@@ -1,0 +1,95 @@
+/* ====================
+   ANIMATIONS
+   ==================== */
+
+@use 'variables' as vars;
+@use 'colormap' as *;
+
+/* ========== KEYFRAMES ========== */
+
+@keyframes pulse {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+@keyframes pulseWeak {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translate3d(0, 20px, 0); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translate3d(0, -20px, 0); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translate3d(20px, 0, 0); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translate3d(-20px, 0, 0); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes gradient {
+	0% { background-position: 0% 50%; }
+	100% { background-position: 100% 50%; }
+}
+
+/* ========== CLASSES ========== */
+
+/* ----- Animation Types ----- */
+
+.animation-pulse {
+    animation: 1s ease-in-out pulse;
+}
+
+.animation-pulse-weak {
+    animation: 1s ease-in-out pulseWeak;
+}
+
+.animation-fade-in {
+    animation: 1s ease-in-out fadeIn;
+}
+
+.animation-fade-out {
+    animation: 1s ease-in-out fadeOut;
+}
+
+.animation-fade-in-up {
+    animation: 1s ease-in-out fadeInUp;
+}
+
+.animation-gradient {
+    animation: 4s ease-in-out infinite gradient;
+    background: linear-gradient(90deg, var(--primary), var(--primary-highlight), var(--primary));
+    background-size: 400% 400%;
+}
+
+/* ----- Animation Properties ----- */
+
+.loop-animation {
+    animation-iteration-count: infinite;
+}
+
+@each $name, $duration in vars.$durations {
+    .#{$name}-animation {
+        animation-duration: $duration;
+    }
+}

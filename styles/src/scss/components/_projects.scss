@@ -1,0 +1,94 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+.projects {
+    .projects-container {
+        height: calc(100vh - 120px);
+        overflow: hidden auto;
+        padding: .5rem 1rem;
+        margin: 1rem -1rem;
+
+        &.narrow {
+            height: calc(100vh - 580px);
+            min-height: 191px;
+        }
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: size('16');
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: size('4');
+        height: size-ext('176');
+
+        &.active {
+            outline: size('2') solid var(--border-focus);
+            background-color: var(--bg-hover);
+            box-shadow: shadow('xs');
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            .title {
+                padding-top: size('2');
+                font-size: font-size('lg');
+                font-weight: bold;
+            }
+        }
+
+        .description.placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .footer {
+            display: flex;
+            align-items: flex-end;
+            gap: size('8');
+            width: 100%;
+            margin-top: auto;
+
+            >span,
+            >.tooltip-wrapper>span {
+                margin-bottom: size('6');
+                background-color: var(--icon-secondary);
+            }
+
+            .meta {
+                display: flex;
+                flex-direction: column;
+                margin-right: auto;
+                font-size: font-size('xs');
+                color: var(--text-secondary);
+            }
+        }
+    }
+}
+
+.new-indicator {
+    // TODO: move to some other file?
+    position: absolute;
+    top: -0.375rem;
+    right: -0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: radius('full');
+    box-shadow: shadow('md');
+    background-color: color('orange');
+    color: color('white');
+    font-size: font-size('xs');
+    font-weight: bold;
+}

@@ -1,0 +1,556 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons';
+
+/* line 53, src/scss/ui-components/_explorama-select.scss */
+.select-placeholder {
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #999;
+}
+
+/* line 136, src/scss/ui-components/_explorama-select.scss */
+.Select-option.Select-value:hover {
+    background: #f8f9fa;
+}
+
+/* line 343, src/scss/ui-components/_explorama-select.scss */
+.Select-option.Select-value:hover {
+    background: #f8f9fa;
+}
+
+/* line 353, src/scss/ui-components/_explorama-select.scss */
+.Select-option.inactive {
+    cursor: default;
+}
+
+/* line 355, src/scss/ui-components/_explorama-select.scss */
+.Select-option.inactive:hover {
+    background: #e9ecef;
+}
+
+/* line 379, src/scss/ui-components/_explorama-select.scss */
+.Select-option.Select-value {
+    padding: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* line 385, src/scss/ui-components/_explorama-select.scss */
+.select-value-tagged {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.select-value-tagged label {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.select-option:not(.disabled) .select-value-tagged label {
+    cursor: pointer;
+}
+
+/* line 390, src/scss/ui-components/_explorama-select.scss */
+.select-value-tagged span {
+    display: block;
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+    opacity: .8;
+}
+
+/* line 396, src/scss/ui-components/_explorama-select.scss */
+.select-value-tagged.tags-before {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+/* line 400, src/scss/ui-components/_explorama-select.scss */
+.select-value-tagged.tags-after {
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+/* line 404, src/scss/ui-components/_explorama-select.scss */
+.select-value-tagged.tags-right {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.select__colorswatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: radius('full');
+    box-shadow: shadow('sm');
+}
+
+.input {
+
+    .select-wrapper {
+        position: relative;
+        width: 100%;
+
+        &:has(> .btn-icon:first-child) {
+            width: auto;
+            //height: 100%; // disabled for slight fix of grouped inputs' button height
+            //aspect-ratio: 1;
+            flex: none;
+
+            button { // quick fix with specific values instead of dynamic sizing
+                width: size('32');
+                height: size('32');
+                box-shadow: shadow('xs');
+            }
+        }
+    }
+    
+    .select-input {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        min-height: size('32');
+        padding: size('6', true) size('6', true) size('6', true) size('12', true);
+        border-radius: radius('xl');
+        color: var(--text);
+        background-color: var(--bg-section);
+        transition: border-color 120ms, box-shadow 120ms;
+        cursor: pointer;
+
+        > span[class^="icon-"] {
+            margin-right: size('6', true);
+            background-color: var(--icon-secondary);
+
+            ~ .select-placeholder {
+                margin-left: 1.375em;
+            }
+        }
+        
+        .value {
+            overflow: hidden;
+            
+            .value-label {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+
+                span[class^="icon-"] {
+                    background-color: var(--icon);
+                }
+
+                label {
+                    padding: 0 size('4') 0 0;
+                }
+            }
+        }
+
+        input {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            cursor: pointer;
+            flex: 1 1 1px;
+            
+            &::placeholder {
+                color: var(--text-disabled);
+            }
+            &:placeholder-shown + .select-buttons .btn-clear {
+                visibility: hidden;
+                opacity: 0;
+            }
+
+            &:disabled {
+                color: var(--text-disabled);
+                cursor: default;
+            }
+        }
+
+        &:hover:has(input:enabled), &:hover:not(.disabled) {
+            border-color: var(--border);
+
+            .select-buttons:has(> .btn-clear:not(:hover)) .btn-select > span[class^="icon-"], .select-buttons:not(:has(> .btn-clear)) .btn-select > span[class^="icon-"] {
+                background-color: var(--link);
+            }
+        }
+        &:has(input:focus) {
+            box-shadow: shadow('xs'), inset 0 0 0 1px var(--border-focus);
+            border-color: var(--border-focus);
+            caret-color: var(--border-focus);
+        }
+        &:has(input:disabled) {
+            background-color: var(--bg-hover);
+            color: var(--text-disabled);
+            box-shadow: none;
+            cursor: default;
+
+            .select-buttons {
+                pointer-events: none; // TODO: perhaps button should be disabled via HTML instead of disabling pointer events via CSS (the latter causes tooltips from the title attribute to not work for exmaple)
+            }
+        }
+
+        &.single-select .value:has(+ input:focus) {
+            opacity: 0.5;
+        }
+
+        .select-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: size('8', true);
+            padding: 0 size('4', true);
+            margin-left: auto;
+
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: size('2', true);
+                border: none;
+                border-radius: radius('full');
+                background: none;
+                cursor: pointer;
+                visibility: visible;
+                opacity: 1;
+                transition: opacity 180ms, visibility 180ms;
+
+                &.focus, &:focus-visible {
+                    outline: width('2') solid var(--border-focus);
+                    outline-offset: width('2');
+                }            
+                
+                & > span[class^="icon-"] {
+                    background-color: var(--icon-secondary);
+                    width: .75em;
+                    height: .75em;
+                    transition: background-color 120ms;
+                }
+
+            }
+            
+            .btn-clear:hover:enabled > span[class^="icon-"] {
+                background-color: var(--icon-warning);
+            }
+        }
+
+        &:has(> .multi-select-values) {
+            padding-left: size('6', true);
+
+            input::placeholder {
+                color: transparent;
+            }
+
+            input:placeholder-shown + .select-buttons .btn-clear {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+    }
+
+    .multi-select-values {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: size('4');
+        min-width: 0;
+
+        &.expanded {
+            max-height: 108px; // 4 rows (4 * 24px chip height + 3 * 4px row gap)
+            overflow: auto;
+            overscroll-behavior: contain;
+        }
+
+        & + input {
+            padding: 0 0 0 size('4');
+        }
+
+        &:has(~ input:disabled) > .value {
+            color: var(--text-disabled);
+
+            &.value-group {
+                background-color: color('gray-400');
+                color: color('gray-100');
+            }
+        }
+
+        & > .value {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            min-width: size('48', true);
+            padding: size('4', true) size('4', true) size('4', true) size('8', true);
+            border-radius: radius('full');
+            background-color: var(--bg-over-bg);
+            font-size: font-size('xs');
+            gap: size('2');
+            transition: box-shadow 120ms;
+
+            &.value-group {
+                background-color: var(--text-secondary);
+                color: var(--bg);
+
+                .btn-clear {
+                    & > span[class^="icon-"] {
+                        background-color: var(--icon-secondary);
+                    }
+
+                    &:hover > span[class^="icon-"] {
+                        background-color: var(--icon-warning);
+                    }
+                }
+            }
+
+            &.hidden {
+                display: none;
+            }
+
+            &.invalid {
+                box-shadow: inset 0 0 0 width('1') var(--border-warning);
+            }
+
+            .btn-clear {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: size('6', true);
+                border: none;
+                border-radius: radius('full');
+                background: none;
+                cursor: pointer;
+                
+                & > span[class^="icon-"] {
+                    background-color: var(--icon-secondary);
+                    width: .75em;
+                    height: .75em;
+                    transition: background-color 120ms;
+                }
+
+                &:hover > span[class^="icon-"] {
+                    background-color: var(--icon-warning);
+                }
+            }
+        }
+    }
+
+    &.invalid, &:has(.multi-select-values > .value.invalid) {
+        
+        .select-input {
+            border-color: var(--border-warning);
+        
+            &:has(input:focus) {
+                border-color: var(--border-warning);
+                box-shadow: shadow('xs'), inset 0 0 0 1px var(--border-warning);
+            }
+            input:focus {
+                caret-color: var(--border-warning);
+            }
+
+            &:hover:has(input:enabled) {
+                border-color: var(--border-warning);
+            }
+        }
+
+        .input-hint {
+            color: var(--text-warning);
+        }
+    }
+
+    .overflow-count {
+        min-width: fit-content;
+        padding: size('4', true) size('8', true);
+        color: color('gray-500');
+        font-size: font-size('xs');
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.select-option-list {
+    position: absolute;
+    width: 100%;
+    padding: size('6', true);
+    //border: width('1') solid var(--border);
+    border-radius: radius('xl');
+    color: var(--text);
+    box-shadow: shadow('xs');
+    background-color: var(--bg-over-bg);
+    z-index: 1000;
+
+    &:not(.open-above) {
+        top: size('4'); // top: calc(100% + size('4')); offset from select container already done in the code
+    }
+    &.open-above {
+        bottom: size('4');
+    }
+
+    &:not(.grid) {
+        container-type: inline-size;
+
+        > *:not(:last-child) {
+            margin-bottom: size('2');
+        }
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .select-option {
+        padding: size('6', true) size('12', true);
+        border-radius: radius('full');
+        transition: background-color 120ms, color 120ms;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        
+        span[class^="icon-"] {
+            background-color: var(--icon);
+        }
+        
+        &:hover:not(.disabled), &.active {
+            background-color: var(--bg-hover);
+            color: var(--text);
+            cursor: pointer;
+
+            span[class^="icon-"] {
+                background-color: var(--icon);
+            }
+        }
+
+        &.selected {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-hover);
+            color: var(--link);
+
+            &::after {
+                content: '';
+                @include icons.icon($icon: 'checkmark', $color: var(--link));
+            }
+        }
+
+        &.disabled {
+            color: var(--text-disabled);
+            cursor: default;
+
+            span[class^="icon-"] {
+                background-color: var(--icon-disabled);
+            }
+        }
+    }
+
+    &.grid {
+        width: auto;
+        gap: size('4');
+
+        .select-option {
+            padding: size('8', true);
+            overflow: visible;
+            
+            span[class^="icon-"] {
+                background-color: var(--icon);
+                transition: background-color 120ms;
+            }
+
+            &:hover {
+                background-color: inherit;
+                
+                span[class^="icon-"] {
+                    background-color: var(--link);
+                }
+            }
+
+            &.selected {
+                background-color: var(--bg-hover);
+
+                span[class^="icon-"] {
+                    background-color: var(--link);
+                }
+
+                &:hover span[class^="icon-"] {
+                    background-color: var(--link);
+                }
+
+                &::after {
+                    content: none;
+                }
+            }
+
+            &:has(span[class*="-important"]) {
+
+                span[class^="icon-"] {
+                    transition: box-shadow 120ms;
+                }
+
+                &:hover span[class^="icon-"] {
+                    box-shadow: inset 0 0 0 1em color('black', 0.2);
+                }
+
+                &.selected {
+                    background-color: var(--bg-hover);
+                }
+            }
+        }
+    }
+
+    .select-option-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: size('6', true) size('12', true);
+        border-radius: radius('full');
+        color: var(--link);
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: default;
+        
+        .select-option-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 size('8', true);
+            font-size: font-size('xs');
+            border-radius: radius('full');
+            color: var(--text-secondary);
+            background-color: var(--bg-hover);
+        }
+        
+        &.selectable {
+            cursor: pointer;
+            transition: background-color 120ms, color 120ms;
+
+            &:hover, &.active {
+                background-color: var(--bg-hover);
+                color: var(--text);
+            }
+
+            &.selected {
+                background-color: var(--bg-hover);
+                color: var(--link);
+            }
+        }
+    }
+}
+
+// Container for small select inputs
+@container (max-width: 70px) {
+    .select-option-list .select-option {
+        padding: size('8');
+        font-size: font-size('xs');
+    }
+}

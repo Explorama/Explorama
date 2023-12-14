@@ -1,0 +1,173 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.rc-slider {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 16px;
+}
+
+.rc-slider-rail {
+    position: relative;
+    border-radius: radius('full');
+    width: 100%;
+    height: 6px;
+    background-color: color('gray-100');
+}
+
+.rc-slider-track {
+    position: absolute;
+    border-radius: radius('full');
+    height: 8px;
+    background-color: color('purple');
+}
+
+.rc-slider-step {
+    position: absolute;
+    width: 100%;
+    height: 8px;
+}
+
+.rc-slider-dot {
+    position: absolute;
+    transform: translateX(-50%) translateY(-2px);
+    border-radius: radius('full');
+    width: 4px !important;
+    height: 12px !important;
+    background-color: color('gray-100');
+    cursor: pointer;
+}
+.rc-slider-dot-active {
+    width: 2px !important;
+    background-color: color('white');
+
+    &:first-child {
+        margin-left: -1px;
+    }
+}
+
+.rc-slider-mark {
+    position: absolute;
+    top: 16px;
+    width: 100%;
+    font-size: font-size('xs');
+}
+
+.rc-slider-mark-text {
+    position: absolute;
+    color: color('gray-500');
+    cursor: pointer;
+}
+.rc-slider-mark-text-active {
+    color: color('gray-700');
+}
+
+.rc-slider-handle {
+    position: absolute;
+    box-shadow: shadow('sm');
+    outline-offset: 0;
+    border: width('4') solid color('purple');
+    border-radius: radius('full');
+    width: 16px;
+    height: 16px;
+    background-color: color('white');
+    transition: transform 120ms, outline-width 120ms;
+    cursor: grab;
+
+    &:hover, &:active, &:hover:focus, &:active:focus {
+        transform: translateX(-50%) scale(1.5) !important;
+        box-shadow: none;
+        outline-width: 0;
+        border: width('4') solid color('purple');
+    }
+
+    &:focus {
+        box-shadow: shadow('lg');
+        outline: width('2') solid rgba(color('purple'), 0.5);
+        border: width('4') solid color('purple');
+    }
+}
+
+.rc-slider-disabled {
+    pointer-events: none;
+
+    .rc-slider-track {
+        background-color: color('gray-300');
+    }
+
+    .rc-slider-handle {
+        box-shadow: none;
+        border-color: color('gray-300');
+    }
+}
+
+.rc-slider-vertical {
+    flex-direction: column;
+    width: 16px;
+    height: 100%;
+
+    .rc-slider-rail {
+        width: 6px;
+        height: 100%;
+    }
+    
+    .rc-slider-track {
+        width: 8px;
+    }
+    
+    .rc-slider-step {
+        width: 8px;
+        height: 100%;
+    }
+    
+    .rc-slider-dot {
+        transform: translateX(-2px) translateY(-50%);
+        width: 12px !important;
+        height: 4px !important;
+    }
+    .rc-slider-dot-active {
+        width: 12px !important;
+        height: 2px !important;
+        
+        &:first-child {
+            margin-bottom: -1px;
+            margin-left: 0;
+        }
+    }
+
+    .rc-slider-mark {
+        top: 0;
+        left: 16px;
+        height: 100%;
+    }
+
+    .rc-slider-handle {
+        &:hover, &:active, &:hover:focus, &:active:focus {
+            transform: translateY(50%) scale(1.5) !important;
+        }
+    }
+}
+
+.rc-slider-reversed {
+
+    .rc-slider-handle {
+
+        &:hover, &:active, &:hover:focus, &:active:focus {
+            transform: translateX(50%) scale(1.5) !important;
+        }
+    }
+
+    &.rc-slider-vertical {
+
+        .rc-slider-handle {
+            transform: translateY(-50%);
+            
+            &:hover, &:active, &:hover:focus, &:active:focus {
+                transform: translateY(-50%) scale(1.5) !important;
+            }
+        }
+    }
+}

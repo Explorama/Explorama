@@ -1,0 +1,337 @@
+/* ====================
+   VARIABLES
+   ==================== */
+
+@use 'sass:math';
+
+/* used in 
+    _borders.scss (border-radius) */
+// Remove roundings?
+$radii: (
+    'none': 0px,
+    'xxs': 1px,
+    /*  2 px */
+    'xs': 1px,
+    /*  4 px */
+    'sm': 1px,
+    /*  6 px */
+    'md': 1px,
+    /*  8 px */
+    'lg': 1px,
+    /* 12 px */
+    'xl': 1px,
+    /* 16 px */
+    'xxl': 1px,
+    /* 24 px */
+    'full': 9999px
+);
+
+$radii: (
+    'none': 0px,
+    'xxs': .125rem,
+    /*  2 px */
+    'xs': .25rem,
+    /*  4 px */
+    'sm': .375rem,
+    /*  6 px */
+    'md': .5rem,
+    /*  8 px */
+    'lg': .75rem,
+    /* 12 px */
+    'xl': 1rem,
+    /* 16 px */
+    'xxl': 1.5rem,
+    /* 24 px */
+    'full': 9999px
+);
+
+@function radius($radius) {
+    @return map-get($radii, $radius);
+}
+
+/* used in
+    _borders.scss (border-width, outline-width, outline-offset) */
+$widths: (
+    '0': 0px,
+    '1': 1px,
+    '2': 2px,
+    '4': 4px,
+    '8': 8px
+);
+
+@function width($width) {
+    @return map-get($widths, $width);
+}
+
+/* used in 
+    _fonts.scss (font-size, line-height) */
+$font-sizes: (
+    'xxs': .625rem,
+    /* 10 px */
+    'xs': .75rem,
+    /* 12 px */
+    'sm': .875rem,
+    /* 14 px */
+    'md': 1rem,
+    /* 16 px */
+    'lg': 1.125rem,
+    /* 18 px */
+    'xl': 1.25rem,
+    /* 20 px */
+    'xxl': 1.5rem,
+    /* 24 px */
+    '3xl': 2rem,
+    /* 32 px */
+    '4xl': 2.5rem,
+    /* 40 px */
+    '5xl': 3rem,
+    /* 48 px */
+);
+
+@function font-size($font-size) {
+    @return map-get($font-sizes, $font-size);
+}
+
+$line-heights: (
+    /* Relative line-height based on its current font-size: */
+    'none': 1,
+    'tight': 1.25,
+    'snug': 1.375,
+    'normal': 1.5,
+    'relaxed': 1.625,
+    'slack': 1.75,
+    'loose': 2
+);
+
+@function line-height($line-height) {
+    @return map-get($line-heights, $line-height);
+}
+
+/* used in
+    _layouting.scss (postions, gaps),
+    _spacing.scss (padding, margin) */
+$sizes: (
+    '0': 0px,
+    '1': .0625rem,
+    /*  1 px */
+    '2': .125rem,
+    /*  2 px */
+    '4': .25rem,
+    /*  4 px */
+    '6': .375rem,
+    /*  6 px */
+    '8': .5rem,
+    /*  8 px */
+    '10': .625rem,
+    /* 10 px */
+    '12': .75rem,
+    /* 12 px */
+    '14': .875rem,
+    /* 14 px */
+    '16': 1rem,
+    /* 16 px */
+    '20': 1.25rem,
+    /* 20 px */
+    '24': 1.5rem,
+    /* 24 px */
+    '28': 1.75rem,
+    /* 28 px */
+    '32': 2rem,
+    /* 32 px */
+    '36': 2.25rem,
+    /* 36 px */
+    '40': 2.5rem,
+    /* 40 px */
+    '48': 3rem,
+    /* 48 px */
+    '64': 4rem
+    /* 64 px */
+);
+
+@function size($size, $em: false) {
+    @if $em {
+        @return math.div(map-get($sizes, $size), 1rem) * 1em; // conversion to em units
+    }
+
+    @else {
+        @return map-get($sizes, $size);
+    }
+}
+
+/* used in
+    _sizing.scss (width, height (incl. min/max)) */
+$sizes-ext: (
+    '0': 0px,
+    /*   0 px */
+    '1': .0625rem,
+    /*   1 px */
+    '2': .125rem,
+    /*   2 px */
+    '4': .25rem,
+    /*   4 px */
+    '6': .375rem,
+    /*   6 px */
+    '8': .5rem,
+    /*   8 px */
+    '10': .625rem,
+    /*  10 px */
+    '12': .75rem,
+    /*  12 px */
+    '14': .875rem,
+    /*  14 px */
+    '16': 1rem,
+    /*  16 px */
+    '20': 1.25rem,
+    /*  20 px */
+    '24': 1.5rem,
+    /*  24 px */
+    '28': 1.75rem,
+    /*  28 px */
+    '32': 2rem,
+    /*  32 px */
+    '36': 2.25rem,
+    /* 36 px */
+    '40': 2.5rem,
+    /*  40 px */
+    '48': 3rem,
+    /*  48 px */
+    '64': 4rem,
+    /*  64 px */
+    '80': 5rem,
+    /*  80 px */
+    '96': 6rem,
+    /*  96 px */
+    '112': 7rem,
+    /* 112 px */
+    '128': 8rem,
+    /* 128 px */
+    '144': 9rem,
+    /* 144 px */
+    '160': 10rem,
+    /* 160 px */
+    '176': 11rem,
+    /* 176 px */
+    '192': 12rem,
+    /* 192 px */
+    '208': 13rem,
+    /* 208 px */
+    '224': 14rem,
+    /* 224 px */
+    '240': 15rem,
+    /* 240 px */
+    '256': 16rem,
+    /* 256 px */
+    '288': 18rem,
+    /* 288 px */
+    '320': 20rem,
+    /* 320 px */
+    '352': 22rem,
+    /* 352 px */
+    '384': 24rem,
+    /* 384 px */
+    '1-2': 50%,
+    /*  50%    */
+    '1-3': calc(1 / 3 * 100%),
+    /*  33.33% */
+    '2-3': calc(2 / 3 * 100%),
+    /*  66.67% */
+    '1-4': 25%,
+    /*  25%    */
+    '2-4': 50%,
+    /*  50%    */
+    '3-4': 75%,
+    /*  75%    */
+    '1-5': 20%,
+    /*  20%    */
+    '2-5': 40%,
+    /*  40%    */
+    '3-5': 60%,
+    /*  60%    */
+    '4-5': 80%,
+    /*  80%    */
+    '1-6': calc(1 / 6 * 100%),
+    /*  16.67% */
+    '2-6': calc(2 / 6 * 100%),
+    /*  33.33% */
+    '3-6': 50%,
+    /*  50%    */
+    '4-6': calc(4 / 6 * 100%),
+    /*  66.67% */
+    '5-6': calc(5 / 6 * 100%),
+    /*  83.33% */
+    '1-12': calc(1 / 12 * 100%),
+    /*   8.33% */
+    '2-12': calc(2 / 12 * 100%),
+    /*  16.67% */
+    '3-12': 25%,
+    /*  25%    */
+    '4-12': calc(4 / 12 * 100%),
+    /*  33.33% */
+    '5-12': calc(5 / 12 * 100%),
+    /*  41.67% */
+    '6-12': 50%,
+    /*  50%    */
+    '7-12': calc(7 / 12 * 100%),
+    /*  58.33% */
+    '8-12': calc(8 / 12 * 100%),
+    /*  66.67% */
+    '9-12': 75%,
+    /*  75%    */
+    '10-12': calc(10 / 12 * 100%),
+    /*  83.33% */
+    '11-12': calc(11 / 12 * 100%),
+    /*  91.67% */
+    'full': 100%,
+    /* 100%    */
+    'auto': auto
+);
+
+@function size-ext($size-ext) {
+    @return map-get($sizes-ext, $size-ext);
+}
+
+/* used in
+    _layouting.scss (z-index) */
+$layers: (
+    'menu': 100,
+    'sidebar': 100,
+    'modal': 200,
+    'error': 300,
+    'auto': auto,
+    '0': 0
+);
+
+@function layer($layer) {
+    @return map-get($layers, $layer);
+}
+
+/* used in
+    _shadows.scss */
+$shadows: (
+    'xs': (0 1px 2px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.05))),
+    'sm': (0 2px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.25))),
+    'md': (0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25))),
+    'lg': (0 2px 10px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 6px -4px var(--box-shadow-color, rgba(0, 0, 0, 0.25))),
+    'xl': (0 4px 25px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 10px -6px var(--box-shadow-color, rgba(0, 0, 0, 0.25))),
+    'xxl': (0 8px 50px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25))),
+    'inner': (inset 0 2px 4px 2px var(--box-shadow-color, rgba(0, 0, 0, 0.05))),
+    'none': none
+);
+
+@function shadow($shadow) {
+    @return map-get($shadows, $shadow);
+}
+
+/* used in
+    _animations.scss */
+$durations: (
+    'shortest': 90ms,
+    'short': 120ms,
+    'medium': 180ms,
+    'long': 240ms,
+    'longest': 1s
+);
+
+@function duration($duration) {
+    @return map-get($durations, $duration);
+}

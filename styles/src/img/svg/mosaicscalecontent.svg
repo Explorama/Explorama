@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180px" height="180px" viewBox="0 0 180 180" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>mosaic-scale-content</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M40,40 L40,98 C40,104.627417 34.627417,110 28,110 L12,110 C5.372583,110 1.42108547e-14,104.627417 7.10542736e-15,98 L0,12 C0,5.372583 5.372583,-1.23032071e-15 12,-5.39092184e-15 L28,-6.37063928e-15 L98,0 C104.627417,4.668892e-15 110,5.372583 110,12 L110,28 C110,34.627417 104.627417,40 98,40 L40,40 Z M140,140 L140,82 C140,75.372583 145.372583,70 152,70 L168,70 C174.627417,70 180,75.372583 180,82 L180,168 C180,171.313708 178.656854,174.313708 176.485281,176.485281 C174.313708,178.656854 171.313708,180 168,180 L82,180 C75.372583,180 70,174.627417 70,168 L70,152 C70,145.372583 75.372583,140 82,140 L140,140 Z" id="mosaic-scale-content" fill="#4A4A4A"></path>
+    </g>
+</svg>

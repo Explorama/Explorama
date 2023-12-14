@@ -1,0 +1,184 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons';
+
+/* Geomap openlayers zoom buttons */
+
+.ol-control {
+    background: none;
+
+    &:hover {
+        background: none;
+    }
+
+    button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: size('16', true);
+        border-radius: radius('xs');
+        font-weight: bold;
+        background-color: var(--bg);
+        color: transparent;
+        border: width('1') solid var(--border);
+        box-shadow: shadow('sm');
+        transition: border-color 120ms, transform 120ms, box-shadow 120ms, background-color 120ms, color 120ms;
+    
+        &.ol-zoom-in {
+            border-radius: radius('xs') radius('xs') 0 0;
+    
+            &::after {
+                content: '';
+                position: absolute;
+                @include icons.icon($icon: 'plus', $color: var(--icon));
+            }
+        }
+        &.ol-zoom-out {
+            border-radius: 0 0 radius('xs') radius('xs');
+    
+            &::after {
+                content: '';
+                position: absolute;
+                @include icons.icon($icon: 'minus', $color: var(--icon));
+            }
+        }
+    
+        &:hover:enabled {
+            background-color: var(--bg-hover);
+            cursor: pointer;
+            
+    
+            &::after {
+                background-color: var(--icon);
+            }
+        }
+    
+        &:disabled {
+            opacity: .5;
+            box-shadow: none;
+            cursor: default;
+            background-color: var(--bg-hover);
+    
+            &::after {
+                background-color: var(--icon-disabled);
+            }
+        }
+    
+        &:active:enabled {
+            transform: scale(0.97);
+            box-shadow: none;
+        }
+    
+        &:focus-visible {
+            outline: width('2') solid var(--border-focus);
+            outline-offset: width('2');
+            isolation: isolate;
+        }
+        &:focus {   
+            background-color: var(--bg);
+        }
+    }
+}
+
+/* Geomap popover */
+
+.ol-popup.default {
+
+    & > div {
+        border: none;
+        border-radius: radius('md');
+        box-shadow: shadow('xl');
+        overflow: hidden;
+    
+        .anchor {
+            color: transparent;
+            filter: drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.1));
+        }
+    
+        button.closeBox {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: radius('xs');
+            transition: background-color 120ms;
+    
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            &::after {
+                margin: 0;
+                transform: translateY(-50%);
+            }
+        }
+    
+        .ol-popup-content {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+        }
+    
+        .popup-content dl {
+            padding: size('6') size('12');
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+
+            &:not(.colored-bg) {
+                max-height: 320px;
+                overflow-y: auto;
+
+                dt, dd {
+                    margin-bottom: size('4');
+                }
+            }
+    
+            dt {
+                width: 40%;
+                font-weight: bold;
+                text-transform: capitalize;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+            }
+    
+            dd {
+                width: 60%;
+                margin: 0;
+            }
+    
+            &.colored-bg {
+                background-color: var(--layoutColor, var(--primary-muted));
+                color: var(--text-inverted);
+                min-height: 1.4em;
+                box-sizing: content-box;
+            }
+        }
+    }
+
+    .anchor::after {
+        border-color: var(--bg) transparent;
+    }
+
+    &.ol-popup-top .anchor {
+        margin: -12px 22px;
+        filter: none;
+
+        &::after {
+            border-color: var(--layoutColor, white) transparent;
+        }
+    }
+}
+
+.ol-popup.tooltips {
+    font-size: font-size('xs');
+    text-align: center;
+    padding: size('4', true) size('8', true);
+    border-radius: radius('xs');
+    background-color: color('gray-900');
+    color: color('white');
+    box-shadow: shadow('sm');
+}

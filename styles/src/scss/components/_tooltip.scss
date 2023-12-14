@@ -1,0 +1,49 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.tooltip-wrapper button:disabled {
+    pointer-events: none; // deactivates event in disabled buttons that in turn deactivates all other events including the disappearing of tooltips
+}
+
+.tooltip-wrapper:has(.react-tooltip-lite) {
+    filter: drop-shadow(0 0 1px var(--tooltip-shadow-color));
+    position: absolute;
+    top: 0;
+    z-index: 30000;
+}
+
+// TODO: remove important tags once changes have been made to the ui base
+
+.react-tooltip-lite {
+    z-index: 30000 !important;
+    font-size: font-size('xs');
+    text-align: center;
+    padding: size('8', true) size('16', true) !important;
+    border-radius: radius('xs');
+    background-color: color('gray-900') !important;
+    color: color('white');
+    box-shadow: shadow('sm');
+    min-width: 100px;
+    max-width: 50em !important;
+}
+
+.react-tooltip-lite-arrow {
+    z-index: 30001 !important;
+    border-color: color('gray-900');
+}
+.react-tooltip-lite-up-arrow {
+    border-top-color: color('gray-900') !important;
+    transform: translateY(-1px);
+}
+.react-tooltip-lite-down-arrow {
+    border-bottom-color: color('gray-900') !important;
+    transform: translateY(1px);
+}
+.react-tooltip-lite-left-arrow {
+    border-left-color: color('gray-900') !important;
+    transform: translateX(-1px);
+}
+.react-tooltip-lite-right-arrow {
+    border-right-color: color('gray-900') !important;
+    transform: translateX(1px);
+}

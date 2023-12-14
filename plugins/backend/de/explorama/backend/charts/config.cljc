@@ -1,0 +1,50 @@
+(ns de.explorama.backend.charts.config
+  (:require [de.explorama.shared.common.configs.provider :refer [defconfig]]))
+
+(def explorama-charts-max-data-amount
+  (defconfig
+    {:env :explorama-charts-max-data-amount
+     :default 2000000
+     :type :integer
+     :doc "How much data can be visualized in the Client in one window.
+         If the number of Events is reached, it will show a Message to the user and no data will be visualized."}))
+
+
+(def explorama-charts-stop-filterview-amount
+  (defconfig
+    {:env :explorama-charts-stop-filterview-amount
+     :default 200000
+     :type :integer
+     :doc "This defines how much data can be filtered with the local-filter in each frame.
+         If the number of events is larger than this, only a Message is shown when the user tries to use the filtering."}))
+
+
+(def explorama-charts-warn-filterview-amount
+  (defconfig
+    {:env :explorama-charts-warn-filterview-amount
+     :default 50000
+     :type :integer
+     :doc "This defines at what point a warning message should be shown to the user when he tries to use the local-filter."}))
+
+(def explorama-charts-max-allowed-month-range
+  (defconfig
+    {:env :explorama-charts-max-allowed-month-range
+     :default 6
+     :type :integer
+     :doc "Defines how long the month-range can be in the dataset to select month as x-axis."}))
+
+(def explorama-charts-scatter-min-oppacity
+  (defconfig
+    {:env :explorama-charts-scatter-min-oppacity
+     :default 0.5
+     :type :double
+     :doc "Defines the minimum oppacity in a scatter plot."}))
+
+(def explorama-charts-stemming-algorithm
+  (defconfig
+    {:env :explorama-charts-stemming-algorithm
+     :type :keyword
+     :default :porter
+     :possible-values #{:porter :lancaster :lovins}
+     :doc "Stemming algorithm used for the wordcloud."}))
+

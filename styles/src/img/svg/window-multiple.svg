@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="500px" viewBox="0 0 500 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>w-multiple</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M35.5,496.384938 C17.551,496.384938 3,481.833938 3,463.884938 L3,164.884938 C3,146.935938 17.551,132.384938 35.5,132.384938 L95.9888,132.384938 C113.9378,132.384938 128.4888,146.935938 128.4888,164.884938 C128.4888,182.833938 113.9378,197.384938 95.9888,197.384938 L68,197.384938 L68,431.384938 L302,431.384938 L302,409 C302,391.051 316.551,376.5 334.5,376.5 C352.449,376.5 367,391.051 367,409 L367,463.884938 C367,481.833938 352.449,496.384938 334.5,496.384938 L35.5,496.384938 Z M223,277 L409,277 L409,91 L223,91 L223,277 Z M465.5,366 L166.5,366 C148.551,366 134,351.449 134,333.5 L134,34.5 C134,16.551 148.551,2 166.5,2 L465.5,2 C483.449,2 498,16.551 498,34.5 L498,333.5 C498,351.449 483.449,366 465.5,366 Z" id="path-1"></path>
+    </defs>
+    <g id="w-multiple" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Combined-Shape" fill="#000000" xlink:href="#path-1"></use>
+    </g>
+</svg>

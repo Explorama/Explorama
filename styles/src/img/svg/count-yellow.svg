@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="500px" viewBox="0 0 500 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>count-yellow</title>
+    <desc>Created with Sketch.</desc>
+    <g id="count-yellow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M362,250 C362,211.9375 392.875,181 431,181 C469.0625,181 500,211.9375 500,250 C500,288.0625 469.0625,319 431,319 C392.875,319 362,288.0625 362,250" id="Fill-1" fill="#C6C6C5"></path>
+        <path d="M182,250 C182,211.9375 212.875,181 251,181 C289.0625,181 319.9375,211.9375 319.9375,250 C319.9375,288.0625 289.0625,319 251,319 C212.875,319 182,288.0625 182,250" id="Fill-4" fill="#F9D960"></path>
+        <path d="M1,250 C1,211.9375 31.875,181 70,181 C108.0625,181 138.9375,211.9375 138.9375,250 C138.9375,288.0625 108.0625,319 70,319 C31.875,319 1,288.0625 1,250" id="Fill-7" fill="#C6C6C5"></path>
+    </g>
+</svg>

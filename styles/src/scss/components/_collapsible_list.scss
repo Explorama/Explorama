@@ -1,0 +1,57 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.collapsible-list {
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        gap: size('4');
+        position: relative;
+        padding: size('10');
+        border-bottom: size('1') solid var(--border-secondary);
+        background-color: var(--bg);
+        font-size: font-size('sm');
+        transition: background-color 120ms;
+    
+        &:hover:not(.disabled) {
+            background-color: var(--bg-hover);
+            cursor: pointer;
+        }
+
+        &:active:not(.disabled) {
+            transform: scale(0.97);
+        }
+        
+        &.disabled {
+            color: var(--text-disabled);
+    
+            > .item-icon > span {
+                background-color: var(--icon-disabled);
+            }
+        }
+
+        > .item-label {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        > .item-icon {
+            margin-left: auto;
+
+            > span {
+                background-color: var(--icon);
+            }
+        }
+    
+        &.open {
+            box-shadow: shadow('sm');
+            z-index: 1;
+        }
+    
+        &.child {
+            border-left: size('4') solid var(--border);
+        }
+    }
+}

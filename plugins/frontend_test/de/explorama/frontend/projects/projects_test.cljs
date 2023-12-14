@@ -1,0 +1,53 @@
+(ns de.explorama.frontend.projects.projects-test
+  (:require [de.explorama.frontend.projects.utils.projects :as pro]
+            [cljs.test :refer-macros [deftest testing is]]))
+
+(def test-data [[{:c 1 :t 1} ["woco" ["dont-care 1"]]]
+                [{:c 2 :t 1} ["origin-1" ["dont-care 2"]]]
+                [{:c 3 :t 1} ["origin-1" ["dont-care 3"]]]
+                [{:c 4 :t 1} ["woco" ["dont-care 4"]]]
+                [{:c 5 :t 1} ["woco" ["dont-care 5"]]]
+                [{:c 6 :t 1} ["origin-2" ["dont-care 6"]]]
+                [{:c 1 :t 2} ["woco" ["dont-care 7"]]]
+                [{:c 1 :t 3} ["origin-1" ["dont-care 8"]]]
+                [{:c 1 :t 4} ["origin-2" ["dont-care 9"]]]
+                [{:c 2 :t 4} ["origin-3" ["dont-care 10"]]]
+                [{:c 3 :t 4} ["origin-3" ["dont-care 11"]]]
+                [{:c 4 :t 4} ["origin-1" ["dont-care 12"]]]
+                [{:c 5 :t 4} ["woco" ["dont-care 13"]]]
+                [{:c 6 :t 4} ["origin-1" ["dont-care 14"]]]
+                [{:c 7 :t 4} ["origin-3" ["dont-care 15"]]]])
+
+(deftest project-log-merge-test
+  (testing "testing merging of project logs"
+    (is (= (pro/group-logs-by-origin test-data)
+           {"woco" [["woco" ["dont-care 1"]]
+                    ["woco" ["dont-care 4"]]
+                    ["woco" ["dont-care 5"]]
+                    ["woco" ["dont-care 7"]]
+                    ["woco" ["dont-care 13"]]]
+            "origin-1" [["woco" ["dont-care 1"]]
+                        ["origin-1" ["dont-care 2"]]
+                        ["origin-1" ["dont-care 3"]]
+                        ["woco" ["dont-care 4"]]
+                        ["woco" ["dont-care 5"]]
+                        ["woco" ["dont-care 7"]]
+                        ["origin-1" ["dont-care 8"]]
+                        ["origin-1" ["dont-care 12"]]
+                        ["woco" ["dont-care 13"]]
+                        ["origin-1" ["dont-care 14"]]]
+            "origin-2" [["woco" ["dont-care 1"]]
+                        ["woco" ["dont-care 4"]]
+                        ["woco" ["dont-care 5"]]
+                        ["origin-2" ["dont-care 6"]]
+                        ["woco" ["dont-care 7"]]
+                        ["origin-2" ["dont-care 9"]]
+                        ["woco" ["dont-care 13"]]]
+            "origin-3" [["woco" ["dont-care 1"]]
+                        ["woco" ["dont-care 4"]]
+                        ["woco" ["dont-care 5"]]
+                        ["woco" ["dont-care 7"]]
+                        ["origin-3" ["dont-care 10"]]
+                        ["origin-3" ["dont-care 11"]]
+                        ["woco" ["dont-care 13"]]
+                        ["origin-3" ["dont-care 15"]]]}))))

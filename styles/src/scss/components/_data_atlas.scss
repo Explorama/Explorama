@@ -1,0 +1,206 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+.explorama__datenatlas {
+    align-items: stretch;
+
+    .window__body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        
+        .data__search__container {
+            padding: 12px;
+            border-bottom: size('1') solid var(--border);
+            display: flex;
+            gap: 6px;
+            
+            button {
+                font-size: font-size('xs');
+            }
+            
+            .data__reset {
+                display: flex;
+                gap: 6px;
+                margin-left: auto;
+            }
+        }
+        
+        .data__lists__container {
+            position: relative;
+            display: flex;
+            height: 230px;
+            
+            .data__list {
+                position: relative;
+                flex-grow: 1;
+                width: 33.3%;
+                padding-top: 30px;
+                border-right: size('1') solid var(--border);
+                
+                &:last-child {
+                    border-right: none;
+                }
+                
+                h1 {
+                    position: absolute;
+                    top: 0;
+                    left: 2px;
+                    display: block;
+                    width: 99%;
+                    margin: 0;
+                    padding-left: 22px;
+                    padding-top: 4px;
+                    padding-bottom: 6px;
+                    background: var(--bg-section);
+                    border-bottom: size('1') solid var(--border);
+                    font-weight: 400;
+                    font-size: font-size('sm');
+                    
+                    .note {
+                        font-size: font-size('xxs');
+                        color: var(--text-secondary);
+                    }
+
+                }
+                a {
+                    display: block;
+                    width: 90%;
+                    padding-block: size('2');
+                    padding-left: size('24');
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: var(--text);
+                    text-decoration: none;
+                    line-height: 1.5;
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        position: absolute;
+                        top: 0px;
+                        right: 0px;
+                        bottom: 0px;
+                        width: 10%;
+                    }
+
+                    &::after {
+                        content: '';
+                        display: inline-block;
+                        position: absolute;
+                        top: size('6');
+                        right: size('8');
+                    }
+
+                    &:hover {
+                        background-color: var(--bg-highlight);
+
+                        &::before {
+                            background-color: var(--bg-highlight);
+                        }
+
+                        &::after {
+                            @include icon($icon: 'pin', $color: var(--icon-secondary));
+                        }
+                    }
+                }
+
+                div.active {
+                    font-weight: 700;
+                    
+                    a {
+                        &:after {
+                            @include icon($icon: 'pin', $color: var(--icon));
+                        }
+                        
+                        &:hover {
+                            text-decoration: line-through;
+                            
+                            &::after {
+                                @include icon($icon: 'unpin', $color: var(--icon));
+                            }
+                        }
+                    }
+
+                    &.matched a {
+                        &:before {
+                            background-color: var(--bg-hover);
+                        }
+
+                        &:after {
+                            filter: invert(87%) sepia(12%) saturate(190%) hue-rotate(169deg) brightness(83%) contrast(84%);
+                        }
+    
+                        &:hover {
+                            background-color: #d0e9e9;
+                            color: var(--text-secondary);
+                            
+                            &::before {
+                                background-color: #d0e9e9;
+                            }
+        
+                            &::after {
+                                filter: invert(35%) sepia(13%) saturate(3088%) hue-rotate(316deg) brightness(100%) contrast(72%);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .data__element.matched {
+                background: #e2f1f1;
+                border-bottom: 1px solid #fff;
+            }
+        }
+
+        .data__details__container {
+            flex-grow: 1;
+            min-height: 25%;
+            padding-block: size('12') size('24');
+            overflow-y: auto;
+            border-top: size('1') solid var(--border);
+            
+            > * {
+                margin-left: 12px;
+                margin-right: 48px;
+                padding: 7px 12px;
+            }
+            
+            :is(h1, h2, h3) {
+                margin-top: 0;
+                margin-bottom: 0;
+                font-size: font-size('md');
+            }
+        
+            :is(h1, h2, h3, p) span {
+                display: block;
+                width: auto;
+                font-size: font-size('sm');
+                font-weight: 400;
+                color: var(--text-secondary);
+            }
+            
+            h2 div span { // recolor min & max values
+                color: inherit;
+            }
+            
+            p {
+                margin-top: 0;
+                margin-bottom: 12px;
+                white-space: pre-line;
+                
+                &:first-child::before {
+                    content: "Info";
+                }
+            }
+            
+            h1:not(:first-of-type) {
+                margin-top: size('12');
+                padding-top: size('16');
+                border-top: size('1') solid color('gray-300');
+            }
+        }
+    }
+}

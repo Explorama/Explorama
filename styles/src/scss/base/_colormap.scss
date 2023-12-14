@@ -1,0 +1,215 @@
+@use 'sass:color';
+
+$gray: #839299;
+$teal: #2b5e65;
+$purple: #5f759e;
+$orange: #fa7014;
+$red: #ed3b3b;
+$blue: #105aa3;
+$green: #10a35a;
+$yellow: #fecd34;
+
+$base-colors: (
+    'gray': $gray,
+    'purple': $purple,
+    'teal': $teal,
+    'orange': $orange,
+    'red': $red,
+    'blue': $blue,
+    'green': $green,
+    'yellow': $yellow,
+);
+
+@function tint($color, $percentage) {
+    @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+    @return mix(black, $color, $percentage);
+}
+
+$colors: (
+    /* ----- Black and White ----- */
+
+    'white': #ffffff,
+    'white-alpha-50': #ffffff80,
+    'black': #000000,
+    'black-alpha-50': rgba(#000000, .5),
+
+    /* ----- Gray ----- */
+
+    'gray': $gray,
+    // default value
+    'gray-50': tint($gray, 95%),
+    'gray-100': tint($gray, 90%),
+    'gray-200': tint($gray, 75%),
+    'gray-300': tint($gray, 50%),
+    'gray-400': tint($gray, 25%),
+    'gray-500': $gray,
+    'gray-600': shade($gray, 25%),
+    'gray-700': shade($gray, 50%),
+    'gray-800': shade($gray, 75%),
+    'gray-900': shade($gray, 90%),
+
+    /* ----- Purple ----- */
+
+    'purple': $purple,
+    // default value
+    'purple-50': tint($purple, 90%),
+    'purple-100': tint($purple, 80%),
+    'purple-200': tint($purple, 60%),
+    'purple-300': tint($purple, 40%),
+    'purple-400': tint($purple, 20%),
+    'purple-500': $purple,
+    'purple-600': shade($purple, 12%),
+    'purple-700': shade($purple, 24%),
+    'purple-800': shade($purple, 36%),
+    'purple-900': shade($purple, 50%),
+
+    /* ----- Teal ----- */
+
+    'teal': $teal,
+    // default value
+    'teal-50': tint($teal, 90%),
+    'teal-100': tint($teal, 80%),
+    'teal-200': tint($teal, 60%),
+    'teal-300': tint($teal, 40%),
+    'teal-400': tint($teal, 20%),
+    'teal-500': $teal,
+    'teal-600': shade($teal, 12%),
+    'teal-700': shade($teal, 24%),
+    'teal-800': shade($teal, 36%),
+    'teal-900': shade($teal, 50%),
+
+    /* ----- Orange ----- */
+
+    'orange': $orange,
+    // default value
+    'orange-50': tint($orange, 95%),
+    'orange-100': tint($orange, 80%),
+    'orange-200': tint($orange, 60%),
+    'orange-300': tint($orange, 40%),
+    'orange-400': tint($orange, 20%),
+    'orange-500': $orange,
+    'orange-600': shade($orange, 12%),
+    'orange-700': shade($orange, 24%),
+    'orange-800': shade($orange, 36%),
+    'orange-900': shade($orange, 50%),
+
+    /* ----- Red ----- */
+
+    'red': $red,
+    // default value
+    'red-50': tint($red, 95%),
+    'red-100': tint($red, 80%),
+    'red-200': tint($red, 60%),
+    'red-300': tint($red, 40%),
+    'red-400': tint($red, 20%),
+    'red-500': $red,
+    'red-600': shade($red, 12%),
+    'red-700': shade($red, 24%),
+    'red-800': shade($red, 36%),
+    'red-900': shade($red, 50%),
+
+    /* ----- Blue ----- */
+
+    'blue': $blue,
+    // default value
+    'blue-50': tint($blue, 95%),
+    'blue-100': tint($blue, 80%),
+    'blue-200': tint($blue, 60%),
+    'blue-300': tint($blue, 40%),
+    'blue-400': tint($blue, 20%),
+    'blue-500': $blue,
+    'blue-600': shade($blue, 12%),
+    'blue-700': shade($blue, 24%),
+    'blue-800': shade($blue, 36%),
+    'blue-900': shade($blue, 50%),
+
+    /* ----- Green ----- */
+
+    'green': $green,
+    // default value
+    'green-50': tint($green, 95%),
+    'green-100': tint($green, 80%),
+    'green-200': tint($green, 60%),
+    'green-300': tint($green, 40%),
+    'green-400': tint($green, 20%),
+    'green-500': $green,
+    'green-600': shade($green, 12%),
+    'green-700': shade($green, 24%),
+    'green-800': shade($green, 36%),
+    'green-900': shade($green, 50%),
+
+    /* ----- Yellow ----- */
+
+    'yellow': $yellow,
+    // default value
+    'yellow-50': tint($yellow, 95%),
+    'yellow-100': tint($yellow, 80%),
+    'yellow-200': tint($yellow, 60%),
+    'yellow-300': tint($yellow, 40%),
+    'yellow-400': tint($yellow, 20%),
+    'yellow-500': $yellow,
+    'yellow-600': shade($yellow, 12%),
+    'yellow-700': shade($yellow, 24%),
+    'yellow-800': shade($yellow, 36%),
+    'yellow-900': shade($yellow, 50%),
+
+);
+
+@function color($color, $opacity: 1) {
+    @return color.change(map-get($colors, $color), $alpha: $opacity);
+}
+
+// Determines contrasting text color (black or white) depending on background color
+@function contrastColor($bg-color) {
+    $threshold: 149;
+    $intensity: color.red($bg-color) * 0.299 + color.green($bg-color) * 0.587 + color.blue($bg-color) * 0.114;
+
+    @if $intensity >$threshold {
+        @return #000000;
+    }
+
+    @else {
+        @return #ffffff;
+    }
+}
+
+/* ----- Window Group Colors ----- */
+
+$frame: (
+    'group-1': map-get($colors, 'teal-700'),
+    'group-2': map-get($colors, 'orange-700'),
+    'group-3': map-get($colors, 'blue-500'),
+    'group-4': map-get($colors, 'red-600'),
+    'group-5': map-get($colors, 'green-700'),
+    'group-6': map-get($colors, 'yellow-700'),
+    'group-7': #7b2885,
+    'group-8': #c82d88,
+    'group-9': #387c8d,
+    'group-10': #835130,
+    'group-11': map-get($colors, 'blue-800'),
+    'group-12': #6a0000,
+    'group-13': map-get($colors, 'green-900'),
+    'group-14': map-get($colors, 'yellow-900'),
+    'group-15': #ba4861
+);
+
+/* ----- Chart Colors ----- */
+
+$charts: (
+    // changes here do not affect the chart colors in the app, they need to be changed by a dev
+    // Chart 1
+    'chart-1': #4477AA,
+    'chart-2': #CCBB44,
+    'chart-3': #AA3377,
+    'chart-4': #228833,
+    'chart-5': #BBBBBB,
+    // Chart 2
+    'chart-6': #EE6677,
+    'chart-7': #c82d88,
+    'chart-8': #bccf00,
+    'chart-9': #f49819,
+    'chart-10': #66CCEE,
+);

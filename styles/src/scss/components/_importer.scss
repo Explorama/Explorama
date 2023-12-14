@@ -1,0 +1,535 @@
+/* line 3, src/scss/components/_importer.scss */
+.explorama__importer .row [class^="col-"] {
+    margin: 0;
+}
+
+/* line 7, src/scss/components/_importer.scss */
+.explorama__importer .importer__body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.explorama__importer .importer__body :is(.explorama__form__file-upload, .file-upload-done) {
+    margin-bottom: 12px;
+    padding: 8px 24px;
+}
+
+.explorama__importer .importer__body .explorama__alertbox .input {
+    flex: 1 1 auto;
+}
+
+/* line 13, src/scss/components/_importer.scss */
+.explorama__importer .importer__body__container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+/* line 18, src/scss/components/_importer.scss */
+.explorama__importer .importer__body__container>.col-8 {
+    margin-right: 12px;
+}
+
+/* line 24, src/scss/components/_importer.scss */
+.explorama__importer .importer__sidebar .importer__sidebar__section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* line 28, src/scss/components/_importer.scss */
+.explorama__importer .importer__sidebar .importer__sidebar__section .sample__text {
+    flex-grow: 1;
+    max-height: 350px;
+    padding: 12px;
+    overflow: auto;
+    background: var(--bg);
+}
+
+/* line 36, src/scss/components/_importer.scss */
+.explorama__importer .importer__sidebar .importer__sidebar__section .sample__data {
+    flex-grow: 1;
+    background: var(--bg);
+    overflow: auto;
+}
+
+/* line 43, src/scss/components/_importer.scss */
+.explorama__importer .importer__sidebar .importer__sidebar__section table.explorama__table {
+    font-size: .75em;
+}
+
+/* line 49, src/scss/components/_importer.scss */
+.explorama__importer .importer__filesample {
+    padding-left: 24px;
+}
+
+/* line 84, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--standard,
+.explorama__importer .importer__mappings--advanced {
+    min-height: 36px;
+    margin-left: 26px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* line 91, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--standard label,
+.explorama__importer .importer__mappings--advanced label {
+    width: 100px;
+}
+
+/* line 95, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--standard:last-child,
+.explorama__importer .importer__mappings--advanced:last-child {
+    border-bottom: none;
+}
+
+/* line 99, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--standard a.advanced,
+.explorama__importer .importer__mappings--advanced a.advanced {
+    float: right;
+    margin-right: 20px;
+}
+
+/* line 104, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--standard a.advanced__edit,
+.explorama__importer .importer__mappings--advanced a.advanced__edit {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+/* line 109, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--standard .explorama__form__input,
+.explorama__importer .importer__mappings--advanced .explorama__form__input {
+    display: inline-block;
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+/* line 116, src/scss/components/_importer.scss */
+.explorama__importer .importer__mappings--advanced {
+    height: auto;
+}
+
+/* line 121, src/scss/components/_importer.scss */
+.explorama__importer .explorama__form__input {
+    height: auto;
+}
+
+/* line 125, src/scss/components/_importer.scss */
+.explorama__importer a.advanced {
+    float: right;
+    margin-right: 0px;
+    margin-left: auto;
+}
+
+/* line 130, src/scss/components/_importer.scss */
+.explorama__importer a.advanced.advanced--vertical {
+    padding-top: 25px;
+}
+
+/* line 135, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section {
+    padding: 8px 0 0 0;
+}
+
+/* line 138, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section .explorama__form__input {
+    padding-left: 0;
+    margin-right: 12px;
+}
+
+/* line 142, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section .explorama__form__input>input {
+    width: 100%;
+}
+
+/* line 146, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section .explorama__form__input .explorama__form__label {
+    width: auto;
+}
+
+/* line 151, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section table.conditions__table {
+    border: 1px solid var(--border);
+}
+
+/* line 154, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section table.conditions__table td div.row {
+    display: flex;
+    column-gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+/* line 161, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section table.conditions__table td div.row:first-child,
+.explorama__importer .context__mappings__section table.conditions__table td div.row:last-child {
+    border-top: none;
+}
+
+/* line 165, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section table.conditions__table td div.row:first-child {
+    padding-top: 0;
+}
+
+/* line 169, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section table.conditions__table td div.row>button {
+    align-self: center;
+}
+
+/* line 173, src/scss/components/_importer.scss */
+.explorama__importer .context__mappings__section table.conditions__table td div.row::after {
+    content: none;
+}
+
+/* line 180, src/scss/components/_importer.scss */
+.explorama__importer .explorama__table {
+    border-bottom: 0;
+    font-size: 14px;
+    background-color: var(--bg);
+}
+
+/* line 185, src/scss/components/_importer.scss */
+.explorama__importer .explorama__table th {
+    text-align: left;
+}
+
+/* line 192, src/scss/components/_importer.scss */
+.explorama__importer .explorama__table td,
+.explorama__importer .explorama__table th {
+    padding: 3px 6px;
+}
+
+/* line 196, src/scss/components/_importer.scss */
+.explorama__importer .explorama__table label {
+    width: auto;
+}
+
+/* line 200, src/scss/components/_importer.scss */
+.explorama__importer .explorama__table .advanced {
+    margin-right: 0px;
+}
+
+.explorama__importer .explorama__table .tooltip-wrapper {
+    display: inline-block;
+}
+
+/* line 205, src/scss/components/_importer.scss */
+.explorama__importer textarea.importer__example {
+    height: 95px;
+}
+
+/* line 209, src/scss/components/_importer.scss */
+.explorama__importer h3 {
+    border-bottom: 1px solid var(--border);
+}
+
+/* line 213, src/scss/components/_importer.scss */
+.explorama__importer .transpose__date--header {
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 6px;
+}
+
+/* line 216, src/scss/components/_importer.scss */
+.explorama__importer .transpose__date--header label {
+    width: auto;
+}
+
+/* line 221, src/scss/components/_importer.scss */
+.explorama__importer .transpose__date {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 6px;
+}
+
+/* line 226, src/scss/components/_importer.scss */
+.explorama__importer .conditions__table td {
+    vertical-align: top;
+}
+
+/* line 229, src/scss/components/_importer.scss */
+.explorama__importer .conditions__table td:last-child {
+    padding-top: 25px;
+}
+
+/* line 234, src/scss/components/_importer.scss */
+.explorama__importer .conditions__table .col-1>a {
+    margin-top: 24px;
+}
+
+/* line 239, src/scss/components/_importer.scss */
+.explorama__importer .explorama__form__actions>.explorama__form__input {
+    display: inline;
+    padding-right: 5px;
+}
+
+/* line 244, src/scss/components/_importer.scss */
+.explorama__importer .importer__add-lookup,
+.explorama__importer .importer__clear-log {
+    margin-left: 6px;
+    margin-top: 6px;
+}
+
+/* line 259, src/scss/components/_importer.scss */
+.explorama__importer .explorama__form__actions button {
+    float: right;
+    margin-left: 12px;
+}
+
+/* line 263, src/scss/components/_importer.scss */
+.explorama__importer .explorama__form__actions button:first-child {
+    float: left;
+    margin-left: 0;
+}
+
+
+/* line 115, src/scss/utils/_grid.scss */
+.explorama__importer .col-3 {
+    width: 25%;
+}
+
+/* line 116, src/scss/utils/_grid.scss */
+.explorama__importer .col-4 {
+    width: 33.3333333333%;
+    margin-right: 1.3333333333%;
+}
+
+/* line 293, src/scss/components/_importer.scss */
+.mosaic__features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* line 304, src/scss/components/_importer.scss */
+ul.feature__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* line 315, src/scss/components/_importer.scss */
+ul.feature__list .feature__title {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* line 320, src/scss/components/_importer.scss */
+ul.feature__list li {
+    border: 1px solid var(--border);
+    background-color: var(--bg);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 12px;
+}
+
+/* line 146, src/scss/components/_collapsibles.scss */
+.column__section {
+    display: flex;
+    flex-direction: row;
+}
+
+/* line 150, src/scss/components/_collapsibles.scss */
+.column__section [class^='column__'] {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+}
+
+/* line 156, src/scss/components/_collapsibles.scss */
+.column__section [class^='column__left'] {
+    margin-right: 12px;
+}
+
+/* line 160, src/scss/components/_collapsibles.scss */
+.column__section [class$='--fixed-width'] {
+    width: 600px;
+}
+
+/* line 165, src/scss/components/_collapsibles.scss */
+.row__section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* line 173, src/scss/components/_collapsibles.scss */
+.row__section:first-child {
+    padding-top: 0;
+}
+
+/* line 176, src/scss/components/_collapsibles.scss */
+.row__section:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* line 180, src/scss/components/_collapsibles.scss */
+.row__section.row__wrap {
+    flex-wrap: wrap;
+}
+
+/* line 184, src/scss/components/_collapsibles.scss */
+.row__section h3 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 6px 0;
+    padding: 0;
+    border-bottom: none !important;
+}
+
+/* line 192, src/scss/components/_collapsibles.scss */
+.row__section h3>span,
+.row__section h3>div>span {
+    margin-left: 6px;
+    filter: invert(87%) sepia(12%) saturate(190%) hue-rotate(169deg) brightness(83%) contrast(84%);
+    ;
+}
+
+/* line 198, src/scss/components/_collapsibles.scss */
+.row__section .section__hint {
+    width: 100%;
+    font-size: 12px;
+}
+
+/* line 203, src/scss/components/_collapsibles.scss */
+.row__section .explorama__form__select,
+.row__section .explorama__form__input,
+.row__section .basic-multi-select {
+    margin-bottom: 0;
+}
+
+/* line 206, src/scss/components/_collapsibles.scss */
+.row__section .importer__mappings--advanced {
+    margin: 0;
+}
+
+/* line 209, src/scss/components/_collapsibles.scss */
+.row__section>label,
+.row__section :not(.explorama__form__checkbox-container)>label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* line 214, src/scss/components/_collapsibles.scss */
+.row__section>label>span,
+.row__section>label>div>span,
+.row__section :not(.explorama__form__checkbox-container)>label>span,
+.row__section :not(.explorama__form__checkbox-container)>label>div>span {
+    margin-left: 6px;
+    filter: invert(87%) sepia(12%) saturate(190%) hue-rotate(169deg) brightness(83%) contrast(84%);
+    ;
+}
+
+/* line 219, src/scss/components/_collapsibles.scss */
+.row__section .explorama__form__checkbox-container label {
+    white-space: nowrap;
+}
+
+/* line 222, src/scss/components/_collapsibles.scss */
+.row__section .explorama__table .explorama__form__input {
+    display: flex;
+    flex-direction: row;
+}
+
+/* line 226, src/scss/components/_collapsibles.scss */
+.row__section .explorama__table .explorama__form__input>input+button {
+    margin-left: 4px;
+}
+
+/* line 232, src/scss/components/_collapsibles.scss */
+.tables__container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+}
+
+/* line 238, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+/* line 243, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] .table__header,
+.tables__container [class^='table__'] .table__footer {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--bg-section);
+}
+
+/* line 250, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] .table__header {
+    border-bottom: 1px solid var(--border);
+    font-weight: bold;
+}
+
+/* line 255, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] .table__footer {
+    border-top: 1px solid var(--border);
+    text-align: end;
+}
+
+/* line 260, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] .table__content {
+    width: 100%;
+    height: 100%;
+    min-height: 100px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+/* line 267, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] .table__content table {
+    font-size: 11px;
+    background-color: var(--bg);
+}
+
+/* line 272, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__'] .table__content .mapped__data__info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    align-self: center;
+    font-size: 16px;
+    max-width: 500px;
+    text-align: center;
+}
+
+/* line 286, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__left'] {
+    border-right: 5px double var(--border);
+}
+
+/* line 289, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__left'] .table__header {
+    border-top-left-radius: 4px;
+}
+
+/* line 293, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__left'] .table__footer {
+    border-bottom-left-radius: 4px;
+}
+
+/* line 300, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__right'] .table__header {
+    border-top-right-radius: 4px;
+}
+
+/* line 304, src/scss/components/_collapsibles.scss */
+.tables__container [class^='table__right'] .table__footer {
+    border-bottom-right-radius: 4px;
+}

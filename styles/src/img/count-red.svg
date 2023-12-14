@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="250px" viewBox="0 0 500 250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>count-red</title>
+    <desc>Created with Sketch.</desc>
+    <g id="count-red" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M362,125 C362,86.9375 392.875,56 431,56 C469.0625,56 500,86.9375 500,125 C500,163.0625 469.0625,194 431,194 C392.875,194 362,163.0625 362,125" id="Fill-1" fill="#E42820"></path>
+        <path d="M182,125 C182,86.9375 212.88899,56 251.031264,56 C289.11101,56 320,86.9375 320,125 C320,163.0625 289.11101,194 251.031264,194 C212.88899,194 182,163.0625 182,125" id="Fill-4" fill="#C6C6C5"></path>
+        <path d="M1,125 C1,86.9375 31.8889896,56 70.0312642,56 C108.11101,56 139,86.9375 139,125 C139,163.0625 108.11101,194 70.0312642,194 C31.8889896,194 1,163.0625 1,125" id="Fill-7" fill="#C6C6C5"></path>
+    </g>
+</svg>

@@ -1,0 +1,57 @@
+/*
+This file is the place for CSS-fixes by devs.
+Please always add a comment to describe where the CSS is used!
+Try to adress the elements by using the existing css-classes and only add a new class if absolutely neccessary.
+If you added a class please mention it in the comment so we don't forget get rid of it after the fix has been integrated in the general css.
+
+Example:
+
+// Button in component x screen y needed a padding to sit in line with element z
+// Added class xyz to target the element
+.xyz {
+    padding-left: 5px;
+}
+*/
+.legend__subtitle {
+    padding: 0.4rem 1px;
+    font-weight: bold;
+    text-shadow: 0 0 #2e2e2e;
+    font-size: 0.65rem;
+    letter-spacing: 0.2px;
+    color: gray;
+    background-color: white;
+}
+
+.toolbar-preview {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: -20px;
+    min-width: 180px;
+}
+
+.toolbar-preview span.saved__lastused {
+    font-size: x-small;
+    opacity: 0.6;
+}
+
+.toolbar-preview .toolbar__action {
+    position: absolute;
+    right: -26px;
+    top: 2px;
+}
+
+.window-toolbar-center-x {
+    left: -50%;
+    position: relative;
+}
+
+/* exploramajack */
+.textarea-h-full textarea {
+    height: 100%;
+}
+
+/* exploramajack */
+.a-text-bold {
+    font-weight: bold;
+}

@@ -1,0 +1,189 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.sidebar {
+    display: flex;
+    position: absolute;
+    top: 68px;
+    right: 8px;
+    bottom: 8px;
+    flex-direction: column;
+    width: 500px;
+    height: auto;
+    background-color: var(--bg);
+    border-radius: radius('xl');
+    overflow: hidden;
+    box-shadow: shadow('lg');
+    animation: 120ms fadeInLeft;
+
+    &.show {
+        display: flex;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        padding: size('8') size('12');
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: size('8');
+            margin: 0;
+            font-size: font-size('sm');
+            cursor: default;
+        }
+
+        .actions {
+            display: flex;
+            gap: size('2');
+
+            span {
+                background-color: var(--icon);
+            }
+        }
+    }
+
+    > .section:has(.details-view) {
+        border: none;
+
+        > .content {
+            margin: 0;
+        }
+    }
+
+    > .overlay {
+        border-radius: radius('xl');
+    }
+
+    > .tabs__navigation {
+        box-shadow: none;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .content {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        position: relative;
+        overflow: auto;
+
+        > div:not(.tabs__navigation, .overlay, .flex-initial, .details-view, .fulltext__container) { // TODO: html/css should probably revised here
+            flex: 1;
+            padding: size('8');
+            border-bottom: size('1') solid var(--border);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            > div:has(+ h3) {
+                margin-bottom: size('16');
+            }
+
+            :where(h1,h2) {
+                margin: 0 0 size('8') 0;
+                font-size: font-size('lg');
+                font-weight: normal;
+                color: var(--text-secondary);
+                cursor: default;
+
+                span[class^='icon-'] {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    background-color: var(--icon-secondary);
+                }
+            }
+
+            h2:has(span) {
+                display: flex;
+                gap: size('8');
+                align-items: center;
+            }
+
+            input:disabled + label img {
+                opacity: .5;
+            }
+
+        }
+
+        &:has(.details-view) {
+            max-height: 240px;
+        }
+    }
+
+    .footer {
+        position: relative;
+        padding: size('8');
+
+        h3 {
+            display: block;
+            margin-top: size('4');
+            padding-inline: size('4');
+            color: var(--text-secondary);
+            font-weight: normal;
+            text-align: center;
+            cursor: default;
+        }
+    }
+
+    hr {
+        border: 0;
+        border-bottom: size('1') solid var(--border);
+    }
+
+    iframe { // help iframe styling
+        flex-grow: 1;
+        border: none;
+    }
+
+    .details-view {
+        padding-bottom: size('8');
+        
+        &:has(.fulltext__container) {
+            flex-grow: 10;
+        }
+
+        .title.flex {
+            gap: size('4');
+        }
+
+
+        table {
+            user-select: text;
+
+            thead {
+                th {
+                    white-space: nowrap;
+                    overflow: auto;
+                    text-overflow: ellipsis;
+                    vertical-align: text-bottom;
+                    > div {
+                        display: inline-block;
+
+                        button {
+                            margin-left: size('4');
+                        }
+                    }
+                }
+            }
+            tbody {
+                td {
+                    padding: size('4');
+
+                    &:first-of-type {
+                        font-weight: bold;
+                    }
+                }
+        
+                tr:nth-child(odd) {
+                    background-color: var(--bg-hover);
+                }
+            }
+        }
+    }
+}

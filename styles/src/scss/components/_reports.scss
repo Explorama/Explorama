@@ -1,0 +1,764 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+/* line 1, src/scss/components/_reports.scss */
+.report__container {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+
+  div#\:reporting\.shared\.config\/standalone {
+    background-color: var(--bg);
+  }
+}
+
+/* line 8, src/scss/components/_reports.scss */
+.report__container .report__row {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin: -4px;
+  padding: 2px;
+  border-radius: 2px;
+  transition: border-color 120ms;
+}
+
+@container (max-width: 768px) {
+  .a4-container .report__container .report__row {
+    flex-direction: column;
+  }
+}
+
+/* line 23, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder {
+  display: flex;
+  flex-direction: column;
+}
+
+/* line 28, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  margin: 0 -6px 0 0;
+  padding: 3px;
+  background-color: var(--bg);
+  border: width('1') solid var(--border);
+  border-width: 1px 1px 0 1px;
+  border-radius: 0;
+  box-shadow: none;
+  transition: background-color 120ms, border-color 120ms;
+}
+
+/* line 42, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button span[class^="icon-"] {
+  background-color: var(--icon);
+  width: 11px;
+  height: 11px;
+  margin: 0;
+  transition: background-color 120ms;
+}
+
+/* line 50, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--border);
+}
+
+/* line 53, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button:hover span[class^="icon-"] {
+  background-color: var(--primary);
+}
+
+/* line 58, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button:disabled {
+  background-color: var(--bg-hover);
+}
+
+/* line 61, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button:disabled span[class^="icon-"] {
+  background-color: var(--icon-disabled);
+}
+
+/* line 66, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button:first-of-type {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+/* line 70, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__reorder button:last-of-type {
+  border-bottom-width: 1px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+/* line 78, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__remove {
+  display: flex;
+}
+
+/* line 81, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__remove button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -6px;
+  padding: 3px;
+  background-color: var(--bg);
+  border: width('1') solid var(--border);
+  border-radius: 2px;
+  transition: background-color 120ms;
+}
+
+.report__container .report__row div.report__row__remove button:hover {
+  background-color: var(--bg-hover);
+}
+
+/* line 93, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__remove button span {
+  margin: 0;
+}
+
+/* line 96, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__remove button span[class^="icon-"] {
+  background-color: var(--icon);
+  transition: background-color 120ms;
+}
+
+/* line 105, src/scss/components/_reports.scss */
+.report__container .report__row div.report__row__remove button:hover span[class^="icon-"] {
+  background-color: var(--icon-warning);
+}
+
+/* line 112, src/scss/components/_reports.scss */
+.report__container .report__row .report__element {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 120px;
+  padding: 8px;
+  border: width('1') solid var(--border);
+  border-radius: 2px;
+  transition: border-color 120ms, border-width 120ms, outline-color 120ms, outline-width 120ms, width 1s;
+
+  &:has(~ .report__row__remove button:hover) {
+    border: width('1') solid var(--icon-warning);
+    outline: width('1') solid var(--icon-warning);
+  }
+}
+
+/* line 126, src/scss/components/_reports.scss */
+.report__container .report__row .report__element:hover {
+  border-color: var(--border);
+}
+
+/* line 130, src/scss/components/_reports.scss */
+.report__container .report__row .report__element.empty {
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* line 135, src/scss/components/_reports.scss */
+.report__container .report__row .report__element.empty .placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 12px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* line 144, src/scss/components/_reports.scss */
+.report__container .report__row .report__element.empty .placeholder span.divider {
+  display: flex;
+  flex-direction: row;
+}
+
+/* line 148, src/scss/components/_reports.scss */
+.report__container .report__row .report__element.empty .placeholder span.divider::before,
+.report__container .report__row .report__element.empty .placeholder span.divider::after {
+  content: "";
+  flex: 1 1;
+  width: 30px;
+  margin: auto;
+  border-bottom: 1px solid var(--border);
+}
+
+/* line 155, src/scss/components/_reports.scss */
+.report__container .report__row .report__element.empty .placeholder span.divider::before {
+  margin-right: 6px;
+}
+
+/* line 158, src/scss/components/_reports.scss */
+.report__container .report__row .report__element.empty .placeholder span.divider::after {
+  margin-left: 6px;
+}
+
+.report__container .report__row .report__element :is(.drag-drop-area, .explorama__form__file-upload) {
+  height: 100%;
+  border-radius: radius('xxs');
+  cursor: default;
+
+  &:is(.drop-target, .overlay) {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    background-color: var(--bg-highlight);
+  }
+}
+
+/* line 183, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title {
+  display: flex;
+  gap: 4px;
+  padding: 0 4px 4px;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+}
+
+/* line 191, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* line 196, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  width: 19.5px;
+  height: 19.5px;
+  padding: 0;
+  background-color: var(--bg);
+  border: none;
+  box-shadow: none;
+  transition: border-color 120ms, transform 120ms, box-shadow 120ms, background-color 120ms, color 120ms;
+}
+
+/* line 208, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button:hover {
+  border-color: none;
+  background-color: var(--bg-hover);
+}
+
+/* line 212, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button span {
+  background-color: var(--icon);
+  margin: 0;
+
+  &.icon-burgermenu {
+    width: size('12', true);
+    height: size('12', true);
+  }
+}
+
+/* line 220, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button.legend-toggle {
+  width: auto;
+  height: auto;
+}
+
+/* line 227, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button.legend-toggle:hover span {
+  background-color: var(--primary);
+}
+
+/* line 232, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button.legend-toggle span {
+  width: 12px;
+  height: 12px;
+  background-color: var(--bg-inverted);
+}
+
+/* line 239, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button.legend-toggle.active span {
+  background-color: var(--primary);
+}
+
+/* line 244, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .title .options button.legend-toggle.active:hover span {
+  background-color: var(--primary-highlight);
+}
+
+/* line 254, src/scss/components/_reports.scss */
+.report__container .report__row .report__element button.remove-element {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 19.5px;
+  height: 19.5px;
+  margin-right: -4px;
+  background-color: var(--bg-section);
+  box-shadow: none;
+  padding: 0;
+}
+
+/* line 269, src/scss/components/_reports.scss */
+.report__container .report__row .report__element button.remove-element:hover {
+  background-color: var(--bg-hover);
+}
+
+/* line 273, src/scss/components/_reports.scss */
+.report__container .report__row .report__element button.remove-element span {
+  margin: 0;
+}
+
+/* line 278, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content {
+  display: flex;
+  flex-grow: 1;
+}
+
+.report__container .report__row .report__element>.content .legend__panel {
+  border: none;
+}
+
+/* line 282, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content.legend-top {
+  flex-direction: column-reverse;
+}
+
+/* line 285, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content.legend-bottom {
+  flex-direction: column;
+}
+
+/* line 288, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content.legend-bottom>.legend {
+  max-height: 150px;
+  padding-top: 4px;
+  overflow-y: auto;
+}
+
+/* line 294, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content.legend-right {
+  flex-direction: row;
+}
+
+/* line 297, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content.legend-right>.legend {
+  width: 200px;
+  height: 100%;
+  padding-left: 6px;
+  overflow-y: auto;
+}
+
+/* line 304, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content.legend-left {
+  flex-direction: row-reverse;
+}
+
+/* line 309, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend .legend__attribute {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 4px;
+  font-size: 11px;
+  color: #868e96;
+}
+
+/* line 317, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend .legend__attribute span.tag {
+  padding: 0px 3px;
+  border-radius: 2px;
+  background-color: #e9ecef;
+  font-size: 9px;
+}
+
+/* line 325, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend {
+  display: flex;
+  column-gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* line 333, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* line 339, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend li {
+  font-size: 9px;
+}
+
+/* line 342, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend li span.legend__color {
+  width: 9px;
+  height: 9px;
+  margin-right: 3px;
+}
+
+/* line 347, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend li span.legend__color.circle {
+  width: 9px;
+  height: 9px;
+  margin: 0 3px 0 0;
+}
+
+/* line 353, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend li span.legend__color.line {
+  height: 2px;
+}
+
+/* line 358, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend ul.legend li .legend__value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* line 366, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend>dl {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 9px;
+}
+
+/* line 372, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend>dl div {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* line 376, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend>dl div dt {
+  color: #868e96;
+}
+
+/* line 380, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend>dl div dd {
+  margin: 0;
+  text-align: end;
+}
+
+/* line 384, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend>dl div dd .operator {
+  color: #009191;
+}
+
+/* line 390, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend>dl p {
+  margin: 2px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* line 396, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend .collapsible .content dl {
+  font-size: 9px;
+}
+
+.report__container .report__row .report__element>.content div.legend .collapsible a {
+  text-decoration: none;
+
+  &:hover .label {
+    color: color('gray-700');
+  }
+}
+
+
+/* line 399, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend .collapsible .collapsible__bar .label {
+  margin: 6px 0;
+  font-size: 9px;
+  color: color('gray-500');
+}
+
+/* line 403, src/scss/components/_reports.scss */
+.report__container .report__row .report__element>.content div.legend .collapsible .collapsible__bar .label span {
+  padding: 0 6px;
+}
+
+/* line 410, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .explorama__form__textarea {
+  margin-left: -4px;
+  width: 100%;
+}
+
+/* line 414, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .explorama__form__textarea form {
+  height: 100%;
+}
+
+/* line 418, src/scss/components/_reports.scss */
+.report__container .report__row .report__element .explorama__form__textarea input[type='text'] {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding-left: 4px;
+  font-size: 12px;
+}
+
+/* line 427, src/scss/components/_reports.scss */
+.report__container .report__row .report__element {
+  .ql-container {
+    min-height: 0;
+    font-family: inherit;
+  }
+
+  .ql-snow {
+
+    .ql-stroke {
+      stroke: var(--icon);
+    }
+
+    .ql-fill {
+      fill: var(--icon);
+    }
+
+    .ql-picker-label {
+      color: var(--text);
+    }
+  }
+}
+
+
+/* line 433, src/scss/components/_reports.scss */
+.report__container .explorama__form__input {
+  display: flex;
+  margin-bottom: 0;
+}
+
+/* line 437, src/scss/components/_reports.scss */
+.report__container .explorama__form__input>input {
+  flex-grow: 1;
+}
+
+/* line 442, src/scss/components/_reports.scss */
+.report__container .report__add-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: size('6', true);
+  width: 100%;
+  padding: size('12');
+  border-radius: radius('xs');
+  font-weight: bold;
+  line-height: 1;
+  border: width('1') solid var(--border);
+  box-shadow: shadow('sm');
+  background-color: var(--bg);
+  transition: border-color 120ms, background-color 120ms;
+  color: var(--text);
+}
+
+/* line 455, src/scss/components/_reports.scss */
+.report__container .report__add-row:hover {
+  background-color: var(--bg-hover);
+  cursor: pointer;
+}
+
+/* line 465, src/scss/components/_reports.scss */
+.report__container .report__add-row span[class^="icon-"] {
+  background-color: var(--icon);
+  margin-right: 6px;
+}
+
+/* line 472, src/scss/components/_reports.scss */
+.report__container .report__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px;
+
+  a.main-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+
+    span.icon__explorama {
+      width: 40px;
+      height: 40px;
+      margin: 0;
+      background-image: url(../img/explorama-logo-black.svg);
+      background-size: contain;
+    }
+  }
+}
+
+/* line 478, src/scss/components/_reports.scss */
+.report__container .report__header .report__titles {
+  overflow: hidden;
+  overflow-wrap: break-word;
+}
+
+/* line 481, src/scss/components/_reports.scss */
+.report__container .report__header .report__titles .report__title {
+  font-size: min(32px, 5vw);
+  font-weight: bold;
+  color: var(--text-secondary);
+}
+
+/* line 487, src/scss/components/_reports.scss */
+.report__container .report__header .report__titles .report__subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+/* line 493, src/scss/components/_reports.scss */
+.report__container .report__header a.main-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* line 514, src/scss/components/_reports.scss */
+.a4-container {
+  display: block;
+  height: 100vh;
+  padding: 6mm;
+  overflow: auto;
+}
+
+/* line 521, src/scss/components/_reports.scss */
+.a4-container .report__container {
+  position: relative;
+  gap: 0;
+  max-width: 21cm;
+  margin: auto;
+  border: size('1') solid var(--border-secondary);
+  border-radius: radius('md');
+  box-shadow: shadow('md');
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* line 530, src/scss/components/_reports.scss */
+.a4-container .report__container .report__row {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* line 535, src/scss/components/_reports.scss */
+.a4-container .report__container .report__row .report__element {
+  min-height: 0;
+  border: none;
+}
+
+/* line 539, src/scss/components/_reports.scss */
+.a4-container .report__container .report__row .report__element .datasources {
+  align-self: flex-end;
+  padding: 4px 0;
+  color: var(--text-secondary);
+  font-size: 10px;
+}
+
+/* line 545, src/scss/components/_reports.scss */
+.a4-container .report__container .report__row .report__element .datasources span {
+  margin-left: 4px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background-color: var(--bg-section);
+  font-size: 8px;
+}
+
+/* line 557, src/scss/components/_reports.scss */
+.a4-container .report__navigation {
+  position: absolute;
+  top: 0;
+  left: 213mm;
+  height: 100%;
+}
+
+/* line 563, src/scss/components/_reports.scss */
+.a4-container .report__navigation>div {
+  display: flex;
+  flex-direction: column;
+  gap: size('8');
+  z-index: 1;
+  align-self: flex-start;
+  position: sticky;
+  top: -3mm;
+}
+
+@container (max-width: 768px) {
+  .a4-container .report__navigation {
+    position: relative;
+    left: 0;
+
+    >div {
+      flex-direction: row;
+    }
+  }
+}
+
+/* line 572, src/scss/components/_reports.scss */
+.a4-container .report__navigation>div button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: size('1') solid var(--border-secondary);
+  border-radius: radius('md');
+  box-shadow: shadow('md');
+  background-color: var(--bg);
+  transition: box-shadow 120ms;
+}
+
+/* line 584, src/scss/components/_reports.scss */
+.a4-container .report__navigation>div button span {
+  background-color: var(--icon);
+  margin: 0;
+  width: 24px;
+  height: 24px;
+  transition: background-color 120ms;
+}
+
+/* line 591, src/scss/components/_reports.scss */
+.a4-container .report__navigation>div button:hover {
+  box-shadow: shadow('sm');
+  background-color: var(--bg-hover);
+}
+
+/* line 594, src/scss/components/_reports.scss */
+.a4-container .report__navigation>div button:hover span {
+  background-color: var(--primary);
+}

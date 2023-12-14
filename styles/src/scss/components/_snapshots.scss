@@ -1,0 +1,173 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+/* line 19, src/scss/components/_snapshots.scss */
+.protocol {
+    margin: -0.5rem;
+}
+
+/* line 25, src/scss/components/_snapshots.scss */
+.protocol li {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    padding: 12px 0;
+    box-shadow: 0 -1px 0 var(--border) inset;
+    color: var(--text-secondary);
+    transition: background-color 120ms;
+}
+
+.protocol .ReactVirtualized__Grid__innerScrollContainer :first-child li {
+    border: none;
+}
+
+/* line 34, src/scss/components/_snapshots.scss */
+.protocol li:hover {
+    background: var(--bg);
+}
+
+/* line 37, src/scss/components/_snapshots.scss */
+.protocol li:hover .protocol__actions {
+    display: block;
+}
+
+/* line 42, src/scss/components/_snapshots.scss */
+.protocol li .protocol__step {
+    display: inline-block;
+    padding-inline: 8px 4px;
+    font-weight: 600;
+}
+
+/* line 47, src/scss/components/_snapshots.scss */
+.protocol li .protocol__step span {
+    display: none;
+}
+
+.protocol li.current-prot-step {
+    box-shadow: 0 0 0 2px var(--border-focus) inset;
+    background-color: var(--bg-hover);
+
+    .protocol__actions {
+        background-image: linear-gradient(to right, transparent, var(--bg-hover) 25%);
+    }
+}
+
+/* line 55, src/scss/components/_snapshots.scss */
+.protocol li.protocol__snapshot .protocol__step {
+    color: var(--primary);
+}
+
+.protocol li.protocol__snapshot .protocol__info :is(dt:first-of-type, dd:first-of-type, dt:nth-of-type(2), dd:nth-of-type(2)) {
+    color: var(--primary);
+}
+
+/* line 59, src/scss/components/_snapshots.scss */
+.protocol li.protocol__snapshot:hover .protocol__actions {
+    display: block;
+}
+
+/* line 63, src/scss/components/_snapshots.scss */
+.protocol li.protocol__snapshot label {
+    display: block;
+    float: none;
+}
+
+/* line 68, src/scss/components/_snapshots.scss */
+.protocol li.protocol__snapshot .explorama__form__input {
+    display: block;
+    height: auto;
+    margin-bottom: 6px;
+}
+
+/* line 74, src/scss/components/_snapshots.scss */
+.protocol li.protocol__snapshot .explorama__form__textarea {
+    width: 100%;
+    margin-bottom: 6px;
+    padding-right: 12px;
+}
+
+/* line 81, src/scss/components/_snapshots.scss */
+.protocol li .snapshot__editor {
+    display: flex;
+    flex-direction: column;
+    gap: size('8');
+}
+
+/* line 89, src/scss/components/_snapshots.scss */
+.protocol li .protocol__star {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    span {
+        background-color: var(--primary);
+    }
+}
+
+/* line 102, src/scss/components/_snapshots.scss */
+.protocol li .protocol__container {
+    display: inline-block;
+    flex-grow: 1;
+    padding: 0 6px;
+}
+
+/* line 107, src/scss/components/_snapshots.scss */
+.protocol li .protocol__container .protocol__info {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+/* line 112, src/scss/components/_snapshots.scss */
+.protocol li .protocol__container .protocol__info dt {
+    width: 20%;
+}
+
+/* line 116, src/scss/components/_snapshots.scss */
+.protocol li .protocol__container .protocol__info dd {
+    width: 60%;
+    word-break: break-all;
+}
+
+/* line 123, src/scss/components/_snapshots.scss */
+.protocol li .protocol__actions {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 10;
+    display: none;
+    padding: 12px 12px 12px 40px;
+    background-image: linear-gradient(to right, transparent, var(--bg) 25%);
+    transition: background 120ms;
+}
+
+/* line 141, src/scss/components/_snapshots.scss */
+li.inactive * {
+    color: #ced4da !important;
+}
+
+/* line 145, src/scss/components/_snapshots.scss */
+li.inactive:hover * {
+    color: #495057 !important;
+}
+
+/* line 150, src/scss/components/_snapshots.scss */
+li.protocol__snapshot.inactive {
+    background-color: #f0fafa;
+}
+
+/* line 153, src/scss/components/_snapshots.scss */
+li.protocol__snapshot.inactive .protocol__star {
+    opacity: 22%;
+}
+
+/* line 157, src/scss/components/_snapshots.scss */
+li.protocol__snapshot.inactive:hover {
+    background-color: #d9f2f2;
+}
+
+/* line 160, src/scss/components/_snapshots.scss */
+li.protocol__snapshot.inactive:hover .protocol__star {
+    opacity: 1;
+}

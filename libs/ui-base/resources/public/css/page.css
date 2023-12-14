@@ -1,0 +1,424 @@
+/*
+
+Atom One Dark by Daniel Gamage
+Original One Dark Syntax theme from https://github.com/atom/one-dark-syntax
+
+base:    #282c34
+mono-1:  #abb2bf
+mono-2:  #818896
+mono-3:  #5c6370
+hue-1:   #56b6c2
+hue-2:   #61aeee
+hue-3:   #c678dd
+hue-4:   #98c379
+hue-5:   #e06c75
+hue-5-2: #be5046
+hue-6:   #d19a66
+hue-6-2: #e6c07b
+
+*/
+
+body {
+  overflow: none;
+  background-color: #fff;
+  visibility: visible;
+  user-select: unset !important;
+}
+
+.main {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  overflow: auto;
+}
+
+.table-of-content {
+  top: 30px;
+  right: 30px;
+  position: fixed;
+  width: 160px;
+}
+
+.component-infos {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10000;
+  padding-bottom: 5px;
+}
+
+.toc-content {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+}
+
+.toc-title:hover {
+  border-left-color: #eeeeee;
+}
+
+.toc-title {
+  padding: 4px 0px 4px 5px;
+  font-size: .8125rem;
+  box-sizing: border-box;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+  white-space: pre-wrap;
+  display: block;
+  color: rgba(0, 0, 0, 0.54);
+  margin-right: 0px;
+  cursor: pointer;
+}
+
+/*
+[id]::before {
+  content: '';
+  display: block;
+  height: 87px;
+  margin-top: -87px;
+  visibility: hidden;
+*/
+
+.toc-main-title {
+  margin-top: 16px;
+  padding-left: 8px;
+  margin-bottom: 0.35em;
+  font-size: 1rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+}
+
+.explorama-logo {
+  background-image: url("../img/explorama-logo.svg");
+  background-size: cover;
+  border: 0px;
+  width: 30px;
+  height: 30px;
+  left: 25px;
+  position: absolute;
+}
+
+.curr-view {
+  color: rgba(12, 124, 124) !important;
+  font-weight: bold;
+}
+
+.sec-lvl {
+  font-size: 0.775rem;
+}
+
+.third-lvl {
+  font-size: 0.675rem;
+}
+
+.lib-name:hover {
+  color: rgba(51, 153, 153);
+}
+
+.lib-name {
+  color: rgba(0, 0, 0, 0.54);
+  margin: 0;
+  margin-bottom: 4px;
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.version {
+  color: rgba(0, 0, 0, 0.54);
+  margin: 0;
+  margin-bottom: 4px;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
+}
+
+.basic-infos {
+  display: flex;
+  flex-grow: 1;
+  height: 56px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  padding-left: 30px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.page-content {
+  margin-left: 240px;
+  padding-left: 30px;
+  padding-right: 30px;
+  min-width: 400px;
+  width: calc(100% - 400px);
+}
+
+.live-example {
+  position: relative;
+  margin: auto;
+  margin-bottom: 20px;
+  outline: 0;
+  position: relative;
+  justify-content: center;
+  padding: 30px 24px 30px 24px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.menu:hover {
+  text-decoration: none;
+  background-color: rgba(51, 153, 153, 0.15);
+}
+
+.menu-title {
+  color: rgba(0, 0, 0, 0.87);
+  text-transform: capitalize;
+}
+
+.h {
+  font-weight: 510;
+}
+
+.menu-item {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.875rem;
+  min-width: 64px;
+  box-sizing: border-box;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-weight: 500;
+  line-height: 1.75;
+  padding: 3px 4px;
+  width: 100%;
+  letter-spacing: 0;
+  text-transform: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  display: inline-flex;
+  outline: 0;
+  position: relative;
+  align-items: center;
+  user-select: none;
+  border-radius: 0;
+  vertical-align: middle;
+  justify-content: start-flex;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.menu-list-root {
+  color: rgba(0, 0, 0, 0.87);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  list-style: none;
+}
+
+.menu-list-item-root {
+  width: 100%;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  text-align: left;
+  align-items: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  justify-content: flex-start;
+  text-decoration: none;
+  list-style: none;
+  display: block;
+  padding-top: 0;
+  padding-bottom: 0
+}
+
+.menu-frame {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.menu-parent {
+  top: 0;
+  left: 0;
+  flex: 1 0 auto;
+  height: 100%;
+  display: flex;
+  outline: 0;
+  z-index: 1200;
+  position: fixed;
+  overflow-y: auto;
+  flex-direction: column;
+  width: 220px;
+  transform: none;
+  color: rgba(0, 0, 0, 0.87);
+  transition: transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  background-color: #fff;
+  box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+}
+
+.hljs {
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #abb2bf;
+  background: #39393b;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #89a3e1;
+  font-style: italic;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-formula {
+  color: #d483ec;
+}
+
+.hljs-name {
+  color: #61aeee;
+}
+
+.hljs-section,
+.hljs-selector-tag,
+.hljs-deletion,
+.hljs-subst {
+  color: #e06c75;
+}
+
+.hljs-literal {
+  color: #d19a66;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-meta-string {
+  color: #98c379;
+}
+
+.hljs-built_in,
+.hljs-class .hljs-title {
+  color: #e6c07b;
+}
+
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-type,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-number {
+  color: #d19a66;
+}
+
+.hljs-symbol {
+  color: #d19a66;
+}
+
+.hljs-bullet,
+.hljs-link,
+.hljs-meta,
+.hljs-selector-id,
+.hljs-title {
+  color: #61aeee;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-link {
+  text-decoration: underline;
+}
+
+table.code {
+  width: 100%;
+  display: block;
+  overflow: auto;
+  word-break: normal;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border-color: grey;
+}
+
+table.code>thead>tr>th {
+  text-align: left;
+  min-width: 250px;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 16px;
+  font-weight: 500;
+  line-height: 1.5rem;
+  white-space: pre;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+th.normal {
+  min-width: 120px !important;
+  ;
+}
+
+th.medium {
+  min-width: 170px !important;
+  ;
+}
+
+table.code>tbody>tr>td {
+  color: rgba(0, 0, 0, 0.87);
+  padding: 16px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.43;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  letter-spacing: 0.01071em;
+  white-space: pre-wrap;
+}
+
+.func-def {
+  font-size: 10px !important;
+  font-weight: 50 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.00171em !important;
+}
+
+.parameter {
+  font-family: "Consolas";
+  color: rgba(0, 0, 0, 0.87);
+  padding: 16px;
+  font-size: 0.775rem;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+}

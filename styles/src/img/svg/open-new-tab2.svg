@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:60;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<desc>Created with Sketch.</desc>
+<g>
+	<path d="M406,60c18.7,0,34,15.3,34,34v222c0,18.7-15.3,34-34,34H184c-18.7,0-34-15.3-34-34V94c0-18.7,15.3-34,34-34H406 M406,0H184
+		c-51.9,0-94,42.1-94,94v222c0,51.9,42.1,94,94,94h222c51.9,0,94-42.1,94-94V94C500,42.1,457.9,0,406,0L406,0z"/>
+</g>
+<g>
+	<line class="st0" x1="360.4" y1="141.7" x2="229.6" y2="269.7"/>
+	<line class="st0" x1="229.6" y1="140.3" x2="360.4" y2="140.3"/>
+	<line class="st0" x1="360.4" y1="269.7" x2="360.4" y2="141.7"/>
+</g>
+<path d="M350,367.4V406c0,18.7-15.3,34-34,34H94c-18.7,0-34-15.3-34-34V184c0-18.7,15.3-34,34-34h36.2V90H94c-51.9,0-94,42.1-94,94
+	v222c0,51.9,42.1,94,94,94h222c51.9,0,94-42.1,94-94v-38.6H350z"/>
+</svg>

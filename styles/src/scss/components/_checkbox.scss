@@ -1,0 +1,212 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+%control {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: size('6');
+
+    input {
+        appearance: none;
+        flex: none;
+        cursor: pointer;
+
+        & + label {
+            cursor: pointer;
+            width: auto; // override woco.css
+            line-height: line-height('relaxed');
+        }
+
+        &:disabled, &:disabled + label {
+            cursor: default;
+        }
+    }
+}
+
+.checkbox-right, .radio-right, .switch-right {
+    flex-direction: row-reverse;
+    text-align: end;
+    justify-content: flex-end;
+}
+
+.checkbox {
+    @extend %control;
+
+    input {
+        width: 1.15em;
+        height: 1.15em;
+        display: grid;
+        place-content: center;
+        border: width('2') solid var(--border);
+        border-radius: radius('xxs');
+        background-color: var(--bg);
+        box-shadow: shadow('xs');
+        transition: background 120ms ease-in-out,
+                    border 120ms ease-in-out;
+
+        &::before {
+            content: "";
+            width: 0.75em;
+            height: 0.75em;
+            transform: scale(0);
+            transform-origin: bottom left;
+            transition: transform 120ms ease-out 120ms,
+                        clip-path 120ms;
+            box-shadow: inset 1em 1em var(--bg), shadow('sm');
+            clip-path: polygon(0 50%, 20% 30%, 40% 50%, 80% 10%, 100% 30%, 40% 90%, 40% 90%, 40% 90%, 40% 90%, 40% 90%, 40% 90%, 40% 90%);
+        }
+        
+        &:checked {
+            background: var(--primary);
+            border-width: 0;
+            
+            &::before {
+                transform: scale(1);
+            }
+            
+            &:hover:enabled {
+                border-width: 0;
+                
+                &::before {
+                    clip-path: polygon(0 20%, 20% 0, 50% 30%, 80% 0%, 100% 20%, 70% 50%, 100% 80%, 80% 100%, 50% 70%, 20% 100%, 0% 80%, 30% 50%);
+                }
+            }
+        }
+
+        &:hover:enabled {
+            border: width('2') solid var(--border-focus);
+        }
+
+        &:focus-visible {
+            outline: max(2px, 0.15em) solid var(--border-focus);
+            outline-offset: max(2px, 0.15em);
+        }
+
+        &:disabled {
+            background: var(--bg-hover);
+            box-shadow: none;
+
+            & + label {
+                color: var(--text-disabled);
+            }
+        }
+    }
+}
+
+.radio {
+    @extend %control;
+    
+    input {
+        width: 1.15em;
+        height: 1.15em;
+        display: grid;
+        place-content: center;
+        border: width('2') solid var(--border);
+        border-radius: radius('full');
+        background-color: var(--bg);
+        box-shadow: shadow('xs');
+        transition: background 120ms ease-in-out,
+                    border 120ms ease-in-out;
+
+        &::before {
+            content: "";
+            width: 0.5em;
+            height: 0.5em;
+            border-radius: radius('full');
+            transform: scale(0);
+            transition: transform 120ms ease-out 120ms;
+            box-shadow: inset 1em 1em var(--bg), shadow('sm');
+        }
+
+        &:checked {
+            background: var(--primary);
+            border-width: 0;
+
+            &::before {
+                transform: scale(1);
+            }
+
+            &:hover:enabled {
+                border-width: 0;
+            }
+        }
+
+        &:hover:enabled {
+            border: width('2') solid var(--border-focus);
+        }
+
+        &:focus-visible {
+            outline: max(2px, 0.15em) solid var(--border-focus);
+            outline-offset: max(2px, 0.15em);
+        }
+
+        &:disabled {
+            background: var(--bg-hover);
+            box-shadow: none;
+
+            & + label {
+                color: var(--text-disabled);
+            }
+        }
+    }
+}
+
+.switch {
+    @extend %control;
+
+    input {
+        width: 2.15em;
+        height: 1.15em;
+        background: var(--bg-hover);
+        border-radius: radius('full');
+        display: grid;
+        place-content: center;
+        box-shadow: shadow('xs');
+        transition: background 120ms ease-in-out;
+
+        &::before {
+            content: "";
+            width: 0.75em;
+            height: 0.75em;
+            border-radius: radius('full');
+            transform: translateX(-67%);
+            transition: transform 120ms ease-in-out;
+            box-shadow: inset 1em 1em color('white'), shadow('sm');
+        }
+
+        &:checked {
+            background: var(--primary);
+
+            &::before {
+                transform: translateX(67%);
+            }
+
+            &:hover:enabled {
+                background: var(--primary);
+            }
+
+            &:disabled {
+                background: var(--primary-muted);
+            }
+        }
+
+        &:hover:enabled {
+            background: var(--primary-highlight);
+        }
+
+        &:focus-visible {
+            outline: max(2px, 0.15em) solid var(--border-focus);
+            outline-offset: max(2px, 0.15em);
+        }
+
+        &:disabled {
+            background: var(--bg-section);
+            box-shadow: none;
+
+            & + label {
+                color: var(--text-disabled);
+            }
+        }
+    }
+}

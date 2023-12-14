@@ -1,0 +1,21 @@
+/* ====================
+   SHADOWS
+   ==================== */
+
+@use 'variables' as vars;
+
+/* ----- Shadow ----- */
+
+.shadow {
+    @extend .shadow-md; // default value
+}
+
+@each $name, $shadow in vars.$shadows {
+    .shadow-#{$name} {
+        box-shadow: $shadow;
+    }
+}
+
+/* ----- Shadow Color ----- */
+
+/* see _colors.scss for shadow color definition */

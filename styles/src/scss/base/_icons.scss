@@ -1,0 +1,62 @@
+
+/* ====================
+   ICONS
+   ==================== */
+
+@use 'iconmap';
+@use 'colormap';
+
+$icon-sizes: (
+	'xs':   .625rem,  /* 10 px */
+	'sm':   .875rem,  /* 14 px */
+	'md':  1.125rem,  /* 18 px */
+	'lg':  1.5rem,    /* 24 px */
+	'xl':  2rem,      /* 32 px */
+	'xxl': 3rem,      /* 48 px */
+	'3xl': 4rem,      /* 64 px */
+);
+
+@mixin icon($icon, $size: map-get($icon-sizes, 'sm'), $color: map-get(colormap.$colors, 'black')) {
+	display: block;
+	width: $size;
+	height: $size;
+	background-color: $color;
+	-webkit-mask-image: url(map-get(iconmap.$imap, $icon));
+	-webkit-mask-size: contain;
+	-webkit-mask-origin: content-box;
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+}
+
+/*	Replace if supported:
+		mask-image: url(map-get(iconmap.$imap, $icon));
+		mask-size: contain;
+		mask-origin: content-box;
+		mask-position: center;
+		mask-repeat: no-repeat;
+*/
+
+@each $name, $icon in iconmap.$imap {
+	.icon-#{$name} {
+		@include icon($name);
+	}
+}
+
+@mixin icon-color($color) {
+	span[class^="icon-"] {
+		background-color: colormap.color($color);
+	}
+}
+
+@each $name, $size in $icon-sizes {
+   
+    .icon-#{$name} {
+        width: $size;
+		height: $size;
+    }
+}
+
+.icon-font-size {
+	width: 1em;
+	height: 1em;
+}

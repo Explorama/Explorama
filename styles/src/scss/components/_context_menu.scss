@@ -1,0 +1,64 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+.context-menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    border: width('1') solid var(--border);
+    border-radius: radius('xl');
+    background-color: var(--bg);
+    box-shadow: shadow('md');
+    overflow: auto;
+    animation: 90ms fadeIn; // animations including scale and translate effects do not work since they cause positioning bugs with the ClojureScript code
+
+    &:not(:has(.context-menu-entry)) {
+        padding: size('8');
+    }
+
+    .context-menu-group {
+        display: flex;
+        flex-direction: column;
+
+        &:not(:last-child) {
+            border-bottom: width('1') solid var(--border);
+        }
+    }
+
+    .context-menu-entry {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: size('8');
+        padding: size('8') size('16') size('8') 34px; // padding-left = 12px (regular left padding) + 14px (icon) + 8px (gap)
+        color: var(--text);
+        user-select: none;
+        transition: background-color 120ms;
+        
+        &:has(> span[class^="icon-"]:not(.expand)) {
+            padding-left: size('12');
+        }
+        
+        span[class^="icon-"] {
+            background-color: var(--icon);
+        }
+
+        .expand {
+            margin-left: auto;
+        }
+        
+        &:hover:not(.disabled) {
+            background-color: var(--bg-hover);
+            cursor: pointer;
+        }
+
+        &.disabled {
+            color: var(--text-disabled);
+
+            span[class^="icon-"] {
+                background-color: var(--icon-disabled);
+            }
+        }
+    }
+}

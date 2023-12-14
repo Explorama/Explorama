@@ -1,0 +1,28 @@
+/* ====================
+   SIZING
+   ==================== */
+
+@use 'variables' as vars;
+
+@each $name, $size in vars.$sizes-ext {
+
+    .w-#{$name} {
+        width: $size;
+    }
+    .min-w-#{$name} {
+        min-width: $size;
+    }
+    .max-w-#{$name} {
+        max-width: $size;
+    }
+
+    .h-#{$name} {
+        height: $size;
+    }
+    .min-h-#{$name} {
+        min-height: $size;
+    }
+    .max-h-#{$name} {
+        max-height: $size;
+    }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="500px" viewBox="0 0 500 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>union</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0 498 0 498 301 0 301"></polygon>
+    </defs>
+    <g id="union" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-3" transform="translate(1.000000, 100.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Clip-2"></g>
+            <path d="M347.792937,0 C311.16134,0 276.394889,13.1398521 249.001459,37.1647542 C221.610949,13.1398521 186.841579,0 150.209982,0 C67.3846262,0 0,67.5124608 0,150.498538 C0,233.484615 67.3846262,301 150.209982,301 C186.841579,301 221.610949,287.860148 249.001459,263.835246 C276.39197,287.860148 311.16134,301 347.792937,301 C430.618293,301 498,233.484615 498,150.498538 C498,67.5124608 430.618293,0 347.792937,0" id="Fill-1" fill="#1D1D1B" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

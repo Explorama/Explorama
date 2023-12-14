@@ -1,0 +1,58 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.hint {
+    display: flex;
+    flex-direction: row;
+    gap: size('8');
+    padding: size('8');
+    border-radius: radius('sm');
+    background-color: color('gray-50');
+    border: width('1') solid color('gray-200');
+
+    &:not(:has(> span[class^="icon-"])) {
+        flex-direction: column;
+        gap: size('4');
+    }
+
+    > span[class^="icon-"] {
+        width: size('16');
+        height: size('16');
+        margin-top: width('2');
+        flex: none;
+        background-color: color('gray-900');
+    }
+
+    .hint-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hint-title {
+        font-weight: bold;
+    }
+
+    .hint-desc {
+
+    }
+
+    &.hint-error {
+        background-color: color('red-50');
+        color: color('red-700');
+        border: width('1') solid color('red-200');
+
+        > span[class^="icon-"] {
+            background-color: color('red');
+        }
+    }
+
+    &.hint-warning {
+        background-color: color('orange-50');
+        color: color('orange-700');
+        border: width('1') solid color('orange-200');
+
+        > span[class^="icon-"] {
+            background-color: color('orange');
+        }
+    }
+}

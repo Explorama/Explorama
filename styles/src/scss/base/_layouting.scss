@@ -1,0 +1,451 @@
+@use 'variables' as vars;
+
+/* ====================
+   LAYOUTING
+   ==================== */
+
+ /* line 242, src/scss/components/_cards.scss */
+ .flex-row--align-right {
+   justify-content: flex-end;
+ }
+ 
+ /* line 245, src/scss/components/_cards.scss */
+ .flex-row--align-distributed {
+   justify-content: space-between;
+ }
+ 
+ /* line 249, src/scss/components/_cards.scss */
+ .flex-row h1,
+ .flex-row h2,
+ .flex-row h3,
+ .flex-row h4,
+ .flex-row h5,
+ .flex-row h6 {
+   margin: 0 !important;
+   padding: 0 !important;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   gap: 4px;
+   min-width: 0;
+ }
+ 
+ /* line 268, src/scss/components/_cards.scss */
+ .flex-row>div:not([class]) {
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+ }
+ 
+ /* line 274, src/scss/components/_cards.scss */
+ .flex-row .basic-multi-select {
+   margin-bottom: 0;
+ }
+ 
+ /* line 277, src/scss/components/_cards.scss */
+ .flex-row>input[type=text],
+ .flex-row>.form__select>input[type=text] {
+   width: 100%;
+   height: 100%;
+ }
+ 
+ /* line 282, src/scss/components/_cards.scss */
+ .flex-row--grid {
+   display: grid;
+   grid-auto-flow: column;
+   grid-auto-columns: 1fr;
+ }
+ 
+ /* line 289, src/scss/components/_cards.scss */
+ .flex-column {
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+ }
+
+/* ========== POSITIONING ========== */
+
+.static {
+   position: static;
+}
+.fixed {
+   position: fixed;
+}
+.absolute {
+   position: absolute;
+}
+.relative {
+   position: relative;
+}
+.sticky {
+   position: sticky;
+}
+
+@each $name, $size in vars.$sizes {
+
+   .top-#{$name} {
+      top: $size;
+   }
+   .right-#{$name} {
+      right: $size;
+   }
+   .bottom-#{$name} {
+      bottom: $size;
+   }
+   .left-#{$name} {
+      left: $size;
+   }
+}
+
+.center {
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+.center-x {
+   left: 50%;
+   transform: translateX(-50%);
+}
+.center-y {
+   top: 50%;
+   transform: translateY(-50%);
+}
+
+/* ========== LAYERING ========== */
+
+@each $name, $layer in vars.$layers {
+   .z-#{$name} {
+      z-index: $layer;
+   }
+}
+
+/* ========== DISPLAY TYPES ========== */
+
+.block {
+   display: block;
+
+   &.inline {
+      display: inline-block;
+   }
+}
+.flex {
+   display: flex;
+
+   &.inline {
+      display: inline-flex;
+   }
+}
+.grid {
+   display: grid;
+
+   &.inline {
+      display: inline-grid;
+   }
+}
+.inline {
+   display: inline;
+}
+.hidden {
+   display: none;
+}
+
+/* ========== FLEXBOX ========== */
+
+/* ----- Flex Direction ----- */
+
+.flex-row {
+   flex-direction: row;
+}
+.flex-row-reverse {
+   flex-direction: row-reverse;
+}
+.flex-col {
+   flex-direction: column;
+}
+.flex-col-reverse {
+   flex-direction: column-reverse;
+}
+
+/* ----- Flex Wrap ----- */
+
+.flex-wrap {
+   flex-wrap: wrap;
+}
+.flex-wrap-reverse {
+   flex-wrap: wrap-reverse;
+}
+.flex-nowrap {
+   flex-wrap: nowrap;
+}
+
+/* ----- Flex Item Sizing ----- */
+
+.flex-grow {
+   flex-grow: 1;
+}
+.flex-grow-0 {
+   flex-grow: 0;
+}
+
+.flex-shrink {
+   flex-grow: 1;
+}
+.flex-shrink-0 {
+   flex-grow: 0;
+}
+
+.flex-basis-0 {
+   flex-basis: 0;
+}
+.flex-basis-full {
+   flex-basis: 100%;
+}
+.flex-basis-auto {
+   flex-basis: auto;
+}
+
+.flex-1 {
+   flex: 1 1 0; // shrink and grow, ignoring initial size
+}
+.flex-auto {
+   flex: 1 1 auto; // shrink and grow, accounting for initial size
+}
+.flex-initial {
+   flex: 0 1 auto; // shrink but not grow, accounting for initial size (default)
+}
+.flex-none {
+   flex: none; // neither shrink nor grow
+}
+
+/* ========== GRID ========== */
+
+/* ----- Grid Layout  ----- */
+
+@for $i from 1 through 12 {
+
+   .grid-cols-#{$i} {
+      grid-template-columns: repeat($i, minmax(0, 1fr));
+   }
+   .grid-rows-#{$i} {
+      grid-template-rows: repeat($i, minmax(0, 1fr));
+   }
+
+   .grid-cols-#{$i}-fr {
+      grid-template-columns: repeat($i, 1fr);
+   }
+   .grid-rows-#{$i}-fr {
+      grid-template-rows: repeat($i, 1fr);
+   }
+
+   .col-span-#{$i} {
+      grid-column: span $i / span $i;
+   }
+   .col-start-#{$i} {
+      grid-column-start: $i;
+   }
+   .col-end-#{$i} {
+      grid-column-end: $i;
+   }
+
+   .row-span-#{$i} {
+      grid-row: span $i / span $i;
+   }
+   .row-start-#{$i} {
+      grid-row-start: $i;
+   }
+   .row-end-#{$i} {
+      grid-row-end: $i;
+   }
+}
+
+/* ========== FLEXBOX & GRID ========== */
+
+/* ----- Item Order ----- */
+
+@for $i from -10 through 10 {
+   .order-#{$i} {
+      order: $i;
+   }
+}
+
+.order-first {
+   order: -9999;
+}
+.order-last {
+   order: 9999;
+}
+.order-none {
+   order: 0;
+}
+
+/* ----- Item Spacing ----- */
+
+@each $name, $size in vars.$sizes {
+
+   .gap-#{$name} {
+      gap: $size;
+   }
+   .gap-x-#{$name} {
+      column-gap: $size;
+   }
+   .gap-y-#{$name} {
+      row-gap: $size;
+   }
+}
+
+/* ----- Item Alignment ----- */
+
+.justify-start {
+   justify-content: start;
+}
+.justify-center {
+   justify-content: center;
+}
+.justify-end {
+   justify-content: end;
+}
+.justify-between {
+   justify-content: space-between;
+}
+.justify-around {
+   justify-content: space-around;
+}
+.justify-evenly {
+   justify-content: space-evenly;
+}
+.justify-stretch {
+   justify-content: stretch; // grid only
+
+   // Workaround for flexbox to set flex-grow 1 for all children via parent
+   & > * {
+      flex-grow: 1;
+   }
+}
+
+.justify-items-start {
+   justify-items: start;
+}
+.justify-items-center {
+   justify-items: center;
+}
+.justify-items-end {
+   justify-items: end;
+}
+.justify-items-stretch {
+   justify-items: stretch;
+}
+
+.justify-self-start {
+   justify-self: start;
+}
+.justify-self-center {
+   justify-self: center;
+}
+.justify-self-end {
+   justify-self: end;
+}
+.justify-self-stretch {
+   justify-self: stretch;
+}
+
+.align-start {
+   align-content: start;
+}
+.align-center {
+   align-content: center;
+}
+.align-end {
+   align-content: end;
+}
+.align-between {
+   align-content: space-between;
+}
+.align-around {
+   align-content: space-around;
+}
+.align-evenly {
+   align-content: space-evenly;
+}
+.align-stretch {
+   align-content: stretch;
+}
+
+.align-items-start {
+   align-items: start;
+}
+.align-items-center {
+   align-items: center;
+}
+.align-items-end {
+   align-items: end;
+}
+.align-items-stretch {
+   align-items: stretch;
+}
+.align-items-baseline {
+   align-items: baseline;
+}
+
+.align-self-start {
+   align-self: start;
+}
+.align-self-center {
+   align-self: center;
+}
+.align-self-end {
+   align-self: end;
+}
+.align-self-stretch {
+   align-self: stretch;
+}
+.align-self-baseline {
+   align-self: baseline;
+}
+
+.place-start {
+   place-content: start;
+}
+.place-center {
+   place-content: center;
+}
+.place-end {
+   place-content: end;
+}
+.place-between {
+   place-content: space-between;
+}
+.place-around {
+   place-content: space-around;
+}
+.place-evenly {
+   place-content: space-evenly;
+}
+.place-stretch {
+   place-content: stretch;
+}
+
+.place-items-start {
+   place-items: start;
+}
+.place-items-center {
+   place-items: center;
+}
+.place-items-end {
+   place-items: end;
+}
+.place-items-stretch {
+   place-items: stretch;
+}
+
+.place-self-start {
+   place-self: start;
+}
+.place-self-center {
+   place-self: center;
+}
+.place-self-end {
+   place-self: end;
+}
+.place-self-stretch {
+   place-self: stretch;
+}

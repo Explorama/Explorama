@@ -1,0 +1,178 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: size('4');
+    transition: opacity 120ms ease-in;
+    transition-delay: 500ms;
+  
+    .toolbar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: size('2');
+        padding: size('8');
+        border-radius: radius('xl');
+        background-color: var(--bg);
+        box-shadow: shadow('lg');
+    }
+
+    &.toolbar-horizontal {
+        flex-direction: row;
+
+        .toolbar-section {
+            flex-direction: row;
+        }
+
+        .toolbar-divider {
+            width: size('2');
+            height: 80%;
+            margin: 0 size('4');
+        }
+    }
+
+    .toolbar-divider {
+        width: 80%;
+        height: size('2');
+        margin: size('4') 0;
+        border-radius: radius('full');
+        background-color: var(--divider);
+    }
+    
+    button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: size('8');
+        border: none;
+        border-radius: radius('lg');
+        font-weight: bold;
+        color: var(--text);
+        background-color: var(--bg);
+        transition: color 120ms, background-color 120ms;
+        cursor: pointer;
+
+        span[class^="icon-"] {
+            width: size('20');
+            height: size('20');
+            background-color: var(--icon);
+            transition: background-color 120ms;
+        }
+
+        &:hover {
+            color: var(--link);
+
+            span[class^="icon-"] {
+                background-color: var(--icon-hover);
+            }
+        }
+
+        &:active:enabled {
+            transform: scale(0.95);
+        }
+
+        &:focus-visible {
+            outline: size('2') solid var(--border-focus);
+        }
+
+        &:disabled {
+            color: var(--text-disabled);
+            cursor: default;
+
+            span[class^="icon-"] {
+                background-color: var(--icon-disabled);
+            }
+        }
+
+        &.active {
+            color: var(--link);
+            background-color: var(--bg-hover);
+
+            span[class^="icon-"] {
+                background-color: var(--icon-hover);
+            }
+
+            &:hover {
+                color: var(--link-hover);
+
+                span[class^="icon-"] {
+                    background-color: var(--link-hover);
+                }
+            }
+        }
+
+        &:has(> .label) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: size('2');
+        }
+
+        .label:not(:only-child) { // icon + label buttons
+            width: max-content;
+            font-weight: normal;
+            font-size: font-size('xs');
+        }
+    }
+
+    &:has(> .toolbar-options) {
+
+        .toolbar-section:last-child {
+            padding-right: size('12');
+        }
+    }
+
+    .toolbar-options {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: size('2');
+        border-radius: radius('md');
+        background-color: transparent;
+
+        span[class^="icon-"] {
+            width: size('12');
+            height: size('12');
+            background-color: var(--icon-secondary);
+            transform: rotate(-45deg);
+        }
+    }
+}
+
+.toolbar-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: size('4');
+
+    &:has(.toolbar-horizontal) {
+        flex-direction: column;
+
+        .toolbar-popout > span { // popouts equal in width to toolbar width
+            width: 0;
+            height: auto;
+        }
+    }
+
+    .toolbar-popout {
+        display: flex;
+        padding: size('8');
+        border: size('1') solid var(--border);
+        border-radius: radius('md');
+        background-color: var(--bg);
+        box-shadow: shadow('md');
+
+        > span { // popouts equal in height to toolbar height
+            flex: 1;
+            height: 0;
+        }
+
+        canvas {
+            background-color: var(--bg);
+            vertical-align: bottom;
+            touch-action: none;
+            cursor: inherit;
+        }
+    }
+}

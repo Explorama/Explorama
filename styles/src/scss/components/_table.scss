@@ -1,0 +1,634 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use 'buttons';
+
+
+/* line 1, src/scss/components/_tables.scss */
+.explorama__table {
+    /* Remove spacing between table cells (from Normalize.css) */
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    font-size: 12px;
+}
+
+/* line 14, src/scss/components/_tables.scss */
+.explorama__table caption {
+    text-align: center;
+}
+
+/* line 19, src/scss/components/_tables.scss */
+.explorama__table td,
+.explorama__table th {
+    margin: 0;
+    padding: 0.25em 0.5em;
+    border-width: 0 0 0 1px;
+    font-size: inherit;
+    overflow: visible;
+    /*to make ths where the title is really long work*/
+}
+
+/* Consider removing this next declaration block, as it causes problems when
+  there's a rowspan on the first cell. Case added to the tests. issue#432 */
+/* line 30, src/scss/components/_tables.scss */
+.explorama__table td:first-child,
+.explorama__table th:first-child {
+    border-left-width: 0;
+}
+
+/* line 35, src/scss/components/_tables.scss */
+.explorama__table thead {
+    background-color: var(--bg-hover);
+    text-align: left;
+    vertical-align: bottom;
+}
+
+/*
+  striping:
+     even - #fff (white)
+     odd  - #f2f2f2 (light gray)
+  */
+/* line 47, src/scss/components/_tables.scss */
+.explorama__table td {
+    background-color: transparent;
+}
+
+/* line 50, src/scss/components/_tables.scss */
+.explorama__table--odd td {
+    background-color: var(--bg-section);
+}
+
+/* nth-child selector for modern browsers */
+/* line 55, src/scss/components/_tables.scss */
+.explorama__table--striped tr:nth-child(2n-1) td {
+    background-color: var(--bg-section);
+}
+
+/* BORDERED TABLES */
+/* line 61, src/scss/components/_tables.scss */
+.explorama__table--bordered td {
+    border-bottom: 1px solid var(--border);
+}
+
+/* line 64, src/scss/components/_tables.scss */
+.explorama__table--bordered tbody>tr:last-child>td {
+    border-bottom-width: 0;
+}
+
+/* HORIZONTAL BORDERED TABLES */
+/* line 71, src/scss/components/_tables.scss */
+.explorama__table--horizontal td,
+.explorama__table--horizontal th {
+    border-width: 0 0 1px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* line 76, src/scss/components/_tables.scss */
+.explorama__table--horizontal tbody>tr:last-child>td {
+    border-bottom-width: 0;
+}
+
+/* line 83, src/scss/components/_tables.scss */
+.explorama__fulltext .window__body {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    padding: 0;
+    overflow-y: hidden;
+}
+
+/* line 98, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs {
+    box-shadow: 0 1px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.1)), 0 1px 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.1));
+}
+
+/* line 104, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs p {
+    margin: 0;
+    padding: 5px 5px 8px;
+    border-bottom: 1.33px solid var(--border);
+    font-weight: 700;
+}
+
+/* line 111, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* line 116, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    position: relative;
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+    word-break: break-all;
+    cursor: pointer;
+    transition: background-color 120ms;
+}
+
+/* line 131, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li:hover {
+    background: #f8f9fa;
+}
+
+/* line 127, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li .fulltext__tab__actions {
+    position: absolute;
+    right: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms, visibility 120ms;
+}
+
+/* line 134, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li:hover .fulltext__tab__actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* line 189, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li.active {
+    background: var(--bg-hover);
+    font-weight: bold;
+}
+
+/* line 197, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li.active+.active {
+    border-top: 1px solid var(--border);
+}
+
+/* line 204, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 3;
+    overflow-y: scroll;
+}
+
+/* line 210, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container .fulltext__container__tab {
+    height: auto;
+}
+
+/* line 213, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container .fulltext__container__tab:nth-child(2) table {
+    border-left: 1px solid var(--border);
+}
+
+/* line 218, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table {
+    width: 100%;
+    border-collapse: separate;
+    table-layout: fixed;
+}
+
+/* line 223, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table thead th {
+    padding-top: 12px;
+    text-align: left;
+}
+
+/* line 227, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table thead th:first-child {
+    width: auto;
+    max-width: 10%;
+}
+
+/* line 233, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td,
+.explorama__fulltext .fulltext__container table th {
+    padding: 5px 12px 5px;
+    word-wrap: break-word;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+}
+
+/* line 240, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td .entry__header,
+.explorama__fulltext .fulltext__container table th .entry__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+}
+
+/* line 244, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td .entry__header .entry__title,
+.explorama__fulltext .fulltext__container table th .entry__header .entry__title {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* line 251, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td .entry__header .entry__icon,
+.explorama__fulltext .fulltext__container table td .entry__header .entry__focus,
+.explorama__fulltext .fulltext__container table th .entry__header .entry__icon,
+.explorama__fulltext .fulltext__container table th .entry__header .entry__focus {
+    width: 20px;
+}
+
+/* line 258, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table tr:first-child td {
+    border-right: none;
+}
+
+/* line 267, src/scss/components/_tables.scss */
+table.checkbox-matrix td {
+    border: 1px solid;
+    text-align: center;
+}
+
+/* line 271, src/scss/components/_tables.scss */
+table.checkbox-matrix td:first-child {
+    text-align: start;
+}
+
+/* line 276, src/scss/components/_tables.scss */
+table.checkbox-matrix tr.indent td:first-child::before {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20500%20500%22%3E%3Cpath%20d%3D%22M169.1%20445.2L124%20400.1c-6.4-6.4-6.4-16.9%200-23.4L250.8%20250%20124%20123.3c-6.4-6.4-6.4-16.9%200-23.4l45.1-45.1c6.4-6.4%2016.9-6.4%2023.4%200L376%20238.3c6.4%206.4%206.4%2016.9%200%2023.4L192.5%20445.2c-6.5%206.4-16.9%206.4-23.4%200z%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(91%) sepia(8%) saturate(179%) hue-rotate(170deg) brightness(92%) contrast(91%);
+    ;
+}
+
+/* line 284, src/scss/components/_tables.scss */
+div.checkbox-matrix {
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-2 {
+    grid-template-columns: max-content repeat(calc(2 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-3 {
+    grid-template-columns: max-content repeat(calc(3 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-4 {
+    grid-template-columns: max-content repeat(calc(4 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-5 {
+    grid-template-columns: max-content repeat(calc(5 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-6 {
+    grid-template-columns: max-content repeat(calc(6 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-7 {
+    grid-template-columns: max-content repeat(calc(7 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-8 {
+    grid-template-columns: max-content repeat(calc(8 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-9 {
+    grid-template-columns: max-content repeat(calc(9 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-10 {
+    grid-template-columns: max-content repeat(calc(10 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-11 {
+    grid-template-columns: max-content repeat(calc(11 - 1), auto);
+}
+
+/* line 290, src/scss/components/_tables.scss */
+div.checkbox-matrix.cols-12 {
+    grid-template-columns: max-content repeat(calc(12 - 1), auto);
+}
+
+/* line 295, src/scss/components/_tables.scss */
+div.checkbox-matrix>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+}
+
+/* line 302, src/scss/components/_tables.scss */
+div.checkbox-matrix>div.indent::before {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%22500%22%20height%3D%22500%22%20viewBox%3D%220%200%20500%20500%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M182.096%20412c-2.83%200-5.332-1.082-7.508-3.246l-16.323-16.233c-2.177-2.164-3.265-4.653-3.265-7.467s1.088-5.302%203.265-7.467L286.564%20250l-128.3-127.587c-2.176-2.165-3.264-4.653-3.264-7.467s1.088-5.303%203.265-7.467l16.323-16.233c2.176-2.164%204.679-3.246%207.508-3.246%202.83%200%205.332%201.082%207.509%203.246l152.13%20151.287c2.177%202.164%203.265%204.653%203.265%207.467s-1.088%205.303-3.265%207.467l-152.13%20151.287c-2.177%202.164-4.68%203.246-7.509%203.246z%22%20fill%3D%22%23000%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(91%) sepia(8%) saturate(179%) hue-rotate(170deg) brightness(92%) contrast(91%);
+    ;
+}
+
+/* line 309, src/scss/components/_tables.scss */
+div.checkbox-matrix>div.header-col {
+    font-weight: bold;
+}
+
+/* line 313, src/scss/components/_tables.scss */
+div.checkbox-matrix>div.header-row {
+    justify-self: start;
+}
+
+/* line 317, src/scss/components/_tables.scss */
+div.checkbox-matrix>div .explorama__form__checkbox-container {
+    margin: 0;
+    min-height: 0;
+}
+
+/* line 321, src/scss/components/_tables.scss */
+div.checkbox-matrix>div .explorama__form__checkbox-container .explorama__form__checkbox+label {
+    line-height: 0;
+}
+
+/* line 324, src/scss/components/_tables.scss */
+div.checkbox-matrix>div .explorama__form__checkbox-container .explorama__form__checkbox+label::before {
+    margin: 0;
+}
+
+/* line 327, src/scss/components/_tables.scss */
+div.checkbox-matrix>div .explorama__form__checkbox-container .explorama__form__checkbox+label::after {
+    top: 5px;
+}
+
+
+/* line 1, src/scss/components/_table.scss */
+.table--header__scrollable__parent {
+    overflow: hidden !important;
+}
+
+/* line 5, src/scss/components/_table.scss */
+.table--header__scrollable__cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+    box-sizing: border-box;
+    border: 0px solid var(--border);
+    border-width: 0 1px 1px 0;
+    background: var(--bg-hover);
+    font-weight: bold;
+    text-align: left;
+    overflow: hidden;
+}
+
+/* line 17, src/scss/components/_table.scss */
+.table--header__scrollable__cell:hover {
+    opacity: .8;
+    cursor: pointer;
+}
+
+/* line 23, src/scss/components/_table.scss */
+.table--body__scrollable__parent {
+    overflow: auto;
+}
+
+/* line 27, src/scss/components/_table.scss */
+.table--body__scrollable__cell {
+    display: inline-block;
+    padding: 4px;
+    box-sizing: border-box;
+    border-right: 1px solid var(--border);
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Alternating through this two colors like Line 1 normal-color, line 2 second-color, line 3 normal-color .. */
+/* line 39, src/scss/components/_table.scss */
+.table__normal_color {
+    background: transparent;
+    cursor: pointer;
+}
+
+/* line 44, src/scss/components/_table.scss */
+.table__second_color {
+    background: var(--bg-section);
+    cursor: pointer;
+}
+
+/* line 49, src/scss/components/_table.scss */
+.table__normal_color.table__selected {
+    background: #ff00dc24;
+    cursor: pointer;
+}
+
+/* line 54, src/scss/components/_table.scss */
+.table__second_color.table__selected {
+    background: #bc00ff2b;
+    cursor: pointer;
+}
+
+/* line 59, src/scss/components/_table.scss */
+.table__header__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* line 66, src/scss/components/_table.scss */
+.table--footer__parent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+}
+
+/* line 74, src/scss/components/_table.scss */
+.table--footer__parent .explorama__form__select {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+/* line 79, src/scss/components/_table.scss */
+.table--footer__parent .explorama__form__select .basic-multi-select {
+    margin-bottom: 0;
+}
+
+/* line 85, src/scss/components/_table.scss */
+.page__size__selection {
+    overflow: hidden;
+}
+
+/* line 89, src/scss/components/_table.scss */
+.paging__selection__page__parent {
+    font-weight: bold;
+}
+
+/* line 92, src/scss/components/_table.scss */
+.paging__selection__page__parent>a {
+    padding: 0 !important;
+}
+
+/* line 95, src/scss/components/_table.scss */
+.paging__selection__page__parent>a>div {
+    margin: 0;
+}
+
+/* line 101, src/scss/components/_table.scss */
+.paging__selection__page__limit {
+    white-space: nowrap;
+}
+
+/* line 109, src/scss/components/_table.scss */
+.paging__selection__page__input__field {
+    text-align: center;
+}
+
+/* Used for empty container e.g opening an table with 0 Events */
+/* line 119, src/scss/components/_table.scss */
+.enable--linebreaks {
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+/* line 129, src/scss/components/_table.scss */
+.fill--header--scrollbar {
+    flex-grow: 1;
+    width: 17px;
+    background: var(--bg-hover);
+}
+
+/* line 135, src/scss/components/_table.scss */
+.table-header-scrollable-empty-cell {
+    display: inline-block;
+    padding: 10px 8px;
+    box-sizing: border-box;
+    border-right: 1px solid var(--border);
+    background: var(--bg-hover);
+    font-weight: bold;
+    text-align: left;
+    vertical-align: bottom;
+    overflow: hidden;
+}
+
+/* Table buttons */
+
+div[id^="woco_frame-table"] .window__body>div {
+    display: flex;
+    flex-direction: column;
+}
+
+.table--footer__parent {
+    flex-grow: 1;
+    flex-wrap: wrap;
+    gap: size('4');
+
+    .page__size__selection {
+
+        .input {
+            flex-direction: row;
+            align-items: center;
+            width: auto;
+            gap: 8px;
+
+            label {
+                padding: 0;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .btn-group {
+        height: 33.5px;
+        gap: 0;
+        padding: 0;
+        background: none;
+
+        &> :not(:last-child) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &> :not(:first-child) {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        button {
+            @extend .btn-secondary;
+            border-width: 0;
+            box-shadow: none;
+            border-radius: radius('sm');
+        }
+
+        .paging__selection__page__limit {
+
+            &:disabled {
+                border-right-width: size('1');
+                opacity: 1;
+                color: var(--text);
+                background-color: var(--bg-section);
+            }
+        }
+
+        .paging__selection__page__parent {
+            padding: 0;
+            border-inline-width: size('1');
+
+            label.paging__selection__page__input__field {
+                display: none;
+            }
+
+            .btn-clear {
+                display: none;
+            }
+
+            .text-input {
+                border: none;
+                box-shadow: none;
+                max-width: size('48');
+                padding: size('6', true);
+
+                input {
+                    text-align: center;
+                }
+            }
+
+            &:has(input:focus) {
+                border-color: var(--border-focus);
+            }
+
+            &:active:enabled {
+                transform: none;
+                box-shadow: shadow('sm');
+            }
+        }
+    }
+}

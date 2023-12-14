@@ -1,0 +1,196 @@
+/* line 1, src/scss/components/_flyout.scss */
+.flyout__container {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: -240px;
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    height: 100%;
+    max-height: 100%;
+    border-top-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* line 14, src/scss/components/_flyout.scss */
+.flyout__container .flyout__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    max-height: 100%;
+    padding: 12px;
+    padding-bottom: 2px;
+    border-left: 1px solid #ccc;
+    background: white;
+    box-shadow: 0 4px 6px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.1)), 0 2px 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.1));
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    overflow: hidden;
+}
+
+/* line 30, src/scss/components/_flyout.scss */
+.flyout__container .action__save {
+    padding-left: 12px;
+}
+
+/* line 33, src/scss/components/_flyout.scss */
+.flyout__container .action__save label {
+    display: block;
+}
+
+/* line 37, src/scss/components/_flyout.scss */
+.flyout__container .action__save .input__group {
+    display: inline-flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+/* line 42, src/scss/components/_flyout.scss */
+.flyout__container .action__save .input__group input {
+    flex-grow: 1;
+    margin-right: 5px;
+}
+
+/* line 48, src/scss/components/_flyout.scss */
+.flyout__container h1 {
+    margin-bottom: 0 !important;
+    padding: .25rem 1.25rem 1rem .25rem;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222f40;
+}
+
+/* line 58, src/scss/components/_flyout.scss */
+.flyout__container h2 {
+    padding-left: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #adb5bd;
+    border-bottom: none;
+}
+
+/* line 66, src/scss/components/_flyout.scss */
+.flyout__container .explorama__flyout--close {
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+    padding: 3px;
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 11px;
+    background-color: #adb5bd;
+    border-radius: 3px;
+}
+
+/* line 81, src/scss/components/_flyout.scss */
+.flyout__container .explorama__flyout--close:after {
+    content: "";
+    display: block;
+    width: 13px;
+    height: 13px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%22500%22%20height%3D%22500%22%20viewBox%3D%220%200%20500%20500%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M318.426%20250L445.17%20123.256c6.441-6.44%206.441-16.885%200-23.326l-45.1-45.099c-6.44-6.441-16.884-6.441-23.327%200L250%20181.574%20123.257%2054.83c-6.442-6.441-16.885-6.441-23.327%200L54.83%2099.93c-6.441%206.441-6.441%2016.885%200%2023.326L181.574%20250%2054.831%20376.742c-6.441%206.442-6.441%2016.886%200%2023.328L99.93%20445.17A16.445%2016.445%200%2000111.593%20450c4.222%200%208.443-1.611%2011.664-4.831L250%20318.426%20376.742%20445.17A16.448%2016.448%200%2000388.407%20450c4.221%200%208.442-1.611%2011.662-4.831l45.1-45.099c6.441-6.442%206.441-16.885%200-23.328L318.426%20250z%22%20id%3D%22a%22%2F%3E%3C%2Fdefs%3E%3Cuse%20fill%3D%22%23000%22%20fill-rule%3D%22nonzero%22%20xlink%3Ahref%3D%22%23a%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(100%) sepia(2%) saturate(6%) hue-rotate(17deg) brightness(105%) contrast(101%);
+    ;
+}
+
+/* line 88, src/scss/components/_flyout.scss */
+.flyout__container .explorama__flyout--close:hover {
+    background-color: #868e96;
+}
+
+/* line 93, src/scss/components/_flyout.scss */
+.flyout__container ul {
+    flex-grow: 1;
+    padding-left: 0px;
+    margin: 0;
+    margin-top: .5rem;
+    overflow-y: auto;
+    list-style: none;
+}
+
+/* line 101, src/scss/components/_flyout.scss */
+.flyout__container ul li {
+    position: relative;
+    padding: 6px 8px;
+    border-radius: 0.25rem;
+}
+
+/* line 105, src/scss/components/_flyout.scss */
+.flyout__container ul li span {
+    display: block;
+}
+
+/* line 108, src/scss/components/_flyout.scss */
+.flyout__container ul li span.saved__title {
+    width: 90%;
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+}
+
+/* line 116, src/scss/components/_flyout.scss */
+.flyout__container ul li span.saved__lastused {
+    color: #868e96;
+    font-size: 0.75rem;
+}
+
+/* line 120, src/scss/components/_flyout.scss */
+.flyout__container ul li button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 5px;
+    visibility: hidden;
+}
+
+/* line 128, src/scss/components/_flyout.scss */
+.flyout__container ul li:hover {
+    cursor: pointer;
+    background: #f9f9fa;
+}
+
+/* line 132, src/scss/components/_flyout.scss */
+.flyout__container ul li:hover button {
+    visibility: visible;
+}
+
+/* line 140, src/scss/components/_flyout.scss */
+.extra-column .flyout__container {
+    z-index: auto;
+    position: static;
+    top: 0;
+    right: 0;
+    width: auto;
+    height: 100%;
+    max-height: none;
+    padding-top: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* line 152, src/scss/components/_flyout.scss */
+.extra-column .flyout__container .flyout__inner {
+    z-index: auto;
+    max-height: none;
+    box-shadow: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* line 160, src/scss/components/_flyout.scss */
+.extra-column .flyout__container h1 {
+    margin: 0;
+}

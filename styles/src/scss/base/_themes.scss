@@ -1,0 +1,399 @@
+@use '../base/colormap' as *;
+
+// /* ====================
+//    THEMES
+//    ==================== */
+
+// @use 'colormap';
+
+// /* ----- Base Classes ----- */
+
+// // TODO: uncomment once dark mode is properly supported
+// /*:root {
+//     color-scheme: light dark;
+// }
+
+// [data-color-scheme="dark"] {
+//     color-scheme: dark;
+// }
+
+// [data-color-scheme="light"] {
+//     color-scheme: light;
+// }*/
+
+// /* ----- Theme Definitions ----- */
+
+// $themes: (
+//     light: (
+//         'text': map-get(colormap.$colors, 'gray-800'),
+//         'text-secondary': map-get(colormap.$colors, 'gray-600'),
+//         'link': map-get(colormap.$colors, 'teal-600'),
+//         'link-hover': map-get(colormap.$colors, 'teal-400'),
+//         'bg': map-get(colormap.$colors, 'white'),
+//         'bg-hover': map-get(colormap.$colors, 'gray-200'),
+//         'bg-section': map-get(colormap.$colors, 'gray-100'),
+//         'icon': map-get(colormap.$colors, 'gray-600'),
+//         'icon-hover': map-get(colormap.$colors, 'gray-800'),
+//         'icon-disabled': map-get(colormap.$colors, 'gray-400'),
+//         'border': map-get(colormap.$colors, 'gray-400')
+//     ),
+//     dark: (
+//         'text': map-get(colormap.$colors, 'gray-100'),
+//         'text-secondary': map-get(colormap.$colors, 'gray-500'),
+//         'link': map-get(colormap.$colors, 'teal-400'),
+//         'link-hover': map-get(colormap.$colors, 'teal-300'),
+//         'bg': map-get(colormap.$colors, 'gray-800'),
+//         'bg-hover': map-get(colormap.$colors, 'gray-600'),
+//         'bg-section': map-get(colormap.$colors, 'gray-700'),
+//         'icon': map-get(colormap.$colors, 'gray-300'),
+//         'icon-hover': map-get(colormap.$colors, 'gray-100'),
+//         'icon-disabled': map-get(colormap.$colors, 'gray-600'),
+//         'border': map-get(colormap.$colors, 'gray-700')
+//     )
+// );
+
+// /* ----- Theming Functions ----- */
+// /**
+//  * USAGE
+//  *
+//  * Wrap css properties with theme-dependent color definitions in themed() mixin
+//  * and declare colors within the col function inside.
+//  *
+//  * Note: col does not work inside sass or css functions like color.scale or radial-gradient
+//  *
+//  * Example:
+//  *
+//  *  @include themed() {
+//  *      color: col('text-secondary');    
+//  *      border: 2px solid col('border-strong');
+//  *  }
+//  *
+//  */
+
+// $theme-map: null;
+
+// @mixin themed() {
+//     @each $theme, $map in $themes {
+//         .theme--#{$theme} & {
+//             $theme-map: () !global;
+//             @each $key, $submap in $map {
+//                 $value: map-get(map-get($themes, $theme), '#{$key}');
+//                 $theme-map: map-merge($theme-map, ($key: $value)) !global;
+//             }
+//             @content;
+//             $theme-map: null !global;
+//         }
+//     }
+// }
+
+// @function col($key) {
+//     @return map-get($theme-map, $key);
+// }
+
+@mixin light-theme {
+    --primary: #{color('teal-600')};
+    --primary-highlight: #{color('teal-400')};
+    --primary-muted: #{color('teal-50')};
+
+    --text: #{color('gray-900')};
+    --text-secondary: #{color('gray-600')};
+    --text-disabled: #{color('gray-300')};
+    --text-warning: #{color('red-600')};
+    --text-hint: #{color('yellow-700')};
+    --text-success: #{color('green-600')};
+    --text-inverted: #{color('gray-50')};
+
+    --link: var(--primary);
+    --link-hover: var(--primary-highlight);
+
+    --bg: #{color('white')};
+    --bg-over-bg: #{color('white')};
+    --bg-hover: #{color('gray-100')};
+    --bg-section: #{color('gray-800', .06)};
+    --bg-highlight: #{color('blue-50')};
+    --bg-text-highlight: #{color('yellow-300')};
+    --bg-inverted: #{color('gray-800')};
+    --bg-error: #{color('red-100', .5)};
+    --bg-warning: #{color('red-50')};
+    --bg-hint: #{color('yellow-50')};
+    --bg-success: #{color('green-50')};
+    --bg-woco: url('../img/woco-bg.jpg');
+
+    --bg-page: url('../img/bgpage.png');
+    --bg-page-gradient-top: #{color('gray-50')};
+    --bg-page-gradient-bottom: #{color('white')};
+
+    --icon: #{color('purple-800')};
+    --icon-secondary: var(--text-secondary);
+    --icon-hover: var(--primary-highlight);
+    --icon-disabled: var(--text-disabled);
+    --icon-warning: var(--text-warning);
+    --icon-hint: var(--text-hint);
+    --icon-success: var(--text-success);
+    --icon-inverted: var(--text-inverted);
+
+    --border: #{color('gray-400')};
+    --border-secondary: #{color('gray-300')};
+    --border-focus: var(--primary);
+    --border-warning: var(--text-warning);
+    --border-hint: var(--text-hint);
+    --border-success: var(--text-success);
+    --divider: #{color('gray-200')};
+
+    --scrollbar-thumb: #{color('gray-400')};
+    --scrollbar-thumb-hover: #{color('gray-500')};
+    --scrollbar-track-hover: #{color('gray-400', .2)};
+
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+    --tooltip-shadow-color: #{color('white')};
+
+    --backdrop-filter: saturate(0.9) brightness(0.9);
+
+    --logo: url("../img/explorama_black.svg");
+}
+
+@mixin dark-theme {
+    --primary: #{color('teal-400')};
+    --primary-highlight: #{color('teal-200')};
+    --primary-muted: #{color('teal-900')};
+
+    --text: #{color('gray-50')};
+    --text-secondary: #{color('gray-300')};
+    --text-disabled: #{color('gray-600')};
+    --text-warning: #{color('red-400')};
+    --text-hint: #{color('yellow-400')};
+    --text-success: #{color('green-400')};
+    --text-inverted: #{color('gray-800')};
+
+    --link: var(--primary);
+    --link-hover: var(--primary-highlight);
+
+    --bg: #{color('gray-900')};
+    --bg-over-bg: #{mix(black, color('gray'), 80%)};
+    --bg-hover: #{color('gray-800')};
+    --bg-section: #{color('gray-200', .12)};
+    --bg-highlight: #1b2631;
+    --bg-text-highlight: #{color('yellow-800')};
+    --bg-inverted: #{color('gray-50')};
+    --bg-error: #{color('red-900', .25)};
+    --bg-warning: #{color('red-900', .25)};
+    --bg-hint: #{color('yellow-900', .25)};
+    --bg-success: #{color('green-800', .25)};
+    --bg-woco: url('../img/woco-bg-dark.jpg');
+
+    --bg-page: url('../img/bgpage-dark.png');
+    --bg-page-gradient-top: #{color('gray-900')};
+    --bg-page-gradient-bottom: #{color('gray-800')};
+
+    --icon: #{color('purple-300')};
+    --icon-secondary: var(--text-secondary);
+    --icon-hover: var(--primary-highlight);
+    --icon-disabled: var(--text-disabled);
+    --icon-warning: var(--text-warning);
+    --icon-hint: var(--text-hint);
+    --icon-success: var(--text-success);
+    --icon-inverted: var(--text-inverted);
+
+    --border: #{color('gray-800')};
+    --border-secondary: #{color('gray-800')};
+    --border-focus: var(--primary);
+    --border-warning: var(--text-warning);
+    --border-hint: var(--text-hint);
+    --border-success: var(--text-success);
+    --divider: #{color('gray-700')};
+
+    --scrollbar-thumb: #{color('gray-700')};
+    --scrollbar-thumb-hover: #{color('gray-600')};
+    --scrollbar-track-hover: #{color('gray-600', .2)};
+
+    --box-shadow-color: #{color('gray-800')};
+    --tooltip-shadow-color: #{color('gray-700')};
+
+    --backdrop-filter: saturate(0.9) brightness(0.7);
+
+    --logo: url("../img/explorama_white.svg");
+}
+
+:root {
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        @include light-theme;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include dark-theme;
+    }
+}
+
+:root :has(.theme-light) {
+    @include light-theme;
+}
+
+:root :has(.theme-dark) {
+    @include dark-theme;
+}
+
+
+// Theme-based utility classes
+
+.text-normal {
+    color: var(--text);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-disabled {
+    color: var(--text-disabled);
+}
+
+.text-warning {
+    color: var(--text-warning);
+}
+
+.text-inverted {
+    color: var(--text-inverted);
+}
+
+.icon-normal {
+    color: var(--icon);
+}
+
+.icon-secondary {
+    color: var(--icon-secondary);
+}
+
+.icon-hover {
+    color: var(--icon-hover);
+}
+
+.icon-disabled {
+    color: var(--icon-disabled);
+}
+
+.icon-warning {
+    color: var(--icon-warning);
+}
+
+.icon-inverted {
+    color: var(--icon-inverted);
+}
+
+// Windows high contrast mode
+
+@media screen and (forced-colors: active) {
+
+    // Change colors to CanvasText
+    span[class^="icon-"]:not([class*="-important"]),
+    :where(.drag-drop-area--empty, .explorama__form__file-upload)::after {
+        background-color: CanvasText !important;
+    }
+
+    // Change colors to ButtonText
+    :where(button, a, .tabs__navigation, .context-menu-entry, .indicator__create) span[class^="icon-"]:not([class*="-important"]),
+    :where(.radio, .checkbox, .switch) input:checked,
+    button .loader span,
+    :where(.loader-sm, .loader-md, .loader-lg) span,
+    .btn-group .btn-toggled,
+    .toolbar button.active,
+    .ol-zoom button::after,
+    .progress-bar>span {
+        background-color: ButtonText !important;
+    }
+
+    .tab,
+    .toolbar button.active,
+    .context-menu-entry,
+    .indicator__create h1,
+    .explorama__form__file-upload,
+    .list-item:not(.disabled),
+    .map-input .hint-text,
+    .search__sidebar ul li {
+        color: ButtonText !important;
+    }
+
+    // Change colors to Canvas
+    .welcome__page,
+    .explorama__workspace,
+    :where(.radio, .checkbox, .switch) input::before,
+    .btn-loading,
+    .btn-loading span[class^="icon-"],
+    .btn-group .btn-toggled span[class^="icon-"] {
+        background: Canvas !important;
+    }
+
+    .btn-loading {
+        color: Canvas !important;
+    }
+
+    // Change colors to ButtonFace
+    .btn-tertiary,
+    .toolbar button.active span[class^="icon-"],
+    .tab,
+    .context-menu-entry,
+    .indicator__create,
+    .list-item:not(.disabled),
+    .search__sidebar ul li,
+    .btn-group button {
+        background-color: ButtonFace !important;
+    }
+
+    // Change colors to LinkText
+    .input__mode,
+    .explorama__input__mode,
+    .attribute__toggle {
+        color: LinkText !important;
+    }
+
+    // Change colors to GrayText
+    .switch input:not(:checked),
+    canvas[id^=":woco.navigation.minimap"],
+    .progress-bar {
+        background-color: GrayText !important;
+    }
+
+    // Prevent color adjust in high contrast mode
+    .legend__color,
+    .select__colorswatch,
+    .color__scale__preview>div,
+    span[class*="icon-"][class*="-important"] {
+        forced-color-adjust: none;
+    }
+
+    // Other high contrast mode adjustments
+    .dialog {
+        border: 1px solid;
+    }
+
+    .tab.active {
+        border-bottom: 3px solid;
+    }
+
+    .frame>.header {
+        border-bottom: 1px solid;
+    }
+
+    :where(.radio, .checkbox, .switch) input:disabled,
+    .context-menu-entry.disabled {
+        opacity: 0.5;
+    }
+
+    :where(.drag-drop-area--empty, .explorama__form__file-upload)::after {
+        opacity: 0.3;
+    }
+
+    .react-tooltip-lite-arrow,
+    .ol-popup .anchor {
+        opacity: 0;
+    }
+
+    .switch input {
+        transition: none;
+    }
+}

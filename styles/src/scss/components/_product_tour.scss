@@ -1,0 +1,14 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.dialog.product-tour .dialog-body {
+
+    span[class^="icon-"] {
+        display: inline-block;
+        background-color: var(--primary);
+    }
+
+    img[src$=".svg"] {
+        height: 21px;
+    }
+}

@@ -1,0 +1,128 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+.welcome__page {
+	width: 100vw;
+	height: 100vh;
+	overflow: auto;
+	scrollbar-gutter: stable;
+	background-color: var(--bg);
+
+	&:has(.projects-grid):not(:has(.welcome__header)) {
+		background-color: var(--bg-section);
+		backdrop-filter: blur(8px);
+	}
+
+	.app-footer {
+		position: fixed;
+		bottom: 8px;
+		color: var(--text-secondary);
+		font-size: 12px;
+
+		a {
+			color: var(--text-secondary);
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+		&--center {
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+		&--right {
+			right: 8px;
+			margin-right: 8px;
+		}
+
+		&--left {
+			left: 8px;
+		}
+	}
+
+	&~.toolbar-wrapper {
+		display: none;
+	}
+}
+
+.welcome__close {
+	color: var(--text-secondary);
+
+	span[class^=icon-] {
+		order: 2;
+		background-color: var(--icon-secondary);
+	}
+
+	&:hover {
+		color: var(--text);
+
+		span {
+			background-color: var(--icon);
+		}
+	}
+}
+
+.welcome__panel {
+	position: relative;
+	min-width: 960px;
+	max-width: 1280px;
+	margin: 16px auto;
+	padding: size('8') size('16');
+	height: calc(100% - 16px - 16px);
+	cursor: default;
+
+	&:has(.projects-grid):not(:has(.welcome__header)) {
+		padding-inline: 2rem;
+		border-radius: radius('lg');
+		background-color: var(--bg);
+		box-shadow: shadow('xl');
+	}
+
+	.welcome__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.welcome__text {
+			font-size: 2em;
+			font-weight: bold;
+		}
+	}
+
+	.welcome__section {
+		margin: size('8') 0 size('16');
+
+		>h2,
+		>.flex>h2 {
+			margin: size('8') 0;
+		}
+
+		.actions {
+			display: flex;
+			gap: size('4');
+		}
+
+		.project__list {
+			overflow: auto;
+			height: calc(100vh - 240px);
+			margin-top: size('16');
+		}
+
+		.project__list--small {
+			overflow: auto;
+			min-height: 176px;
+			max-height: calc(100vh - 570px);
+			margin-top: size('12');
+		}
+
+		.help__section {
+			.btn-card.vertical {
+				width: 100%;
+			}
+		}
+	}
+}

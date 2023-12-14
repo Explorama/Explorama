@@ -1,0 +1,188 @@
+/* ====================
+   FONTS
+   ==================== */
+
+@use 'variables' as vars;
+
+/* ========== FONTS ========== */
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 300; // light
+    src: url('../fonts/montserrat-v25-latin-300.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400; // regular
+    src: url('../fonts/montserrat-v25-latin-regular.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700; // bold
+    src: url('../fonts/montserrat-v25-latin-700.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
+}
+
+/* ========== CLASSES ========== */
+
+/* ----- Font Color ----- */
+
+/* see _colors.scss for font color definition */
+
+
+/* ----- Font Size ----- */
+@each $name, $font-size in vars.$font-sizes {
+    .text-#{$name} {
+        font-size: $font-size;
+    }
+}
+
+/* ----- Line Height ----- */
+@each $name, $line-height in vars.$line-heights {
+    .line-height-#{$name} {
+        line-height: $line-height;
+    }
+}
+
+/* ----- Font Weight ----- */
+
+.text-light {
+    font-weight: 300;
+}
+.text-regular {
+    font-weight: 400;
+}
+.text-medium {
+    font-weight: 500;
+}
+.text-semibold {
+    font-weight: 600;
+}
+.text-bold {
+    font-weight: 700;
+}
+.text-extrabold {
+    font-weight: 800;
+}
+
+/* ----- Font Style ----- */
+
+.text-italic {
+    font-style: italic;
+}
+.text-non-italic {
+    font-style: normal;
+}
+
+/* ----- Text Align ----- */
+
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+.text-center {
+    text-align: center;
+}
+.text-justify {
+    text-align: justify;
+}
+.text-justify-all {
+    text-align: justify-all;
+}
+
+/* ----- Text Decoration ----- */
+
+.text-underline {
+    text-decoration-line: underline;
+}
+.text-overline {
+    text-decoration-line: overline;
+}
+.text-line-through {
+    text-decoration-line: line-through;
+}
+.text-no-underline {
+    text-decoration-line: none;
+}
+
+.text-decor-solid {
+    text-decoration-style: solid;
+}
+.text-decor-double {
+    text-decoration-style: double;
+}
+.text-decor-dotted {
+    text-decoration-style: dotted;
+}
+.text-decor-dashed {
+    text-decoration-style: dashed;
+}
+
+.text-decor-0 {
+    text-decoration-thickness: 0em;
+}
+.text-decor-1 {
+    text-decoration-thickness: .1em;
+}
+.text-decor-2 {
+    text-decoration-thickness: .2em;
+}
+.text-decor-3 {
+    text-decoration-thickness: .3em;
+}
+.text-decor-4 {
+    text-decoration-thickness: .4em;
+}
+.text-decor-5 {
+    text-decoration-thickness: .5em;
+}
+
+.text-underline-offset-0 {
+    text-underline-offset: 0em;
+}
+.text-underline-offset-1 {
+    text-underline-offset: .1em;
+}
+.text-underline-offset-2 {
+    text-underline-offset: .2em;
+}
+.text-underline-offset-3 {
+    text-underline-offset: .3em;
+}
+.text-underline-offset-4 {
+    text-underline-offset: .4em;
+}
+.text-underline-offset-5 {
+    text-underline-offset: .5em;
+}
+
+/* see _colors.scss for text decoration color definition */
+
+/* ----- Text Transform ----- */
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+.text-lowercase {
+    text-transform: lowercase;
+}
+.text-capitalize {
+    text-transform: capitalize;
+}
+.text-normal-case {
+    text-transform: none;
+}
+
+/* ----- Text Overflow ----- */
+
+.text-truncate, .truncate-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

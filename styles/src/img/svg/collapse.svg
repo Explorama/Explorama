@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="500px" viewBox="0 0 500 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>collapse</title>
+    <desc>Created with Sketch.</desc>
+    <g id="collapse" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M223.585495,400.889437 L11.0190685,187.64482 C-3.67302282,172.905853 -3.67302282,149.072631 11.0190685,134.490463 L46.3426071,99.0542247 C61.0346983,84.3152584 84.7921225,84.3152584 99.327915,99.0542247 L250,250.207027 L400.672085,99.0542247 C415.364176,84.3152584 439.121601,84.3152584 453.657393,99.0542247 L488.980932,134.490463 C503.673023,149.229429 503.673023,173.062651 488.980932,187.64482 L276.414505,400.889437 C262.035011,415.628404 238.277587,415.628404 223.585495,400.889437 Z" id="Path" fill="#000000"></path>
+    </g>
+</svg>

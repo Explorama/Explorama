@@ -1,0 +1,113 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+.chip {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: size('8', true);
+    padding: size('6') size('12');
+    border-radius: radius('full');
+    color: color('white');
+    background-color: var(--border);
+    line-height: line-height('normal');
+    cursor: default;
+
+    &.light {
+        background-color: color('gray-100');
+        color: color('gray-900');
+        @include icon-color('gray-900');
+    }
+    &.dark {
+        background-color: color('gray-800');
+        @include icon-color('white');
+    }
+    &.outline {
+        background-color: color('white');
+        outline-color: var(--border);
+        color: color('gray-500');
+    }
+
+    &.extra-small {
+        font-size: font-size('xxs');
+        padding: 0 size('6') size('1');
+    }
+    &.small {
+        font-size: font-size('xs');
+        padding: size('4') size('8');
+    }
+    &.large {
+        font-size: font-size('lg');
+        padding: size('12') size('24');
+    }
+    &.full {
+        width: 100%;
+    }
+
+    @each $name, $color in $base-colors {
+        &.chip-#{$name} {
+            background-color: $color;
+            color: contrastColor($color);
+            
+            &.light {
+                background-color: color(#{$name} + '-100');
+                color: contrastColor(color(#{$name} + '-100'));
+            }
+    
+            &.dark {
+                background-color: color(#{$name} + '-800');
+                color: contrastColor(color(#{$name} + '-800'));
+            }
+
+            &.outline {
+                background-color: color('white');
+                outline-color: $color;
+                color: darken($color, 15%);
+            }
+        }
+    }
+
+    span[class^="icon-"] {
+        width: 1em;
+        height: 1em;
+        background-color: color('white');
+        mix-blend-mode: hard-light;
+    }
+
+    &:has(button,span[class^="icon-"]) {
+        padding-inline: size('10');
+    }
+
+    button {
+        position: relative;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        mix-blend-mode: multiply;
+        cursor: pointer;
+
+        span[class^="icon-"] {
+            transform: scale(0.8);
+            background-color: color('white');
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 1em;
+            height: 1em;
+            transform: scale(1.2);
+            background-color: color('gray-500');
+            border-radius: radius('full');
+        }
+
+        &:hover {
+            &::before {
+                background-color: color('gray-700');
+            }
+        }
+    }
+}

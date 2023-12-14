@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{display:none;}
+	.st2{display:inline;stroke:#000000;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st3{stroke:#000000;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st4{display:none;fill:none;stroke:#000000;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<desc>Created with Sketch.</desc>
+<polyline class="st0" points="15,65 15,435 485,435 "/>
+<g class="st1">
+	<circle class="st2" cx="93" cy="300" r="25"/>
+	<circle class="st2" cx="171" cy="200" r="25"/>
+	<circle class="st2" cx="250" cy="325" r="25"/>
+	<circle class="st2" cx="329" cy="125" r="25"/>
+	<circle class="st2" cx="407" cy="225" r="25"/>
+</g>
+<g>
+	<circle class="st3" cx="93" cy="300" r="25"/>
+	<circle class="st3" cx="171" cy="200" r="50"/>
+	<circle class="st3" cx="250" cy="325" r="37.5"/>
+	<circle class="st3" cx="329" cy="125" r="18.8"/>
+	<circle class="st3" cx="407" cy="225" r="43.8"/>
+</g>
+<polyline class="st4" points="93,300 171,200 250,325 329,125 407,225 "/>
+<g class="st1">
+	<rect x="68" y="300" class="st2" width="50" height="135"/>
+	<rect x="146" y="200" class="st2" width="50" height="235"/>
+	<rect x="225" y="325" class="st2" width="50" height="110"/>
+	<rect x="304" y="125" class="st2" width="50" height="310"/>
+	<rect x="382" y="225" class="st2" width="50" height="210"/>
+</g>
+</svg>

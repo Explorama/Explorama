@@ -1,0 +1,101 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.tabs__navigation {
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+    background-color: var(--bg);
+    box-shadow: shadow('md');
+
+    &.app-tabs {
+        max-width: calc((100%/2) - 68px - 44px);
+        overflow: hidden;
+    }
+
+    .tab {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: size('4');
+        padding: size('8') size('16');
+        transition: background-color .1s, color .1s, box-shadow .25s;
+        text-align: center;
+        color: var(--text-secondary);
+        font-weight: bold;
+        cursor: pointer;
+
+        span[class^="icon-"] {
+            background-color: var(--icon-secondary);
+            transition: background-color .1s;
+        }
+
+        &:hover {
+            background-color: var(--bg-hover);
+            color: var(--link);
+
+            span[class^="icon-"] {
+                background-color: var(--link);
+            }
+        }
+
+        &.active {
+            box-shadow: var(--text) 0 -2px 0 0 inset;
+            color: var(--text);
+            background-color: var(--bg);
+            cursor: default;
+
+            span[class^="icon-"] {
+                background-color: var(--icon);
+            }
+        }
+    }
+
+    &.full-width .tab {
+        flex-grow: 1;
+    }
+
+    &.scrollable {
+        .scroll-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: size('8');
+            cursor: pointer;
+            transition: background-color .1s;
+
+            span[class^="icon-"] {
+                background-color: var(--icon-secondary);
+                transition: background-color .1s;
+            }
+
+            &:hover {
+                background-color: var(--bg-hover);
+
+                span[class^="icon-"] {
+                    background-color: var(--icon);
+                }
+            }
+
+            &.disabled {
+                pointer-events: none;
+
+                span[class^="icon-"] {
+                    background-color: var(--icon-disabled);
+                }
+            }
+        }
+
+        .tabs {
+            display: flex;
+            flex-grow: 1;
+            flex-direction: row;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+
+            .tab {
+                min-width: max-content;
+            }
+        }
+    }
+}

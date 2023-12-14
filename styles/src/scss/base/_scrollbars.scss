@@ -1,0 +1,64 @@
+
+/* ====================
+   SCROLLBARS & OVERFLOW
+   ==================== */
+
+@use 'variables' as *;
+@use 'colormap' as *;
+
+/* ========== SCROLLBARS ========== */
+
+@mixin scrollbar($size: 'sm') {
+	&::-webkit-scrollbar {
+		// visible width: declared width - 2 * border width
+		@if ($size == 'lg') {
+			width: 22px; // visible width: 16px
+            height: 22px;
+		} @else { // defaults to size 'sm'
+			width: 14px; // visible width: 8px
+            height: 14px;
+		}
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb);
+        border: 3px solid transparent; // hack to simulate scrollbar margins
+        background-clip: padding-box;
+        border-radius: radius('full');
+        transition: background-color 120ms;
+        
+        &:hover {
+            background-color: var(--scrollbar-thumb-hover);
+        }
+    }
+    &::-webkit-scrollbar-track {
+        background: none;
+        border: 3px solid transparent; // hack to simulate scrollbar margins
+        background-clip: padding-box;
+        border-radius: radius('full');
+        transition: background-color 120ms;
+    
+        &:hover {
+            background-color: var(--scrollbar-track-hover);
+        }
+    }
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+}
+
+/* ========== OVERFLOW ========== */
+
+.overflow-auto {
+    overflow: auto;
+}
+.overflow-hidden {
+    overflow: hidden;
+}
+.overflow-hover {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+
+    &:hover {
+        overflow: auto;
+    }
+}

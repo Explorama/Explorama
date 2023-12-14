@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500px" height="500px" viewBox="0 0 500 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>scatter</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M51.1962403,417.128946 L51.1962403,361.089657 L51.1962403,76.935527 C51.1962403,64.8191395 42.8710454,55 32.5981201,55 C22.3251949,55 14,64.8191395 14,76.935527 L14,439.064473 C14,451.18086 22.3251949,461 32.5981201,461 L467.40188,461 C477.671424,461 486,451.18086 486,439.064473 C486,426.948086 477.671424,417.128946 467.40188,417.128946 L51.1962403,417.128946 Z" id="path-1"></path>
+    </defs>
+    <g id="scatter" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Combined-Shape" fill="#1D1D1B" xlink:href="#path-1"></use>
+        <circle id="Oval" fill="#000000" fill-rule="nonzero" cx="123" cy="225" r="25"></circle>
+        <circle id="Oval-Copy" fill="#000000" fill-rule="nonzero" cx="173" cy="148" r="25"></circle>
+        <circle id="Oval-Copy-2" fill="#000000" fill-rule="nonzero" cx="225" cy="347" r="25"></circle>
+        <circle id="Oval-Copy-3" fill="#000000" fill-rule="nonzero" cx="315" cy="98" r="25"></circle>
+        <circle id="Oval-Copy-4" fill="#000000" fill-rule="nonzero" cx="315" cy="233" r="25"></circle>
+        <circle id="Oval-Copy-5" fill="#000000" fill-rule="nonzero" cx="432" cy="361" r="25"></circle>
+        <circle id="Oval-Copy-6" fill="#000000" fill-rule="nonzero" cx="432" cy="55" r="25"></circle>
+    </g>
+</svg>

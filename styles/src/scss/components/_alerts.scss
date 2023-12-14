@@ -1,0 +1,143 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.alert__title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.alert__time,
+.alert__expiry {
+    font-size: font-size('xxs');
+    color: color('gray');
+    white-space: nowrap;
+}
+
+.alert__desc-standard {
+    color: color('gray');
+}
+
+.condition {
+    border-left: 2px solid #ced4da;
+    padding: 8px 0 8px 8px;
+    display: flex;
+    gap: 12px;
+    align-items: end;
+}
+
+.condition button.remove-condition {
+    margin-bottom: 2px;
+}
+
+.Toastify .Toastify__toast-container {
+    z-index: 30000;
+
+    &.Toastify__toast-container--bottom-right {
+        bottom: 10px;
+        right: 10px;
+        padding: 0;
+
+        .Toastify__toast {
+            margin-bottom: 10px;
+
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.Toastify__toast {
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 16px;
+    padding-bottom: 13px;
+    background-color: var(--bg);
+    color: var(--text);
+
+    &::before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .Toastify__toast-body {
+        z-index: 1;
+        padding-left: 12px;
+        background-size: 18px;
+        background-repeat: no-repeat;
+        background-position: left center;
+
+        br:first-child {
+            display: none;
+        }
+    }
+
+    .Toastify__progress-bar {
+        background: #adb5bd;
+    }
+
+    :where(.Toastify__close-button, .Toastify__toast .Toastify__close-button--default) {
+        margin-left: auto;
+        opacity: .5;
+        color: color('gray');
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.Toastify__toast-icon {
+    // Workaround for big icons
+    display: none;
+}
+
+.Toastify__toast--default {
+    padding-left: 8px;
+
+    &::before {
+        content: none;
+    }
+}
+
+.Toastify__toast--warning::before {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20500%20500%22%3E%3Cpath%20d%3D%22M491.4%20379.6L305.1%2056.8c-24.5-42.4-85.6-42.4-110.1%200L8.6%20379.6C-15.9%20422%2014.7%20475%2063.7%20475h372.7c48.9-.1%2079.5-53%2055-95.4zM290%20400c0%2011-9%2020-20%2020h-40c-11%200-20-9-20-20v-40c0-11%209-20%2020-20h40c11%200%2020%209%2020%2020v40zm0-120c0%2011-9%2020-20%2020h-40c-11%200-20-9-20-20V160c0-11%209-20%2020-20h40c11%200%2020%209%2020%2020v120z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(76%) sepia(86%) saturate(1332%) hue-rotate(359deg) brightness(101%) contrast(89%);
+}
+
+.Toastify__toast--warning .Toastify__progress-bar {
+    background-color: color('yellow');
+}
+
+.Toastify__toast--info::before {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20500%20500%22%3E%3Cpath%20d%3D%22M250%200C111.9%200%200%20111.9%200%20250s111.9%20250%20250%20250%20250-111.9%20250-250S388.1%200%20250%200zm40%20370c0%2011-9%2020-20%2020h-40c-11%200-20-9-20-20V250c0-11%209-20%2020-20h40c11%200%2020%209%2020%2020v120zm0-200c0%2011-9%2020-20%2020h-40c-11%200-20-9-20-20v-40c0-11%209-20%2020-20h40c11%200%2020%209%2020%2020v40z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(57%) sepia(23%) saturate(4000%) hue-rotate(177deg) brightness(92%) contrast(85%);
+}
+
+.Toastify__toast--info .Toastify__progress-bar {
+    background-color: color('blue');
+}
+
+.Toastify__toast--success::before {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20500%20500%22%3E%3Cpath%20d%3D%22M250%200C111.9%200%200%20111.9%200%20250s111.9%20250%20250%20250%20250-111.9%20250-250S388.1%200%20250%200zm127.3%20207.6L264.1%20320.7%20235.9%20349c-7.8%207.8-20.5%207.8-28.3%200l-28.3-28.3-56.6-56.6c-7.8-7.8-7.8-20.5%200-28.3l28.3-28.3c7.8-7.8%2020.5-7.8%2028.3%200l42.4%2042.4%2099-99c7.8-7.8%2020.5-7.8%2028.3%200l28.3%2028.3c7.8%207.9%207.8%2020.6%200%2028.4z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(42%) sepia(76%) saturate(1078%) hue-rotate(86deg) brightness(103%) contrast(102%);
+}
+
+.Toastify__toast--success .Toastify__progress-bar {
+    background-color: color('green');
+}
+
+.Toastify__toast--error::before {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20500%20500%22%3E%3Cpath%20d%3D%22M250%200C111.9%200%200%20111.9%200%20250s111.9%20250%20250%20250%20250-111.9%20250-250S388.1%200%20250%200zm40%20370c0%2011-9%2020-20%2020h-40c-11%200-20-9-20-20v-40c0-11%209-20%2020-20h40c11%200%2020%209%2020%2020v40zm0-120c0%2011-9%2020-20%2020h-40c-11%200-20-9-20-20V130c0-11%209-20%2020-20h40c11%200%2020%209%2020%2020v120z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(35%) sepia(18%) saturate(6897%) hue-rotate(342deg) brightness(99%) contrast(83%);
+}
+
+.Toastify__toast--error .Toastify__progress-bar {
+    background-color: color('red');
+}

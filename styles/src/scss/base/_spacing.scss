@@ -1,0 +1,134 @@
+/* ====================
+   SPACING
+   ==================== */
+
+@use 'variables' as vars;
+
+@each $name, $size in vars.$sizes {
+
+    /* ----- Padding ----- */
+
+    .p-#{$name} {
+        padding: $size;
+    }
+
+    .px-#{$name} {
+        padding-left: $size;
+        padding-right: $size;
+    }
+    .py-#{$name} {
+        padding-top: $size;
+        padding-bottom: $size;
+    }
+
+    .pt-#{$name} {
+        padding-top: $size;
+    }
+    .pr-#{$name} {
+        padding-right: $size;
+    }
+    .pb-#{$name} {
+        padding-bottom: $size;
+    }
+    .pl-#{$name} {
+        padding-left: $size;
+    }
+
+    /* ----- Margin ----- */
+
+    .m-#{$name} {
+        margin: $size;
+    }
+
+    .mx-#{$name} {
+        margin-left: $size;
+        margin-right: $size;
+    }
+    .my-#{$name} {
+        margin-top: $size;
+        margin-bottom: $size;
+    }
+
+    .mt-#{$name} {
+        margin-top: $size;
+    }
+    .mr-#{$name} {
+        margin-right: $size;
+    }
+    .mb-#{$name} {
+        margin-bottom: $size;
+    }
+    .ml-#{$name} {
+        margin-left: $size;
+    }
+
+    /* negative margins */
+    .-m-#{$name} {
+        margin: -$size;
+    }
+
+    .-mx-#{$name} {
+        margin-left: -$size;
+        margin-right: -$size;
+    }
+    .-my-#{$name} {
+        margin-top: -$size;
+        margin-bottom: -$size;
+    }
+
+    .-mt-#{$name} {
+        margin-top: -$size;
+    }
+    .-mr-#{$name} {
+        margin-right: -$size;
+    }
+    .-mb-#{$name} {
+        margin-bottom: -$size;
+    }
+    .-ml-#{$name} {
+        margin-left: -$size;
+    }
+
+    /* ----- Space Between ----- */
+    
+    .spaced-x-#{$name} > *:not(:last-child) {
+        margin-right: $size;
+    }
+    .spaced-y-#{$name} > *:not(:last-child) {
+        margin-bottom: $size;
+    }
+
+    .-spaced-x-#{$name} > *:not(:last-child) {
+        margin-right: -$size;
+    }
+    .-spaced-y-#{$name} > *:not(:last-child) {
+        margin-bottom: -$size;
+    }
+}
+
+/* auto margins */
+.m-auto {
+    margin: auto;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+.my-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.mt-auto {
+    margin-top: auto;
+}
+.mr-auto {
+    margin-right: auto;
+}
+.mb-auto {
+    margin-bottom: auto;
+}
+.ml-auto {
+    margin-left: auto;
+}

@@ -1,0 +1,294 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/scrollbars';
+
+input {
+    padding: size('4') size('8');
+    border: 0;
+    outline: 0;
+    background-color: var(--bg);
+    color: var(--text);
+
+    &:focus {
+        outline: 0;
+    }
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+
+    label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: size('6', true);
+        padding: 0 size('4') size('4');
+        color: var(--text);
+        font-size: font-size('xs');
+        font-weight: bold;
+        line-height: line-height('normal');
+        width: auto; // override woco.css
+
+        & > span[class^="icon-"] {
+            width: 1em;
+            height: 1em;
+            background-color: var(--icon-secondary);
+        }
+    }
+
+    .input-hint {
+        padding: size('4') size('4') 0;
+        font-size: font-size('xs');
+        color: var(--text-secondary);
+    }
+
+    .text-input {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: size('6', true) size('6', true) size('6', true) size('12', true);
+        border-radius: radius('xl');
+        color: var(--text);
+        background-color:var(--bg-section);
+        transition: border-color 120ms, box-shadow 120ms;
+        width: 100%;
+
+        &.compact {
+            padding: size('2', true) size('2', true) size('2', true) size('6', true);
+
+            & > span[class^="icon-"] {
+                //height: calc(100% - size('8', true)); // TODO: work out how the icon can occupy the (dynamic) full height
+                width: 14px;
+                height: 14px;
+                margin-right: size('4', true);
+            }
+        }
+
+        &:has(> span[class^="icon-"]):not(.compact) {
+            padding: size('6', true) size('6', true) size('6', true) size('10', true);
+        }
+        & > span[class^="icon-"] {
+            //height: calc(100% - size('4', true)); // TODO: work out how the icon can occupy the (dynamic) full height
+            //width: auto;
+            //aspect-ratio: 1;
+            width: 17.5px;
+            height: 17.5px;
+            margin-right: size('6', true);
+            background-color: var(--icon-secondary);
+        }
+        
+        input {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            color: var(--text);
+            
+            &::placeholder {
+                color: var(--text-secondary);
+            }
+            &:placeholder-shown + .btn-clear {
+                visibility: hidden;
+                opacity: 0;
+            }
+
+            &:disabled {
+                color: var(--text-disabled);
+            }
+        }
+
+        &:hover:has(> input:enabled) {
+            border-color: var(--border);
+        }
+        &:has(> input:focus) {
+            box-shadow: shadow('xs'), inset 0 0 0 1px var(--border-focus);
+            border-color: var(--border-focus);
+            caret-color: var(--border-focus);
+        }
+        &:has(> input:disabled) {
+            background-color: var(--bg-hover);
+            color: var(--text-disabled);
+            box-shadow: none;
+            cursor: default;
+
+            .btn-clear {
+                pointer-events: none; // TODO: perhaps button should be disabled via HTML instead of disabling pointer events via CSS (the latter causes tooltips from the title attribute to not work for exmaple)
+            }
+        }
+
+        .btn-clear {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: size('6', true);
+            border: none;
+            border-radius: radius('full');
+            background: none;
+            cursor: pointer;
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 180ms, visibility 180ms;
+            
+            & > span[class^="icon-"] {
+                background-color: var(--icon-secondary);
+                width: .75em;
+                height: .75em;
+                transition: background-color 120ms;
+            }
+
+            &:hover:enabled > span[class^="icon-"] {
+                background-color: var(--icon-warning);
+            }
+        }
+    }
+
+    &.invalid, &:has(> .text-input input:invalid) {
+        
+        .text-input {
+            border-color: var(--border-warning);
+        
+            &:has(> input:focus) {
+                border-color: var(--border-warning);
+                box-shadow: shadow('xs'), inset 0 0 0 1px var(--border-warning);
+            }
+            input:focus {
+                caret-color: var(--border-warning);
+            }
+
+            &:hover:has(> input:enabled) {
+                border-color: var(--border-warning);
+            }
+        }
+
+        .input-hint {
+            color: var(--text-warning);
+        }
+    }
+
+    .inputs-grouped {
+        display: flex;
+        flex-direction: row;
+        min-width: 0;
+        width: 100%;
+        
+        & > div {
+            min-width: 0;
+        }
+        &:has(.input) > button, &:has(.input) > .select-wrapper > button, &:has(.input) > .tooltip-wrapper > button, & > .input > .select-wrapper > button {
+            box-shadow: none;
+            
+            &.btn-icon {
+                flex: 1 0 2.1rem;
+                height: 100%;
+                aspect-ratio: 1;
+            }
+
+            &.btn-secondary.btn-icon {
+                background-color: var(--bg-section);
+                border: none;
+                box-shadow: none;
+                margin-right: 5px;
+
+                &:hover {
+                    background-color: var(--bg-highlight);
+                }
+            }
+        }
+
+        & > :not(:first-child), & > .select-wrapper:not(:first-child) > :first-child, & > .tooltip-wrapper:not(:first-child) > :first-child, & > .input:not(:first-child) > .select-wrapper > :first-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        & > :not(:last-child), & > .select-wrapper:not(:last-child) > :first-child, & > .tooltip-wrapper:not(:last-child) > :first-child, & > .input:not(:last-child) > .select-wrapper > :first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+
+    & + span[class^="icon-"]:has(+ .input) { // minus icon that connects two inputs (range input)
+        width: size('16');
+        height: size('32');
+        background-color: var(--icon-secondary);
+    }
+
+    & + span[class^="icon-"] + .input, &:has(+ span[class^="icon-"] + .input) { // fix for consistent responsive width of range inputs
+        flex: 1 1 auto;
+        width: 15rem;
+    }
+
+    &:has(+ .input > label) {
+        margin-bottom: size('4');
+    }
+}
+
+textarea {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: size('6', true) size('6', true) size('6', true) size('12', true);
+    outline: none;
+    border: none;
+    border-radius: radius('xl');
+    color: var(--text);
+    background-color: var(--bg-section);
+    transition: border-color 120ms, box-shadow 120ms;
+    width: 100%;
+    resize: none;
+    cursor: auto;
+    line-height: line-height('snug');
+
+    &:hover:enabled {
+        border-color: var(--border);
+    }
+    &:focus {
+        box-shadow: shadow('xs'), inset 0 0 0 1px var(--border-focus);
+        border-color: var(--border-focus);
+        caret-color: var(--border-focus);
+    }
+    &:disabled {
+        background-color: var(--bg-hover);
+        color: var(--text-secondary);
+        box-shadow: none;
+        cursor: default;
+    }
+    &::placeholder {
+        color: var(--text-secondary);
+    }
+
+    &.borderless {
+        border: none;
+        border-radius: radius('none');
+        box-shadow: none;
+        padding: 0;
+    }
+}
+
+// TODO: custom number inputs
+input[type="number"]::-webkit-inner-spin-button {
+    cursor: pointer;
+}
+
+input[type="color"] {
+    width: size('24');
+    height: size('24');
+    border-radius: radius('full'); // TODO: maybe full radius for a circle?
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+
+    &::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+    
+    &::-webkit-color-swatch {
+        border: none;
+    }
+}
+.input > div:has(input[type="color"]) {
+    display: flex;
+}

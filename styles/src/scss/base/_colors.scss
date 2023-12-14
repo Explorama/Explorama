@@ -1,0 +1,59 @@
+/* ====================
+   COLORS
+   ==================== */
+
+@use 'sass:math';
+@use 'colormap';
+
+/* ----- Colors ----- */
+
+@each $name, $color in colormap.$colors {
+
+	.text-#{$name} {
+		color: $color;
+	}
+
+	.bg-#{$name} {
+		background-color: $color;
+	}
+    
+    .icon-#{$name} {
+        background-color: $color;
+    }
+
+	.icon-#{$name}-important {
+        background-color: $color !important;
+    }
+
+	.text-decor-#{$name} {
+		text-decoration-color: $color;
+	}
+
+	.border-#{$name} {
+		border-color: $color;
+	}
+
+	.divide-#{$name} > *:not(:last-child) {
+		border-color: $color;
+	}
+
+	.outline-#{$name} {
+		outline-color: $color;
+	}
+
+	.shadow-#{$name} {
+		--box-shadow-color: #{$color};
+	}
+}
+
+/* ----- Opacity ----- */
+
+@for $i from 0 through 100 {
+
+	@if $i % 5 == 0 {
+
+		.opacity-#{$i} {
+			opacity: math.div($i, 100);
+		}
+	}
+}

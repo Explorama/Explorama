@@ -1,0 +1,325 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+// mosaic Note Box 
+
+.note__box {
+	position: absolute;
+	display: none;
+	width: 250px;
+	z-index: 3;
+	border-radius: radius('xs');
+	background-color: var(--bg-section);
+	box-shadow: shadow('lg');
+
+    .note__box__header {
+        padding: .5rem .5rem 0;
+    
+        span[class^="icon-"] {
+            background-color: var(--icon);
+        }
+    }
+    
+    .note__box__title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1;
+    }
+    
+    .note__box__body {
+        padding: .5rem;
+        font-size: 0;
+    
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: .5rem;
+            border: size('1') solid var(--border-secondary);
+            background: var(--bg);
+        }
+    }
+    
+    .note__box__footer {
+        padding: .5rem;
+    }
+    
+    .note__box__authors {
+        padding: 0 .7rem;
+        font-size: 10px;
+        color: var(--text-secondary);
+    }
+}
+
+// Workspace text cards
+
+.note-card {
+    position: absolute;
+    padding: size('12');
+    border: width('1') solid color('gray-200');
+    border-radius: radius('md');
+    color: color('gray-900');
+    background-color: white;
+    box-shadow: shadow('md');
+    text-decoration: none;
+    z-index: 400;
+    transition: box-shadow 120ms, border-color 120ms;
+    
+    &.active, &:has(.ql-editor:focus) {
+        box-shadow: shadow('md'), inset 0 0 0 1px var(--primary);
+        border-color: var(--primary);
+
+        .ql-toolbar {
+            display: flex;
+        }
+    }
+
+    &:not(:has(.ql-editor:focus)) {
+        cursor: grab;
+
+        .ql-editor p {
+            cursor: grab;
+        }
+    }
+
+    .note-remove {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: none;
+        background-color: color('white', .25);
+        z-index: 1;
+    }
+    &:hover .note-remove, &:has(.ql-editor:focus) .note-remove {
+        display: block;
+    }
+    &:has(.note-remove:hover) {
+        box-shadow: shadow('md'), inset 0 0 0 1px var(--border-warning);
+        border-color: var(--border-warning);
+    }
+
+    .ql-toolbar.ql-snow {
+        display: none;
+        align-items: center;
+        gap: size('2');
+        width: max-content;
+        position: absolute;
+        top: -4rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: size('8');
+        border: none;
+        border-radius: radius('md');
+        background-color: color('white');
+        box-shadow: shadow('md');
+        z-index: 2;
+
+        :is(.ql-formats, .custom-ql-toolbar) button, .ql-picker-label {
+            width: auto;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: size('8');
+            border: none;
+            border-radius: radius('xs');
+            color: color('gray-900');
+            background-color: color('white');
+            transition: background-color 120ms, color 120ms, transform 120ms;
+
+            &:active {
+                transform: scale(0.95);
+            }
+    
+            &:focus-visible {
+                outline: size('2') solid var(--border-focus);
+            }
+
+            svg {
+                width: size('20');
+                height: size('20');
+                
+                .ql-stroke {
+                    stroke: color('gray-900');
+                    transition: stroke 120ms, fill 120ms;
+                }
+                .ql-fill {
+                    fill: color('gray-900');
+                    transition: stroke 120ms, fill 120ms;
+                }
+            }
+
+            &:hover {
+                color: var(--primary);
+
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary);
+                    }
+                    .ql-fill {
+                        fill: var(--primary);
+                    }
+                }
+            }
+            &.ql-active {
+                color: var(--primary);
+                background-color: var(--primary);
+
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary);
+                    }
+                    .ql-fill {
+                        fill: var(--primary);
+                    }
+                }
+            }
+            &.ql-active:hover {
+                color: var(--primary-highlight);
+
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary-highlight);
+                    }
+                    .ql-fill {
+                        fill: var(--primary-highlight);
+                    }
+                }
+            }
+        }
+
+        .ql-picker {
+            width: auto;
+            height: auto;
+
+            &.ql-expanded .ql-picker-label {
+                color: var(--primary);
+                background-color: var(--primary-muted);
+    
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary);
+                    }
+                    .ql-fill {
+                        fill: var(--primary);
+                    }
+                }
+
+                &:hover {
+                    color: var(--primary-highlight);
+
+                    svg {
+        
+                        .ql-stroke {
+                            stroke: var(--primary-highlight);
+                        }
+                        .ql-fill {
+                            fill: var(--primary-highlight);
+                        }
+                    }
+                }
+            }
+
+            .ql-picker-options {
+                border: none;
+                border-radius: radius('md');
+                box-shadow: shadow('md');
+                font-size: font-size('md');
+
+                .ql-picker-item {
+                    color: color('gray-900');
+    
+                    &:hover, &.ql-selected {
+                        color: var(--primary);
+
+                        .ql-stroke {
+                            stroke: var(--primary);
+                        }
+                        .ql-fill {
+                            fill: var(--primary);
+                        }
+                    }
+
+                    &[data-value="small"]::before {
+                        font-size: font-size('xs');
+                    }
+                    &[data-value="large"]::before {
+                        font-size: font-size('xxl');
+                    }
+                    &[data-value="huge"]::before {
+                        font-size: font-size('3xl');
+                    }
+                }
+            }
+
+            &:not(.ql-color-picker):not(.ql-icon-picker) svg {
+                position: static;
+                width: auto;
+                margin: -1px -4px 0 0;
+            }
+        }
+
+        .ql-formats {
+            display: flex;
+            align-items: center;
+            gap: size('2');
+            margin: 0;
+        }
+
+        .custom-ql-toolbar {
+            display: flex;
+            align-items: center;
+            gap: size('2');
+    
+            button {
+    
+                span[class^="icon-"] {
+                    width: size('16');
+                    height: size('16');
+                    background-color: color('gray-900');
+                    transition: background-color 120ms;
+                }
+    
+                &:hover {
+        
+                    span[class^="icon-"] {
+                        background-color: var(--primary);
+                    }
+                }
+            }
+        }
+    }
+    &.show-toolbar .ql-toolbar {
+        display: flex;
+    }
+    &.toolbar-bottom .ql-toolbar {
+        top: auto;
+        bottom: -4rem;
+    }
+
+    .ql-container {
+        border: none;
+        font-size: font-size('md');
+        font-family: inherit;
+
+        .ql-editor {
+            padding: 0;
+
+            .ql-size-small {
+                font-size: font-size('xs');
+            }
+            .ql-size-large {
+                font-size: font-size('xxl');
+            }
+            .ql-size-huge {
+                font-size: font-size('3xl');
+            }
+        }
+    }
+}

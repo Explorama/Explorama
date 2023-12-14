@@ -1,0 +1,21 @@
+{
+    "version": "0.0.0",
+    "name": "explorama",
+    "productName": "Explorama",
+    "appId": "de.explorama",
+    "author": "Explorama e.V.",
+    "license": "EPL-1.0",
+    "description": "TODO",
+    "dependencies": {
+        "ml-regression-simple-linear": "2.0.4"
+    },
+    "devDependencies": {
+        "@cljs-oss/module-deps": "1.1.1",
+        "karma": "^6.4.1",
+        "karma-chrome-launcher": "^3.2.0",
+        "karma-cljs-test": "^0.1.0",
+        "karma-coverage": "^2.2.1",
+        "karma-htmlfile-reporter": "^0.3.8",
+        "karma-junit-reporter": "^2.0.1"
+    }
+}

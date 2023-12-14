@@ -1,0 +1,811 @@
+@use "sass:map";
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+/* line 15, src/scss/components/_explorama-window.scss */
+.explorama__window.ovh {
+    overflow: hidden;
+}
+
+/* line 19, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-1 .data__reference input {
+    color: #fff;
+    background-color: #ef445a;
+}
+
+/* line 20, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-2 .data__reference input {
+    color: #fff;
+    background-color: #265f7e;
+}
+
+/* line 21, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-3 .data__reference input {
+    color: #fff;
+    background-color: #fea334;
+}
+
+/* line 22, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-4 .data__reference input {
+    color: #fff;
+    background-color: #4b8a68;
+}
+
+/* line 23, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-5 .data__reference input {
+    color: #fff;
+    background-color: #BA9E78;
+}
+
+/* line 24, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-6 .data__reference input {
+    color: #fff;
+    background-color: #ba2b1d;
+}
+
+/* line 25, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-7 .data__reference input {
+    color: #fff;
+    background-color: #429eb3;
+}
+
+/* line 26, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-8 .data__reference input {
+    color: #fff;
+    background-color: #f0773a;
+}
+
+/* line 27, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-9 .data__reference input {
+    color: #fff;
+    background-color: #94d9ae;
+}
+
+/* line 28, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-10 .data__reference input {
+    color: #fff;
+    background-color: #796153;
+}
+
+/* line 29, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-11 .data__reference input {
+    color: #fff;
+    background-color: #f58e9c;
+}
+
+/* line 30, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-12 .data__reference input {
+    color: #fff;
+    background-color: #0980ad;
+}
+
+/* line 31, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-13 .data__reference input {
+    color: #fff;
+    background-color: #fecd34;
+}
+
+/* line 32, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-14 .data__reference input {
+    color: #fff;
+    background-color: #64a98b;
+}
+
+/* line 33, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__reference-15 .data__reference input {
+    color: #fff;
+    background-color: #E6CF9E;
+}
+
+/* line 196, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body {
+    overflow: hidden;
+    background: transparent !important;
+    border-radius: 0 0 radius('md') radius('md');
+}
+
+/* line 201, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body.window__body--ql {
+    padding-top: 0;
+    margin-top: 18px;
+}
+
+/* line 206, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body.flex {
+    display: flex;
+}
+
+/* line 210, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body .no-data-placeholder {
+    position: absolute;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+    padding: 25px;
+    background-color: var(--bg);
+    cursor: pointer;
+}
+
+/* line 219, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body .no-data-placeholder>span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed var(--border);
+}
+
+/* line 227, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body .no-data-placeholder>span span[class^="icon-"] {
+    position: absolute;
+    z-index: -1;
+    width: 64px;
+    height: 64px;
+    background-color: var(--icon-secondary);
+    opacity: .3;
+}
+
+/* line 238, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body--scroll {
+    overflow-y: auto;
+}
+
+/* line 242, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__frame {
+    flex-grow: 1;
+    height: 100%;
+    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* line 248, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body canvas {
+    outline: 0;
+}
+
+/* line 252, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper {
+    display: flex;
+    flex-direction: row;
+    height: calc(100% - 32px);
+    position: relative;
+    border-bottom-left-radius: radius('md');
+    border-bottom-right-radius: radius('md');
+    overflow: hidden;
+    border-top: 6px solid var(--border-secondary);
+    border-bottom: 6px solid var(--border-secondary);
+    transition: border-color 120ms;
+}
+
+/* line 262, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper .window__body {
+    width: 100%;
+    height: 100%;
+}
+
+.explorama__window .window__body__wrapper .window__body:has(.no-data-placeholder) {
+    position: relative;
+}
+
+/* line 266, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper .extra-column {
+    flex: 0 0 auto;
+}
+
+/* line 274, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper .no-data-placeholder {
+    background-color: var(--bg);
+}
+
+/* line 303, src/scss/components/_explorama-window.scss */
+.explorama__window--maximized {
+    z-index: 10000;
+}
+
+/* line 306, src/scss/components/_explorama-window.scss */
+.explorama__window--maximized .window__header {
+    border-radius: 0;
+}
+
+/* line 335, src/scss/components/_explorama-window.scss */
+div[id^='woco_frame-visualization-charts'] .window__body,
+div[id^='woco_frame-data-provisioning'] .window__body {
+    height: 100% !important;
+}
+
+/* line 351, src/scss/components/_explorama-window.scss */
+div[id^='woco_frame-ki'] .window__body>div:not(.legend__panel) {
+    flex-grow: 1;
+}
+
+/* line 357, src/scss/components/_explorama-window.scss */
+.button__close {
+    width: 24px !important;
+    height: 24px;
+}
+
+/* line 363, src/scss/components/_explorama-window.scss */
+.explorama__window__footer {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-top: 1px solid #dee2e6;
+}
+
+/* line 368, src/scss/components/_explorama-window.scss */
+.explorama__window__footer a:first-child {
+    margin-right: 12px;
+}
+
+/* line 462, src/scss/components/_explorama-window.scss */
+.explorama__window--flex {
+    display: flex;
+    flex-direction: column;
+}
+
+/* line 466, src/scss/components/_explorama-window.scss */
+.explorama__window--flex .window__body {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+/* line 471, src/scss/components/_explorama-window.scss */
+.explorama__window--flex .window__body .ql-container {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+/* line 475, src/scss/components/_explorama-window.scss */
+.explorama__window--flex .window__body .ql-container .ql-editor {
+    overflow-y: initial;
+}
+
+/* line 482, src/scss/components/_explorama-window.scss */
+.window__notification {
+    position: absolute;
+    top: 42px;
+    right: 10px;
+    left: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 60px;
+    padding: 0.75em;
+    border-radius: 0.375rem;
+    color: white;
+    background-color: rgba(27, 28, 30, 0.8);
+}
+
+/* line 496, src/scss/components/_explorama-window.scss */
+.window__notification.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s linear;
+}
+
+/* line 502, src/scss/components/_explorama-window.scss */
+.window__notification .notification__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    filter: invert(100%) sepia(2%) saturate(6%) hue-rotate(17deg) brightness(105%) contrast(101%);
+}
+
+.window__notification .notification__icon span[class^="icon-"] {
+    width: 24px;
+    height: 24px;
+}
+
+/* line 516, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message {
+    padding-left: 12px;
+}
+
+/* line 519, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message div {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+}
+
+/* line 524, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message div button {
+    padding: 1px 4px 2px;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+}
+
+/* line 530, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message div button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* line 542, src/scss/components/_explorama-window.scss */
+.window__notification .notification__actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding-top: 12px;
+}
+
+/* line 548, src/scss/components/_explorama-window.scss */
+.window__notification .notification__actions .button:first-child {
+    margin-right: 6px;
+}
+
+/* line 553, src/scss/components/_explorama-window.scss */
+.window__notification .notification__close {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%22500%22%20height%3D%22500%22%20viewBox%3D%220%200%20500%20500%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M318.426%20250L445.17%20123.256c6.441-6.44%206.441-16.885%200-23.326l-45.1-45.099c-6.44-6.441-16.884-6.441-23.327%200L250%20181.574%20123.257%2054.83c-6.442-6.441-16.885-6.441-23.327%200L54.83%2099.93c-6.441%206.441-6.441%2016.885%200%2023.326L181.574%20250%2054.831%20376.742c-6.441%206.442-6.441%2016.886%200%2023.328L99.93%20445.17A16.445%2016.445%200%2000111.593%20450c4.222%200%208.443-1.611%2011.664-4.831L250%20318.426%20376.742%20445.17A16.448%2016.448%200%2000388.407%20450c4.221%200%208.442-1.611%2011.662-4.831l45.1-45.099c6.441-6.442%206.441-16.885%200-23.328L318.426%20250z%22%20id%3D%22a%22%2F%3E%3C%2Fdefs%3E%3Cuse%20fill%3D%22%23000%22%20fill-rule%3D%22nonzero%22%20xlink%3Ahref%3D%22%23a%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(100%) sepia(2%) saturate(6%) hue-rotate(17deg) brightness(105%) contrast(101%);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background-size: 12px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: background-color 120ms;
+}
+
+/* line 566, src/scss/components/_explorama-window.scss */
+.window__notification .notification__close:hover {
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* line 628, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar {
+    overflow: hidden;
+    min-height: 300px;
+    background: #fff;
+}
+
+/* line 633, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__body {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex-grow: 1;
+    padding: 0px;
+    overflow: hidden !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* line 647, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar {
+    position: relative;
+    z-index: 10;
+    min-width: 210px;
+    max-width: 210px;
+    padding: 12px 6px 12px 9px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.25);
+}
+
+/* line 657, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul {
+    padding-top: 12px;
+    padding-left: 0;
+    list-style: none;
+}
+
+/* line 662, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    padding: 12px 25px;
+    cursor: pointer;
+    color: #adb5bd;
+    text-decoration: none;
+}
+
+/* line 671, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li.settings__two__actions {
+    padding-right: 55px;
+}
+
+/* line 689, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li .settings__subtitle {
+    display: block;
+    font-size: 75%;
+}
+
+/* line 694, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li a.settings__action {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 3px;
+    transform: translateY(-50%);
+    border-radius: 3px;
+    background-size: 12px;
+    background-position: center;
+    background-color: #ced4da;
+}
+
+/* line 708, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li a.settings__action:hover,
+.explorama__window.explorama__window--sidebar .window__sidebar ul li a.settings__action.active {
+    background-color: #868e96;
+}
+
+/* line 713, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li a.settings__action:first-of-type {
+    right: 29px;
+}
+
+/* line 727, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li.active a {
+    background-color: #adb5bd;
+}
+
+/* line 731, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li.active,
+.explorama__window.explorama__window--sidebar .window__sidebar ul li:hover {
+    background: #dee2e6;
+    color: #343a40;
+}
+
+/* line 736, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li:hover {
+    background: #f8f9fa;
+}
+
+/* line 740, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__sidebar ul li.active:hover {
+    background: #dee2e6;
+}
+
+/* line 769, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* line 774, src/scss/components/_explorama-window.scss */
+.explorama__window.explorama__window--sidebar .window__wrapper .wrapper__main {
+    align-items: stretch;
+    flex-grow: 1;
+    padding: 12px 9px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.frame {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    min-width: 100px;
+    box-shadow: shadow('md');
+    border-radius: radius('lg');
+    outline: 0;
+    transition: outline-width 60ms;
+
+    &:not(.note-card) {
+        background-color: var(--bg) !important;
+    }
+
+    &>.header {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        gap: size('4');
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        padding: size('6') size('16');
+        border-top-left-radius: radius('lg');
+        border-top-right-radius: radius('lg');
+        background-color: color('gray-700');
+        color: color('white');
+        margin-bottom: -0.5px;
+
+        &> :where(span, div) {
+            z-index: 1;
+        }
+
+        span.frame-icon {
+            flex-shrink: 0;
+            width: 1.25em;
+            height: 1.25em;
+            margin-right: size('4');
+            background-color: white;
+        }
+
+        .title,
+        .custom_title {
+            flex: 1 1 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .title {
+            flex: 0 1 auto;
+            max-width: 33%;
+        }
+
+        .custom_title input {
+            max-width: 100%;
+            background-color: color('white', .5);
+            border-radius: radius('full');
+
+            &::placeholder {
+                color: color('black', .5);
+            }
+        }
+
+        .tools {
+            display: flex;
+            gap: size('4');
+            align-items: center;
+            flex-shrink: 1;
+
+            button {
+                padding: size('4');
+
+                &.active {
+                    background-color: color('white', .5);
+                }
+            }
+
+            span[class^="icon-"] {
+                background-color: white;
+            }
+
+            span.divider {
+                width: size('2');
+                height: 1.125rem;
+                margin-left: size('4');
+                margin-right: size('4');
+                border-radius: size('4');
+                background-color: color('white');
+                opacity: .25;
+            }
+        }
+
+        @for $i from 1 through 15 {
+            &.group-#{$i} {
+                background-color: map.get($frame, 'group-#{$i}');
+            }
+        }
+    }
+
+    .body-wrapper {
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        border-bottom-left-radius: radius('lg');
+        border-bottom-right-radius: radius('lg');
+
+        .body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg);
+
+            .scroll {
+                overflow-y: scroll;
+            }
+        }
+
+        .extra-column {
+            flex: 0 0 auto;
+        }
+
+        .no-data-placeholder {
+            position: absolute;
+            z-index: 9; // above map
+            width: 100%;
+            height: 100%;
+            padding: 25px;
+
+            &>span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+                border: width('2') dashed var(--border);
+                border-radius: radius('sm');
+
+                span[class^="icon-"] {
+                    position: absolute;
+                    z-index: -1;
+                    width: size('64');
+                    height: size('64');
+                    margin-top: size('16');
+                    background-color: var(--icon-secondary);
+                }
+            }
+        }
+    }
+
+    .footer {
+        width: 100%;
+        height: 32px;
+        padding: 12px 3px 12px 18px;
+        border-top: 1px solid var(--border);
+        border-bottom-left-radius: radius('lg');
+        border-bottom-right-radius: radius('lg');
+
+        a:first-child {
+            margin-right: 12px;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    &.drop-target {
+        outline: size('2') dashed var(--border-focus);
+        outline-offset: size('4');
+        transition: none;
+
+        .window__body:after {
+            content: "";
+            z-index: 1000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            @include icon($icon: 'drop', $size: size-ext('1-3'), $color: color('purple', 0.5));
+        }
+    }
+}
+
+/* Selection */
+
+.frame {
+    &.selected {
+        outline: size('4') solid color('blue-200');
+        box-shadow: shadow('lg');
+    }
+
+    &.selection {
+        outline: size('8') solid color('blue-300');
+        box-shadow: shadow('xl');
+    }
+
+    &.sticking {
+        // notes sticking to windows
+        outline: size('4') solid color('yellow-400');
+        box-shadow: shadow('lg');
+    }
+}
+
+#local-selection-bounding-box {
+    background-color: color('blue');
+    border: 0;
+    opacity: 0.25;
+}
+
+#selection-bounding-box {
+    border: size('4') solid color('blue-300');
+    border-radius: radius('sm');
+    background-color: color('blue', 0.1);
+}
+
+/* Window Placement */
+
+
+
+.window-placement-overlay,
+.window-drag-overlay {
+    position: absolute;
+    z-index: 200001;
+    overflow: hidden;
+    inset: 0;
+    user-select: none;
+}
+
+.window-placement-overlay {
+    cursor: url(../img/window-placement.svg), cell;
+    backdrop-filter: var(--backdrop-filter);
+
+    .card {
+        position: absolute;
+        top: size('16');
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        padding: size('12') size('24');
+    }
+}
+
+/* Window Handling Tour */
+
+.window-handling-tour {
+    position: absolute;
+    bottom: size('16');
+    left: 50%;
+    translate: -50% 0;
+    width: 386px;
+    animation: fadeInUp 1s 1s both;
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: size('16');
+        box-shadow: shadow('xl');
+        text-align: center;
+
+        img {
+            border: size('1') solid color('gray-200');
+            border-radius: radius('xs');
+            aspect-ratio: 3/4;
+        }
+
+        .image-hint {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: size('12');
+            padding: size('4') size('8');
+            border: size('1') solid color('gray-200');
+            border-radius: radius('xs') 0;
+            background-color: color('gray-100', 0.8);
+            backdrop-filter: blur(4px);
+            color: color('gray-700');
+            font-size: font-size('sm');
+            letter-spacing: size('2');
+        }
+
+        h3 {
+            margin-bottom: size('16');
+        }
+    }
+}
+
+
+/* Legacy Styles */
+
+@for $i from 1 through 15 {
+    .explorama__window__group-#{$i} {
+        background-color: map.get($frame, 'group-#{$i}');
+    }
+
+    .frame:has(.explorama__window__group-#{$i}) .window__body__wrapper {
+        border-top: 6px solid map.get($frame, 'group-#{$i}');
+        border-bottom: 6px solid map.get($frame, 'group-#{$i}');
+    }
+
+    .frame .explorama__window__group-#{$i}.header {
+        background: linear-gradient(90deg, color('gray-700') 59.9%, map.get($frame, 'group-#{$i}') 60%);
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: calc(60% - 199px);
+            border-top-right-radius: radius('lg');
+            background-color: map.get($frame, 'group-#{$i}');
+            clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+        }
+    }
+}

@@ -1,0 +1,46 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+.sidebar .settings {
+
+    > div {
+        flex: 0 !important;
+        padding-block: size('16') !important;
+    }
+
+    .info {
+        padding: size('4') size('8');
+        border: size('1') solid var(--border);
+        border-radius: radius('md');
+        background-color: var(--bg-section);
+        font-style: italic;
+
+        > div:has(+div) {
+            margin-bottom: size('4');
+        }
+
+        span[class^='icon-'] {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: size('4');
+            background-color: var(--icon);
+        }
+    }
+    
+    input + label {
+        > img {
+            display: block;
+            width: auto;
+            height: 0;
+            transition: height 200ms ease;
+        }
+    }
+
+    input:checked + label {
+        > img {
+            height: 75px;
+            border: size('1') solid var(--border);
+            border-radius: radius('sm');
+        }
+    }
+}

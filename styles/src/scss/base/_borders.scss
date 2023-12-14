@@ -1,0 +1,183 @@
+/* ==========================
+   BORDERS, DIVIDES, OUTLINES
+   ========================== */
+
+@use 'variables' as vars;
+
+/* ----- Border Radius ----- */
+
+.rounded {
+    @extend .rounded-md; // default value
+}
+
+@each $name, $radius in vars.$radii {
+    
+    /* all corners */
+    .rounded-#{$name} {
+        border-radius: $radius;
+    }
+
+    /* individual sides */
+    .rounded-t-#{$name} {
+        border-radius: $radius;
+    }
+    .rounded-r-#{$name} {
+        border-radius: $radius;
+    }
+    .rounded-b-#{$name} {
+        border-radius: $radius;
+    }
+    .rounded-l-#{$name} {
+        border-radius: $radius;
+    }
+
+    /* individual corners */
+    .rounded-tl-#{$name} {
+        border-radius: $radius;
+    }
+    .rounded-tr-#{$name} {
+        border-radius: $radius;
+    }
+    .rounded-br-#{$name} {
+        border-radius: $radius;
+    }
+    .rounded-bl-#{$name} {
+        border-radius: $radius;
+    }
+}
+
+/* ----- Border Width ----- */
+
+.border {
+    @extend .border-1; // default value
+}
+.border-x {
+    @extend .border-x-1; // default value
+}
+.border-y {
+    @extend .border-y-1; // default value
+}
+.border-t {
+    @extend .border-t-1; // default value
+}
+.border-r {
+    @extend .border-r-1; // default value
+}
+.border-b {
+    @extend .border-b-1; // default value
+}
+.border-l {
+    @extend .border-l-1; // default value
+}
+.outline {
+    @extend .outline-1; // default value
+}
+
+@each $name, $width in vars.$widths {
+
+    /* all sides */
+    .border-#{$name} {
+        border-width: $width;
+        border-style: solid;
+    }
+    
+    /* horizontal/vertical borders */
+    .border-x-#{$name} {
+        border-left: $width solid;
+        border-right: $width solid;
+    }
+    .border-y-#{$name} {
+        border-top: $width solid;
+        border-bottom: $width solid;
+    }
+
+    /* individual sides */
+    .border-t-#{$name} {
+        border-top: $width solid;
+    }
+    .border-r-#{$name} {
+        border-right: $width solid;
+    }
+    .border-b-#{$name} {
+        border-bottom: $width solid;
+    }
+    .border-l-#{$name} {
+        border-left: $width solid;
+    }
+
+    /* between children */
+    .divide-x-#{$name} > *:not(:last-child) {
+        border-right: $width solid;
+    }
+    .divide-y-#{$name} > *:not(:last-child) {
+        border-bottom: $width solid;
+    }
+
+    /* outline */
+    .outline-#{$name} {
+        outline-width: $width;
+        outline-style: solid;
+    }
+
+    /* outline offset */
+    .outline-offset-#{$name} {
+        outline-offset: $width;
+        outline-style: solid;
+    }
+}
+
+/* ----- Border Style ----- */
+
+.border-solid {
+    border-style: solid;
+}
+.border-dashed {
+    border-style: dashed;
+}
+.border-dotted {
+    border-style: dotted;
+}
+.border-double {
+    border-style: double;
+}
+.border-none {
+    border-style: none;
+}
+
+.divide-solid > *:not(:last-child) {
+    border-style: solid;
+}
+.divide-dashed > *:not(:last-child) {
+    border-style: dashed;
+}
+.divide-dotted > *:not(:last-child) {
+    border-style: dotted;
+}
+.divide-double > *:not(:last-child) {
+    border-style: double;
+}
+.divide-none > *:not(:last-child) {
+    border-style: none;
+}
+
+.outline-solid {
+    outline-style: solid;
+}
+.outline-dashed {
+    outline-style: dashed;
+}
+.outline-dotted {
+    outline-style: dotted;
+}
+.outline-double {
+    outline-style: double;
+}
+.outline-none {
+    // transparent outline used to ensure the elements' focuses are visible in Windows' high contrast mode
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+/* ----- Border Color ----- */
+
+/* see _colors.scss for border, divide, and outline color definition */

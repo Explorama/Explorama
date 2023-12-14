@@ -1,0 +1,648 @@
+/* Temporary fixes */
+
+@use 'sass:math';
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/icons' as *;
+
+/* fix icon colors and icon positions in windows */
+
+.window__header span[class^="icon-"] {
+    background-color: white;
+}
+
+.explorama__window .window__tools {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px;
+}
+
+.explorama__window .window__tools__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search__direct button span[class^="icon-"] {
+    background-color: #ced4da;
+    width: .75em;
+    height: .75em;
+}
+
+.input__icon span[class^="icon-"] {
+    background-color: white;
+}
+
+.explorama__search__bar .input__clearable button span[class^="icon-"] {
+    background-color: #222f40;
+}
+
+.explorama__search__bar div.focused > button span[class^="icon-"] {
+    background-color: #adb5bd;
+}
+
+.input__clearable button {
+    border: none;
+
+    &:disabled {
+        display: none;
+    }
+}
+
+.data__search__container .input__clearable button {
+    height: 27.5px;
+    padding: 6px;
+    cursor: pointer;
+
+    span[class^="icon-"] {
+        background-color: #adb5bd;
+    }
+}
+
+/* Direct visualization icon order */
+
+$tools-order: 'mosaic', 'map', 'charts', 'table', 'ki', 'anca', 'note'; // TODO: implement same name for ki/anca
+
+@each $tool in $tools-order {
+    .tool-#{$tool} {
+        order: index($tools-order, $tool);
+    }
+    
+    .tooltip-wrapper:has(> .tool-#{$tool}) { // tooltip wrapper divs
+        order: index($tools-order, $tool);
+    }
+
+    .btn-group .tool-#{$tool}, .btn-group .tooltip-wrapper:has(> .tool-#{$tool}) {
+        border-radius: radius('full') !important; // do not remove border-radius when order of elements is changed via css
+    }
+}
+
+.search__modules, .settings__actions, .indicator__actions {
+    .btn-group .btn-toggled {
+        border-radius: radius('full') !important;
+    }
+}
+
+/* Overlay position in search window */
+
+.explorama__window .window__body__wrapper .overlay {
+    top: 0;
+}
+
+/* Topic/datasource toggle in search */
+
+.search__block__label .attribute__toggle {
+    color: var(--link);
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* Charts legend */
+
+div[id^="woco_frame-visualization-charts"] .legend__panel .subsection__control {
+    
+    .input:not(:last-child) {
+        margin-bottom: size('8');
+    }
+    .input:has(+.input__mode) {
+        margin-bottom: 0;
+    }
+
+    .input__mode {
+        display: block;
+        margin-bottom: size('8');
+        padding: 0 0 0 size('4');
+        line-height: inherit;
+    }
+}
+
+/* Reporting and Projects: Sharing dialog */
+
+.settings__section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 270px;
+
+    & :where(h1,h2,h3,h4) {
+        margin: 0;
+    }
+    & > :where(h1,h2,h3,h4) {
+        margin-top: size('8');
+    }
+    & + .settings__section {
+        margin-top: size('8');
+    }
+    .title, .share__selection {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: size('6');
+    
+        & > .input {
+            flex-grow: 1;
+        }
+
+        & > .switch {
+            align-items: center;
+        }
+    }
+    .email__actions {
+        display: flex;
+        justify-content: space-between;
+    }
+    .explorama__form__subheader {
+        margin-bottom: size('6');
+    }
+    .explorama__search__block {
+        padding: 0 0 0 size('4');
+        background: none;
+    }
+    .explorama__form__row {
+        padding-left: size('4');
+    }
+    .col-3, .col-6, .col-8, .col-10 {
+        width: auto;
+        margin: 0;
+    }
+    .col-6 {
+        flex: 1;
+    }
+    .input--w14 {
+        width: 100%;
+        min-width: 18em;
+    }
+    .explorama__form__select.row.explorama__form--flex {
+        margin: 0;
+        min-height: 0;
+        align-items: center;
+
+        & > .col-6 {
+            margin-right: size('6');
+        }
+    }
+}
+
+/* Red highlighting of input fields on erraneous inputs, should eventually be done via the "invalid" class in the code */
+
+.search__block--error .input {
+    .text-input {
+        border-color: color('red-600');
+    
+        &:has(> input:focus) {
+            border-color: color('red-600');
+            box-shadow: shadow('xs'), inset 0 0 0 1px color('red-600');
+        }
+        input:focus {
+            caret-color: color('red-600');
+        }
+
+        &:hover:has(> input:enabled) {
+            border-color: color('red-700');
+        }
+    }
+
+    .select-input {
+        border-color: color('red-600');
+    
+        &:has(input:focus) {
+            border-color: color('red-600');
+            box-shadow: shadow('xs'), inset 0 0 0 1px color('red-600');
+        }
+        input:focus {
+            caret-color: color('red-600');
+        }
+
+        &:hover:has(input:enabled) {
+            border-color: color('red-700');
+        }
+    }
+
+    .input-hint {
+        color: color('red-600');
+    }
+}
+.search__block--error {
+    color: color('red-600');
+}
+
+/* Grid layouting quick fix */ // TODO: think about base classes for grid
+
+.grid-cols-1-4 {
+    grid-template-columns: 1fr 3fr auto;
+}
+
+/* Layout field icon and attribute selection */  // TODO: Replace with input group and button instead of select for icon (dev)
+
+:where(.sidebar, .legend__panel) .input--w6:has(+ .input--w100) .select-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+:where(.sidebar, .legend__panel) .input--w6 + .input--w100 .select-input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Legacy woco.css styles: */
+
+/* line 1, src/scss/utils/_tooltip.scss */
+a.tooltip {
+    position: relative;
+    text-decoration: none;
+}
+
+/* line 97, src/scss/ui-components/_explorama-search-block.scss */
+.input__mode {
+    color: #868e96;
+    line-height: 1.5rem;
+    width: fit-content;
+}
+
+/* line 103, src/scss/ui-components/_explorama-search-block.scss */
+.input__mode:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+h3 {
+    margin: 0;
+}
+
+// User list
+
+ul.user__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    div.title {
+        font-size: 12px;
+        font-weight: bold;
+        color: color('gray-700');
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        color: color('gray-700');
+        background-color: color('green-50');
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-bottom: 4px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        span.role__tag {
+            font-size: 10px;
+            padding: 1px 4px;
+            background-color: color('gray-200');
+            border-radius: 4px;
+            margin-left: 4px;
+
+            &.domain-expert {
+                background-color: color('yellow-100');
+            }
+            &.data-scientist {
+                background-color: color('green-100');
+            }
+            &.admin {
+                background-color: color('red-100');
+            }
+        }
+
+        a.remove-user {
+            margin-left: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            span[class^="icon-"] {
+                background-color: color('gray-500');
+            }
+
+            &:hover {
+
+                span[class^="icon-"] {
+                    background-color: color('gray-600');
+                }
+            }
+        }
+
+        &>span[class^="icon-"]:first-child {
+            background-color: color('gray-700');
+            margin-right: 4px;
+            margin-left: -2px;
+        }
+    }
+
+    div.groups {
+        margin-bottom: 4px;
+        padding-bottom: 4px;
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        li {
+            background-color: color('blue-50');
+        }
+    }
+}
+
+// Frame list // TODO: should be replaced by the collapsible list in the software
+
+.viewport__controls__framelist {
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+
+    .framelist__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: size('2');
+        border-bottom: size('1') solid var(--border);
+    }
+
+    .framelist__entries {
+        overflow: auto;
+        max-height: calc(100vh - 298px);
+        border-bottom: size('1') solid var(--border);
+
+        div.framelist__entry {
+            cursor: pointer;
+            overflow: hidden;
+            border-top: size('1') solid var(--border);
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+
+            &:first-child {
+                border: none;
+            }
+
+            &:hover {
+                background-color: var(--bg-hover);
+            }
+
+            div.entry__content {
+                display: flex;
+                align-items: flex-start;
+                padding: 4px 0 4px;
+
+                div.frame__icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 2px;
+                    padding: 4px;
+                    margin-right: 4px;
+
+                    span {
+                        width: 12px;
+                        height: 12px;
+                        background-color: color('white');
+                    }
+                }
+
+                div.frame__title {
+                    align-self: center;
+                }
+                
+                div.button__download {
+                    margin-left: auto;
+                    margin-right: 4px;
+
+                    button {
+                        background: none;
+                        box-shadow: none;
+                        padding: 4px;
+                
+                        span {
+                            width: 12px;
+                            height: 12px;
+                            background-color: var(--icon-secondary);
+                            margin: 0;
+                        }
+                        
+                        &:hover {
+                            background-color: var(--bg-hover);
+    
+                            span {
+                                background-color: var(--icon-hover);
+                            }
+                        }
+                    }
+                }
+            }
+
+            div.preview__image {
+                margin-bottom: 4px;
+
+                img {
+                    width: 50%;
+                    margin: auto;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+// User avatar
+
+.avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: size('40');
+    height: size('40');
+    border-radius: radius('full');
+    color: color('white');
+    background-color: color('purple-700');
+    font-weight: bold;
+    box-shadow: shadow('md');
+}
+
+// Filter overlay // TODO: should be removed when filter overlay is reworked
+
+.explorama__search__block {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 0.375rem;
+    background: var(--bg-section);
+    box-shadow: 0 1px 2px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.05));
+
+    .explorama__form__row {
+        display: flex;
+        gap: 4px;
+        padding: 0;
+
+        > div:nth-child(1) {
+            flex: 0 0 25%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        > div:nth-child(2) {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        > div:nth-child(3) {
+            width: 24px;
+        }
+    }
+}
+
+.constrainview__overlay {
+    position: absolute;
+    top: 32px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    background: color('black', .5);
+}
+.constrainview__overlay .constrain__canvas {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    display: flex;
+    // Not sure if this is the best solution. With windows that are too small in their width, the overlay extends beyond the window. But at least the overlay is usable opposed to when it is contained in the window (with the min-width property active).
+    width: 100%;
+    //min-width: min(300px, calc(100% - 24px));
+    max-width: min(600px, calc(100% - 24px));
+    max-height: min(600px, calc(100% - 24px));
+    overflow: hidden;
+    background: var(--bg);
+    box-shadow: shadow('md');
+    border-radius: radius('md');
+}
+.constrainview__overlay .constrain__canvas .window__wrapper__search {
+    height: auto;
+}
+.constrainview__overlay .constrain__canvas .constrain__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border-radius: 4px;
+    transition: background-color 120ms;
+}
+.constrainview__overlay .constrain__canvas .constrain__close:after {
+    content: " ";
+    display: block;
+    width: 1em;
+    height: 1em;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%22500%22%20height%3D%22500%22%20viewBox%3D%220%200%20500%20500%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M318.426%20250L445.17%20123.256c6.441-6.44%206.441-16.885%200-23.326l-45.1-45.099c-6.44-6.441-16.884-6.441-23.327%200L250%20181.574%20123.257%2054.83c-6.442-6.441-16.885-6.441-23.327%200L54.83%2099.93c-6.441%206.441-6.441%2016.885%200%2023.326L181.574%20250%2054.831%20376.742c-6.441%206.442-6.441%2016.886%200%2023.328L99.93%20445.17A16.445%2016.445%200%2000111.593%20450c4.222%200%208.443-1.611%2011.664-4.831L250%20318.426%20376.742%20445.17A16.448%2016.448%200%2000388.407%20450c4.221%200%208.442-1.611%2011.662-4.831l45.1-45.099c6.441-6.442%206.441-16.885%200-23.328L318.426%20250z%22%20id%3D%22a%22%2F%3E%3C%2Fdefs%3E%3Cuse%20fill%3D%22%23000%22%20fill-rule%3D%22nonzero%22%20xlink%3Ahref%3D%22%23a%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(38%) sepia(60%) saturate(635%) hue-rotate(131deg) brightness(87%) contrast(91%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 1em;
+    transition: filter 120ms;
+}
+.constrainview__overlay .constrain__canvas .constrain__close:hover {
+    background-color: color('gray-100', .5);
+
+    &:after {
+        filter: invert(7%) sepia(2%) saturate(3278%) hue-rotate(183deg) brightness(89%) contrast(89%);
+    }
+}
+.constrainview__overlay .constrain__canvas .search__main {
+    padding-top: 28px;
+}
+
+
+// Old row/col css
+
+$width:98%;
+$gutter: 2%;
+
+.row {
+  position: relative;
+  width: 100%;
+}
+
+.row [class^="col"] {
+  float: left;
+  margin: 0.5rem 1%;
+  min-height: 0.125rem;
+}
+
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.col-1,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-10,.col-11,.col-12 {
+  width: $width;
+}
+
+@media only screen and (min-width: 720px) {
+  .col-1 { width:(math.div($width, 12)) - ($gutter *  math.div(11, 12)); margin-right: $gutter * math.div(11, 12); }
+  .col-2 { width: (math.div($width, 6)) - ($gutter * math.div(10, 12)); }
+  .col-3 { width: (math.div($width, 4)) - ($gutter * math.div(9, 12)); }
+  .col-4 { width: (math.div($width, 3)) - ($gutter * math.div(8, 12)); margin-right: $gutter * math.div(18, 12); }
+  .col-5 { width: (math.div($width, math.div(12, 5))) - ($gutter * math.div(7, 12)); }
+  .col-6 { width: (math.div($width, 2)) - ($gutter * math.div(6, 12)); }
+  .col-7 { width: (math.div($width, math.div(12, 7))) - ($gutter * math.div(5, 12)); }
+  .col-8 { width: (math.div($width, math.div(12, 8))) - ($gutter * math.div(4, 12)); margin-right: $gutter * math.div(4, 12); }
+  .col-9 { width: (math.div($width, math.div(12, 9))) - ($gutter * math.div(3, 12)); }
+  .col-10 { width: (math.div($width, math.div(12, 10))) - ($gutter * math.div(2, 12)); }
+  .col-11 { width: (math.div($width, math.div(12, 11))) - ($gutter * math.div(1, 12)); }
+  .col-12 { width: $width; }
+}
+
+.explorama__importer {
+    .col-3 { width: math.div(100%, 4); }
+    .col-4 { width: math.div(100%, 3); margin-right: $gutter * math.div(8, 12); }
+}
+
+// Color circle (used in note toolbar)
+
+.color-circle {
+    display: block;
+    width: size('20');
+    height: size('20');
+    border-radius: radius('full');
+    border: width('2') solid color('black', 0.1);
+}
+
+// Export footer
+.export-footer {
+    padding: size('8');
+    background-color: color('white');
+    border-top: width('1') solid color('gray-300');
+    box-shadow: shadow('md');
+    display: flex;
+    flex-direction: column;
+    gap: size('4');
+
+    th {
+        text-align: left;
+        padding-right: size('16');
+    }
+}
+
+// Viewport toolbar position
+
+.explorama__workspace:has(.sidebar.show) #viewport-toolbar {
+    margin-right: 6px;
+}

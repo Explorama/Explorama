@@ -1,0 +1,341 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+
+%btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: size('6', true);
+    padding: size('8', true) size('12', true);
+    border: width('1') solid transparent;
+    border-radius: radius('full');
+    font-weight: bold;
+    line-height: 1;
+    text-decoration: none;
+
+    &.hover,
+    &:hover:enabled {
+        cursor: pointer;
+    }
+
+    &.active,
+    &:active:enabled {
+        transform: scale(0.97);
+        box-shadow: none;
+    }
+
+    &.focus,
+    &:focus-visible {
+        outline: width('2') solid color('purple-700');
+        outline-offset: width('2');
+        isolation: isolate; // creates a new stacking context for the outline to be rendered above siblings; alternatives: "position: relative;" or setting a z-index
+    }
+
+    &:disabled {
+        opacity: .5;
+        box-shadow: none;
+        cursor: default;
+    }
+
+    span[class^="icon-"] {
+        // icons scale with font size
+        width: 1em;
+        height: 1em;
+    }
+
+}
+
+.btn-icon,
+.btn-group .btn-icon {
+    // for icon only buttons (not for icon + label buttons)
+    padding: size('8', true);
+}
+
+.btn-small {
+    padding: size('4', true) size('8', true);
+
+    &.btn-icon {
+        padding: size('4', true);
+    }
+}
+
+.btn-large {
+    width: 100%;
+    padding: size('12', true);
+}
+
+.btn-warning {
+
+    &.btn-primary {
+        background-color: color('red-700');
+
+        &.hover,
+        &:hover:enabled {
+            background-color: color('red-800');
+        }
+    }
+
+    &.btn-secondary,
+    &.btn-tertiary {
+        color: color('red-700');
+
+        span[class^="icon-"] {
+            background-color: color('red-700');
+        }
+
+        &.hover,
+        &:hover:enabled {
+            color: color('red-800');
+
+            span[class^="icon-"] {
+                background-color: color('red-800');
+            }
+        }
+    }
+}
+
+.btn-primary {
+    @extend %btn;
+    background-color: var(--primary);
+    ;
+    color: color('gray-50');
+    box-shadow: shadow('sm');
+    transition: background-color 240ms, transform 120ms;
+
+    span[class^="icon-"] {
+        background-color: color('white');
+    }
+
+    &.hover,
+    &:hover:enabled {
+        background-color: var(--primary-highlight);
+        ;
+    }
+}
+
+.btn-secondary {
+    @extend %btn;
+    background-color: var(--bg);
+    color: var(--text);
+    border: width('1') solid var(--border);
+    box-shadow: shadow('sm');
+    transition: border-color 120ms, transform 120ms, box-shadow 120ms, background-color 120ms, color 120ms;
+
+    span[class^="icon-"] {
+        background-color: var(--icon);
+    }
+
+    &.hover,
+    &:hover:enabled {
+        background-color: var(--bg-hover);
+    }
+
+    &:disabled {
+        background-color: color('gray-100');
+        color: color('gray-600');
+        border-color: color('gray-300');
+
+        span[class^="icon-"] {
+            background-color: color('gray-600');
+        }
+    }
+}
+
+.btn-tertiary {
+    @extend %btn;
+    background-color: transparent;
+    color: var(--primary);
+    transition: background-color 120ms, color 120ms, transform 120ms;
+
+    &.btn-icon {
+        border-radius: radius('md');
+    }
+
+    span[class^="icon-"] {
+        background-color: var(--primary);
+        transition: background-color 120ms;
+    }
+
+    &.hover,
+    &:hover:enabled {
+        background-color: var(--bg-hover);
+        color: var(--text);
+
+        span[class^="icon-"] {
+            background-color: var(--icon);
+        }
+    }
+
+    &.active,
+    &:active:enabled {
+        box-shadow: none;
+    }
+
+    &:disabled {
+        background-color: color('gray-100', .5);
+        color: color('purple-700');
+
+        span[class^="icon-"] {
+            background-color: color('purple-700');
+        }
+    }
+}
+
+.btn-loading,
+.btn-loading:disabled {
+    position: relative;
+    overflow: hidden;
+    color: transparent;
+    cursor: progress;
+    user-select: none;
+    opacity: 1;
+
+    span[class^="icon-"] {
+        background-color: transparent;
+    }
+
+    &.btn-primary {
+        box-shadow: shadow('sm');
+
+        .loader span {
+            background-color: color('white');
+        }
+    }
+
+    &.btn-secondary {
+        box-shadow: shadow('sm');
+        background-color: var(--bg);
+    }
+
+    &.btn-tertiary {
+        background-color: var(--bg);
+    }
+}
+
+.btn-back {
+    @extend %btn;
+    justify-content: start;
+    background-color: var(--bg);
+    border-radius: 0;
+    border-bottom: 1px solid var(--border);
+    font-weight: normal;
+    color: var(--text);
+    transition: background-color 120ms;
+
+    span {
+        background-color: var(--icon);
+    }
+
+    &.hover,
+    &:hover:enabled {
+        background-color: var(--bg-hover);
+    }
+
+    &.active,
+    &:active:enabled {
+        transform: none;
+    }
+}
+
+.btn-group {
+    display: inline-flex;
+    gap: size('1');
+    padding: size('2');
+    border: width('1') solid var(--border);
+    border-radius: radius('full');
+    background-color: var(--bg);
+    box-shadow: shadow('xs');
+
+    button {
+        @extend %btn;
+        flex: 1 1 0;
+        background: none;
+        border: none;
+        border-radius: radius('full');
+        transition: background-color 120ms, box-shadow 120ms, color 120ms;
+
+        span[class^="icon-"] {
+            transition: background-color 120ms;
+        }
+
+        &.btn-toggled {
+            background-color: var(--primary-muted);
+            color: var(--primary);
+
+            span[class^="icon-"] {
+                background-color: var(--primary);
+            }
+
+            &:hover:enabled {
+                color: var(--primary-highlight);
+
+                span[class^="icon-"] {
+                    background-color: var(--primary-highlight);
+                }
+            }
+
+            &:disabled {
+                opacity: .5;
+                box-shadow: none;
+            }
+        }
+
+        &:not(.btn-toggled) {
+            color: var(--text);
+
+            span[class^="icon-"] {
+                background-color: var(--icon);
+            }
+
+            &:hover:enabled {
+                color: var(--primary);
+
+                span[class^="icon-"] {
+                    background-color: var(--primary);
+                }
+            }
+
+            &:disabled {
+                opacity: .5;
+                background-color: var(--bg-section);
+            }
+        }
+    }
+
+    // Remove rounding of elements that have highlighted elements to the left
+    .btn-toggled+.btn-toggled,
+    // toggled next to toggled
+    //.btn-toggled + :not(.btn-toggled):hover, // toggled next to hover
+    //:not(.btn-toggled):hover + .btn-toggled, // hover next to toggled
+    :not(.btn-toggled):disabled+ :not(.btn-toggled):disabled {
+        // disabled next to disabled
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    // Remove rounding of elements that have highlighted elements to the right
+    .btn-toggled:has(+ .btn-toggled),
+    // toggled next to toggled
+    //.btn-toggled:has(+ :not(.btn-toggled):hover), // toggled next to hover
+    //:not(.btn-toggled):hover:has(+ .btn-toggled), // hover next to toggled
+    :not(.btn-toggled):disabled:has(+ :not(.btn-toggled):disabled) {
+        // disabled next to disabled
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &.disabled {
+        background-color: var(--bg-section);
+        box-shadow: none;
+    }
+}
+
+.btn-link,
+a.btn-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

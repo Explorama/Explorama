@@ -1,0 +1,149 @@
+@use '../base/variables' as *;
+@use '../base/colormap' as *;
+@use '../base/scrollbars';
+
+.bp4-datepicker {
+    background-color: var(--bg);
+
+    .DayPicker-Day {
+        border-radius: radius('xs');
+
+        &:hover {
+            background-color: var(--primary-muted);
+            color: var(--text);
+        }
+
+        &.DayPicker-Day--selected {
+            border-radius: radius('xs');
+            background-color: var(--primary) !important;
+    
+            &:hover {
+                background-color: var(--primary-highlight) !important;
+                color: var(--text-inverted);
+            }
+        }
+
+        &.DayPicker-Day--selected-range {
+            background-color: var(--primary-muted);
+
+            &:hover {
+                background-color: var(--primary);
+                color: var(--text-inverted);
+            }
+        }
+
+        &.DayPicker-Day--hovered-range:not(.DayPicker-Day--selected):not(.DayPicker-Day--selected-range):not(.DayPicker-Day--selected-range-start):not(.DayPicker-Day--selected-range-end) {
+            background-color: var(--primary-muted);
+        }
+
+        &.DayPicker-Day--hovered-range-end:not(.DayPicker-Day--hovered-range-start) {
+            border-top-left-radius:0;
+            border-bottom-left-radius:0;
+        }
+        &.DayPicker-Day--hovered-range-start:not(.DayPicker-Day--hovered-range-end) {
+            border-top-right-radius:0;
+            border-bottom-right-radius:0;
+        }
+    }
+}
+
+.bp4-daterangepicker .DayPicker-Day--selected-range, .bp4-daterangepicker .DayPicker-Day--hovered-range {
+    border-radius: 0;
+}
+
+.bp4-datepicker-caption .bp4-html-select select {
+    border-radius: radius('xs');
+    transition: background-color 120ms, color 120ms;
+    color: var(--text-secondary);
+
+    &:hover {
+        background-color: var(--bg-hover);
+        color: var(--text);
+
+        & + .bp4-icon {
+            color: var(--primary);
+        }
+    }
+
+    & + .bp4-icon {
+        right: 2px !important;
+        transition: color 120ms;
+        color: var(--icon-secondary);
+    }
+    
+    option {
+        background-color: var(--bg);
+    }
+    
+}
+
+.bp4-button.bp4-minimal {
+    border-radius: radius('xs');
+    transition: background-color 120ms, color 120ms;
+    color: var(--text-secondary);
+    
+    &:hover {
+        background-color: var(--bg-hover);
+        color: var(--text);
+
+        .bp4-icon {
+            color: var(--primary);
+        }
+    }
+
+    .bp4-icon {
+        color: var(--icon-secondary);
+        transition: color 120ms;
+    }
+}
+
+.bp4-control-group .bp4-input-group {
+
+    &:not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &:not(:first-child) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.bp4-input-group.text-input {
+    width: auto;
+    min-width: 0;
+    flex: 0 1 auto;
+
+    &.bp4-intent-danger {
+        border-color: var(--border-warning);
+        
+        &:hover:has(> input:enabled) {
+            border-color: var(--border-warning);
+        }
+    
+        &:has(> input:focus) {
+            border-color: var(--border-warning);
+            box-shadow: shadow('xs'), inset 0 0 0 1px var(--border-warning);
+        }
+    
+        input:focus {
+            caret-color: var(--border-warning);
+            box-shadow: none;
+        }
+    
+        .bp4-input {
+            box-shadow: none;
+        }
+    }
+}
+
+.bp4-popover-wrapper {
+    min-width: 0;
+}
+.bp4-popover-target {
+    max-width: 100%;
+}
+.bp4-popover .bp4-popover-arrow-fill {
+    fill: var(--bg);
+}

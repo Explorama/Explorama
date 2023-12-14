@@ -1,0 +1,87 @@
+{
+    "version": "0.0.0",
+    "name": "explorama",
+    "productName": "Explorama",
+    "appId": "de.explorama",
+    "author": "Explorama e.V.",
+    "license": "EPL-1.0",
+    "description": "TODO",
+    "main": "main.js",
+    "dependencies": {
+        "better-sqlite3": "9.2.2",
+        "ml-regression-simple-linear": "2.0.4"
+    },
+    "devDependencies": {
+        "devtron": "^1.4.0",
+        "electron": "28.0.0",
+        "karma": "^6.4.1",
+        "karma-chrome-launcher": "^3.2.0",
+        "karma-cljs-test": "^0.1.0",
+        "karma-coverage": "^2.2.1",
+        "karma-htmlfile-reporter": "^0.3.8",
+        "karma-junit-reporter": "^2.0.1",
+        "ws": "^8.12.0"
+    },
+    "overrides": {
+        "core-js": "3.26.1"
+    },
+    "build": {
+        "asar": true,
+        "linux": {
+            "icon": "../public/app/icon_1024.png",
+            "detectUpdateChannel": false,
+            "target": [
+                {
+                    "target": "appImage",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
+        },
+        "mac": {
+            "artifactName": "${productName}-mac.${ext}",
+            "detectUpdateChannel": false,
+            "target": [
+                {
+                    "target": "zip",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
+        },
+        "win": {
+            "icon": "../public/app/icon_256.ico",
+            "compression": "maximum",
+            "detectUpdateChannel": false,
+            "target": [
+                {
+                    "target": "portable",
+                    "arch": [
+                        "x64"
+                    ]
+                },
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
+        },
+        "appImage": {
+            "artifactName": "${productName}-linux.${ext}"
+        },
+        "portable": {
+            "artifactName": "${productName}-windows-portable.${ext}"
+        },
+        "nsis": {
+            "oneClick": false,
+            "installerSidebar": "../public/app/bg_installer.bmp",
+            "allowToChangeInstallationDirectory": true,
+            "uninstallDisplayName": "${productName}",
+            "artifactName": "${productName}-windows-setup.${ext}"
+        }
+    }
+}

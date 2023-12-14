@@ -24,17 +24,17 @@ Explorama is a user-friendly data analytics tool designed specifically for subje
 
 ## Playground
 For playing around with a temporary analysis use:
-[Explorama Playground](https://TODO.com)
+[Explorama Playground](https://github.com/Explorama/Explorama/releases/latest/)
 
 Or just download a prebuild package from: 
-[Browser-build](https://TODO/Releases)
+[Browser-build](https://github.com/Explorama/Explorama/releases/latest/)
 
 ## Installation
 We provide two different releases:
-- [Windows Release](https://TODO/Releases)
-- [Linux Release](https://TODO/Releases)
+- [Windows Release](https://github.com/Explorama/Explorama/releases/latest/)
+- [Linux Release](https://github.com/Explorama/Explorama/releases/latest/)
 
-When you use the [Browser-build](https://TODO/Releases), just unzip it and open the *index.html* file in your Browser (Chrome, Edge are supported)
+When you use the [Browser-build](https://github.com/Explorama/Explorama/releases/latest/), just unzip it and open the *index.html* file in your Browser (Chrome, Edge are supported)
 
 ## Additional Information
 

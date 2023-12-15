@@ -29,7 +29,9 @@ bundles/*/de.explorama.backend.expdb.simple-test.sqlite3
 bundles/*/de.explorama.backend.expdb.indexed-test.sqlite3
 bundles/*/target
 bundles/*/resources/main.js
-bundles/*/resources/public/*
+bundles/*/resources/public/css
+bundles/*/resources/public/fonts
+bundles/*/resources/public/img
 bundles/*/.lein-failures
 bundles/*/.rebel_readline_history
 bundles/*/.calva/output-window

@@ -17,6 +17,7 @@ libs/*/target
 node_modules
 
 bundles/browser/package-lock.json
+bundles/browser/resources/public/
 
 bundles/electron/Explorama-dev
 bundles/electron/dist

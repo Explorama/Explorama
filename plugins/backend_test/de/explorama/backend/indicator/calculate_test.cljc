@@ -233,25 +233,25 @@
 ;;;;;;;;;;
 
 (def datasource-a [{td/country td/country-a
-                          "date" "1997-01-04"
-                          td/fact-1 0
-                          td/org ["A" "B"]
-                         {td/country td/country-a
-                          "date" "1997-01-31"
-                          td/fact-1 20
-                          td/org ["C" "B"]}
-                         {td/country td/country-a
-                          "date" "1997-05-05"
-                          td/fact-1 5
-                          td/org "CC"}
-                         {td/country td/country-a
-                          "date" "1997-06-01"
-                          td/fact-1 1000
-                          td/org ["A" "BC"]}
-                         {td/country td/country-a
-                          "date" "1997-10-12"
-                          td/fact-1 300
-                          td/org "A"}}])
+                    "date" "1997-01-04"
+                    td/fact-1 0
+                    td/org ["A" "B"]}
+                   {td/country td/country-a
+                    "date" "1997-01-31"
+                    td/fact-1 20
+                    td/org ["C" "B"]}
+                   {td/country td/country-a
+                    "date" "1997-05-05"
+                    td/fact-1 5
+                    td/org "CC"}
+                   {td/country td/country-a
+                    "date" "1997-06-01"
+                    td/fact-1 1000
+                    td/org ["A" "BC"]}
+                   {td/country td/country-a
+                    "date" "1997-10-12"
+                    td/fact-1 300
+                    td/org "A"}])
 (def datasource-e [{td/country td/country-a
                     "date" "1997"
                     "indicator" "indicator value 1"
@@ -315,7 +315,6 @@
     (is (= control-fact-1-indicator-simple-heal-result
            (apply-calculation-desc control-fact-1-with-simple-heal
                                    dis)))
-    #_;TODO r1/tests fix this test
     (is (= control-fact-1-indicator-with-heal-result
            (apply-calculation-desc control-fact-1-with-heal
                                    dis)))))

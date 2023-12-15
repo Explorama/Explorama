@@ -424,8 +424,16 @@
            (set (sac-api/neighborhood query-all-attr-name))))))
 
 (deftest ranges-test
-  (testing "Testing ranges for one data-tile"
+  (testing "Testing ranges for all data-tiles"
     (is (= {"fact1" {:min 1 :max 3}
             "fact2" {:min 2 :max 4}
             "fact3" {:min 1, :max 3}}
-           (sac-api/ranges {})))))
+           (sac-api/ranges {}))))
+  (testing "Testing ranges for one datasource"
+    (is (= {"fact1" {:min 1 :max 3}
+            "fact2" {:min 2 :max 4}}
+           (sac-api/ranges {:datasources #{"dsn-1"}}))))
+  (testing "Testing ranges for one datasource and one country"
+    (is (= {"fact1" {:min 1 :max 1}
+            "fact2" {:min 2 :max 2}}
+           (sac-api/ranges {:datasources #{"dsn-1"} :countries #{"country1"}})))))

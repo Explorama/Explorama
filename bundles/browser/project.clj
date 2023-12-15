@@ -280,11 +280,9 @@
                     ["with-profile" "test" "doo" "chrome-headless" "test-frontend" "once"]
                     ["with-profile" "test" "doo" "chrome-headless" "test-backend" "once"]]
             "test-frontend" ["do"
-                             ["shell" "make" "prepare-test"]
                              ["with-profile" "test" "doo" "chrome-headless" "test-frontend" "once"]]
             "test-backend" ["do"
-                            ["shell" "make" "prepare-test"]]
-            ;;                 ["with-profile" "test" "doo" "chrome-headless" "test-backend" "once"]]
+                            ["with-profile" "test" "doo" "chrome-headless" "test-backend" "once"]]
             ;; "build" ["do"
             ;;          "clean"
             ;;          ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-dist-folder)]

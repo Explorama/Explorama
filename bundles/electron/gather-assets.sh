@@ -22,6 +22,7 @@ rm -rf "$RES_PATH/public/css"
 rm -rf "$RES_PATH/public/fonts"
 rm -rf "$RES_PATH/public/img"
 echo "remove old folders done."
+
 if [ $mode == "prod" ]
 then
   mkdir -p "$RES_PATH/public"

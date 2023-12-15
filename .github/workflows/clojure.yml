@@ -10,7 +10,9 @@ on:
 
 jobs:
   test-browser:
-    runs-on: ghcr.io/explorama/images/build-image:latest
+    runs-on: ubuntu:latest
+    container:
+      image: ghcr.io/explorama/images/build-image:latest
     steps:
     - uses: actions/checkout@v2
     - name: Cache dependencies
@@ -22,7 +24,9 @@ jobs:
       run: cd bundles/browser && make test
   test-electron:
     if: ${{ !github.event.act }}
-    runs-on: ghcr.io/explorama/images/build-image:latest
+    runs-on: ubuntu:latest
+    container:
+      image: ghcr.io/explorama/images/build-image:latest
     steps:
     - uses: actions/checkout@v2
     - name: Cache dependencies

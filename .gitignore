@@ -32,6 +32,7 @@ bundles/*/resources/main.js
 bundles/*/resources/public/css
 bundles/*/resources/public/fonts
 bundles/*/resources/public/img
+bundles/*/resources/public/js
 bundles/*/.lein-failures
 bundles/*/.rebel_readline_history
 bundles/*/.calva/output-window

@@ -271,16 +271,7 @@
          :config {"customLaunchers" {"Chrome_no_security" {"base" "Chrome"}}
                   "reporters" ["progress"  "coverage"]
                   "coverageReporter" {"dir" "target/coverage/"
-                                      "reporters" [{"type" "text"
-                                                    "subdir" "."
-                                                    "file" "coverage.txt"}
-                                                   {"type" "text-summary"
-                                                    "subdir" "."
-                                                    "file" "text-summary.txt"}
-                                                   {"type" "json-summary"
-                                                    "subdir" "."
-                                                    "file" "json-summary.json"}
-                                                   {"type" "html"
+                                      "reporters" [{"type" "html"
                                                     "subdir" "report-html"}
                                                    {"type" "cobertura"
                                                     "subdir" "."

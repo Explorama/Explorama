@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-browser:
+    runs-on: ghcr.io/explorama/images/build-image:latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: "m2-${{ hashFiles('bundles/browser/project.clj', 'bundles/electorn/project.clj') }}"
+    - name: Run tests
+      run: cd bundles/browser && make test
+  test-electron:
+    if: ${{ !github.event.act }}
+    runs-on: ghcr.io/explorama/images/build-image:latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: "m2-${{ hashFiles('bundles/browser/project.clj', 'bundles/electorn/project.clj') }}"
+    - name: Run tests
+      run: cd bundles/electron && make test

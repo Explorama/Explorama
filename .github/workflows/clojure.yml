@@ -10,7 +10,7 @@ on:
 
 jobs:
   test-browser:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/build-image:latest
     steps:
@@ -24,7 +24,7 @@ jobs:
       run: cd bundles/browser && make test
   test-electron:
     if: ${{ !github.event.act }}
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/build-image:latest
     steps:

@@ -39,3 +39,54 @@ jobs:
         path: ancient-report.md
     - name: Write to Job Summary
       run: cat ancient-report.md >> $GITHUB_STEP_SUMMARY
+  clj-kondo:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/explorama/images/build-image:latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: apk add --no-cache tar
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: "m2-browser-${{ hashFiles('bundles/browser/project.clj') }}"
+    - name: check browser bundle
+      run: |
+        cd bundles/browser
+        clj-kondo --lint $(bash ../../tools/list-files ./backend/ ./frontend/ ./frontend-integrations/ ./test/)
+    - name: check electron bundle
+      if: always()
+      run: |
+        cd bundles/electron
+        clj-kondo --lint $(bash ../../tools/list-files ./backend/ ./frontend/ ./frontend-integrations/ ./test/ ./main/)
+    - name: check lib abac
+      if: always()
+      run: |
+        cd libs/abac
+        clj-kondo --lint $(bash ../../tools/list-files ./backend/ ./frontend/ ./test/)
+    - name: check lib cache
+      if: always()
+      run: |
+        cd libs/cache
+        clj-kondo --lint $(bash ../../tools/list-files ./src/ ./test/)
+    - name: check lib data-format-lib
+      if: always()  
+      run: |
+        cd libs/data-format-lib
+        clj-kondo --lint $(bash ../../tools/list-files ./src/ ./test/)
+    - name: check lib data-transformer
+      if: always()
+      run: |
+        cd libs/data-transformer
+        clj-kondo --lint $(bash ../../tools/list-files ./src/)
+    - name: check lib ui-base
+      if: always()
+      run: |
+        cd libs/ui-base
+        clj-kondo --lint $(bash ../../tools/list-files ./src/ ./test/)
+    - name: check plugins
+      if: always()
+      run: |
+        cd plugins
+        clj-kondo --lint $(bash ../tools/list-files ./backend/ ./frontend/ ./shared/ ./backend_test/ ./frontend_test/ ./shared_test/)

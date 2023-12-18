@@ -9,9 +9,9 @@
   (let [ranges (ac-api/attribute-ranges (->> (map (fn [[key val]]
                                                     (if (= key :years)
                                                       [key (set (map str val))]
-                                                      [key (set val)])))
-                                             dim-info)
-                                        (into {}))]
+                                                      [key (set val)]))
+                                                  dim-info)
+                                             (into {})))]
     (cond (seq ranges)
           (let [[attribute {:keys [min max]}]
                 (first (reverse (sort-by (fn [[_ {:keys [min max]}]]

@@ -1,21 +1,32 @@
 #!/usr/bin/env bb
-(require '[clojure.string :as str])
+(require '[babashka.deps :as deps])
+
+(deps/add-deps '{:deps {lambdaisland/ansi {:mvn/version "0.2.37"}}})
+
+(require '[clojure.string :as str]
+         '[lambdaisland.ansi :refer [text->hiccup]])
 
 (def browser-ancient "bundles/browser/browser_ancient.txt")
 (def electron-ancient "bundles/electron/electron_ancient.txt")
 
+(defn clean-ansi
+  "Remove ansi code by converting to hiccup and only return the last bit (clean text)"
+  [text]
+  (first (map last (text->hiccup text))))
 
 (defn- clean-up-new-version [new-version]
   (-> new-version
       (str/replace "\"" "")
-      (str/replace "]" "")))
+      (str/replace "]" "")
+      clean-ansi))
 
 (defn- clean-up-old-version [old-version]
   (-> old-version
       str/trim
       (str/split #" ")
       first
-      (str/replace "\"" "")))
+      (str/replace "\"" "")
+      clean-ansi))
 
 (defn- read-ancient-report [report-path]
   (let [report-lines (str/split (slurp report-path)

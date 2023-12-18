@@ -90,7 +90,7 @@
                      :backend-paths (vec (sort fixed-backend-folders))
                      :backend-test-paths (vec (sort (concat fixed-backend-folders
                                                             fixed-backend-test-folders)))})
-
+#_
 (println "Versions"
          {:electron electron-version
           :better-sqlite3 better-sqlite3-version

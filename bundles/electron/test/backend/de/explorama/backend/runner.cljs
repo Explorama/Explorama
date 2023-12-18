@@ -27,7 +27,6 @@
             [de.explorama.backend.projects.projects-test]
             [de.explorama.backend.projects.queue-test]
             [de.explorama.backend.projects.repo-test]
-            [de.explorama.backend.projects.store-test]
             [de.explorama.backend.search.core-test]
             [de.explorama.backend.search.data-tile-test]
             [de.explorama.backend.search.filter-test]
@@ -68,7 +67,6 @@
  'de.explorama.backend.projects.projects-test
  'de.explorama.backend.projects.queue-test
  'de.explorama.backend.projects.repo-test
- 'de.explorama.backend.projects.store-test
  'de.explorama.backend.search.core-test
  'de.explorama.backend.search.data-tile-test
  'de.explorama.backend.search.filter-test

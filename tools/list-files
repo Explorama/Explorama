@@ -1,9 +1,3 @@
 #! /bin/bash
 
-files=()
-for var in "$@"
-do
-files+=$(find $var/* -follow -type f)
-done
-
-echo $files
+echo $(find $1/* -follow -type f)

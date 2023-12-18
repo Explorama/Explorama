@@ -25,10 +25,13 @@
          (map (fn [report-line]
                 (let [[new-version-vector old-version] (str/split report-line #"is available but we use")
                       [lib new-version] (str/split new-version-vector #" ")]
-
-                  [(str/replace lib "[" "")
-                   (clean-up-old-version old-version)
-                   (clean-up-new-version new-version)]))))))
+                  (when (and (not (str/blank? new-version))
+                             (not (str/blank? lib))
+                             (not (str/blank? old-version)))
+                    [(str/replace lib "[" "")
+                     (clean-up-old-version old-version)
+                     (clean-up-new-version new-version)]))))
+         (filter #(identity %)))))
 
 (defn- report-row [[lib old-verion new-version]]
   (format "|     %s     |       %s        |      %s     |"
@@ -40,7 +43,7 @@
   (let [ancient-versions (distinct (concat (read-ancient-report browser-ancient)
                                            (read-ancient-report electron-ancient)))
         table-header (str "| Dependency | Current Version | New Version |
-|----------|:---------------:|:-----------:|")] 
+|----------|:---------------:|:-----------:|")]
     (spit "ancient-report.md" (str/join "\n" (into [table-header]
                                                    (map report-row
                                                         ancient-versions))))))

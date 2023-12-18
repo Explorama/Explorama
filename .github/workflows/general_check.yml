@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  acnient:
+  ancient:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/build-image:latest

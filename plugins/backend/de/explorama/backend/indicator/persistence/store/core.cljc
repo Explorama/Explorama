@@ -30,14 +30,14 @@
      (if (nil? creator)
        (error "No creator found for indicator id" id)
        (read-indicator creator id))))
-  ([user id]
-   (adapter/read-indicator @instance user id)))
+  ([_user id]
+   (adapter/read-indicator @instance id)))
 
 (defn short-indicator-desc
   "Returns only the following keys:
    [:id :creator :name :description :shared-by]"
-  [user id]
-  (adapter/short-indicator-desc @instance user id))
+  [_user id]
+  (adapter/short-indicator-desc @instance id))
 
 (defn list-all-user-indicators
   "Returns all indicators for a specific user with the following keys: 
@@ -50,8 +50,8 @@
    On successfull deletion returns a vector:
      [creator id]
    On failure a error message is printed and nil will be returned."
-  [user id]
-  (adapter/delete-indicator @instance user id))
+  [_user id]
+  (adapter/delete-indicator @instance id))
 
 (defn new-instance []
   (reset! instance (expdb-backend/new-instance)))

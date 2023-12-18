@@ -1,94 +1,71 @@
 (ns de.explorama.backend.indicator.persistence.store.expdb
-  (:require [de.explorama.backend.common.storage.agent.core :as pcore]
-            [de.explorama.backend.expdb.middleware.db :as db]
+  (:require [de.explorama.backend.expdb.middleware.db :as expdb]
             [de.explorama.backend.indicator.persistence.store.adapter :as adapter]
-            [taoensso.timbre :refer [debug error]]))
+            [de.explorama.shared.common.configs.platform-specific :as platform-specific]
+            [taoensso.timbre :refer [warn error]]))
 
 (defonce ^:private bucket "/indicator/indicators/")
-(defonce ^:private bucket-index "/indicator/indicators-index/")
-(defonce ^:private index-path "index")
 
-(def index-keys [:id :creator :name :description :shared-by])
+(defn write-indicator [indicator]
+  (println "write-indicator" indicator)
+  (expdb/set bucket (:id indicator) indicator))
 
-(defn- indicator-path [creator id]
-  (str creator "/" id))
+(defn read-indicator [id]
+  (expdb/get bucket id))
 
-(defn write-indicator [index {:keys [creator id] :as indicator}]
-  (debug "Write indicator description" {:id id :creator creator})
-  (let [path (indicator-path creator id)
-        index-info (select-keys indicator index-keys)]
-    (db/set bucket path indicator)
-    (get-in
-     (swap! index update creator assoc id index-info)
-     [creator id])))
+(defn list-indicators []
+  (vals (expdb/get+ bucket)))
 
-(defn read-indicator [{creator :username} id]
-  (debug "Read indicator description" {:id id :creator creator})
-  (let [path (indicator-path creator id)
-        indicator (db/get bucket path)]
-    (if indicator
-      indicator
+(defn list-all-user-indicators [user]
+  (let [result (filterv (fn [{creator :creator}]
+                          (= creator (:username user)))
+                        (vals (expdb/get+ bucket)))]
+    (if platform-specific/explorama-multi-user
       (do
-        (error "Indicator file doesn't exist anymore." {:id id :creator creator})
-        nil))))
+        (warn "list-all-user-indicators is not implemented yet - works only for single user")
+        result)
+      result)))
 
-(defn list-indicators [index]
-  (vec
-   (mapcat (fn [[_ indicators]]
-             (vals indicators))
-           @index)))
+(defn short-indicator-desc [id]
+  (if platform-specific/explorama-multi-user
+    (do
+      (warn "list-all-user-indicators is not implemented yet - works only for single user")
+      (select-keys (expdb/get bucket id)
+                   [:id :creator :name :description :shared-by]))
+    (select-keys (expdb/get bucket id)
+                 [:id :creator :name :description :shared-by])))
 
-(defn list-all-user-indicators [index {:keys [username]}]
-  (->> (get @index username) vals vec))
+(defn user-for-indicator-id [id]
+  (let [result (->> (filter (fn [{iid :id}]
+                              (= id iid))
+                            (vals (expdb/get+ bucket)))
+                    first
+                    :creator)]
+    (if platform-specific/explorama-multi-user
+      (do
+        (warn "list-all-user-indicators is not implemented yet - works only for single user")
+        result)
+      result)))
 
-(defn short-indicator-desc [index {:keys [username]} id]
-  (get-in @index [username id]))
+(defn delete-indicator [id]
+  (expdb/del bucket id))
 
-(defn user-for-indicator-id [index id]
-  (some
-   (fn [{indicator-id :id
-         creator-name :creator}]
-     (when (= indicator-id id)
-       {:username creator-name}))
-   (list-indicators index)))
-
-(defn delete-indicator [index user id]
-  (let [{creator :username} user]
-    (try
-      (db/del bucket (indicator-path creator id))
-      (swap! index
-             update creator
-             dissoc id)
-      [creator id]
-      (catch #?(:clj Throwable :cljs :default) e
-        (error "Something went wrong while deleting the file for the de.explorama.backend.indicator.
-                Deletion aborted for this indicator version."
-               {:id id
-                :creator creator}
-               e)
-        nil))))
-
-(deftype ExpDBBackend [index]
+(deftype ExpDBBackend []
   adapter/Backend
-  (write-indicator [instance indicator]
-    (write-indicator index indicator))
-  (read-indicator [instance user id]
-    (read-indicator user id))
-  (list-indicators [instance]
-    (list-indicators index))
-  (short-indicator-desc [instance user id]
-    (short-indicator-desc index user id))
-  (list-all-user-indicators [instance user]
-    (list-all-user-indicators index user))
-  (user-for-indicator-id [instance id]
-    (user-for-indicator-id index id))
-  (delete-indicator [instance user id]
-    (delete-indicator index user id)))
+  (write-indicator [_instance indicator]
+    (write-indicator indicator))
+  (read-indicator [_instance id]
+    (read-indicator id))
+  (list-indicators [_instance]
+    (list-indicators))
+  (short-indicator-desc [_instance id]
+    (short-indicator-desc id))
+  (list-all-user-indicators [_instance user]
+    (list-all-user-indicators user))
+  (user-for-indicator-id [_instance id]
+    (user-for-indicator-id  id))
+  (delete-indicator [_instance id]
+    (delete-indicator id)))
 
 (defn new-instance []
-  (let [index (pcore/create {:impl :expdb
-                             :bucket bucket-index
-                             :path index-path
-                             :init {}})]
-    (pcore/start! index-path)
-    (ExpDBBackend. index)))
+  (ExpDBBackend.))

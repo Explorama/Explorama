@@ -1,6 +1,11 @@
 (ns de.explorama.backend.indicator.persistence-test
-  (:require [clojure.test :as test :refer [deftest is testing]]
-            [de.explorama.backend.indicator.persistence.core :as persistence]))
+  (:require [clojure.test :as test :refer [deftest is testing use-fixtures]]
+            [de.explorama.backend.indicator.persistence.core :as persistence]
+            [de.explorama.backend.indicator.persistence.store.core :as store]))
+
+(use-fixtures :once (fn [f]
+                      (store/new-instance)
+                      (f)))
 
 (def PAdmin {:username "PAdmin"
              :role "admin"})
@@ -29,7 +34,6 @@
                   :calculation-desc []
                   :group-attributes ["country" "year"]})
 
-#_;TODO r1/tests fix this test
 (deftest simple-test
   (testing "create indicators"
     (is (= :success
@@ -38,14 +42,14 @@
            (:status (persistence/create-new-indicator PAdmin indicator-2))))
     (is (= :success
            (:status (persistence/create-new-indicator mmeier indicator-3)))))
-  #_
-  (testing "share with user"
-    (is (= :failed
-           (:status (persistence/share-with-user mmeier mmeier indicator-1))))
-    (let [{:keys [status data]} (persistence/share-with-user PAdmin mmeier indicator-1)]
-      (is (= :success status))
-      (is (= "MMeier" (:creator data)))
-      (is (= "PAdmin" (:shared-by data)))))
+  (testing "listing indicators"
+    (is (= 2
+           (count (persistence/all-user-indicators PAdmin))))
+    (is (= 1
+           (count (persistence/all-user-indicators mmeier)))))
+  (testing "list all indicator"
+    (is (= (set (store/list-indicators))
+           #{indicator-1 indicator-2 indicator-3})))
   (testing "delete indicator"
     (is (= :success
            (:status (persistence/delete-indicator PAdmin indicator-1))))
@@ -54,5 +58,11 @@
   (testing "listing indicators"
     (is (= 1
            (count (persistence/all-user-indicators PAdmin))))
-    (is (= 1
-           (count (persistence/all-user-indicators mmeier))))))
+    (is (= 0
+           (count (persistence/all-user-indicators mmeier)))))
+  (testing "list all indicator"
+    (is (= (set (store/list-indicators))
+           #{indicator-2})))
+  (testing "User for indicator id"
+    (is (= (store/user-for-indicator-id indicator-2-id)
+           (:username PAdmin)))))

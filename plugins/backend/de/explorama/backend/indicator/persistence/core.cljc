@@ -1,6 +1,6 @@
 (ns de.explorama.backend.indicator.persistence.core
-  (:require [de.explorama.backend.indicator.config :as config]
-            [de.explorama.backend.common.middleware.cache-invalidate :as cache-invalidate]
+  (:require [de.explorama.backend.common.middleware.cache-invalidate :as cache-invalidate]
+            [de.explorama.backend.indicator.config :as config]
             [de.explorama.backend.indicator.data.core :as data]
             [de.explorama.backend.indicator.persistence.store.core :as persistence]
             [de.explorama.shared.common.unification.misc :refer [cljc-uuid]]
@@ -36,8 +36,8 @@
                      (m/explain indicator-desc-spec
                                 indicator))}}))
 
-(defn- expand-indicator-description [{:keys [username] :as user}
-                                     {:keys [id]}]
+(defn- expand-indicator-description [user
+                                     {id :id}]
   (assoc (persistence/read-indicator user id)
          :write-access? true))
 
@@ -53,17 +53,15 @@
     (mapv #(expand-indicator-description user %)
           all-user-indicators)))
 
-(defn create-new-indicator [{creator :username
-                             :as user}
-                            {:keys [id name di dis]
-                             :as indicator}]
+(defn create-new-indicator [_user-info
+                            indicator]
   (let [indicator-validation-result (validate-indicator-desc indicator)]
     (if (nil? indicator-validation-result)
       {:status :success
        :data (persistence/write-indicator indicator)}
       indicator-validation-result)))
 
-(defn share-with-user [current-user share-with-user {:keys [id]
+(defn share-with-user [current-user share-with-user {id :id
                                                      :as indicator}]
   (let [indicator-validation-result (validate-indicator-desc indicator)
         correct-user? (check-access current-user id)]
@@ -88,9 +86,7 @@
                                     {"identifier" #{"indicator"}
                                      "description" #{(get dirty-tile "description")}}))
 
-(defn update-indicator [user {:keys [id version
-                                     name description
-                                     creator]
+(defn update-indicator [user {:keys [id]
                               :as indicator}]
   (let [indicator-validation-result (validate-indicator-desc indicator)]
     (if (nil? indicator-validation-result)

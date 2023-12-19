@@ -1,12 +1,12 @@
 (ns de.explorama.frontend.indicator.components.dialog
-  (:require [de.explorama.frontend.ui-base.components.frames.core :refer [dialog]]
-            [de.explorama.frontend.ui-base.components.formular.core :refer [select]]
+  (:require [clojure.string :as str]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.indicator.path :as ip]
             [de.explorama.frontend.indicator.views.management :as management]
-            [de.explorama.shared.indicator.ws-api :as ws-api]
-            [reagent.core :as r]
-            [re-frame.core :as re-frame]))
+            [de.explorama.frontend.ui-base.components.formular.core :refer [select]]
+            [de.explorama.frontend.ui-base.components.frames.core :refer [dialog]]
+            [re-frame.core :as re-frame]
+            [reagent.core :as r]))
 
 (re-frame/reg-sub
  ::is-active?
@@ -76,7 +76,7 @@
 
 (defn- send-copy [user-info selected-users]
   (let [options (vec
-                 (sort-by (comp clojure.string/lower-case :label)
+                 (sort-by (comp str/lower-case :label)
                           (remove #(= (:value %)
                                       (:username user-info))
                                   @(fi/call-api :users-sub))))]
@@ -105,9 +105,9 @@
             :message [send-copy user-info selected-users]
             :yes {:label @(re-frame/subscribe [:de.explorama.frontend.common.i18n/translate :send-label])
                   :on-click #(re-frame/dispatch [::management/send-copy
-                                             user-info
-                                             @selected-users
-                                             id])}
+                                                 user-info
+                                                 @selected-users
+                                                 id])}
             :cancel {:label @(re-frame/subscribe [:de.explorama.frontend.common.i18n/translate :cancel-label])
                      :variant :secondary}}]))})))
 
@@ -116,9 +116,8 @@
          indicator-id :indicator-id
          show? :show?} @(re-frame/subscribe [::is-show?])]
     (when show?
-      [:<>
-       [:div
-        (case dialog-type
-          "back-confirm" [back-confirm-dialog indicator-id]
-          "send-copy" [send-copy-dialog indicator-id]
-          "delete" [delete-dialog indicator-id])]])))
+      [:div
+       (case dialog-type
+         "back-confirm" [back-confirm-dialog indicator-id]
+         "send-copy" [send-copy-dialog indicator-id]
+         "delete" [delete-dialog indicator-id])])))

@@ -83,8 +83,8 @@
   (let [{:keys [data header] :as preview-result} @(re-frame/subscribe [::preview-result indicator-id])
         {:keys [input-data-section calculate-preview-button
                 no-data]} @(re-frame/subscribe [::i18n/translate-multi
-                                            :input-data-section :calculate-preview-button
-                                            :no-data])
+                                                :input-data-section :calculate-preview-button
+                                                :no-data])
         attribute-labels @(fi/call-api [:i18n :get-labels-sub])
         hint-label @(re-frame/subscribe [::i18n/translate :input-data-section-hint])
         {valid? :valid?

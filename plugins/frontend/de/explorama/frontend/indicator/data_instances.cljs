@@ -1,12 +1,10 @@
 (ns de.explorama.frontend.indicator.data-instances
-  (:require [clojure.set :as set]
-            [de.explorama.frontend.common.frontend-interface :as fi]
-            [de.explorama.frontend.common.i18n :as i18n]
+  (:require [de.explorama.frontend.common.i18n :as i18n]
+            [de.explorama.frontend.indicator.event-logging :as event-log]
             [de.explorama.frontend.indicator.path :as path]
             [de.explorama.shared.indicator.ws-api :as ws-api]
             [re-frame.core :as re-frame]
-            [taoensso.timbre :refer [debug]]
-            [de.explorama.frontend.indicator.event-logging :as event-log]))
+            [taoensso.timbre :refer [debug]]))
 
 (re-frame/reg-event-fx
  ws-api/publish-di-success

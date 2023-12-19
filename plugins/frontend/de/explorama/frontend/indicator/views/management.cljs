@@ -98,8 +98,7 @@
 
 (defn all-comps-map [db indicator-id]
   (let [{:keys [definition-rows
-                additional-attributes]
-         :as template-desc} (template-ui-description db indicator-id)
+                additional-attributes]} (template-ui-description db indicator-id)
         additional-comps-map (into {}
                                    (map (fn [{:keys [id] :as comp}]
                                           [id comp]))
@@ -218,9 +217,8 @@
       :replace-indicator-type (when indicator-type (name indicator-type))}
      all-components)))
 
-(defn- custom-indicator-description [db {:keys [id]
-                                         {:keys [custom]} :ui-desc
-                                         :as indicator-desc}]
+(defn- custom-indicator-description [db {id :id
+                                         {custom :custom} :ui-desc}]
   (let [input-desc (first (vals custom))
         all-datasets (into {}
                            (map (fn [{:keys [title di]}]
@@ -455,7 +453,6 @@
                                      (ip/project-indicator-desc indicator-id)
                                      (ip/indicator-desc indicator-id)))
          new-indicator-id (str (random-uuid))
-         indicators (get-in db ip/indicators)
          indicator-name (copy-name (:name indicator-desc)
                                    (get-in db ip/indicators))
          copied-indicator-desc (assoc indicator-desc
@@ -492,7 +489,7 @@
 
 (re-frame/reg-event-fx
  ws-api/create-new-indicator-result
- (fn [{db :db} [_ finalized-desc {:keys [status msg data]}]]
+ (fn [{db :db} [_ finalized-desc {:keys [status data]}]]
    (if (= status :success)
      (let [indicator-id (:id data)]
        {:db (-> db
@@ -505,7 +502,7 @@
 
 (re-frame/reg-event-fx
  ws-api/update-indicator-infos-result
- (fn [{db :db} [_ finalized-desc {:keys [status msg data]}]]
+ (fn [{db :db} [_ finalized-desc {:keys [status data]}]]
    (if (= status :success)
      (let [indicator-id (:id data)
            removed-datasets (get-in db (ip/removed-indicator-data indicator-id))]
@@ -529,12 +526,12 @@
                 (update-in ip/indicators-changes dissoc indicator-id))
         :dispatch [::change-active-indicator nil]}
        {:backend-tube [ws-api/delete-indicator
-                          {:client-callback [ws-api/delete-indicator-result]}
-                          user {:id indicator-id}]}))))
+                       {:client-callback [ws-api/delete-indicator-result]}
+                       user {:id indicator-id}]}))))
 
 (re-frame/reg-event-fx
  ws-api/delete-indicator-result
- (fn [{db :db} [_ {:keys [status msg data]}]]
+ (fn [{db :db} [_ {:keys [status data]}]]
    (when (= status :success)
      (let [indicator-id (second data)
            updated-db (-> db
@@ -848,7 +845,7 @@
 
 (re-frame/reg-sub
  ::indicator-type-info
- (fn [[_ indicator-id :as in]]
+ (fn [[_ indicator-id]]
    [(re-frame/subscribe [::indicator-templates])
     (re-frame/subscribe [::indicator-prop indicator-id :indicator-type])])
  (fn [[all-templates current-type]]
@@ -878,7 +875,7 @@
 
 (re-frame/reg-event-fx
  ws-api/share-indicator-result
- (fn [{db :db} [_ {:keys [status msg data]}]]
+ (fn [{db :db} [_ {:keys [status data]}]]
    (let [success-msg  @(re-frame/subscribe [::i18n/translate :send-success-notification])
          error-msg @(re-frame/subscribe [::i18n/translate :send-error-notification])
          user-name (fi/call-api :name-for-user-db-get db (:creator data))]

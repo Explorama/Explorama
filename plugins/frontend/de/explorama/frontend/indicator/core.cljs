@@ -138,19 +138,19 @@
 
 (re-frame/reg-event-fx
  ::open
- (fn [{db :db} _]
+ (fn [_ _]
    {:dispatch (fi/call-api :frame-create-event-vec (create-frame [100 200] [800 700]))}))
 
 (re-frame/reg-event-fx
  ::connect-to-frame-query
- (fn [{db :db} [_ frame-id new? data-desc]]
+ (fn [{db :db} [_ _frame-id new? data-desc]]
    {:fx [[:dispatch [::views/set-loading true]]]
     :backend-tube [ws-api/connect-to-di {:client-callback [ws-api/connect-to-di-result new?]}
                    (assoc data-desc
                           :indicator-id (:id (get-in db ip/active-indicator)))]}))
 (re-frame/reg-event-fx
  ws-api/connect-to-di-result
- (fn [{db :db} [_  new? {:keys [indicator-id di frame-id]
+ (fn [{db :db} [_  new? {:keys [indicator-id di]
                          :as dataset-result}]]
    (let [di-id (dfl-di/ctn->sha256-id di)]
      {:db (if (management/indicator-exist? db indicator-id)
@@ -168,7 +168,7 @@
  ::view-event
  (fn [{db :db} [_ action params]]
    (debug ::view-event action params)
-   (let [{:keys [frame-id frame-target-id callback-event min-h]} params]
+   (let [{:keys [frame-id callback-event]} params]
      (case action
        :frame/init {:db (assoc-in db ip/open-frame-id frame-id)}
        :frame/close {:dispatch [::close-action frame-id callback-event]}

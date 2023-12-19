@@ -1,19 +1,19 @@
 (ns de.explorama.frontend.indicator.views.core
   "Connects main and sidebar to one view.
    Also defines the frame definition and content."
-  (:require [de.explorama.frontend.indicator.components.dialog :as dialog]
-            [de.explorama.frontend.indicator.db-utils :as db-utils]
-            [de.explorama.frontend.common.frontend-interface :as fi]
+  (:require [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
+            [de.explorama.frontend.indicator.components.dialog :as dialog]
+            [de.explorama.frontend.indicator.db-utils :as db-utils]
             [de.explorama.frontend.indicator.path :as db-path]
             [de.explorama.frontend.indicator.views.main :as main-view]
-            [re-frame.core :as re-frame]
+            [de.explorama.frontend.indicator.views.management :as management]
             [de.explorama.frontend.indicator.views.overview :as overview]
-            [de.explorama.frontend.indicator.views.management :as management]))
+            [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
  ::title-prefix
- (fn [db [_ frame-id _]]
+ (fn [db [_ _frame-id _]]
    (i18n/translate db :vertical-label-indicator)))
 
 (re-frame/reg-event-fx
@@ -23,15 +23,15 @@
 
 (def frame-header-impl
   {:frame-icon :indicator
-   :frame-title-sub (fn [frame-id]
+   :frame-title-sub (fn [_frame-id]
                       (atom "")) ;! workaround otherwise boom! 
    :frame-title-prefix-sub (fn [frame-id vertical-count-number]
                              (re-frame/subscribe [::title-prefix frame-id vertical-count-number]))
    :can-change-title? false
-   :on-minimize-event (fn [frame-id] [::no-event])
-   :on-maximize-event (fn [frame-id] [::no-event])
-   :on-normalize-event (fn [frame-id] [::no-event])
-   :on-close-fn (fn [frame-id done-fn]
+   :on-minimize-event (fn [_frame-id] [::no-event])
+   :on-maximize-event (fn [_frame-id] [::no-event])
+   :on-normalize-event (fn [_frame-id] [::no-event])
+   :on-close-fn (fn [_frame-id done-fn]
                   (done-fn))})
 
 (def toolbar-impl
@@ -42,13 +42,13 @@
 
 (def loading-screen-impl
   {:show?
-   (fn [frame-id]
+   (fn [_frame-id]
      (re-frame/subscribe [::is-loading?]))
    :cancellable?
    (fn [_]
      (atom false))
    :cancel-fn
-   (fn [frame-id _])
+   (fn [_frame-id _])
    :loading-screen-message-sub
    (fn [_]
      (re-frame/subscribe [::i18n/translate :loading-screen-message]))

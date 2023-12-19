@@ -10,12 +10,11 @@
             [de.explorama.frontend.indicator.views.management :as management]
             [re-frame.core :as re-frame]))
 
-(defn- indicator-card [frame-id
+(defn- indicator-card [_frame-id
                        project?
                        {:keys [name description
                                shared-by
-                               id write-access?]
-                        :as indicator-desc}]
+                               id write-access?]}]
   (let [shared-by-name (when shared-by @(fi/call-api :name-for-user-sub shared-by))
         is-changed? @(re-frame/subscribe [::management/changed? id])
         edit-tooltip @(re-frame/subscribe [::i18n/translate :edit-label])
@@ -62,9 +61,9 @@
       (when shared-by-name
         [:div.credits (format shared-by-label shared-by-name)])]
      [:div.indicator__actions {:on-mouse-down (fn [e]
-                                                (when-let [inside-actions? (-> e
-                                                                               (safe-aget "nativeEvent" "target")
-                                                                               (is-inside? ".indicator__actions"))]
+                                                (when (-> e
+                                                          (safe-aget "nativeEvent" "target")
+                                                          (is-inside? ".indicator__actions"))
                                                   (.stopPropagation e)))}
       [direct-visualization id project? is-changed?]]]))
 

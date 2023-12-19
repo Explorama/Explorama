@@ -7,7 +7,6 @@
 (defonce ^:private bucket "/indicator/indicators/")
 
 (defn write-indicator [indicator]
-  (println "write-indicator" indicator)
   (expdb/set bucket (:id indicator) indicator))
 
 (defn read-indicator [id]

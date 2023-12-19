@@ -6,8 +6,8 @@
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button
-                                                                   input-field select
-                                                                   textarea]]
+                                                                            input-field select
+                                                                            textarea]]
             [de.explorama.frontend.ui-base.components.misc.core :refer [icon]]
             [de.explorama.frontend.ui-base.utils.select :as select-util]
             [de.explorama.frontend.indicator.components.dialog :as dialog]
@@ -174,8 +174,8 @@
         {:keys [legend-range-separator
                 legend-not-operator]}
         @(re-frame/subscribe [::i18n/translate-multi
-                          :legend-range-separator
-                          :legend-not-operator])
+                              :legend-range-separator
+                              :legend-not-operator])
         to legend-range-separator
         v (case op
             :in (str/join "," value)
@@ -201,8 +201,7 @@
 (defn- dataset-description [{:keys [title di indicator-id]
                              {[years] :years
                               [countries] :countries
-                              [datasources] :datasources} :di-desc
-                             :as dataset}]
+                              [datasources] :datasources} :di-desc}]
   (let [{incomplete-desc? :incomplete?
          di-filter-primitives :di-filter-primitives} (dflsv/simplified-filter di nil)
         legend-icomplete-filter-explanation @(re-frame/subscribe [::i18n/translate :legend-icomplete-filter-explanation])]
@@ -294,8 +293,8 @@
 
 (defn- type-comp [indicator-id]
   (let [indicator-type @(re-frame/subscribe [::management/indicator-prop
-                                         indicator-id
-                                         :indicator-type])
+                                             indicator-id
+                                             :indicator-type])
         drop-down-label @(re-frame/subscribe [::i18n/translate :indicator-type])
         hint-label @(re-frame/subscribe [::i18n/translate :indicator-type-hint])
         template-options @(re-frame/subscribe [::management/indicator-template-options])
@@ -310,7 +309,7 @@
       :values (select-util/selected-option :value template-options indicator-type)
       :on-change (fn [{:keys [value]}]
                    (re-frame/dispatch [::management/update-indiactor-type
-                                   indicator-id value]))}]))
+                                       indicator-id value]))}]))
 
 (defn- type-info-comp [indicator-id]
   (let [type-info @(re-frame/subscribe [::management/indicator-type-info indicator-id])
@@ -326,8 +325,8 @@
          name-label :indicator-name}
         @(re-frame/subscribe [::i18n/translate-multi :indicator-desc :indicator-desc-placeholder :indicator-name])
         {:keys [name description]} @(re-frame/subscribe [::management/indicator-props
-                                                     indicator-id
-                                                     [:name :description]])]
+                                                         indicator-id
+                                                         [:name :description]])]
     [:div.indicator__basics.row
      [:div.col-12
       [:h1 name]
@@ -337,7 +336,7 @@
                     :max-length 25
                     :on-change (fn [val]
                                  (re-frame/dispatch [::management/update-indicator-prop
-                                                 indicator-id :name val]))}]
+                                                     indicator-id :name val]))}]
       [textarea {:label desc-label
                  :extra-class "input--w14"
                  :value (or description "")
@@ -345,7 +344,7 @@
                  :max-length 255
                  :on-change (fn [val]
                               (re-frame/dispatch [::management/update-indicator-prop
-                                              indicator-id :description val]))}]
+                                                  indicator-id :description val]))}]
       [drop-area frame-id indicator-id drop-area-props]
       [type-comp indicator-id]
       [type-info-comp indicator-id]]]))
@@ -362,10 +361,9 @@
        [addon-row indicator-id additional-attributes])]))
 
 (defn- editor-view [frame-id indicator-id drop-area-props]
-  (let [is-changed? @(re-frame/subscribe [::management/changed? indicator-id true])
-        indicator-type @(re-frame/subscribe [::management/indicator-prop
-                                         indicator-id
-                                         :indicator-type])
+  (let [indicator-type @(re-frame/subscribe [::management/indicator-prop
+                                             indicator-id
+                                             :indicator-type])
         loaded-datasets @(re-frame/subscribe [::management/datasets-descriptions indicator-id])]
     [:div.wrapper__main
      [basic-row frame-id indicator-id drop-area-props]
@@ -419,10 +417,8 @@
        [button {:start-icon :previous
                 :variant :back
                 :label (re-frame/subscribe [::i18n/translate :back-to-overview-label])
-                :on-click (fn [e]
-                            (let [is-changed? @(re-frame/subscribe [::management/changed? current-indicator-id false])
-                                  shift? (aget e "shiftKey")
-                                  is-new? (= new-indicator-id current-indicator-id)]
+                :on-click (fn [_]
+                            (let [is-changed? @(re-frame/subscribe [::management/changed? current-indicator-id false])]
                               (cond
                                 is-changed? (re-frame/dispatch [::dialog/set-show "back-confirm" new-indicator-id true])
                                 :else (re-frame/dispatch [::management/change-active-indicator nil]))))}]

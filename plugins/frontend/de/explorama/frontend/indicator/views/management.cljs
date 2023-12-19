@@ -489,9 +489,9 @@
 
 (re-frame/reg-event-fx
  ws-api/create-new-indicator-result
- (fn [{db :db} [_ finalized-desc {:keys [status data]}]]
+ (fn [{db :db} [_ finalized-desc {:keys [status]}]]
    (if (= status :success)
-     (let [indicator-id (:id data)]
+     (let [indicator-id (:id finalized-desc)]
        {:db (-> db
                 (assoc-in (ip/indicator-desc indicator-id) finalized-desc)
                 (update-in ip/indicators-changes dissoc indicator-id)
@@ -502,9 +502,9 @@
 
 (re-frame/reg-event-fx
  ws-api/update-indicator-infos-result
- (fn [{db :db} [_ finalized-desc {:keys [status data]}]]
+ (fn [{db :db} [_ finalized-desc {:keys [status]}]]
    (if (= status :success)
-     (let [indicator-id (:id data)
+     (let [indicator-id (:id finalized-desc)
            removed-datasets (get-in db (ip/removed-indicator-data indicator-id))]
        {:db (-> db
                 (assoc-in (ip/indicator-desc indicator-id) finalized-desc)
@@ -533,7 +533,7 @@
  ws-api/delete-indicator-result
  (fn [{db :db} [_ {:keys [status data]}]]
    (when (= status :success)
-     (let [indicator-id (second data)
+     (let [indicator-id data
            updated-db (-> db
                           (update-in ip/indicators dissoc indicator-id)
                           (update-in ip/indicators-changes dissoc indicator-id)

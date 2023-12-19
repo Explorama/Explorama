@@ -7,7 +7,9 @@
 (defonce ^:private bucket "/indicator/indicators/")
 
 (defn write-indicator [indicator]
-  (expdb/set bucket (:id indicator) indicator))
+  (if (:success (expdb/set bucket (:id indicator) indicator))
+    indicator
+    (throw (ex-info "Could not write indicator to expdb" {:indicator indicator}))))
 
 (defn read-indicator [id]
   (expdb/get bucket id))
@@ -47,7 +49,9 @@
       result)))
 
 (defn delete-indicator [id]
-  (expdb/del bucket id))
+  (if (:success (expdb/del bucket id))
+    id
+    (throw (ex-info "Could not delete indicator to expdb" {:indicator-id id}))))
 
 (deftype ExpDBBackend []
   adapter/Backend

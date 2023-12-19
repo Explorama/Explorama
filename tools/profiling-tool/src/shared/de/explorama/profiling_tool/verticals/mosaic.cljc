@@ -44,13 +44,12 @@
                               :card-margin 30})))
 
 (defn- operation-payload [{:keys [di operations-desc local-filter
-                                  send-data-acs? update-usable-layouts?
+                                  send-data-acs?
                                   new-di? validate-operations-desc? layouts]}]
   (cond->
    {:di di
     :operations-desc operations-desc
     :send-data-acs? send-data-acs?
-    :update-usable-layouts? update-usable-layouts?
     :new-di? new-di?
     :validate-operations-desc? validate-operations-desc?
     :lang :en-GB}

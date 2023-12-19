@@ -6,12 +6,14 @@
             [de.explorama.shared.configuration.defaults :as defaults]))
 
 (defn layout-ranges [dim-info datasource-set]
-  (let [ranges (ac-api/attribute-ranges (->> (map (fn [[key val]]
-                                                    (if (= key :years)
-                                                      [key (set (map str val))]
-                                                      [key (set val)]))
-                                                  dim-info)
-                                             (into {})))]
+  (let [ranges (if (empty? (:buckets dim-info))
+                 []
+                 (ac-api/attribute-ranges (->> (map (fn [[key val]]
+                                                      (if (= key :years)
+                                                        [key (set (map str val))]
+                                                        [key (set val)]))
+                                                    dim-info)
+                                               (into {}))))]
     (cond (seq ranges)
           (let [[attribute {:keys [min max]}]
                 (first (reverse (sort-by (fn [[_ {:keys [min max]}]]
@@ -65,7 +67,6 @@
                             ["else" "datasource"]
                             ["notes" "notes"]
                             ["location" "country"]]}
-       :else
        {:id (str "country-default-layout-" (cljc-uuid))
         :name "Country Layout"
         :timestamp 1627662367930

@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/explorama/images/deploy-image:latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+    - uses: actions/checkout@v4
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
+    - name: Browser build
+      run: |
+        echo "--------- Compile Browser version ---------"
+        cd bundles/browser
+        make prepare-prod
+        make bundle
+        cd ../../dist/
+        mv *.zip ../
+        echo "--------- done ---------"
+    - name: Electron win build
+      run: |
+        echo "--------- Compile Electron (windows) version ---------"
+        cd bundles/electron
+        make prepare-prod target_platform=win
+        mv ../../dist/electron ../../dist/electron-win
+        cd ../../
+        mv dist/electron-win dist/electron
+        cd bundles/electron
+        make bundle-win
+        cd ../../dist/electron
+        mv *.exe ../../
+        echo "--------- done ---------"
+    - name: Electron linux build
+      run: |
+        echo "--------- Compile Electron (linux) version ---------"
+        cd bundles/electron
+        make prepare-prod target_platform=linux
+        mv ../../dist/electron ../../dist/electron-linux
+        cd ../../
+        mv dist/electron-linux dist/electron
+        cd bundles/electron
+        make bundle-linux
+        cd ../../dist/electron
+        mv *.AppImage ../../
+        echo "--------- done ---------"
+    - name: Generate change log
+      run: |
+        echo "--------- Generate change log ---------"
+        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+        git log --pretty="- %s" $LATEST_TAG..HEAD > CHANGELOG.md
+        echo "--------- done ---------"
+    - name: TEST
+      run: |
+        echo "--------- TEST ---------"
+        ls -la
+        echo "--------- done ---------"
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      env:
+          GITHUB_REPOSITORY: explorama/explorama
+      with:
+        tag_name: ${{ env.VERSION }}
+        name: ${{ env.VERSION }}
+        body_path: CHANGELOG.md
+        files: |
+          ./Explorama-browser.zip
+          ./Explorama-linux.AppImage
+          ./Explorama-windows-portable.exe
+          ./Explorama-windows-setup.exe
+        draft: true
+        prerelease: true

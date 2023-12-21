@@ -45,7 +45,7 @@ jobs:
         mv *.zip ../
         echo "--------- done ---------"
     - name: Electron win build
-      variables:
+      env:
         ELECTRON_CACHE: /home/runner/.cache/electron
         ELECTRON_BUILDER_CACHE: /home/runner/.cache/electron-builder
       run: |
@@ -61,7 +61,7 @@ jobs:
         mv *.exe ../../
         echo "--------- done ---------"
     - name: Electron linux build
-      variables:
+      env:
         ELECTRON_CACHE: /home/runner/.cache/electron
         ELECTRON_BUILDER_CACHE: /home/runner/.cache/electron-builder
       run: |

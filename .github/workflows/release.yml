@@ -2,6 +2,10 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        type: string
     branches:
       - main
 
@@ -72,13 +76,14 @@ jobs:
       env:
           GITHUB_REPOSITORY: explorama/explorama
       with:
-        tag_name: ${{ env.VERSION }}
-        name: ${{ env.VERSION }}
+        tag_name: ${{ env.release_version }}
+        name: ${{ env.release_version }}
         body_path: CHANGELOG.md
         files: |
           ./Explorama-browser.zip
           ./Explorama-linux.AppImage
           ./Explorama-windows-portable.exe
           ./Explorama-windows-setup.exe
+        token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
         draft: true
         prerelease: true

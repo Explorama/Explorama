@@ -45,6 +45,9 @@ jobs:
         mv *.zip ../
         echo "--------- done ---------"
     - name: Electron win build
+      variables:
+        ELECTRON_CACHE: /home/runner/.cache/electron
+        ELECTRON_BUILDER_CACHE: /home/runner/.cache/electron-builder
       run: |
         echo "--------- Compile Electron (windows) version ---------"
         cd bundles/electron
@@ -58,6 +61,9 @@ jobs:
         mv *.exe ../../
         echo "--------- done ---------"
     - name: Electron linux build
+      variables:
+        ELECTRON_CACHE: /home/runner/.cache/electron
+        ELECTRON_BUILDER_CACHE: /home/runner/.cache/electron-builder
       run: |
         echo "--------- Compile Electron (linux) version ---------"
         cd bundles/electron
@@ -76,7 +82,7 @@ jobs:
         LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
         git log --pretty="- %s" $LATEST_TAG..HEAD > CHANGELOG.md
         echo "--------- done ---------"
-    - name: TEST
+    - name: Changelog and version
       run: |
         echo "--------- Changelog ---------"
         cat CHANGELOG.md

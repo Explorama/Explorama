@@ -45,11 +45,9 @@ jobs:
         mv *.zip ../
         echo "--------- done ---------"
     - name: Electron win build
-      env:
-        ELECTRON_CACHE: /home/runner/.cache/electron
-        ELECTRON_BUILDER_CACHE: /home/runner/.cache/electron-builder
       run: |
         echo "--------- Compile Electron (windows) version ---------"
+        WINEPREFIX=`pwd`/.wine
         cd bundles/electron
         make prepare-prod target_platform=win
         mv ../../dist/electron ../../dist/electron-win
@@ -61,9 +59,6 @@ jobs:
         mv *.exe ../../
         echo "--------- done ---------"
     - name: Electron linux build
-      env:
-        ELECTRON_CACHE: /home/runner/.cache/electron
-        ELECTRON_BUILDER_CACHE: /home/runner/.cache/electron-builder
       run: |
         echo "--------- Compile Electron (linux) version ---------"
         cd bundles/electron

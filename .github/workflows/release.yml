@@ -20,6 +20,10 @@ on:
     branches:
       - main
 
+env:
+  WINEPREFIX: ${{ github.workspace }}/home/.wine # this is a workaround for wine
+  HOME: ${{ github.workspace }}/home # this is a workaround for wine
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -30,11 +34,19 @@ jobs:
         working-directory: .
     steps:
     - uses: actions/checkout@v4
+      with:
+        set-safe-directory: '*'
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
         path: ~/.m2/repository
         key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
+    - name: Home directory
+      run: |
+        echo "--------- Home directory ---------"
+        echo $HOME
+        mkdir $HOME
+        echo "--------- done ---------"
     - name: Browser build
       run: |
         echo "--------- Compile Browser version ---------"
@@ -50,7 +62,6 @@ jobs:
         echo "WINEPREFIX $WINEPREFIX"
         echo "HOME $HOME"
         echo "USER $USER"
-        mkdir temp-home
         ls -la
         cd bundles/electron
         make prepare-prod target_platform=win
@@ -62,9 +73,6 @@ jobs:
         cd ../../dist/electron
         mv *.exe ../../
         echo "--------- done ---------"
-      env:
-        WINEPREFIX: ${{ github.workspace }}/temp-home/.wine
-        HOME: ${{ github.workspace }}/temp-home
     - name: Electron linux build
       run: |
         echo "--------- Compile Electron (linux) version ---------"

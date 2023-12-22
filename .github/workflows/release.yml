@@ -49,6 +49,9 @@ jobs:
         echo "--------- Compile Electron (windows) version ---------"
         echo "WINEPREFIX $WINEPREFIX"
         echo "HOME $HOME"
+        echo "USER $USER"
+        mkdir temp-home
+        ls -la
         cd bundles/electron
         make prepare-prod target_platform=win
         mv ../../dist/electron ../../dist/electron-win
@@ -61,7 +64,7 @@ jobs:
         echo "--------- done ---------"
       env:
         WINEPREFIX: ${{ github.workspace }}/.wine
-        HOME: ${{ github.workspace }}
+        HOME: ${{ github.workspace }}/temp-home
     - name: Electron linux build
       run: |
         echo "--------- Compile Electron (linux) version ---------"

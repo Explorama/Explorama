@@ -63,7 +63,7 @@ jobs:
         mv *.exe ../../
         echo "--------- done ---------"
       env:
-        WINEPREFIX: ${{ github.workspace }}/.wine
+        WINEPREFIX: ${{ github.workspace }}/temp-home/.wine
         HOME: ${{ github.workspace }}/temp-home
     - name: Electron linux build
       run: |

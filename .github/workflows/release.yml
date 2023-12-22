@@ -20,18 +20,15 @@ on:
     branches:
       - main
 
-env:
-  WINEPREFIX: ${{ github.workspace }}/home/.wine # this is a workaround for wine
-  HOME: ${{ github.workspace }}/home # this is a workaround for wine
+# env:
+#   WINEPREFIX: ${{ github.workspace }}/home/.wine # this is a workaround for wine
+#   HOME: ${{ github.workspace }}/home # this is a workaround for wine
 
 jobs:
   test:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/deploy-image:latest
-    defaults:
-      run:
-        working-directory: .
     steps:
     - uses: actions/checkout@v4
       with:
@@ -41,12 +38,12 @@ jobs:
       with:
         path: ~/.m2/repository
         key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
-    - name: Home directory
-      run: |
-        echo "--------- Home directory ---------"
-        echo $HOME
-        mkdir $HOME
-        echo "--------- done ---------"
+    # - name: Home directory
+    #   run: |
+    #     echo "--------- Home directory ---------"
+    #     echo $HOME
+    #     mkdir $HOME
+    #     echo "--------- done ---------"
     - name: Browser build
       run: |
         echo "--------- Compile Browser version ---------"

@@ -48,6 +48,7 @@ jobs:
       run: |
         echo "--------- Compile Electron (windows) version ---------"
         WINEPREFIX=`pwd`/.wine
+        echo "WINEPREFIX = $WINEPREFIX"
         cd bundles/electron
         make prepare-prod target_platform=win
         mv ../../dist/electron ../../dist/electron-win

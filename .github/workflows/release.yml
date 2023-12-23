@@ -30,7 +30,7 @@ jobs:
     container:
       image: ghcr.io/explorama/images/deploy-image:latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         set-safe-directory: '*'
     - name: Cache dependencies
@@ -41,6 +41,7 @@ jobs:
     - name: Home directory
       run: |
         echo "--------- Home directory ---------"
+        git --version
         echo $HOME
         mkdir $HOME
         echo "--------- done ---------"

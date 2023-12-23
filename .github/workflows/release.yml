@@ -30,24 +30,18 @@ jobs:
     container:
       image: ghcr.io/explorama/images/deploy-image:latest
     steps:
-    - name: Ensure permissions
+    - name: Ensure permissions # workaround for newer git versions
       run: |
         chown $(whoami) -R .
     - uses: actions/checkout@v4
       with:
         set-safe-directory: '*'
+        fetch-tags: true
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
         path: ~/.m2/repository
         key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
-    - name: Home directory
-      run: |
-        echo "--------- Home directory ---------"
-        git --version
-        echo $HOME
-        mkdir $HOME
-        echo "--------- done ---------"
     - name: Browser build
       run: |
         echo "--------- Compile Browser version ---------"
@@ -60,10 +54,6 @@ jobs:
     - name: Electron win build
       run: |
         echo "--------- Compile Electron (windows) version ---------"
-        echo "WINEPREFIX $WINEPREFIX"
-        echo "HOME $HOME"
-        echo "USER $USER"
-        ls -la
         cd bundles/electron
         make prepare-prod target_platform=win
         mv ../../dist/electron ../../dist/electron-win
@@ -89,10 +79,9 @@ jobs:
         echo "--------- done ---------"
     - name: Generate change log
       run: |
-        echo "--------- Generate change log ---------"
         LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
         git log --pretty="- %s" $LATEST_TAG..HEAD > CHANGELOG.md
-        echo "--------- done ---------"
+        bb tools/changelog/changelog.clj
     - name: Changelog and version
       run: |
         echo "--------- Changelog ---------"

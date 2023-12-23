@@ -30,6 +30,9 @@ jobs:
     container:
       image: ghcr.io/explorama/images/deploy-image:latest
     steps:
+    - name: Ensure permissions
+      run: |
+        chown $(whoami) -R .
     - uses: actions/checkout@v4
       with:
         set-safe-directory: '*'

@@ -25,7 +25,7 @@ env:
   HOME: ${{ github.workspace }}/home # this is a workaround for wine
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/deploy-image:latest

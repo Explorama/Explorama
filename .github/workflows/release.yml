@@ -39,6 +39,7 @@ jobs:
         fetch-tags: true
     - name: fetch tags # Fetching tags fetch tags seems not to work
       run: |
+        git fetch --tags
         git tag
     - name: Cache dependencies
       uses: actions/cache@v3

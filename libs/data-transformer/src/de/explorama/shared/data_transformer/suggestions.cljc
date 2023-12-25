@@ -125,6 +125,13 @@
     {:type :text}
     nil))
 
+(defn- check-string [_ value]
+  ;TODO r1/mapping what is a good number?
+  (if (< (count value) 40)
+    {:type :string
+     :context? true}
+    nil))
+
 (defn- find-types [{{check-lines :check-lines} :suggestions}
                    content]
   (reduce (fn [acc row]
@@ -132,7 +139,7 @@
                          (update acc
                                  col-name
                                  (fnil conj [])
-                                 (loop [funcs [check-types check-dates check-locations check-numbers check-text check-ids]]
+                                 (loop [funcs [check-types check-dates check-locations check-numbers check-ids check-text check-string]]
                                    (if (empty? funcs)
                                      {:type :string}
                                      (if-let [result ((first funcs) col-name value)]
@@ -146,24 +153,29 @@
                 content)))
 
 (def ^:private type-priority
-  {:id 0
-   :location 1
-   :date 2
-   :number 3
-   :text 4
-   :string 5})
+  {[:id nil] 0
+   [:location nil] 1
+   [:date nil] 2
+   [:integer nil] 3
+   [:decimal nil] 3
+   [:text nil] 4
+   [:string true] 4
+   [:string nil] 5
+   [:default nil] 6})
 
 (defn- priotize-types [types]
   (reduce-kv (fn [acc col-name col-types]
                (let [col-types (set col-types)
                      priotize-type (reduce (fn [final-type type]
-                                             (if (< (get type-priority (:type type) 0)
-                                                    (get type-priority (:type final-type) 0))
+                                             (if (< (get type-priority [(:type type) (:context? type)] 6)
+                                                    (get type-priority [(:type final-type) (:context? type)] 6))
                                                type
                                                final-type))
-                                           {:type :string}
+                                           {:type :default}
                                            col-types)]
-                 (assoc acc col-name priotize-type)))
+                 (assoc acc col-name (if (= priotize-type {:type :default})
+                                       {:type :string}
+                                       priotize-type))))
              {}
              types))
 
@@ -172,7 +184,8 @@
    :name [:value (str/lower-case col-name)]
    :type [:value (case type
                    :integer "integer"
-                   :decimal "decimal")]})
+                   :decimal "decimal"
+                   :string "string")]})
 
 (defn- context [[col-name _]]
   {:name [:field col-name]
@@ -204,9 +217,11 @@
       [:field col-name])
     [:id-rand :uuid]))
 
-(defn- filter-types [types fitler-pred]
-  (filter (fn [[_ {:keys [type]}]]
-            (fitler-pred type))
+(defn- filter-types [types filter-pred]
+  (filter (fn [[_ {:keys [type] :as desc}]]
+            (if (set? filter-pred)
+              (filter-pred type)
+              (filter-pred desc)))
           types))
 
 (defn create [desc content]
@@ -214,11 +229,16 @@
         types (find-types desc content)
         types (priotize-types types)
         global-ids (filter-types types #{:id})
-        facts (filter-types types #{:decimal :integer})
+        facts (filter-types types (fn [{:keys [type context?]}]
+                                    (or (#{:decimal :integer} type)
+                                        (and (= type :string)
+                                             (not context?)))))
         locations (filter-types types #{:location})
         dates (filter-types types #{:date})
         texts (filter-types types #{:text})
-        contexts (filter-types types #{:string})
+        contexts (filter-types types (fn [{:keys [type context?]}]
+                                       (and (= type :string)
+                                            context?)))
         desc (merge desc
                     {:mapping {:datasource {:name [:value data-source-name]
                                             :global-id [:value (str "source-" (str/lower-case data-source-name))]}

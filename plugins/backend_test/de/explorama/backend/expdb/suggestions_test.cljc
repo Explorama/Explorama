@@ -49,3 +49,29 @@
                                                             [:field "date"]],
                                                     :type [:value "occured-at"]}],
                                            :texts [[:field "text" ""]]}]}]}}))))
+
+(deftest test-numbers
+  (testing "Decimals happy path"
+    (is (= (@#'sut/check-numbers nil "-1.5")
+           (@#'sut/check-numbers nil "-1,5")
+           (@#'sut/check-numbers nil "1.5")
+           (@#'sut/check-numbers nil "1,5")
+           (@#'sut/check-numbers nil "1.5e1")
+           (@#'sut/check-numbers nil "-1.5e1")
+           (@#'sut/check-numbers nil "-1.5e-1")
+           (@#'sut/check-numbers nil "1,5e1")
+           (@#'sut/check-numbers nil "-1,5e1")
+           (@#'sut/check-numbers nil "-1,5e-1")
+           (@#'sut/check-numbers nil "12,310,101.5")
+           (@#'sut/check-numbers nil "1.238.711,5")
+           (@#'sut/check-numbers nil "-12,310,101.5")
+           (@#'sut/check-numbers nil "-1.238.711,5")
+           {:type :decimal})))
+  (testing "integer happy path"
+    (is (= (@#'sut/check-numbers nil "-1.000.123")
+           (@#'sut/check-numbers nil "-44,123,421")
+           (@#'sut/check-numbers nil "32.312.213")
+           (@#'sut/check-numbers nil "-32,312,213")
+           (@#'sut/check-numbers nil "32312213")
+           (@#'sut/check-numbers nil "-32312213")
+           {:type :integer}))))

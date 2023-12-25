@@ -19,6 +19,9 @@
 (def ^:private complex-decimal-schema-en #"^[\-]{0,1}([1-9]\d{0,2}(,?\d{3})*|0)(\.\d+)+$")
 (def ^:private complex-integer-schema-en #"^[\-]{0,1}([1-9]\d{0,2}(,?\d{3})*|0)$")
 
+(def ^:private pow-decimal-schema-de #"^[\-]{0,1}\d{1}\,\d+[Ee]{1}[\-]{0,1}\d+$")
+(def ^:private pow-decimal-schema-en #"^[\-]{0,1}\d{1}\.\d+[Ee]{1}[\-]{0,1}\d+$")
+
 (def ^:private simple-decimal-schema-de #"^[\-]{0,1}[\d]+\,\d+$")
 (def ^:private complex-decimal-schema-de #"^[\-]{0,1}([1-9]\d{0,2}(.?\d{3})*|0)(\,\d+)+$")
 (def ^:private complex-integer-schema-de #"^[\-]{0,1}([1-9]\d{0,2}(.?\d{3})*|0)$")
@@ -26,18 +29,22 @@
 (defn- check-numbers [_ value]
   (cond (re-find simple-integer-schema-en value)
         {:type :integer}
+        (re-find complex-integer-schema-en value)
+        {:type :integer}
+        (re-find complex-integer-schema-de value)
+        {:type :integer}
         (re-find simple-decimal-schema-en value)
+        {:type :decimal}
+        (re-find simple-decimal-schema-de value)
         {:type :decimal}
         (re-find complex-decimal-schema-en value)
         {:type :decimal}
-        (re-find complex-integer-schema-en value)
-        {:type :integer}
-        (re-find simple-decimal-schema-de value)
-        {:type :decimal}
         (re-find complex-decimal-schema-de value)
         {:type :decimal}
-        (re-find complex-integer-schema-de value)
-        {:type :integer}
+        (re-find pow-decimal-schema-de value)
+        {:type :decimal}
+        (re-find pow-decimal-schema-en value)
+        {:type :decimal}
         :else nil))
 
 (def ^:private date-schema-1 #"^(\d{2})([\/\-\.])(\d{2})([\/\-\.])(\d{4})$")

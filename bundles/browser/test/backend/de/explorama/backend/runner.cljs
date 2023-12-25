@@ -2,11 +2,11 @@
   (:require [data-format-lib.core-test]
             [data-format-lib.data-test]
             [data-format-lib.date-filter-test]
-            [data-format-lib.standard-filter-test]
-            [data-format-lib.simplified-view-test]
             [data-format-lib.operations-indicator-test]
-            [data-format-lib.operations-test]
             [data-format-lib.operations-mosaic-test]
+            [data-format-lib.operations-test]
+            [data-format-lib.simplified-view-test]
+            [data-format-lib.standard-filter-test]
             [de.explorama.backend.algorithms.data.future-data-test]
             [de.explorama.backend.algorithms.data.redo-test]
             [de.explorama.backend.algorithms.data.train-data-test]
@@ -25,6 +25,8 @@
             [de.explorama.backend.common.data.descriptions-test]
             [de.explorama.backend.expdb.ac-api-test]
             [de.explorama.backend.expdb.indexed-db-test]
+            [de.explorama.backend.expdb.mapping-test]
+            [de.explorama.backend.expdb.suggestions-test]
             [de.explorama.backend.expdb.simple-db-test]
             [de.explorama.backend.indicator.calculate-test]
             [de.explorama.backend.indicator.persistence-test]
@@ -74,6 +76,8 @@
  'de.explorama.backend.expdb.ac-api-test
  'de.explorama.backend.expdb.simple-db-test
  'de.explorama.backend.expdb.indexed-db-test
+ 'de.explorama.backend.expdb.mapping-test
+ 'de.explorama.backend.expdb.suggestions-test
  'de.explorama.backend.indicator.calculate-test
  'de.explorama.backend.indicator.persistence-test
  'de.explorama.backend.indicator.sample-test

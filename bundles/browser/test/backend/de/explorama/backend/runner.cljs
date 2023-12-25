@@ -1,5 +1,13 @@
 (ns de.explorama.backend.runner
-  (:require [de.explorama.backend.algorithms.data.future-data-test]
+  (:require [data-format-lib.core-test]
+            [data-format-lib.data-test]
+            [data-format-lib.date-filter-test]
+            [data-format-lib.standard-filter-test]
+            [data-format-lib.simplified-view-test]
+            [data-format-lib.operations-indicator-test]
+            [data-format-lib.operations-test]
+            [data-format-lib.operations-mosaic-test]
+            [de.explorama.backend.algorithms.data.future-data-test]
             [de.explorama.backend.algorithms.data.redo-test]
             [de.explorama.backend.algorithms.data.train-data-test]
             [de.explorama.backend.algorithms.prediction-registry.expdb-backend-test]
@@ -39,6 +47,14 @@
             [doo.runner :refer-macros [doo-tests]]))
 
 (doo-tests
+ 'data-format-lib.core-test
+ 'data-format-lib.data-test
+ 'data-format-lib.date-filter-test
+ 'data-format-lib.operations-indicator-test
+ 'data-format-lib.operations-test
+ 'data-format-lib.standard-filter-test
+ 'data-format-lib.simplified-view-test
+ 'data-format-lib.operations-mosaic-test
  'de.explorama.backend.algorithms.data.future-data-test
  'de.explorama.backend.algorithms.data.redo-test
  'de.explorama.backend.algorithms.data.train-data-test

@@ -80,6 +80,7 @@
                              (add-to-path "frontend-integrations" "woco" "backend")})
 
 (def fixed-backend-test-folders #{(add-to-path "test" "backend")
+                                  (add-to-path libs-paths "data-format-lib" "test" "cljc")
                                   (add-to-path plugins-paths "backend_test")
                                   (add-to-path plugins-paths "shared_test")})
 

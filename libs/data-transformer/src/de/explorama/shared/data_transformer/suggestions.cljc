@@ -69,6 +69,10 @@
 (def ^:private date-schema-15 #"^([a-zA-Z]{3})\.\ (\d{1,2})\,\ (\d{4})$")
 (def ^:private date-schema-16 #"^([a-zA-Z]{3})\.\ (\d{1,2})\,\ (\d{2})$")
 
+(def ^:private date-schema-17 #"^(\d{4})$")
+(def ^:private date-schema-18 #"^(\d{2})([\/\-\.])(\d{4})$")
+(def ^:private date-schema-19 #"^(\d{4})([\/\-\.])(\d{2})$")
+
 (defn- check-dates [_ value]
   ;TODO r1/mapping this could maybe faster if there is a regex/parser/lib checking all variants
   (loop [schemas [[date-schema-1 "dd.MM.YYYY" true]
@@ -86,7 +90,10 @@
                   [date-schema-13 "dd MMM. YY" false]
                   [date-schema-14 "dd MMM. YYYY" false]
                   [date-schema-15 "MMM. dd, YYYY" false]
-                  [date-schema-16 "MMM. dd, YY" false]]]
+                  [date-schema-16 "MMM. dd, YY" false]
+                  [date-schema-17 "YYYY" false]
+                  [date-schema-18 "MM.YYYY" true]
+                  [date-schema-19 "YYYY.MM" true]]]
     (if (empty? schemas)
       nil
       (let [[schema field-schema replace-dot?] (first schemas)

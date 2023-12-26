@@ -76,3 +76,39 @@
            (@#'sut/check-numbers nil "32312213")
            (@#'sut/check-numbers nil "-32312213")
            {:type :integer}))))
+
+(deftest test-dates
+  (testing "Dates happy path"
+    (is (= (@#'sut/check-dates nil "2018-09-24")
+           {:type :date
+            :date-schema "YYYY-MM-dd"}))
+    (is (= (@#'sut/check-dates nil "2018/09/24")
+           {:type :date
+            :date-schema "YYYY/MM/dd"}))
+    (is (= (@#'sut/check-dates nil "2018.09.24")
+           {:type :date
+            :date-schema "YYYY.MM.dd"}))
+    (is (= (@#'sut/check-dates nil "24-09-2018")
+           {:type :date
+            :date-schema "dd-MM-YYYY"}))
+    (is (= (@#'sut/check-dates nil "24/09/2018")
+           {:type :date
+            :date-schema "dd/MM/YYYY"}))
+    (is (= (@#'sut/check-dates nil "24.09.2018")
+           {:type :date
+            :date-schema "dd.MM.YYYY"}))
+    (is (= (@#'sut/check-dates nil "24 SEP. 2018")
+           {:type :date
+            :date-schema "dd MMM. YYYY"}))
+    (is (= (@#'sut/check-dates nil "SEP. 24, 2018")
+           {:type :date
+            :date-schema "MMM. dd, YYYY"}))
+    (is (= (@#'sut/check-dates nil "2018")
+           {:type :date
+            :date-schema "YYYY"}))
+    (is (= (@#'sut/check-dates nil "09.2018")
+           {:type :date
+            :date-schema "MM.YYYY"}))
+    (is (= (@#'sut/check-dates nil "2018-09")
+           {:type :date
+            :date-schema "YYYY-MM"}))))

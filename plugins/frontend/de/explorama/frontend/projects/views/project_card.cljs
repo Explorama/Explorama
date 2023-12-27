@@ -355,14 +355,16 @@
                              config-shared/explorama-project-sync?
                              (not= own-client-id locked-by-client))]
     [:div.footer
-     (if is-shared?
-       [tooltip {:text shared-project-label}
-        [icon {:icon :users
-               :size :large}]]
-       [icon {:icon :user
-              :size :large}])
+     (cond is-shared?
+           [tooltip {:text shared-project-label}
+            [icon {:icon :users
+                   :size :large}]]
+           config-platform/explorama-multi-user
+           [icon {:icon :user
+                  :size :large}])
      [:div.meta
-      [:div (str author-label " " creator-name)]
+      [:div (when config-platform/explorama-multi-user
+              (str author-label " " creator-name))]
       [:div (str last-modified-label " " date)]]
      (when-not rw-rights?
        [tooltip {:text read-only}
@@ -422,7 +424,8 @@
   "Representing one project-card."
   [{:keys [project-id allowed-user allowed-groups] :as project-desc}]
   (let [{:keys [username role] :as user-info} @(fi/call-api :user-info-sub)
-        rw-rights? (or (some #{username} allowed-user)
+        rw-rights? (or (not config-platform/explorama-multi-user)
+                       (some #{username} allowed-user)
                        (some #{role} allowed-groups))
         is-loaded? (= project-id @(re-frame/subscribe [:de.explorama.frontend.projects.core/loaded-project-id]))
         lock-info @(re-frame/subscribe [::locks project-id])

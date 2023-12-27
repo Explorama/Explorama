@@ -79,6 +79,7 @@
                              :title title
                              :description desc
                              :date (format-date t)
+                             :last-modified (cljc-time/current-ms)
                              :snapshots []}))
   (write-mapping-table-for-tests id title)
   {:project-id id})
@@ -103,14 +104,18 @@
     (event-backend/append-lines to-instance to-logs)
     (project-backend/update to-proj
                             (assoc to-project
+                                   :last-modified (cljc-time/current-ms)
                                    :snapshots src-snapshots))
     {:project-id to-id}))
 
 (defn all-projects []
   (reduce (fn [res id]
-            (let [instance (project-backend/new-instance id)]
+            (let [instance (project-backend/new-instance id)
+                  {:keys [title date] :as pdesc} (project-backend/read instance)]
               ;TODO r1/projects check access rights
-              (assoc res id (project-backend/read instance))))
+              (cond-> res 
+                (and title date) 
+                (assoc id pdesc))))
           {}
           (project-backend/list-all)))
 
@@ -138,7 +143,7 @@
 
 (defn list-projects [user-info]
   (reduce (fn [acc [p-id p-desc]]
-            (if platfom-config/explorama-multi-user
+            (if-not platfom-config/explorama-multi-user
               (assoc-in acc [:created-projects p-id] p-desc)
               ;TODO r1/projects implement for multi user
               (let [_public-read-only? (project-public-read-only? p-id)

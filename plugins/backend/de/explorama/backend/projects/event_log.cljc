@@ -2,6 +2,7 @@
   (:require [de.explorama.backend.frontend-api :as fapi]
             [de.explorama.backend.projects.core :as pcore]
             [de.explorama.backend.projects.persistence.event-log :as persist]
+            [de.explorama.backend.projects.persistence.project :as project-backend]
             [de.explorama.shared.common.unification.time :refer [current-ms]]
             [de.explorama.shared.projects.ws-api :as ws-api]
             [taoensso.timbre :refer [error]]))
@@ -22,9 +23,13 @@
                     :t (current-ms)})]
     (when (pcore/user-allowed? user-info project-id)
       (try
-        (let [instance (persist/new-instance project-id)]
+        (let [instance (persist/new-instance project-id)
+              project-instance (project-backend/new-instance project-id)
+              new-pdesc (-> (project-backend/read project-instance)
+                            (assoc :last-modified (current-ms)))]
           (try
             (persist/append-lines instance [[event-id [origin frame-id event-name desc version]]])
+            (project-backend/update project-instance new-pdesc)
             ;;TODO r1/projects whats this?
             ;; (when (and inform-after-log client-id)
               ;;   (after-log-inform client-id project-id))

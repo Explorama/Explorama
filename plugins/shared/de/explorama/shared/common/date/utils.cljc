@@ -1,9 +1,8 @@
 (ns de.explorama.shared.common.date.utils
-  (:require [clojure.edn :as edn]
-            [clojure.string :as str]))
+  (:require [clojure.string :as str]))
 
 (defn parse-date [value]
-  (mapv #(int (edn/read-string %)) (str/split value #"-0|-")))
+  (mapv #(parse-long %) (str/split value #"-0|-")))
 
 (defn date-convert [value & [{granularity :granularity}]]
   (let [[year month day] (parse-date value)]

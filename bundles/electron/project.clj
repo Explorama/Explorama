@@ -1,7 +1,7 @@
 (require '[clojure.string :as st])
 
 (def app-version "0.0.0")
-(def electron-version "28.0.0")
+(def electron-version "28.1.0")
 (def better-sqlite3-version "9.2.2")
 (def ml-regression-simple-linear-version "2.0.4")
 

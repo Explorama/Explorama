@@ -423,8 +423,6 @@
                                         (try
                                           (mwidb/get+ (vec data-tiles))
                                           (catch #?(:clj Exception :cljs :default) e
-                                            (println "request")
-                                            (println {:data-tiles (vec data-tiles)})
                                             (throw e))))]
                             (into acc result)))
                         []

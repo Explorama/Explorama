@@ -68,19 +68,16 @@
       (is (nil? (adapter/retrive-prediction reg-instance username pred-id-3)))
       (is (nil? (adapter/retrive-prediction reg-instance username-2 pred-id-4))))
 
-    (println "Store Test-Prediction-Tasks")
     (adapter/store-prediction reg-instance username prediction-task-1)
     (adapter/store-prediction reg-instance username prediction-task-2)
     (adapter/store-prediction reg-instance username prediction-task-3)
     (adapter/store-prediction reg-instance username-2 prediction-task-4)
-    (println "Retrive Test-Prediction-Tasks")
     (testing
      "Retrive Stored Tasks"
       (is (= prediction-task-1 (adapter/retrive-prediction reg-instance username pred-id-1)))
       (is (= prediction-task-2 (adapter/retrive-prediction reg-instance username pred-id-2)))
       (is (= prediction-task-3 (adapter/retrive-prediction reg-instance username pred-id-3)))
       (is (= prediction-task-4 (adapter/retrive-prediction reg-instance username-2 pred-id-4))))
-    (println "List Test-Tasks")
     (let [predictions (adapter/all-predictions reg-instance)
           u1 (get predictions username)
           u2 (get predictions username-2)
@@ -101,14 +98,12 @@
                (-> predictions
                    (update-in [username] #(map (fn [pred] (dissoc pred :last-used)) %))
                    (update-in [username-2] #(map (fn [pred] (dissoc pred :last-used)) %)))))))
-    (println "Remove prediction by wrong user")
     (adapter/remove-prediction reg-instance username-2 pred-id-1)
     (adapter/remove-prediction reg-instance username pred-id-4)
     (testing
      "Prediction still there"
       (is (= prediction-task-1 (adapter/retrive-prediction reg-instance username pred-id-1)))
       (is (= prediction-task-4 (adapter/retrive-prediction reg-instance username-2 pred-id-4))))
-    (println "Remove predictions by correct user")
     (adapter/remove-prediction reg-instance username pred-id-1)
     (adapter/remove-prediction reg-instance username-2 pred-id-4)
     (testing
@@ -120,7 +115,6 @@
               username-2 []}
              (-> (adapter/all-predictions reg-instance)
                  (update-in [username] #(map (fn [pred] (dissoc pred :last-used)) %))))))
-    (println "Remove multiple predictions and then list all")
     (adapter/remove-predictions reg-instance username [pred-id-2 pred-id-3])
     (testing
      "List all predictions"

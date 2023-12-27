@@ -111,7 +111,17 @@
                          :dashboard [::dashboards/delete-dashboard id]
                          :report [::reports/delete-report id]
                          nil)]
-     {:dispatch dispatch})))
+    (let [unregister-tab-event-desc (case (id-type db id)
+                                      :dashboard {:id id
+                                                  :type :dashboard}
+                                      :report {:id id
+                                               :type :report}
+                                      nil)] 
+    
+     {:fx (cond-> [[:dispatch dispatch]]
+            unregister-tab-event-desc 
+            (conj [:dispatch (fi/call-api [:tabs :deregister-event-vec]
+                                          unregister-tab-event-desc)]))}))))
 
 (reg-sub
  ::url-key

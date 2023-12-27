@@ -289,7 +289,6 @@
            descs)))
 
 (defn- gen-features [g row-num features row]
-  (println row)
   (persistent!
    (reduce (fn [acc feature]
              (try
@@ -302,7 +301,6 @@
                                    (gen-generic g row-num (:dates feature) row gen/date [:type :value])
                                    (gen-generic g row-num (:texts feature) row gen/text [identity])))
                (catch #?(:clj Throwable :cljs :default) exc
-                 (println (ex-message exc) (ex-data exc))
                  (swap! (gen/state g) update :errors (fnil conj [])
                         {:row-num row-num
                          :msg (ex-message exc)

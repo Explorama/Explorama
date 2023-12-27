@@ -595,6 +595,11 @@
 
 /* maximized*/
 /* line 886, src/scss/components/_explorama_backup.scss */
+
+.explorama.explorama--window-maximized {
+  display: none;
+}
+
 .explorama.explorama--window-maximized .explorama__header {
   height: 32px;
 }

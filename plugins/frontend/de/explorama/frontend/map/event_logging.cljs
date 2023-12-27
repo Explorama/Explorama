@@ -74,29 +74,29 @@
 (defn action-desc [base-op action both _ only-new]
   (cond (= "operation" action)
         (cond (not-creating-and-target? :base-layer base-op both only-new)
-              (base-desc :map-protocol-action-base-layer-change
+              (base-desc :geomap-protocol-action-base-layer-change
                          (access-attrs both only-new [:payload :base-layer]))
               (not-creating-and-target? :overlayer base-op both only-new)
-              (base-desc :map-protocol-action-overlayer-active
+              (base-desc :geomap-protocol-action-overlayer-active
                          (str/join ", "
                                    (access-attrs both only-new [:payload :overlayers])))
               (not-creating-and-target? :feature-layer base-op both only-new)
-              (base-desc :map-protocol-action-feature-layers-active
+              (base-desc :geomap-protocol-action-feature-layers-active
                          (str/join ", "
                                    (map (fn [[_ {name :name}]] name)
                                         (access-attrs both only-new [:payload :feature-layers]))))
               (not-creating-and-target? :marker base-op both only-new)
-              (base-desc :map-protocol-action-marker-settings
+              (base-desc :geomap-protocol-action-marker-settings
                          (str/join ", "
                                    (map (fn [{name :name}] name)
                                         (access-attrs both only-new [:payload :marker-layouts]))))
 
               (or (= :init-di (:action only-new))
                   (= :init-di (:action both)))
-              (base-desc :map-protocol-action-load-data)
+              (base-desc :geomap-protocol-action-load-data)
 
               (= :copy-frame (:action only-new))
-              (base-desc :map-protocol-action-copy-frame)
+              (base-desc :geomap-protocol-action-copy-frame)
 
               :else nil)))
 

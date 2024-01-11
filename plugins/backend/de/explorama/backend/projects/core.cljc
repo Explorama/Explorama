@@ -121,9 +121,10 @@
 
 (defn all-public-read-only-projects []
   (reduce (fn [res id]
-            (let [instance (project-backend/new-instance id)]
+            (if id
               ;TODO r1/projects check access rights
-              (assoc res id (project-backend/read instance))))
+              (assoc res id (project-backend/read (project-backend/new-instance id)))
+              res))
           {}
           (project-backend/list-all)))
 
@@ -292,10 +293,10 @@
                                :as head-desc}
                               user-info]
   (let [_public-access? (when (has-access? user-info project-id "read")
-                         (user-public-access? project-id user-info))
+                          (user-public-access? project-id user-info))
         _public-read-only? (project-public-read-only? project-id)
-        instance (project-backend/new-instance project-id)
-        project-desc (project-backend/read instance)
+        instance-project (project-backend/new-instance project-id)
+        project-desc (project-backend/read instance-project)
         instance (event-backend/new-instance project-id)
         head (or head
                  (some #(when (= (:snapshot-id %) snapshot-id)
@@ -313,7 +314,7 @@
                               (inc i))))
                    result))]
     (when-not read-only?
-      (remove-newer-heads plogs-id instance result head))
+      (remove-newer-heads plogs-id instance-project result head))
     (if result
       {:description (dissoc project-desc :date-obj)
        :snapshot head-desc

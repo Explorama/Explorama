@@ -128,6 +128,9 @@
                  [clj-time/clj-time "0.15.2"]
                  [org.clojure/math.combinatorics "0.2.0"]
 
+                 [markdown-clj "1.11.4"]
+                 [org.clj-commons/hickory "0.7.3"]
+
                  ;;1.11.11-1 is a forked version with fixing scrollbars which contains changes from https://github.com/2knu/html-to-image/tree/with_scrollbar_fixes
                  [io.github.cljsjs/html-to-image-mod "1.11.11-1"]
                  [cljsjs/jspdf "2.5.1-0"]

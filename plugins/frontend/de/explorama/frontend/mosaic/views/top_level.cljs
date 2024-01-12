@@ -1,5 +1,6 @@
 (ns de.explorama.frontend.mosaic.views.top-level
-  (:require [de.explorama.frontend.mosaic.interaction.context-menu.canvas :refer [context-menu-canvas]]
+  (:require [de.explorama.frontend.aggregation-vpl.core :as ddac]
+            [de.explorama.frontend.mosaic.interaction.context-menu.canvas :refer [context-menu-canvas]]
             [de.explorama.frontend.mosaic.interaction.tooltip :as tooltip-canvas]
             [de.explorama.frontend.mosaic.path :as gp]
             [de.explorama.frontend.mosaic.views.canvas :as goocanvas]
@@ -51,6 +52,7 @@
        {:key (str "context-menu-canvas" path)})
      [tooltip-canvas/groups (gp/frame-id path)]
      [:div {:style (assoc mosaic-box-body :overflow :hidden)}
+      [ddac/view (gp/frame-id path)]
       [:div.mosaic__box__body {:style mosaic-box-body
                               :id mosaic-box-body-id
                               :on-context-menu #(.preventDefault %)

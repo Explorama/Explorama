@@ -145,7 +145,7 @@
 (defn- compile* [instance filter-node]
   (cond (filter-leaf? filter-node) (filter-func instance filter-node)
         (filter-op? filter-node) (apply merge-operation-function filter-node)
-        :default filter-node))
+        :else filter-node))
 
 (defn- compile-filter
   [instance filter-definition]

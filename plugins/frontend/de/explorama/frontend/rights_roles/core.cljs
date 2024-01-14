@@ -66,7 +66,8 @@
   (register-init 0)
   (when-not config-shared-platform/explorama-multi-user
     (let [dummy-user-info {:user-info {:username "localuser"
-                                       :name "Local User"}}]
+                                       :name "Local User"
+                                       :role "admin"}}]
       (re-frame/dispatch [::login/token-valid
                           true
                           dummy-user-info]))))

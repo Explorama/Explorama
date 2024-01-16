@@ -34,6 +34,7 @@ bundles/*/resources/public/css
 bundles/*/resources/public/fonts
 bundles/*/resources/public/img
 bundles/*/resources/public/js
+bundles/*/resources/public/assets
 bundles/*/.lein-failures
 bundles/*/.rebel_readline_history
 bundles/*/.calva/output-window

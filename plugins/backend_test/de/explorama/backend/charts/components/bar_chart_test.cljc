@@ -25,11 +25,8 @@
 (def month-characteristics
   #{"08" "03" "01" "02"})
 
-(def year-characteristics
-  #{"1998" "1997" "1999"})
-
 (defn color [idx]
-  (@#'colors/next-color ["test"] idx))
+  (colors/color {} 0 "group" idx))
 
 (defn- color-vec [take-num idx]
   (vec (repeat take-num (color idx))))
@@ -87,70 +84,6 @@
          :org-y-range {:org-min-y 0
                        :org-max-y 2}
          :y-axis-attr :number-of-events))
-(def bar-chart-month-number-of-events-show-by-month
-  (assoc month-base
-         :labels ["01" "02" "03" "08"]
-         :datasets [(assoc base-bar-settings
-                           :label "01"
-                           :backgroundColor (color-vec 2 0)
-                           :data [{:x "1997-10", :y 1} {:x "1997-11", :y 0} {:x "1997-12", :y 1}
-                                  {:x "1998-01", :y 0} {:x "1998-02", :y 0} {:x "1998-03", :y 0}
-                                  {:x "1998-04", :y 0} {:x "1998-05", :y 0} {:x "1998-06", :y 1}
-                                  {:x "1998-07", :y 0} {:x "1998-08", :y 2} {:x "1998-09", :y 0}
-                                  {:x "1998-10", :y 0} {:x "1998-11", :y 0} {:x "1998-12", :y 0}
-                                  {:x "1999-01", :y 1}]
-                           :legend {:color (color 0)}
-                           :type "bar"
-                           :y-range nil
-                           :yAxisID (str "y" ":number-of-events" 0)
-                           :chartIndex 0)
-                    (assoc base-bar-settings
-                           :label "All"
-                           :backgroundColor (color-vec 16 0)
-                           :data [{:x "1997-10", :y 1} {:x "1997-11", :y 0} {:x "1997-12", :y 1}
-                                  {:x "1998-01", :y 0} {:x "1998-02", :y 0} {:x "1998-03", :y 0}
-                                  {:x "1998-04", :y 0} {:x "1998-05", :y 0} {:x "1998-06", :y 1}
-                                  {:x "1998-07", :y 0} {:x "1998-08", :y 2} {:x "1998-09", :y 0}
-                                  {:x "1998-10", :y 0} {:x "1998-11", :y 0} {:x "1998-12", :y 0}
-                                  {:x "1999-01", :y 1}]
-                           :legend {:color (color 0)}
-                           :type "bar"
-                           :y-range nil
-                           :yAxisID (str "y" ":number-of-events" 0)
-                           :chartIndex 0)
-                    (assoc base-bar-settings
-                           :label "All"
-                           :backgroundColor (color-vec 16 0)
-                           :data [{:x "1997-10", :y 1} {:x "1997-11", :y 0} {:x "1997-12", :y 1}
-                                  {:x "1998-01", :y 0} {:x "1998-02", :y 0} {:x "1998-03", :y 0}
-                                  {:x "1998-04", :y 0} {:x "1998-05", :y 0} {:x "1998-06", :y 1}
-                                  {:x "1998-07", :y 0} {:x "1998-08", :y 2} {:x "1998-09", :y 0}
-                                  {:x "1998-10", :y 0} {:x "1998-11", :y 0} {:x "1998-12", :y 0}
-                                  {:x "1999-01", :y 1}]
-                           :legend {:color (color 0)}
-                           :type "bar"
-                           :y-range nil
-                           :yAxisID (str "y" ":number-of-events" 0)
-                           :chartIndex 0)
-                    (assoc base-bar-settings
-                           :label "All"
-                           :backgroundColor (color-vec 16 0)
-                           :data [{:x "1997-10", :y 1} {:x "1997-11", :y 0} {:x "1997-12", :y 1}
-                                  {:x "1998-01", :y 0} {:x "1998-02", :y 0} {:x "1998-03", :y 0}
-                                  {:x "1998-04", :y 0} {:x "1998-05", :y 0} {:x "1998-06", :y 1}
-                                  {:x "1998-07", :y 0} {:x "1998-08", :y 2} {:x "1998-09", :y 0}
-                                  {:x "1998-10", :y 0} {:x "1998-11", :y 0} {:x "1998-12", :y 0}
-                                  {:x "1999-01", :y 1}]
-                           :legend {:color (color 0)}
-                           :type "bar"
-                           :y-range nil
-                           :yAxisID (str "y" ":number-of-events" 0)
-                           :chartIndex 0)]
-         :org-y-range {:org-min-y 0
-                       :org-max-y 2}))
-
-(def month-number-of-events
-  {"1997-10" {:number-of-events 1 :sum 0}})
 
 (def year-base
   {:labels ["1997" "1998" "1999"]
@@ -172,21 +105,6 @@
                        :org-max-y 1}
          :y-axis-attr td/fact-1))
 (def bar-chart-year-number-of-events
-  (assoc year-base
-         :datasets [(assoc base-bar-settings
-                           :label "All"
-                           :backgroundColor (color-vec 3 0)
-                           :data [{:x "1997", :y 2} {:x "1998", :y 3} {:x "1999", :y 1}]
-                           :legend {:color (color 0)}
-                           :type "bar"
-                           :y-range nil
-                           :yAxisID (str "y" ":number-of-events" 0)
-                           :chartIndex 0)]
-         :org-y-range {:org-min-y 0
-                       :org-max-y 3}
-         :y-axis-attr :number-of-events))
-
-(def bar-chart-year-number-of-events-show-by-year
   (assoc year-base
          :datasets [(assoc base-bar-settings
                            :label "All"
@@ -310,18 +228,18 @@
 (def org-show-by-category-1
   (assoc org-base
          :datasets [(assoc base-bar-settings
-                           :label (td/category-val "A" 2)
+                           :label (td/category-val "A" 1)
                            :backgroundColor (color-vec 3 0)
-                           :data [nil nil 0]
+                           :data [1 1 nil]
                            :legend {:color (color 0)}
                            :type "bar"
                            :y-range nil
                            :yAxisID (str "y" td/fact-1 0)
                            :chartIndex 0)
                     (assoc base-bar-settings
-                           :label (td/category-val "A" 1)
+                           :label (td/category-val "A" 2)
                            :backgroundColor (color-vec 3 1)
-                           :data [1 1 nil]
+                           :data [nil nil 0]
                            :legend {:color (color 1)}
                            :type "bar"
                            :y-range nil
@@ -334,18 +252,18 @@
 (def org-show-by-category-1-number-of-events
   (assoc org-base
          :datasets [(assoc base-bar-settings
-                           :label (td/category-val "A" 2)
+                           :label (td/category-val "A" 1)
                            :backgroundColor (color-vec 3 0)
-                           :data [nil nil 5]
+                           :data [1 1 nil]
                            :legend {:color (color 0)}
                            :type "bar"
                            :y-range nil
                            :yAxisID (str "y" ":number-of-events" 0)
                            :chartIndex 0)
                     (assoc base-bar-settings
-                           :label (td/category-val "A" 1)
+                           :label (td/category-val "A" 2)
                            :backgroundColor (color-vec 3 1)
-                           :data [1 1 nil]
+                           :data [nil nil 5]
                            :legend {:color (color 1)}
                            :type "bar"
                            :y-range nil
@@ -417,10 +335,9 @@
   (testing "bar-chart x year, y number-of-events"
     (is (= bar-chart-year-number-of-events
            (simple-x-axis year number-of-events))))
-  #_;TODO r1/tests fix this test
-    (testing "bar-chart x year, y number-of-events, show-by month"
-      (is (= bar-chart-year-number-of-events-show-by-month
-             (simple-show-by year number-of-events month month-characteristics))))
+  (testing "bar-chart x year, y number-of-events, show-by month"
+    (is (= bar-chart-year-number-of-events-show-by-month
+           (simple-show-by year number-of-events month month-characteristics))))
 
   (testing "bar-chart x country, y fact-1"
     (is (= bar-chart-country
@@ -436,15 +353,13 @@
     (is (= bar-chart-org-number-of-events
            (simple-x-axis org number-of-events))))
 
-  #_;TODO r1/tests fix this test
-    (testing "org x org, y fact-1, show-by category-1"
-      (is (= org-show-by-category-1
-             (simple-show-by org fact-1 category-1 category-1-characteristics))))
+  (testing "org x org, y fact-1, show-by category-1"
+    (is (= org-show-by-category-1
+           (simple-show-by org fact-1 category-1 category-1-characteristics))))
 
-  #_;TODO r1/tests fix this test
-    (testing "org x org, y number-of-events, show-by category-1"
-      (is (= org-show-by-category-1-number-of-events
-             (simple-show-by org number-of-events category-1 category-1-characteristics))))
+  (testing "org x org, y number-of-events, show-by category-1"
+    (is (= org-show-by-category-1-number-of-events
+           (simple-show-by org number-of-events category-1 category-1-characteristics))))
 
   (testing "negative-tests"
     (is (= empty-result

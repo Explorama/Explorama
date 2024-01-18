@@ -2,6 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [de.explorama.shared.map.config :as config-shared-map]
             [de.explorama.backend.map.overlayers :as overlayers :refer [layers-data
+                                                                        marker-layer-calc
                                                                         renderable-layers]]
             [de.explorama.shared.common.data.attributes :as attrs]))
 
@@ -250,74 +251,75 @@
 
 (def marker-layer-category-wildcard-data-result
   {"DS-A-ID38"
-   {:style {:color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID38"]}
+   [["default" "DS-A-ID38"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID381"
-   {:style {:color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID381"]}
+   [["default" "DS-A-ID381"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID45"
-   {:style {:color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID45"]}
+   [["default" "DS-A-ID45"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID452"
-   {:style {:color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID452"]}})
+   [["default" "DS-A-ID452"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]})
 
 (def marker-layer-category-specific-data-result
   {"DS-A-ID38"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID38"]}
+   [["default" "DS-A-ID38"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID381"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID381"]}
+   [["default" "DS-A-ID381"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID45"
-   {:style {:color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID45"]}
+   [["default" "DS-A-ID45"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID452"
-   {:style {:color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID452"]}})
+   [["default" "DS-A-ID452"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#fb8d02", :fill true, :fillColor "#fb8d02", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]})
 
 (def marker-layer-category-no-wildcard-data-result
   {"DS-A-ID38"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID38"]}
+   [["default" "DS-A-ID38"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID381"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID381"]}
+   [["default" "DS-A-ID381"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID45"
-   {:style {:color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID45"]}
+   [["default" "DS-A-ID45"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID452"
-   (assoc not-found-style
-          :event-id ["default" "DS-A-ID452"])})
+   [["default" "DS-A-ID452"]
+    [[6.35 2.433]]
+    {:color nil, :fillColor nil, :fill true, :stroke false, :weight 3, :radius 5, :fillOpacity 0.7}]})
 
 (def marker-layer-range-data-result
   {"DS-A-ID38"
-   {:style {:color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID38"]}
+   [["default" "DS-A-ID38"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID381"
-   {:style {:color "#5c5b5b", :fill true, :fillColor "#5c5b5b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID381"]}
+   [["default" "DS-A-ID381"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#5c5b5b", :fill true, :fillColor "#5c5b5b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID45"
-   {:style {:color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID45"]}
+   [["default" "DS-A-ID45"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "DS-A-ID452"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "DS-A-ID452"]}})
+   [["default" "DS-A-ID452"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]})
 
 (def marker-data-multi-attrs [{"Fact-1" 0
                                "date" "2011-03-02"
@@ -345,50 +347,40 @@
                                "location" [[6.35 2.433]]}])
 (def marker-layer-org-result
   {"Rand1"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "Rand1"]}
+   [["default" "Rand1"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "Rand1-Rand2"
-   {:style {:color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "Rand1-Rand2"]}
+   [["default" "Rand1-Rand2"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#e33b3b", :fill true, :fillColor "#e33b3b", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "Rand2-foo"
-   {:style {:color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}
-    :location [[6.35 2.433]]
-    :event-id ["default" "Rand2-foo"]}
+   [["default" "Rand2-foo"]
+    [[6.35 2.433]]
+    {:weight 3 :color "#babab9", :fill true, :fillColor "#babab9", :fillOpacity default-opacity, :radius config-shared-map/explorama-marker-radius, :stroke false}]
    "foo"
-   (assoc not-found-style
-          :event-id ["default" "foo"])})
+   [["default" "foo"]
+    [[6.35 2.433]]
+    {:color nil, :fillColor nil, :fill true, :stroke false, :weight 3, :radius 5, :fillOpacity 0.7}]})
 
-#_;TODO r1/tests fix this test
 (deftest marker-layer-coloring
   (testing "only wildcard match"
     (is (= marker-layer-category-wildcard-data-result
-           (get-in (layers-data [marker-layer-category-wildcard]
-                                simple-data-points
-                                true)
-                   ["fc4cdb53be49c7e410bae59336714a75" :data-set]))))
+           (marker-layer-calc [marker-layer-category-wildcard]
+                              simple-data-points))))
   (testing "specific match and wildcard"
     (is (= marker-layer-category-specific-data-result
-           (get-in (layers-data [marker-layer-category-specific]
-                                simple-data-points
-                                true)
-                   ["fc4cdb53be49c7e410bae59336714a75" :data-set]))))
+           (marker-layer-calc [marker-layer-category-specific]
+                              simple-data-points))))
   (testing "specific with no wildcard"
     (is (= marker-layer-category-no-wildcard-data-result
-           (get-in (layers-data [marker-layer-category-no-wildcard]
-                                simple-data-points
-                                true)
-                   ["fc4cdb53be49c7e410bae59336714a75" :data-set]))))
+           (marker-layer-calc [marker-layer-category-no-wildcard]
+                              simple-data-points))))
   (testing "range attribute (number)"
     (is (= marker-layer-range-data-result
-           (get-in (layers-data [range-marker-layer]
-                                simple-data-points
-                                true)
-                   ["26641e55f42658917c525aedebd98ad3" :data-set]))))
+           (marker-layer-calc [range-marker-layer]
+                              simple-data-points))))
   (testing "multi value attributes"
     (is (= marker-layer-org-result
-           (get-in (layers-data [marker-definition-org]
-                                marker-data-multi-attrs
-                                true)
-                   ["fc4cdb53be49c7e410bae59336714a75" :data-set])))))
+           (marker-layer-calc [marker-definition-org]
+                              marker-data-multi-attrs)))))

@@ -24,9 +24,7 @@
   (re-frame/dispatch event-v))
 
 (def ^:private websocket-url
-  (str (clj-str/replace-first (or config-shared-platform/explorama-origin "")
-                              #"^http" "ws")
-       "/ws"))
+  (str "ws://" (or config-shared-platform/explorama-origin "") "/ws"))
 
 (def ^:private tube-spec (tubes/tube
                           websocket-url

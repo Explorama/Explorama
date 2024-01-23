@@ -33,7 +33,8 @@
                                  :port port
                                  :join? false
                                  :max-body http-max-body
-                                 :legacy-return-value? false})))))
+                                 :legacy-return-value? false}))))
+  (println "Server started on port" port))
 
 (defn -main [& _args]
   (start-server! config-server/explorama-host

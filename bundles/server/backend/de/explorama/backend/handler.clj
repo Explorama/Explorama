@@ -1,13 +1,12 @@
 (ns de.explorama.backend.handler
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [jsonista.core :as json]
             [de.explorama.backend.abac.jwt :as jwt]
             [de.explorama.backend.abac.util :refer [user-info-role-fix]]
             [de.explorama.backend.frontend-api :as frontend-api]
-            [de.explorama.backend.rights-roles.handler :as rr-handler]
             [de.explorama.shared.common.configs.provider :as configp]
             [hiccup.page :refer [html5]]
+            [jsonista.core :as json]
             [muuntaja.core :as m]
             [pneumatic-tubes.httpkit :refer [websocket-handler]]
             [reitit.coercion.spec :as rcs]
@@ -132,124 +131,121 @@
   (str prefix-line "\n" s))
 
 (def routes
-  (into
-   [["/" {:get (fn [_]
-                 {:status 200
-                  :body
-                  (html5
-                   (into
-                    [:head
-                     [:meta {:charset "utf-8"}]
-                     [:meta {:http-equiv "X-UA-Compatible"
-                             :content "IE=edge,chrome=1"}]
-                     [:title "Explorama"]
-                     [:link {:rel "shortcut icon"
-                             :href "images/favicon.ico"}]]
-                    (sort-by (fn [[_ {href :href}]] href)
-                             (local-assets "resources/public" "asset")))
-                   [:body.initial.login
-                    [:div#app]
-                    [:script {:src "js/woco.js"}]
-                    [:script "de.explorama.frontend.woco.app.core.init();"]])})}]
-    ["/js/woco.js"
-     {:get (fn [_]
-             {:status 200
-              :content-type "application/javascript;charset=UTF-8"
-              :body
-              (prepend (slurp "resources/public/js/woco.js" :encoding "UTF-8")
-                       (str "const EXPLORAMA_CLIENT_CONFIG = '"
-                            (json/write-value-as-string @configp/client-configs)
-                            "';"))})}]
-    ["/img/*" (ring/create-resource-handler {:root "public/assets/img/"})]
-    ["/asset/assets/img/*" (ring/create-resource-handler {:root "public/assets/img/"})]
-    ["/asset/assets/fonts/*" (ring/create-resource-handler {:root "public/assets/fonts/"})]
-    ["/asset/assets/css/*" (ring/create-resource-handler {:root "public/assets/css/"})]
-    ["/js/compiled/*" (ring/create-resource-handler {:root "public/js/compiled/"})]
-    ["/ws" {:get {:parameters {:query {:username string? :token string? :client-id string?}}
-                  :handler
-                  (fn [{{req :query} :parameters}]
-                    (println "user-info" req)
-                    (try
-                      (let [user-info (user-info-role-fix req)]
-                        (println "user-info" user-info)
-                        (if (jwt/user-valid? user-info)
-                          {:status 200
-                           :body (websocket-handler (frontend-api/routes->tubes) user-info)}
-                          {:status 403}))
-                      (catch Throwable e
-                        (log/error "Error creating websocket connection" e)
-                        {:status 403})))}}]]
-   (rr-handler/routes (sort-by (fn [[_ {href :href}]] href)
-                               (local-assets "resources/public" "asset")))
-   #_["/datasources" {:post (fn [req]
-                              (gen-error
-                               (let [body (get req :body-params)
-                                     {:keys [bucket default-bucket] :as options} (default-params
-                                                                                  (get req :body-params {}))
-                                     bucket (or bucket default-bucket)
-                                     {:keys [success data]}
-                                     (import/transform->import body options bucket)]
-                                 {:status (if success 200 400)
-                                  :body {:result data}})))
-                      :get (fn [context]
+  [["/" {:get (fn [_]
+                {:status 200
+                 :body
+                 (html5
+                  (into
+                   [:head
+                    [:meta {:charset "utf-8"}]
+                    [:meta {:http-equiv "X-UA-Compatible"
+                            :content "IE=edge,chrome=1"}]
+                    [:title "Explorama"]
+                    [:link {:rel "shortcut icon"
+                            :href "images/favicon.ico"}]]
+                   (sort-by (fn [[_ {href :href}]] href)
+                            (local-assets "resources/public" "asset")))
+                  [:body.initial.login
+                   [:div#app]
+                   [:script {:src "js/woco.js"}]
+                   [:script "de.explorama.frontend.woco.app.core.init();"]])})}]
+   ["/js/woco.js"
+    {:get (fn [_]
+            {:status 200
+             :content-type "application/javascript;charset=UTF-8"
+             :body
+             (prepend (slurp "resources/public/js/woco.js" :encoding "UTF-8")
+                      (str "const EXPLORAMA_CLIENT_CONFIG = '"
+                           (json/write-value-as-string @configp/client-configs)
+                           "';"))})}]
+   ["/img/*" (ring/create-resource-handler {:root "public/assets/img/"})]
+   ["/asset/assets/img/*" (ring/create-resource-handler {:root "public/assets/img/"})]
+   ["/asset/assets/fonts/*" (ring/create-resource-handler {:root "public/assets/fonts/"})]
+   ["/asset/assets/css/*" (ring/create-resource-handler {:root "public/assets/css/"})]
+   ["/js/compiled/*" (ring/create-resource-handler {:root "public/js/compiled/"})]
+   ["/ws" {:get {:parameters {:query {:username string? :token string? :client-id string?}}
+                 :handler
+                 (fn [{{req :query} :parameters}]
+                   (println "user-info" req)
+                   (try
+                     (let [user-info (user-info-role-fix req)]
+                       (println "user-info" user-info)
+                       (if (jwt/user-valid? user-info)
+                         {:status 200
+                          :body (websocket-handler (frontend-api/routes->tubes) user-info)}
+                         {:status 403}))
+                     (catch Throwable e
+                       (log/error "Error creating websocket connection" e)
+                       {:status 403})))}}]]
+  #_["/datasources" {:post (fn [req]
                              (gen-error
-                              (let [{:keys [bucket] :as opts} (default-params
-                                                               (get context :body-params {}))]
-                                (apply-to-all-buckets
-                                 bucket
-                                 nil ; this will do datasources for all buckets if no bucket is provided
-                                 (fn [instance]
-                                   (persistence/data-sources instance opts))))))
-                      :delete (fn [context]
-                                (gen-error
-                                 (let [{{query-params :query} :parameters} context
-                                       {:keys [bucket default-bucket all?] :as qp} (default-params query-params)]
-                                   (cond all?
-                                         (apply-to-all-buckets
-                                          bucket
-                                          default-bucket
-                                          (fn [instance]
-                                            (interc/delete-all instance)))
-                                         (and bucket
-                                              (seq (select-keys (:dims (get (configp/get :explorama-bucket-config "de.explorama.backend.handler") (keyword bucket)))
-                                                                qp)))
-                                         (interc/delete (buckets/new-instance bucket)
-                                                        {:body-params (select-keys (:dims (get (configp/get :explorama-bucket-config "de.explorama.backend.handler") (keyword bucket)))
-                                                                                   qp)
-                                                         :bucket bucket})))))}]
-   #_["/api" ["/check" {:get (fn handler [_] {:status 200, :body "ok"})
-                        :name ::ping}]]
-   #_["/search" [["/attributes" {:get (fn [context]
+                              (let [body (get req :body-params)
+                                    {:keys [bucket default-bucket] :as options} (default-params
+                                                                                 (get req :body-params {}))
+                                    bucket (or bucket default-bucket)
+                                    {:keys [success data]}
+                                    (import/transform->import body options bucket)]
+                                {:status (if success 200 400)
+                                 :body {:result data}})))
+                     :get (fn [context]
+                            (gen-error
+                             (let [{:keys [bucket] :as opts} (default-params
+                                                              (get context :body-params {}))]
+                               (apply-to-all-buckets
+                                bucket
+                                nil ; this will do datasources for all buckets if no bucket is provided
+                                (fn [instance]
+                                  (persistence/data-sources instance opts))))))
+                     :delete (fn [context]
+                               (gen-error
+                                (let [{{query-params :query} :parameters} context
+                                      {:keys [bucket default-bucket all?] :as qp} (default-params query-params)]
+                                  (cond all?
+                                        (apply-to-all-buckets
+                                         bucket
+                                         default-bucket
+                                         (fn [instance]
+                                           (interc/delete-all instance)))
+                                        (and bucket
+                                             (seq (select-keys (:dims (get (configp/get :explorama-bucket-config "de.explorama.backend.handler") (keyword bucket)))
+                                                               qp)))
+                                        (interc/delete (buckets/new-instance bucket)
+                                                       {:body-params (select-keys (:dims (get (configp/get :explorama-bucket-config "de.explorama.backend.handler") (keyword bucket)))
+                                                                                  qp)
+                                                        :bucket bucket})))))}]
+  #_["/api" ["/check" {:get (fn handler [_] {:status 200, :body "ok"})
+                       :name ::ping}]]
+  #_["/search" [["/attributes" {:get (fn [context]
+                                       (let [body (get context :body-params)]
+                                         (gen-error
+                                          (search-api/attributes body))))}]
+                ["/attributes-types" {:get (fn [context]
+                                             (let [body (get context :body-params)]
+                                               (gen-error
+                                                (search-api/attribute-types body))))}]
+                ["/attributes-values" {:get (fn [context]
+                                              (log/debug "/attributes-values" context)
+                                              (let [body (get context :body-params)]
+                                                (log/debug "/attributes-values" body)
+                                                (gen-error
+                                                 (search-api/attributes-values body))))}]
+                ["/data-tiles" {:get (fn [context]
+                                       (let [{:keys [formdata]} (get context :body-params)]
+                                         (gen-error
+                                          (data-tile/get-data-tiles formdata))))}]
+                ["neighborhood" {:get (fn [context]
                                         (let [body (get context :body-params)]
                                           (gen-error
-                                           (search-api/attributes body))))}]
-                 ["/attributes-types" {:get (fn [context]
-                                              (let [body (get context :body-params)]
-                                                (gen-error
-                                                 (search-api/attribute-types body))))}]
-                 ["/attributes-values" {:get (fn [context]
-                                               (log/debug "/attributes-values" context)
-                                               (let [body (get context :body-params)]
-                                                 (log/debug "/attributes-values" body)
-                                                 (gen-error
-                                                  (search-api/attributes-values body))))}]
-                 ["/data-tiles" {:get (fn [context]
-                                        (let [{:keys [formdata]} (get context :body-params)]
-                                          (gen-error
-                                           (data-tile/get-data-tiles formdata))))}]
-                 ["neighborhood" {:get (fn [context]
-                                         (let [body (get context :body-params)]
-                                           (gen-error
-                                            (search-api/neighborhood body))))}]]]
-   #_["/probe"
-      [["/liveness" {:get (fn [req]
-                            (if (probe/liveness)
+                                           (search-api/neighborhood body))))}]]]
+  #_["/probe"
+     [["/liveness" {:get (fn [req]
+                           (if (probe/liveness)
+                             {:status 200}
+                             {:status 500}))}]
+      ["/readiness" {:get (fn [req]
+                            (if (probe/readiness)
                               {:status 200}
-                              {:status 500}))}]
-       ["/readiness" {:get (fn [req]
-                             (if (probe/readiness)
-                               {:status 200}
-                               {:status 500}))}]]]))
+                              {:status 500}))}]]])
     
 (def routes-opts
   {:exception pretty/exception

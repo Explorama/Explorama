@@ -96,7 +96,7 @@
   ([precision date-string]
    (date-str->obj true precision date-string))
   ([native? precision date-string]
-   (when date-string
+   (when-not (st/blank? date-string)
      (try
        (let [formatter (choose-formatter precision)]
          (cond-> (parse formatter date-string)

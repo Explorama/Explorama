@@ -125,13 +125,8 @@
 (def data-tiles ac-api/data-tiles)
 
 (defn directsearch-attributes [formdata]
-  (->> (ac-api/attributes {:formdata formdata
-                           :blacklist attribute-blocklist})
-
-       :body
-       (map (fn [[node-label [attr]]]
-              [attr node-label]))
-       set))
+  (set (ac-api/attributes {:formdata formdata
+                           :blacklist attribute-blocklist})))
 
 (def datasource-search ac-api/datasource-search)
 

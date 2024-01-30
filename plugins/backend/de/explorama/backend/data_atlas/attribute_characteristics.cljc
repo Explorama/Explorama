@@ -209,7 +209,10 @@
 
 (defn- group-by-query [query coll]
   (filterv (fn [[_ _ value]]
-             (boolean (match/match? value query)))
+             (if (map? value)
+               (or (boolean (match/match? (:label value) query))
+                   (boolean (match/match? (:value value) query)))
+               (boolean (match/match? value query))))
            coll))
 
 (defn enabled-sources-vec [user-info]

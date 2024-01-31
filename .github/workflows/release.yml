@@ -7,6 +7,10 @@ on:
         description: 'Release version'
         type: string
         required: true
+      previous_release_version:
+        description: 'Previous release version'
+        type: string
+        required: true
       draft:
         description: 'draft?'
         type: boolean
@@ -83,8 +87,7 @@ jobs:
         echo "--------- done ---------"
     - name: Generate change log
       run: |
-        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
-        git log --pretty="- %s" $LATEST_TAG..HEAD > CHANGELOG.md
+        git log --pretty="- %s" ${{ github.event.inputs.previous_release_version }}..HEAD > CHANGELOG.md
         bb tools/changelog/changelog.clj
     - name: Changelog and version
       run: |

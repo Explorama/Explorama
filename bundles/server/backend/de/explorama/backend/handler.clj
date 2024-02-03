@@ -1,7 +1,6 @@
 (ns de.explorama.backend.handler
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [de.explorama.backend.abac.jwt :as jwt]
             [de.explorama.backend.abac.util :refer [user-info-role-fix]]
             [de.explorama.backend.frontend-api :as frontend-api]
             [de.explorama.shared.common.configs.provider :as configp]
@@ -163,20 +162,21 @@
    ["/asset/assets/fonts/*" (ring/create-resource-handler {:root "public/assets/fonts/"})]
    ["/asset/assets/css/*" (ring/create-resource-handler {:root "public/assets/css/"})]
    ["/js/compiled/*" (ring/create-resource-handler {:root "public/js/compiled/"})]
-   ["/ws" {:get {:parameters {:query {:username string? :token string? :client-id string?}}
-                 :handler
-                 (fn [{{req :query} :parameters}]
-                   (println "user-info" req)
-                   (try
-                     (let [user-info (user-info-role-fix req)]
-                       (println "user-info" user-info)
-                       (if (jwt/user-valid? user-info)
-                         {:status 200
-                          :body (websocket-handler (frontend-api/routes->tubes) user-info)}
-                         {:status 403}))
-                     (catch Throwable e
-                       (log/error "Error creating websocket connection" e)
-                       {:status 403})))}}]]
+   ["/ws" (websocket-handler (frontend-api/routes->tubes))
+    #_{:get {:parameters {:query {:username string? :token string? :client-id string? :role string?}}
+             :content-type "application/javascript;charset=UTF-8"
+             :handler
+             (fn [{{req :query} :parameters}]
+               (println "user-info" req)
+               (try
+                 (let [user-info (user-info-role-fix req)]
+                   (println "user-info" user-info)
+                   (if true #_(jwt/user-valid? user-info) ;TODO r1/rights change this for multiuser setups
+                       (websocket-handler (frontend-api/routes->tubes))
+                       {:status 403}))
+                 (catch Throwable e
+                   (log/error e "Error creating websocket connection")
+                   {:status 403})))}}]]
   #_["/datasources" {:post (fn [req]
                              (gen-error
                               (let [body (get req :body-params)

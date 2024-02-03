@@ -13,7 +13,7 @@
   (defconfig ;TODO r1/config make this proxy url?
     {:name :explorama-origin
      :type :string
-     :default "localhost:4002"
+     :default "127.0.0.1:4001"
      :scope :client
      :overwritable? true
      :doc "Defines if the application is running in multi user mode."}))

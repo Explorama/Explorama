@@ -29,7 +29,7 @@
          (fn [instance]
            (or instance
                (http/run-server handler
-                                {:ip ip
+                                {:ip "127.0.0.1"
                                  :port port
                                  :join? false
                                  :max-body http-max-body

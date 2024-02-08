@@ -103,7 +103,7 @@
   :license {:name "Eclipse Public License - v 1.0"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/clojurescript "1.11.60"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [org.clojure/core.async "1.6.681"]
                  ;;  [metosin/jsonista "0.3.7"]
                  ;for electron

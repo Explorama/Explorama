@@ -5,7 +5,7 @@
     "appId": "de.explorama",
     "author": "Explorama e.V.",
     "license": "EPL-1.0",
-    "description": "TODO",
+    "description": "",
     "main": "main.js",
     "dependencies": {
         "better-sqlite3": "9.4.0",

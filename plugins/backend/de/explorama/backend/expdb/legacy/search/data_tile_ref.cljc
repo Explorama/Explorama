@@ -27,7 +27,7 @@
                              (dissoc value :i :type :label)
                              value)))
           {}
-          (dissoc attr-d :timestamp :valid? :advanced)))
+          (dissoc attr-d :timestamp :valid?)))
 
 (def ^:private type-strip-list #{"decimal" "integer" "notes" "boolean"})
 

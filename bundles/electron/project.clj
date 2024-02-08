@@ -1,8 +1,8 @@
 (require '[clojure.string :as st])
 
 (def app-version "0.0.0")
-(def electron-version "28.1.0")
-(def better-sqlite3-version "9.2.2")
+(def electron-version "28.2.2")
+(def better-sqlite3-version "9.4.0")
 (def ml-regression-simple-linear-version "2.0.4")
 
 (def dev-envs {"goog.DEBUG" true

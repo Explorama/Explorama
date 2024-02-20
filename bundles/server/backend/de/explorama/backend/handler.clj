@@ -1,28 +1,26 @@
 (ns de.explorama.backend.handler
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [de.explorama.backend.abac.util :refer [user-info-role-fix]]
+            [compojure.core :refer [defroutes GET]]
+            [compojure.handler :refer [site]]
+            [compojure.route :refer [files resources]]
+            [de.explorama.backend.common.environment.probe :as probe]
             [de.explorama.backend.frontend-api :as frontend-api]
             [de.explorama.shared.common.configs.provider :as configp]
             [hiccup.page :refer [html5]]
             [jsonista.core :as json]
-            [muuntaja.core :as m]
             [pneumatic-tubes.httpkit :refer [websocket-handler]]
-            [reitit.coercion.spec :as rcs]
-            [reitit.core]
-            [reitit.dev.pretty :as pretty]
-            [reitit.ring :as ring]
-            [reitit.ring.coercion :as coercion]
-            [reitit.ring.middleware.exception :as exception]
-            [reitit.ring.middleware.multipart :as multipart]
-            [reitit.ring.middleware.muuntaja :as muuntaja]
-            [reitit.ring.middleware.parameters :as parameters]
+            [ring.middleware.cors :refer [wrap-cors]]
+            [ring.util.response :refer [content-type not-found response]]
             [taoensso.timbre :as log]))
 
-(def response-mappers
-  {"text/plain" :message
-   "application/json" identity
-   "application/xml" identity})
+(def ^:dynamic *app-name*
+  "The file name of the JS app."
+  "app.js")
+
+(def ^:dynamic *app-source*
+  "The source of the app file."
+  (io/resource "public/js/compiled/woco.js"))
 
 (defmacro gen-error [fnc]
   `(try
@@ -101,10 +99,6 @@
     (catch Throwable e
       (log/error e))))
 
-(defn- default-params [params]
-  (merge {:default-bucket :default}
-         params))
-
 (defn- files-only [files]
   (filter #(.isFile %) files))
 
@@ -129,54 +123,70 @@
 (defn prepend [s prefix-line]
   (str prefix-line "\n" s))
 
-(def routes
-  [["/" {:get (fn [_]
-                {:status 200
-                 :body
-                 (html5
-                  (into
-                   [:head
-                    [:meta {:charset "utf-8"}]
-                    [:meta {:http-equiv "X-UA-Compatible"
-                            :content "IE=edge,chrome=1"}]
-                    [:title "Explorama"]
-                    [:link {:rel "shortcut icon"
-                            :href "images/favicon.ico"}]]
-                   (sort-by (fn [[_ {href :href}]] href)
-                            (local-assets "resources/public" "asset")))
-                  [:body.initial.login
-                   [:div#app]
-                   [:script {:src "js/woco.js"}]
-                   [:script "de.explorama.frontend.woco.app.core.init();"]])})}]
-   ["/js/woco.js"
-    {:get (fn [_]
-            {:status 200
-             :content-type "application/javascript;charset=UTF-8"
-             :body
-             (prepend (slurp "resources/public/js/woco.js" :encoding "UTF-8")
-                      (str "const EXPLORAMA_CLIENT_CONFIG = '"
-                           (json/write-value-as-string @configp/client-configs)
-                           "';"))})}]
-   ["/img/*" (ring/create-resource-handler {:root "public/assets/img/"})]
-   ["/asset/assets/img/*" (ring/create-resource-handler {:root "public/assets/img/"})]
-   ["/asset/assets/fonts/*" (ring/create-resource-handler {:root "public/assets/fonts/"})]
-   ["/asset/assets/css/*" (ring/create-resource-handler {:root "public/assets/css/"})]
-   ["/js/compiled/*" (ring/create-resource-handler {:root "public/js/compiled/"})]
-   ["/ws" (websocket-handler (frontend-api/routes->tubes))
-    #_{:get {:parameters {:query {:username string? :token string? :client-id string? :role string?}}
-             :content-type "application/javascript;charset=UTF-8"
-             :handler
-             (fn [{{req :query} :parameters}]
-               (println "user-info" req)
-               (try
-                 (let [user-info (user-info-role-fix req)]
-                   (println "user-info" user-info)
-                   (if true #_(jwt/user-valid? user-info) ;TODO r1/rights change this for multiuser setups
-                       (websocket-handler (frontend-api/routes->tubes))
-                       {:status 403}))
-                 (catch Throwable e
-                   (log/error e "Error creating websocket connection")
-                   {:status 403})))}}]]
+(defn page []
+  (html5
+   (into
+    [:head
+     [:meta {:charset "utf-8"}]
+     [:meta {:http-equiv "X-UA-Compatible"
+             :content "IE=edge,chrome=1"}]
+     [:title "Explorama"]
+     [:link {:rel "shortcut icon"
+             :href "images/favicon.ico"}]]
+    (sort-by (fn [[_ {href :href}]] href)
+             (local-assets "resources/public" "asset")))
+   [:body.initial.login
+    [:div#app]
+    [:script {:src "js/woco.js"}]
+    [:script "de.explorama.frontend.woco.app.core.init();"]]))
+
+(defroutes routes
+  (GET "/" [] (page))
+  (GET "/ws" req
+    (if true ; Ignoring token validation for now
+      (websocket-handler (frontend-api/routes->tubes))
+      {:status 403}))
+  (GET "/js/woco.js" [app]
+    (log/info "Loading js" {:app app :app-name *app-name* :app-source *app-source*})
+    (-> (slurp "resources/public/js/woco.js" :encoding "UTF-8")
+        (prepend
+         (str "const EXPLORAMA_CLIENT_CONFIG = '"
+              (json/write-value-as-string @configp/client-configs)
+              "';"))
+        response
+        (content-type "application/javascript;charset=UTF-8")))
+  (resources "/js/compiled/" {:root "public/js/compiled/"})
+  (resources "/asset/assets/css/" {:root "public/assets/css/"})
+  (resources "/asset/assets/fonts/" {:root "public/assets/fonts/"})
+  (resources "/img/" {:root "public/assets/img/"})
+  (resources "/asset/assets/fonts/" {:root "public/assets/img/"})
+  (resources "/asset/assets/img/" {:root "public/assets/img/"})
+  (not-found "")
+  #_(fn [{{req :query} :parameters :as req-raw}]
+      (println "user-info" req req-raw)
+      (try
+        (let [user-info (user-info-role-fix req)]
+          (println "user-info" user-info)
+          (if true #_(jwt/user-valid? user-info) ;TODO r1/rights change this for multiuser setups
+              (websocket-handler (frontend-api/routes->tubes))
+              {:status 403}))
+        (catch Throwable e
+          (log/error e "Error creating websocket connection")
+          {:status 403})))
+  #_{:get {:parameters {:query {:username string? :token string? :client-id string? :role string?}}
+           :content-type "application/javascript;charset=UTF-8"
+           :handler
+           (fn [{{req :query} :parameters}]
+             (println "user-info" req)
+             (try
+               (let [user-info (user-info-role-fix req)]
+                 (println "user-info" user-info)
+                 (if true #_(jwt/user-valid? user-info) ;TODO r1/rights change this for multiuser setups
+                     (websocket-handler (frontend-api/routes->tubes))
+                     {:status 403}))
+               (catch Throwable e
+                 (log/error e "Error creating websocket connection")
+                 {:status 403})))}}
   #_["/datasources" {:post (fn [req]
                              (gen-error
                               (let [body (get req :body-params)
@@ -246,21 +256,16 @@
                             (if (probe/readiness)
                               {:status 200}
                               {:status 500}))}]]])
-    
-(def routes-opts
-  {:exception pretty/exception
-   :data {:coercion   rcs/coercion
-          :muuntaja   (m/create
-                       (assoc-in
-                        m/default-options
-                        [:default-format]
-                        "application/edn"))
-          :middleware [parameters/parameters-middleware
-                       muuntaja/format-negotiate-middleware
-                       muuntaja/format-response-middleware
-                       (exception/create-exception-middleware
-                        {::exception/default (partial exception/wrap-log-to-console exception/default-handler)})
-                       muuntaja/format-request-middleware
-                       coercion/coerce-response-middleware
-                       coercion/coerce-request-middleware
-                       multipart/multipart-middleware]}})
+
+(defn wrap-exception [handler]
+  (fn [request]
+    (try (handler request)
+         (catch Exception e
+           (probe/rate-exception e)
+           (log/error e "uncaught exception in request")
+           {:status 400}))))
+
+(def handler (-> #'routes
+                 wrap-exception
+                 site
+                 (wrap-cors :access-control-allow-origin [#".*"])))

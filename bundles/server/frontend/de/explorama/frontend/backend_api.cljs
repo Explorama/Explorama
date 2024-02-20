@@ -35,13 +35,11 @@
 
 (def ^:private tube-instance (atom nil))
 
-(defn- dispatch-to-server [event-vector]
-  (tubes/dispatch tube-spec event-vector))
-
-(def ^:private send-to-server (re-frame/after (fn [_ v] (dispatch-to-server v))))
-
 (defn dispatch [event]
-  (send-to-server event)
+  (try
+    (tubes/dispatch tube-spec event)
+    (catch :default e
+      (js/console.error "Error dispatching event" e)))
   {})
 
 (defn dispatch-n [events]

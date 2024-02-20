@@ -5,7 +5,7 @@
             [de.explorama.backend.concurrent :as concurrent]
             [de.explorama.backend.woco.server-config :as config-server]
             [pneumatic-tubes.core :as tubes :refer [receiver]]
-            [taoensso.timbre :refer [debug error warn]]))
+            [taoensso.timbre :refer [debug error warn info]]))
 
 (defonce ^:private api-routes (atom {}))
 
@@ -93,10 +93,10 @@
 (defn register-routes [routes]
   (swap! api-routes merge routes))
 
-(defn routes->tubes []
-  (receiver @api-routes))
-
 (defn- route-wrapper [route-fn tube [_ metas & params]]
+  (info "Route wrapper" {:tube tube
+                         :metas metas
+                         :params params})
   (let [{:keys [client-callback failed-callback async-callback user-info client-id broadcast-callback broadcast-filter custom]}
         (when (map? metas) metas)
         ignore-first? (and (map? metas)
@@ -114,25 +114,31 @@
                                                (warn (str "Not yet implemented" :broadcast-callback))))
                        :failed-callback (fn [& params]
                                           (when failed-callback
-                                            (dispatch (apply conj failed-callback params))))
+                                            (dispatch tube (apply conj failed-callback params))))
                        :broadcast-notify-fn (fn [& params]
                                               (warn (str "Not yet implemented" :broadcast-notify-fn)))
                        :notify-fn (fn [& params]
                                     (warn (str "Not yet implemented" :notify-fn)))
                        :client-callback (fn [& params]
                                           (when client-callback
-                                            (dispatch (apply conj client-callback params))))
+                                            (dispatch tube (apply conj client-callback params))))
                        :async-callback (fn [& params]
                                          (when async-callback
-                                           (dispatch (apply conj async-callback params))))
+                                            (dispatch tube (apply conj client-callback params))))
                        :user-validation (constantly true)}
                 (map? custom)
                 (into (map (fn [[k event]]
                              [k
                               (fn [& params]
-                                (dispatch (apply conj (prepare-callback-vec event) params)))])
+                                (dispatch tube (apply conj (prepare-callback-vec event) params)))])
                            custom)))
               params)))
+
+(defn routes->tubes []
+  (receiver (into {}
+                  (map (fn [[k v]]
+                         [k (partial route-wrapper v)]))
+                  @api-routes)))
 
 (defn init []
   (routes->tubes))

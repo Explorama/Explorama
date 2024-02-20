@@ -1,6 +1,7 @@
 (ns de.explorama.backend.woco.app.server
   (:require [clojure.math.numeric-tower :as math]
             [de.explorama.backend.handler :as handler]
+            [de.explorama.backend.woco.app.core :as core]
             [de.explorama.backend.woco.server-config :as config-server]
             [de.explorama.shared.woco.config]
             [org.httpkit.server :as http])
@@ -23,6 +24,7 @@
     (reset! server-instance nil)))
 
 (defn start-server! [ip port handler]
+  (core/init)
   (add-shutdown-hook! stop-server!)
   (swap! server-instance
          (fn [instance]

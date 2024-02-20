@@ -171,12 +171,13 @@
 
                  [yogthos/config "1.2.0"]
 
-                 [commons-io/commons-io "2.13.0"]
+                 [commons-io/commons-io "2.15.0"]
 
                  [com.cognitect/transit-cljs "0.8.280"]
-                 [fi.metosin/reitit "0.7.0-alpha6"]
+                 [com.cognitect/transit-clj "1.0.333"]
+                 [compojure/compojure "1.7.1"]
                  [http-kit/http-kit "2.7.0"]
-                 [metosin/jsonista "0.3.7"]
+                 [metosin/jsonista "0.3.8"]
                  [pneumatic-tubes/pneumatic-tubes "0.3.0" :exclusions [com.cognitect/transit-clj com.cognitect/transit-cljs]]
                  [ring/ring "1.10.0"]
 
@@ -198,7 +199,7 @@
                    :repl-options {:timeout 2000000
                                   :init-ns de.explorama.backend.woco.app.dev-core
                                   :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}
-                   :figwheel {:ring-handler   de.explorama.backend.woco.app.dev-core/handler-dev
+                   :figwheel {:ring-handler   de.explorama.backend.handler/handler
                               :server-port 4002
                               :css-dirs       ["resources/public/assets"]
                               #_#_:server-logfile false}

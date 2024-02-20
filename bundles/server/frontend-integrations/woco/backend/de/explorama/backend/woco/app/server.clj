@@ -3,8 +3,7 @@
             [de.explorama.backend.handler :as handler]
             [de.explorama.backend.woco.server-config :as config-server]
             [de.explorama.shared.woco.config]
-            [org.httpkit.server :as http]
-            [reitit.ring :as ring])
+            [org.httpkit.server :as http])
   (:gen-class))
 
 (defn- add-shutdown-hook! [f]
@@ -39,7 +38,4 @@
 (defn -main [& _args]
   (start-server! config-server/explorama-host
                  config-server/explorama-port
-                 (ring/ring-handler
-                  (ring/router
-                   handler/routes
-                   handler/routes-opts))))
+                 handler/handler))

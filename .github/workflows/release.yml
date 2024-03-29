@@ -97,7 +97,7 @@ jobs:
         echo ${{ github.event.inputs.release_version }}
     - name: Create Release
       id: create_release
-      uses: softprops/softprops/action-gh-release@v0.1.15
+      uses: softprops/action-gh-release@v0.1.15
       env:
           GITHUB_REPOSITORY: explorama/explorama
       with:

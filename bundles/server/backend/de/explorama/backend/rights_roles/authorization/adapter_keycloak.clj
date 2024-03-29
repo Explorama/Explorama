@@ -7,8 +7,6 @@
             [clojure.string :as str]
             [de.explorama.backend.rights-roles.crypto-util :refer [aes-decrypt aes-encrypt decrypt
                                                                    encrypt]]
-            [muuntaja.core]
-            [muuntaja.format.json]
             [de.explorama.backend.rights-roles.attribute-infos.api :as attrs]
             [de.explorama.backend.rights-roles.authorization.interface :as interface]
             [de.explorama.backend.rights-roles.config :as config]

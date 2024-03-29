@@ -1,5 +1,5 @@
 (ns de.explorama.backend.abac.core
-  (:require [de.explorama.shared.abac.config]
+  (:require [de.explorama.backend.abac.config]
             [de.explorama.backend.abac.pdp]
             [de.explorama.backend.abac.pep]
             [de.explorama.backend.abac.pip]

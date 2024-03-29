@@ -1,13 +1,8 @@
 (ns de.explorama.backend.expdb.handler
   (:require [clojure.string :as str]
-            [de.explorama.backend.environment.probe.core :as probe]
+            [de.explorama.backend.common.environment.probe :as probe]
             [de.explorama.backend.expdb.buckets :as buckets]
             [de.explorama.backend.expdb.config :as config-expdb]
-            [de.explorama.backend.expdb.import :as imp]
-            [de.explorama.backend.expdb.legacy.search.attribute-characteristics.api :as search-api]
-            [de.explorama.backend.expdb.legacy.search.data-tile :as data-tile]
-            [de.explorama.backend.expdb.persistence.indexed :as persistence]
-            [de.explorama.backend.expdb.persistence.interceptor :as interc]
             [taoensso.timbre :as log :refer [error]]
             [taoensso.tufte :refer [add-basic-println-handler!]]))
 
@@ -93,6 +88,7 @@
   (merge {:default-bucket :default}
          params))
 
+#_
 (def routes
   [["/datasources" {:post (fn [req]
                             (gen-error

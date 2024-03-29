@@ -25,7 +25,6 @@
               project-instance (project-backend/new-instance project-id)
               new-pdesc (-> (project-backend/read project-instance)
                             (assoc :last-modified (current-ms)))]
-           #?(:cljs (js/console.log "write" project-id origin (str frame-id) event-name version))
           (persist/append-lines instance [[event-id [origin frame-id event-name desc version]]])
           (project-backend/update project-instance new-pdesc)
             ;;TODO r1/projects whats this?

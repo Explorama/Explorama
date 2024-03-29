@@ -47,7 +47,7 @@
    {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "2", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1997-10-10", "notes" "Text", td/fact-1 0}
    {td/country td/country-a, td/category-1 (td/category-val "A" 1), "id" "3", "datasource" td/datasource-c, td/org [(td/org-val 2) (td/org-val 5) (td/org-val 4)], "location" [[15 15]], "annotation" "", "date" "1998-08-01", "notes" "Text", td/fact-1 1}
    {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "4", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1998-03-20", "notes" "Text", td/fact-1 6}
-   {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "5", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1998-03-10", "notes" "Text", td/fact-1 4}
+   {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "5", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1998-03-10", "notes" "Text", td/fact-1 1}
    {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "6", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1998-06-21", "notes" "Text", td/fact-1 0}
    {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "7", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1999-01-03", "notes" "Text", td/fact-1 0}
    {td/country td/country-a, td/category-1 (td/category-val "A" 2), "id" "8", "datasource" td/datasource-c, td/org (td/org-val 6), "location" [[15 15]], "annotation" "", "date" "1998-08-07", "notes" "Text", td/fact-1 0}
@@ -57,8 +57,8 @@
   [td/datasource-a td/datasource-c])
 
 (def datasource-results
-  {td/datasource-c {:fact-1-sum 11
-                    :fact-1-average (float 1.375)
+  {td/datasource-c {:fact-1-sum 8
+                    :fact-1-average (float 1.0)
                     :fact-1-median (float 0.0)
                     :fact-1-max 6
                     :fact-1-min 0
@@ -74,8 +74,8 @@
   [td/country-a td/country-b])
 
 (def country-results
-  {td/country-a {:fact-1-sum 11
-                 :fact-1-average (float 1.375)
+  {td/country-a {:fact-1-sum 8
+                 :fact-1-average (float 1.0)
                  :fact-1-median (float 0.0)
                  :fact-1-max 6
                  :fact-1-min 0
@@ -91,8 +91,8 @@
   [(td/category-val "A" 2) (td/category-val "A" 1)])
 
 (def event-type-results
-  {(td/category-val "A" 2) {:fact-1-sum 40
-                            :fact-1-average (float 5.0)
+  {(td/category-val "A" 2) {:fact-1-sum 37
+                            :fact-1-average (float 4.625)
                             :fact-1-median (float 0.0)
                             :fact-1-max 30
                             :fact-1-min 0
@@ -120,8 +120,8 @@
                    :fact-1-max 1
                    :fact-1-min 1
                    :number-of-events 1}
-   (td/org-val 6) {:fact-1-sum 10
-                   :fact-1-average (float 1.428571428571429)
+   (td/org-val 6) {:fact-1-sum 7
+                   :fact-1-average (float 1.0)
                    :fact-1-median (float 0.0)
                    :fact-1-max 6
                    :fact-1-min 0
@@ -169,11 +169,11 @@
               :fact-1-max nil
               :fact-1-min nil
               :number-of-events 0}
-   "1998-03" {:fact-1-sum 10
-              :fact-1-average (float 5.0)
-              :fact-1-median (float 5.0)
+   "1998-03" {:fact-1-sum 7
+              :fact-1-average (float 3.5)
+              :fact-1-median (float 3.5)
               :fact-1-max 6
-              :fact-1-min 4
+              :fact-1-min 1
               :number-of-events 2}
    "1998-04" {:fact-1-sum nil
               :fact-1-average nil
@@ -245,8 +245,8 @@
            :fact-1-max 30
            :fact-1-min 0
            :number-of-events 3}
-   "1998" {:fact-1-sum 11
-           :fact-1-average (float 2.2)
+   "1998" {:fact-1-sum 8
+           :fact-1-average (float 1.6)
            :fact-1-median (float 1.0)
            :fact-1-max 6
            :fact-1-min 0
@@ -260,16 +260,17 @@
 
 (defn- result-helper
   ([result-map result-labels target-attr relevant-keys]
-   (cond->> result-labels
-     :always (mapv (fn [k]
-                     (-> (get result-map k)
-                         (assoc target-attr k)
-                         (select-keys relevant-keys)
-                         (rename-keys {:fact-1-sum fact-1
-                                       :fact-1-average fact-1
-                                       :fact-1-median fact-1
-                                       :fact-1-max fact-1
-                                       :fact-1-min fact-1})))))))
+   (vec (sort-by #(get % fact-1)
+                 (mapv (fn [k]
+                         (-> (get result-map k)
+                             (assoc target-attr k)
+                             (select-keys relevant-keys)
+                             (rename-keys {:fact-1-sum fact-1
+                                           :fact-1-average fact-1
+                                           :fact-1-median fact-1
+                                           :fact-1-max fact-1
+                                           :fact-1-min fact-1})))
+                       result-labels)))))
 
 (def ^:private aggregation-methods (->> dfl-agg/descs
                                         vals
@@ -296,7 +297,9 @@
     (is (= (list
             [{sum-by-all all-label}
              (result-helper expected-results expected-labels expected-result-attr [expected-result-attr (aggr-attr y-axis aggregation-method)])])
-           (charts-helper/chart-grouping data (charts-helper/gen-grouping-desc desc)))
+           (update-in (vec (charts-helper/chart-grouping data (charts-helper/gen-grouping-desc desc)))
+                      [0 1]
+                      #(vec (sort-by (fn [a] (get a fact-1)) %))))
         (str "Failed for the following params\n" (with-out-str (pprint/pprint (dissoc desc :test-vars)))))))
 
 (defn- simple-show-by
@@ -313,7 +316,6 @@
   ([x-axis y-axis show-by characteristics]
    (simple-show-by data x-axis y-axis show-by characteristics)))
 
-#_;TODO r1/tests fix this test
 (deftest show-by-all-test
   (testing "show-by-all"
     (doseq [aggregation-method aggregation-methods]
@@ -368,7 +370,7 @@
               {year-key "1999", fact-1 nil, month-key "02"}]]
             [{month-key "03"}
              [{year-key "1997", fact-1 nil, month-key "03"}
-              {year-key "1998", fact-1 10, month-key "03"}
+              {year-key "1998", fact-1 7, month-key "03"}
               {year-key "1999", fact-1 nil, month-key "03"}]]
             [{month-key "08"}
              [{year-key "1997", fact-1 nil, month-key "08"}
@@ -401,7 +403,7 @@
                 [{td/country td/country-a, "datasource" td/datasource-a}
                  {td/country td/country-b, "datasource" td/datasource-a, td/fact-1 30}]]
                [{"datasource" td/datasource-c}
-                [{td/country td/country-a, "datasource" td/datasource-c, td/fact-1  11}
+                [{td/country td/country-a, "datasource" td/datasource-c, td/fact-1  8}
                  {td/country td/country-b, "datasource" td/datasource-c}]])
          (simple-show-by data country fact-1 datasource (set datasource-labels) :sum))))
 
@@ -429,7 +431,7 @@
                 [{td/country td/country-a, "datasource" td/datasource-a}
                  {td/country td/country-b, "datasource" td/datasource-a, td/fact-1 (float 30.0)}]]
                [{"datasource" td/datasource-c}
-                [{td/country td/country-a, "datasource" td/datasource-c, td/fact-1  (float 1.375)}
+                [{td/country td/country-a, "datasource" td/datasource-c, td/fact-1  (float 1.0)}
                  {td/country td/country-b, "datasource" td/datasource-c}]])
          (simple-show-by data country fact-1 datasource (set datasource-labels) :average))))
 
@@ -496,7 +498,6 @@
                                   resp)))}
        [{:x-axis month
          :sum-by year}])))
-    #_;TODO r1/tests fix this test
     (testing "testing unhandled exception"
       (with-redefs [charts-core/chart-data (fn [_] (throw (ex-info "Test unknown error" {})))]
         (data-api/chart-data

@@ -2,8 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [de.explorama.backend.charts.data.base-charts :as charts]
             [de.explorama.backend.charts.data.colors :as colors]
-            [de.explorama.backend.charts.data.helper :refer [remaining-group-name]]
-            [de.explorama.shared.charts.util :refer [remaining-group-color]]))
+            [de.explorama.backend.charts.data.helper :refer [remaining-group-name]]))
 
 (def y-axis-fact-1
   "fact-1")
@@ -36,46 +35,83 @@
    {"country" "C", "category" "category-1", "id" "6", "datasource" "DS-A", "organisation" "org-1", "location" [[6.35 2.4333]], "annotation" "", "date" "1998-08-07", "notes" "notes-5", "fact-1" 6}])
 
 (def fact-1-all
-  {:labels ["All"]
-   :datasets [{:label "All"
-               :data [1]
-               :backgroundColor ["#0067b2"]
-               :legend {:color "#0067b2"}}]})
+  {:y-axis-attr "fact-1",
+   :labels ["All"],
+   :x-axis-time nil,
+   :datasets [{:type "pie",
+               :label "fact-1",
+               :backgroundColor ["rgba(238,102,119,0.8)"],
+               :data [1],
+               :legend [{:label "All", :color "rgba(238,102,119,0.8)"}]}],
+   :org-y-range nil})
 
 (def show-by-organisation
-  {:labels #{"org-2" "org-3" "org-1"}
-   :datasets [{:label "fact-1"
-               :backgroundColor ["#0067b2" "#f49819" "#41ab34"]
-               :data [1 1 0]
-               :legend [{:label "org-2"
-                         :color "#0067b2"}
-                        {:label "org-3"
-                         :color "#f49819"}
-                        {:label "org-1"
-                         :color "#41ab34"}]}]})
+  {:y-axis-attr "fact-1",
+   :labels ["org-1" "org-2" "org-3"],
+   :x-axis-time nil,
+   :org-y-range nil,
+   :datasets [{:type "pie",
+               :label "fact-1",
+               :backgroundColor ["rgba(238,102,119,0.8)"
+                                 "rgba(238,102,119,0.8)"
+                                 "rgba(238,102,119,0.8)"
+                                 "rgba(238,102,119,0.8)"
+                                 "rgba(238,102,119,0.8)"
+                                 "rgba(238,102,119,0.8)"],
+               :data [0 1 0 1 0 1],
+               :legend [{:label "org-1", :color "rgba(238,102,119,0.8)"}
+                        {:label "org-1", :color "rgba(238,102,119,0.8)"}
+                        {:label "org-2", :color "rgba(238,102,119,0.8)"}
+                        {:label "org-2", :color "rgba(238,102,119,0.8)"}
+                        {:label "org-3", :color "rgba(238,102,119,0.8)"}
+                        {:label "org-3", :color "rgba(238,102,119,0.8)"}]}]})
 
 (def sum-remaining-AB
-  {:labels ["B" "A" remaining-group-name]
-   :datasets
-   [{:label "fact-1"
-     :backgroundColor ["#000000" "#000000" remaining-group-color]
-     :data [7 3 11]
-     :legend
-     [{:label "B", :color "#000000"}
-      {:label "A", :color "#000000"}
-      {:label remaining-group-name, :color remaining-group-color}]}]})
+  {:y-axis-attr "fact-1",
+   :labels ["A" "B" remaining-group-name],
+   :x-axis-time nil,
+   :org-y-range nil,
+   :datasets [{:type "pie",
+               :label "fact-1",
+               :backgroundColor ["#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"],
+               :data [3 7 11 3 7 11 {"country" remaining-group-name, nil 11}],
+               :legend [{:label "A", :color "#000000"}
+                        {:label "A", :color "#000000"}
+                        {:label "A", :color "#000000"}
+                        {:label "B", :color "#000000"}
+                        {:label "B", :color "#000000"}
+                        {:label "B", :color "#000000"}
+                        {:label remaining-group-name, :color "#000000"}]}]})
 
 (def sum-remaining-C
-  {:labels ["C" remaining-group-name]
-   :datasets
-   [{:label "fact-1"
-     :backgroundColor ["#000000" remaining-group-color]
-     :data [11 10]
-     :legend
-     [{:label "C", :color "#000000"}
-      {:label remaining-group-name, :color remaining-group-color}]}]})
+  {:y-axis-attr "fact-1",
+   :labels ["A" "B" remaining-group-name],
+   :x-axis-time nil,
+   :org-y-range nil,
+   :datasets [{:type "pie",
+               :label "fact-1",
+               :backgroundColor ["#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"
+                                 "#000000"],
+               :data [3 7 11 3 7 11 {"country" remaining-group-name, nil 11}],
+               :legend [{:label "A", :color "#000000"}
+                        {:label "A", :color "#000000"}
+                        {:label "A", :color "#000000"}
+                        {:label "B", :color "#000000"}
+                        {:label "B", :color "#000000"}
+                        {:label "B", :color "#000000"}
+                        {:label remaining-group-name, :color "#000000"}]}]})
 
-#_;TODO r1/tests fix this test
 (deftest pie-chart-test
   (testing "fact-1-all"
     (is (= fact-1-all
@@ -91,20 +127,19 @@
                                  :sum-filter characteristics
                                  :sum-remaining? sum-remaining?}))))
   (testing "negative-tests"
-    (is (= {:datasets [{:backgroundColor [], :data [], :label "", :legend []}], :labels #{}}
+    (is (= {:labels [], :x-axis-time nil, :datasets []}
            (charts/pie-datasets data (partial colors/color {})
                                 {:y-axis ""
                                  :sum-by ""
                                  :sum-filter sum-filter-empty
                                  :sum-remaining? sum-remaining?})))
-    (is (= {:datasets [{:backgroundColor [], :data [], :label "", :legend []}], :labels #{}}
+    (is (= {:labels [], :x-axis-time nil, :datasets []}
            (charts/pie-datasets [] (partial colors/color {})
                                 {:y-axis ""
                                  :sum-by ""
                                  :sum-filter sum-filter-empty
                                  :sum-remaining? sum-remaining?})))
-    (is (= {:labels nil
-            :datasets [{:label nil, :backgroundColor [], :data [], :legend []}]}
+    (is (= {:labels [], :x-axis-time nil, :datasets []}
            (charts/pie-datasets data (partial colors/color {})
                                 {:y-axis nil
                                  :sum-by nil

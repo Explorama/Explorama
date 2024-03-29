@@ -272,3 +272,21 @@
 
 (defn prepare-data [data]
   (vec (flatten (vals data))))
+
+(def error-case-data
+  [{country country-a, category-1 (category-val "A" 2), "id" "1"
+    "datasource" datasource-a, org (org-val 6), "location" [[15 15]]
+    "annotation" "", "date" "1997-12-02", "notes" "Text", fact-1 0}
+   {country country-a, category-1 (category-val "A" 2), "id" "2"
+    "datasource" datasource-a, org (org-val 6), "location" [[15 15]]
+    "annotation" "", "date" "1997-10-10", "notes" "Text", fact-1 0}
+   {country country-a, category-1 (category-val "A" 1), "id" "3"
+    "datasource" datasource-a, org [(org-val 4) (org-val 2)], "location" [[15 15]]
+    "annotation" "", "date" "1998-08-01", "notes" "Text", fact-1 1}
+   {country country-a, category-1 (category-val "A" 2), "id" "4","datasource" datasource-a, org (org-val 6), "location" [[15 15]]
+    "annotation" "", "date" "1998-06-21", "notes" "Text", fact-1 0}
+   {country country-a, category-1 (category-val "A" 2), "id" "5"
+    "datasource" datasource-a, org (org-val 6), "location" [[15 15]]
+    "annotation" "", "date" "1998-02-19", "notes" "Text", fact-1 0}
+   {country country-a, category-1 (category-val "A" 2), "id" "6", "datasource" datasource-a, org (org-val 6), "location" [[15 15]]
+    "annotation" "", "date" "1998-08-07", "notes" "Text", fact-1 0}])

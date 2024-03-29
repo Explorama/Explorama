@@ -279,7 +279,7 @@
                                                         (keys new-data-tiles)))
               result)))
         (catch #?(:clj Throwable :cljs :default) e
-          (error "Import failed" e)
+          (error e "Import failed")
           {:success false
            :message (ex-message e)
            :data {:error-data (ex-data e)}}))

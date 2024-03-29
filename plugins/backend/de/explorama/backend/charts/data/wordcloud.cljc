@@ -24,7 +24,7 @@
                                  :porter porter
                                  :lancaster lancaster
                                  :lovins lovins))
-                 ;;TODO r1/charts implement stemming for cljs
+                 ;;TODO r1/charts implement stemming for cljs - create a mr for peco.core https://github.com/dkmarley/peco to migrate to cljc.
                  :cljs (fn [& params] nil)))
 
 (defn- apply-nlp

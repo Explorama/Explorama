@@ -1,8 +1,8 @@
 (require '[clojure.string :as st])
 
 (def app-version "0.0.0")
-(def electron-version "28.1.0")
-(def better-sqlite3-version "9.2.2")
+(def electron-version "28.2.2")
+(def better-sqlite3-version "9.4.0")
 (def ml-regression-simple-linear-version "2.0.4")
 
 (def dev-envs {"goog.DEBUG" true
@@ -103,7 +103,7 @@
   :license {:name "Eclipse Public License - v 1.0"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/clojurescript "1.11.60"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [org.clojure/core.async "1.6.681"]
                  ;;  [metosin/jsonista "0.3.7"]
                  ;for electron

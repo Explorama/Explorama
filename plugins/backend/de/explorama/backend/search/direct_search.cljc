@@ -104,8 +104,8 @@
           {:prefix start-str
            :highlight highlight-part
            :suffix end-str})
-        (catch #?(:clj Throwable :cljs :default) _
-          nil)))))
+        (catch #?(:clj Throwable :cljs :default) e
+          (error e "Error while highlighting" string-value))))))
 
 (defn search-elements
   [callback-fn frame-id labels lang org-search-term formdata datasources [list-type search-keys] task-id]

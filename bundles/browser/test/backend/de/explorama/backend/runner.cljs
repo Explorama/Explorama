@@ -18,7 +18,7 @@
             [de.explorama.backend.charts.components.pie-chart-test]
             [de.explorama.backend.charts.components.scatter-chart-test]
             [de.explorama.backend.charts.components.wordcloud-chart-test]
-            [de.explorama.backend.charts.core-test]
+            [de.explorama.backend.charts.error-test]
             [de.explorama.backend.charts.data.redo-test]
             [de.explorama.backend.common.aggregation-test]
             [de.explorama.backend.common.calculations.data-acs-test]
@@ -40,7 +40,7 @@
             [de.explorama.backend.search.core-test]
             [de.explorama.backend.search.data-tile-test]
             [de.explorama.backend.search.filter-test]
-            [de.explorama.backend.table.core-test]
+            [de.explorama.backend.table.error-test]
             [de.explorama.backend.table.table-test]
             [de.explorama.shared.indicator.transform-test]
             [de.explorama.shared.interval.validation-test]
@@ -68,7 +68,7 @@
  'de.explorama.backend.charts.components.pie-chart-test
  'de.explorama.backend.charts.components.scatter-chart-test
  'de.explorama.backend.charts.components.wordcloud-chart-test
- 'de.explorama.backend.charts.core-test
+ 'de.explorama.backend.charts.error-test
  'de.explorama.backend.charts.data.redo-test
  'de.explorama.backend.common.aggregation-test
  'de.explorama.backend.common.calculations.data-acs-test
@@ -90,7 +90,7 @@
  'de.explorama.backend.search.core-test
  'de.explorama.backend.search.data-tile-test
  'de.explorama.backend.search.filter-test
- 'de.explorama.backend.table.core-test
+ 'de.explorama.backend.table.error-test
  'de.explorama.backend.table.table-test
  'de.explorama.shared.indicator.transform-test
  'de.explorama.shared.interval.validation-test

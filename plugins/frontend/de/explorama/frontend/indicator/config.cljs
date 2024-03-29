@@ -1,6 +1,4 @@
-(ns de.explorama.frontend.indicator.config
-  (:require [taoensso.timbre :refer [log debug trace error]]
-            [re-frame.core :as re-frame]))
+(ns de.explorama.frontend.indicator.config)
 
 (def debug?
   ^boolean goog.DEBUG)

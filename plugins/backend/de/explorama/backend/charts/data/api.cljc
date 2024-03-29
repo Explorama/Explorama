@@ -21,7 +21,7 @@
           (error e "Error during data preparation"))
         (failed-callback
          {;:request-params request-params
-          :error-desc (if data
+          :error-desc (if (seq data)
                         data
                         {:error :unknown})})))))
 

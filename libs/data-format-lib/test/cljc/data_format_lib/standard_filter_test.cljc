@@ -1,11 +1,9 @@
 (ns data-format-lib.standard-filter-test
-  (:require #?(:clj  [clojure.test :as t]
-               :cljs [cljs.test :as t :include-macros true])
+  (:require [clojure.test :as t]
             [data-format-lib.date-filter :as sut]
             [data-format-lib.filter :as f]
             [data-format-lib.filter-functions :as ff]
             [de.explorama.shared.common.test-data :as td]))
-
 
 (def test-input-map [{"a" "hello"
                       "b" "hello-world"
@@ -15,17 +13,6 @@
                       "b" "world"
                       "c" nil
                       "d" -1.0}])
-
-(def test-input-map-annotation [{"a" "hello"
-                                 "b" "hello-world"
-                                 "c" 2.1
-                                 "d" 1.0
-                                 "annotation" {"content" "foo"}}
-                                {"a" "ehlo"
-                                 "b" "world"
-                                 "c" nil
-                                 "d" -1.0
-                                 "annotation" {"content" "bar"}}])
 
 (def test-input-vector [{"a" ["hello" "world"]
                          "b" "foo"
@@ -292,15 +279,3 @@
              (f/negate [:or
                         #::f{:op := :prop "c" :value "test1"}
                         #::f{:op := :prop "c" :value "test2"}])))))
-
-(t/deftest filter-annotation-test
-  (t/testing "simple annotations test"
-    (t/is (= [{"a" "ehlo"
-               "b" "world"
-               "c" nil
-               "d" -1.0
-               "annotation" {"content" "bar"}}]
-             (sut/filter-data
-              ff/default-impl
-              #::f{:op :includes :prop "annotation" :value "ba"}
-              test-input-map-annotation)))))

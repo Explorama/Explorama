@@ -89,14 +89,15 @@
       :dispatch-n [[::check-and-load-link]
                    [::protocol/update-based-events]]})))
 
-(defn- request-projects-tube [user-info query]
+(defn- request-projects-tube [query]
   (if (and query (< 2 (count query)))
     [ws-api/search-projects-route
-     {}
-     user-info query]
+     {:client-callback [ws-api/request-projects-result]}
+     query]
     [ws-api/request-projects-route
      {:client-callback [ws-api/request-projects-result]}
-     user-info]))
+     ""]))
+
 
 (re-frame/reg-event-fx
  ws-api/request-projects-result
@@ -118,18 +119,14 @@
 (re-frame/reg-event-fx
  ws-api/search-projects-route
  (fn [{db :db} [_ query]]
-   (let [user-info (fi/call-api :user-info-db-get db)]
-     {:db (assoc-in db path/current-search-query query)
-      :backend-tube (request-projects-tube user-info query)})))
+   {:db (assoc-in db path/current-search-query query)
+    :backend-tube (request-projects-tube query)}))
 
 (re-frame/reg-event-fx
  ws-api/request-projects-route
  (fn [{db :db} [_ given-user-infos]]
-   (let [user-info (fi/call-api :user-info-db-get db)
-         search-query (get-in db path/current-search-query)]
-     {:backend-tube (request-projects-tube (or given-user-infos
-                                               user-info)
-                                           search-query)})))
+   (let [search-query (get-in db path/current-search-query)]
+     {:backend-tube (request-projects-tube search-query)})))
 
 (re-frame/reg-sub
  ::current-search-query

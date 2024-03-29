@@ -1,8 +1,7 @@
 (ns de.explorama.backend.woco.app.core
             ;;require all app backends here
-  (:require [de.explorama.backend.abac.core]
-            [de.explorama.backend.abac.policy-repository :as pr]
-            [de.explorama.backend.algorithms.backend :as algorithms-backend]
+  (:require [de.explorama.backend.algorithms.backend :as algorithms-backend]
+            [de.explorama.backend.charts.backend :as charts-backend]
             [de.explorama.backend.configuration.backend :as configuration-backend]
             [de.explorama.backend.data-atlas.backend :as data-atlas-backend]
             [de.explorama.backend.expdb.backend :as expdb-backend]
@@ -14,14 +13,14 @@
             [de.explorama.backend.reporting.backend :as reporting-backend]
             [de.explorama.backend.search.backend :as search-backend]
             [de.explorama.backend.table.backend :as table-backend]
-            [de.explorama.backend.charts.backend :as charts-backend]
             [de.explorama.backend.woco.backend :as woco-backend]
             [taoensso.timbre :refer [error info]]))
+
+(defonce initialized (atom nil))
 
 (defn init []
   (try
     (expdb-backend/init)
-    (pr/set-backend)
     (woco-backend/init)
     (configuration-backend/init)
     (projects-backend/init)
@@ -38,3 +37,7 @@
     (info "Backend started")
     (catch Throwable e
       (error e "Initalization failed - force app crash"))))
+
+(when-not @initialized
+  (reset! initialized true)
+  (init))

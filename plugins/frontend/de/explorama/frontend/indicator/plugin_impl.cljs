@@ -10,7 +10,7 @@
 (def desc
   {#_#_:parent-container-id (fn [frame-id]
                               (re-frame/subscribe [::parent-container-id frame-id]))
-   :component-did-mount (fn [frame-id]
+   :component-did-mount (fn [_frame-id]
                           #_(re-frame/dispatch [:mosaic.core/register-render-wait frame-id]))
    :clean-up-event-vec (fn [follow-event frame-ids]
                          [:de.explorama.frontend.indicator.core/clean-up follow-event frame-ids])

@@ -282,7 +282,7 @@
 
 (defn- operations* [{:keys [data-acs-async-callback]}
                     {:keys [local-filter di new-di? operations-desc layouts raw-layouts send-data-acs?
-                            update-usable-layouts? validate-operations-desc? lang scatter-axis-fallback?]}]
+                           validate-operations-desc? lang scatter-axis-fallback?]}]
   (try
     (let [data (get-data di)
           data-count (count data)
@@ -300,18 +300,16 @@
                                               (gcr/validate-operations-desc ds-acs dim-info operations-desc)
                                               [nil operations-desc])
           scatter? (= gcp/render-mode-key-scatter (get operations-desc gcp/render-mode-key))
-          best-layout  (cond (and new-di? (seq layouts) (not= 0 data-count))
-                             (gbrl/check-layouts ds-acs dim-info layouts raw-layouts)
-                             (seq layouts)
-                             layouts
-                             (empty? layouts)
-                             (gbrl/find-layout ds-acs dim-info raw-layouts nil))
+          best-layout (cond (and new-di? (seq layouts) (not= 0 data-count))
+                            (gbrl/check-layouts ds-acs dim-info layouts raw-layouts)
+                            (seq layouts)
+                            layouts
+                            (empty? layouts)
+                            (gbrl/find-layout ds-acs dim-info raw-layouts nil))
           invalid-options (if (empty? best-layout)
                             (assoc invalid-options gcp/layouts true)
                             invalid-options)
-          usable-layout-ids (if update-usable-layouts?
-                              (gsrl/usable-layouts ds-acs dim-info raw-layouts best-layout)
-                              nil)
+          usable-layout-ids (gsrl/usable-layouts ds-acs dim-info raw-layouts best-layout)
           [filtered-data
            filtered-count]
           (if local-filter
@@ -361,7 +359,6 @@
         :scatter? scatter?
         :data-count data-count
         :data-acs data-acs
-        :update-usable-layouts? update-usable-layouts?
         :operations-desc operations-desc}])
     (catch #?(:clj Throwable :cljs :default) e
       (log/warn e "Error during data preparation")
@@ -411,6 +408,8 @@
                                    usable-layout-ids
                                    (assoc :usable-layout-ids usable-layout-ids)
                                    (or (empty? layouts)
+                                       (not= (set (map :id layouts))
+                                             (set (map :id best-layout)))
                                        (get invalid-options gcp/layouts))
                                    (assoc :best-layout-ids (map :id best-layout))
                                    (:default? (first best-layout))

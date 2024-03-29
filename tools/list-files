@@ -1,0 +1,3 @@
+#! /bin/bash
+
+echo $(find $1/* -follow -type f)

@@ -51,9 +51,3 @@
           (/ (- original-val min-val)
              (- max-val min-val)))
        config/explorama-charts-scatter-min-oppacity)))
-
-(comment
-  (reset! color-store {})
-  @color-store)
-
-

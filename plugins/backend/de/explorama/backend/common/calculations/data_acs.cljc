@@ -58,7 +58,8 @@
 (defn handle-min-max [[min max] elem-v val]
   (tufte/p ::handle-min-max
            (if (not elem-v)
-             val
+             [(apply min val)
+              (apply max val)]
              (if (vector? val)
                (if (vector? elem-v)
                  [(apply min (concat elem-v val))

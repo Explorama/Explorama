@@ -1,0 +1,55 @@
+name: Electron Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/explorama/images/build-image:latest
+    defaults:
+      run:
+        working-directory: ./bundles/electron
+    steps:
+    - uses: actions/checkout@v4
+    - run: apk add --no-cache tar
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
+    - name: Prepare test
+      run: |
+        make clean-before
+        npm install
+        bash gather-assets.sh dev
+        npm install -g karma-cli
+        npm install karma@6.4.1 karma-coverage karma-chrome-launcher karma-cljs-test karma-junit-reporter karma-htmlfile-reporter --save-dev 
+    - name: Run backend tests
+      run: |
+        lein with-profile test doo node test-backend once
+    - name: Run frontend tests
+      run: |
+        lein with-profile test doo chrome-headless test-frontend once
+        cp target/coverage/cobertura.xml cobertura.xml
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: './bundles/electron/cobertura.xml'
+        badge: true
+        format: 'markdown'
+        output: 'both'
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md
+    - name: Write to Job Summary
+      run: cat ../../code-coverage-results.md >> $GITHUB_STEP_SUMMARY

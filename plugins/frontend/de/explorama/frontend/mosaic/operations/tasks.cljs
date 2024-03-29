@@ -79,7 +79,6 @@
                                                      (get-in db (gp/operation-desc frame-id))
                                                      operation-desc)
                                    :send-data-acs? true
-                                   :update-usable-layouts? true
                                    :new-di? true
                                    :validate-operations-desc? true}
                             local-filter (assoc :local-filter local-filter))

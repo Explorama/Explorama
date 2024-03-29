@@ -1,25 +1,98 @@
 (ns de.explorama.backend.runner
-  (:require [de.explorama.backend.algorithms.data.future-data-test]
+  (:require [data-format-lib.core-test]
+            [data-format-lib.data-test]
+            [data-format-lib.date-filter-test]
+            [data-format-lib.operations-indicator-test]
+            [data-format-lib.operations-mosaic-test]
+            [data-format-lib.operations-test]
+            [data-format-lib.simplified-view-test]
+            [data-format-lib.standard-filter-test]
+            [de.explorama.backend.algorithms.data.future-data-test]
             [de.explorama.backend.algorithms.data.redo-test]
             [de.explorama.backend.algorithms.data.train-data-test]
             [de.explorama.backend.algorithms.prediction-registry.expdb-backend-test]
+            [de.explorama.backend.charts.components.bar-chart-test]
+            [de.explorama.backend.charts.components.base-charts-test]
+            [de.explorama.backend.charts.components.bubble-chart-test]
+            [de.explorama.backend.charts.components.line-chart-test]
+            [de.explorama.backend.charts.components.pie-chart-test]
+            [de.explorama.backend.charts.components.scatter-chart-test]
+            [de.explorama.backend.charts.components.wordcloud-chart-test]
+            [de.explorama.backend.charts.error-test]
+            [de.explorama.backend.charts.data.redo-test]
+            [de.explorama.backend.common.aggregation-test]
+            [de.explorama.backend.common.calculations.data-acs-test]
+            [de.explorama.backend.common.data.descriptions-test]
             [de.explorama.backend.expdb.ac-api-test]
             [de.explorama.backend.expdb.indexed-db-test]
+            [de.explorama.backend.expdb.mapping-test]
+            [de.explorama.backend.expdb.suggestions-test]
             [de.explorama.backend.expdb.simple-db-test]
+            [de.explorama.backend.indicator.calculate-test]
+            [de.explorama.backend.indicator.persistence-test]
+            [de.explorama.backend.indicator.sample-test]
+            [de.explorama.backend.map.overlayers-test]
+            [de.explorama.backend.projects.core-test]
+            [de.explorama.backend.projects.direct-search-test]
+            [de.explorama.backend.projects.event-log-test]
+            [de.explorama.backend.projects.projects-test]
+            [de.explorama.backend.projects.queue-test]
+            [de.explorama.backend.search.core-test]
+            [de.explorama.backend.search.data-tile-test]
+            [de.explorama.backend.search.filter-test]
+            [de.explorama.backend.table.error-test]
+            [de.explorama.backend.table.table-test]
             [de.explorama.shared.indicator.transform-test]
             [de.explorama.shared.interval.validation-test]
             [de.explorama.shared.mosaic.group-by-layout-test]
             [de.explorama.shared.search.date-utils-test]
             [doo.runner :refer-macros [doo-tests]]))
 
-(doo-tests 'de.explorama.shared.indicator.transform-test
-           'de.explorama.shared.mosaic.group-by-layout-test
-           'de.explorama.shared.search.date-utils-test
-           'de.explorama.backend.expdb.ac-api-test
-           'de.explorama.backend.expdb.simple-db-test
-           'de.explorama.backend.expdb.indexed-db-test
-           'de.explorama.backend.algorithms.data.future-data-test
-           'de.explorama.backend.algorithms.data.redo-test
-           'de.explorama.backend.algorithms.data.train-data-test
-           'de.explorama.backend.algorithms.prediction-registry.expdb-backend-test
-           'de.explorama.shared.interval.validation-test)
+(doo-tests
+ 'data-format-lib.core-test
+ 'data-format-lib.data-test
+ 'data-format-lib.date-filter-test
+ 'data-format-lib.operations-indicator-test
+ 'data-format-lib.operations-test
+ 'data-format-lib.standard-filter-test
+ 'data-format-lib.simplified-view-test
+ 'data-format-lib.operations-mosaic-test
+ 'de.explorama.backend.algorithms.data.future-data-test
+ 'de.explorama.backend.algorithms.data.redo-test
+ 'de.explorama.backend.algorithms.data.train-data-test
+ 'de.explorama.backend.algorithms.prediction-registry.expdb-backend-test
+ 'de.explorama.backend.charts.components.bar-chart-test
+ 'de.explorama.backend.charts.components.base-charts-test
+ 'de.explorama.backend.charts.components.bubble-chart-test
+ 'de.explorama.backend.charts.components.line-chart-test
+ 'de.explorama.backend.charts.components.pie-chart-test
+ 'de.explorama.backend.charts.components.scatter-chart-test
+ 'de.explorama.backend.charts.components.wordcloud-chart-test
+ 'de.explorama.backend.charts.error-test
+ 'de.explorama.backend.charts.data.redo-test
+ 'de.explorama.backend.common.aggregation-test
+ 'de.explorama.backend.common.calculations.data-acs-test
+ 'de.explorama.backend.common.data.descriptions-test
+ 'de.explorama.backend.expdb.ac-api-test
+ 'de.explorama.backend.expdb.simple-db-test
+ 'de.explorama.backend.expdb.indexed-db-test
+ 'de.explorama.backend.expdb.mapping-test
+ 'de.explorama.backend.expdb.suggestions-test
+ 'de.explorama.backend.indicator.calculate-test
+ 'de.explorama.backend.indicator.persistence-test
+ 'de.explorama.backend.indicator.sample-test
+ 'de.explorama.backend.map.overlayers-test
+ 'de.explorama.backend.projects.core-test
+ 'de.explorama.backend.projects.direct-search-test
+ 'de.explorama.backend.projects.projects-test
+ 'de.explorama.backend.projects.queue-test
+ 'de.explorama.backend.projects.event-log-test
+ 'de.explorama.backend.search.core-test
+ 'de.explorama.backend.search.data-tile-test
+ 'de.explorama.backend.search.filter-test
+ 'de.explorama.backend.table.error-test
+ 'de.explorama.backend.table.table-test
+ 'de.explorama.shared.indicator.transform-test
+ 'de.explorama.shared.interval.validation-test
+ 'de.explorama.shared.mosaic.group-by-layout-test
+ 'de.explorama.shared.search.date-utils-test)

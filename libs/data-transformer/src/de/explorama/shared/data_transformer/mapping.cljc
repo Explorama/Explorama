@@ -93,14 +93,15 @@
                       :empty nil)]
           (if (nil? value)
             nil
-            #?(:clj (Integer/parseInt value)
-               :cljs (js/parseInt value))))
+            (parse-long value)))
         :else
         (throw (ex-info "Can't convert to integer value wrong input type" {:value value}))))
 
 ;TODO r1/mapping support more layouts than german and english.
 (def ^:private complex-decimal-schema-en #"^[\-]{0,1}([1-9]\d{0,2}(,?\d{3})*|0)(\.\d+)+$")
 (def ^:private complex-decimal-schema-de #"^[\-]{0,1}([1-9]\d{0,2}(.?\d{3})*|0)(\,\d+)+$")
+(def ^:private pow-decimal-schema-de #"^[\-]{0,1}\d{1}\,\d+[Ee]{1}[\-]{0,1}\d+$")
+(def ^:private pow-decimal-schema-en #"^[\-]{0,1}\d{1}\.\d+[Ee]{1}[\-]{0,1}\d+$")
 
 (defn- decimal-conversion [value]
   (cond (vector? value)
@@ -111,7 +112,9 @@
         (let [value (str/trim value)
               value (loop [patterns
                            [[:complex-en complex-decimal-schema-en]
-                            [:complex-de complex-decimal-schema-de]]]
+                            [:complex-de complex-decimal-schema-de]
+                            [:complex-en pow-decimal-schema-en]
+                            [:complex-de pow-decimal-schema-de]]]
                       (let [pattern (first patterns)]
                         (if (nil? patterns)
                           [:empty ""]
@@ -127,8 +130,7 @@
                       :empty nil)]
           (if (nil? value)
             nil
-            #?(:clj (Double/parseDouble value)
-               :cljs (js/parseFloat value))))
+            (parse-double value)))
         :else
         (throw (ex-info "Can't convert to decimal value wrong input type" {:value value}))))
 

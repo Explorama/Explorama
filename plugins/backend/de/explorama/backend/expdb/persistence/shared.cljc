@@ -8,8 +8,9 @@
             [de.explorama.backend.expdb.query.index :as idx]
             [de.explorama.backend.expdb.spec :as spec]
             [de.explorama.backend.expdb.utils :refer [expdb-hash]]
-            [de.explorama.shared.common.date.utils :refer [date-convert]]
             [de.explorama.shared.common.data.attributes :as attrs]
+            [de.explorama.shared.common.date.utils :refer [complete-date
+                                                           date-convert]]
             [de.explorama.shared.common.unification.misc
              :refer [double-negativ-infinity double-positiv-infinity]]
             [de.explorama.shared.common.unification.time :refer [formatters
@@ -52,10 +53,26 @@
 (defn- datasource-> [datasource]
   [(:name datasource)])
 
-(defn- date-acs [year month day]
-  {"year" #{(str year)}
-   "month" #{(str year "-" month)}
-   "day" #{(str year "-" month "-" day)}})
+(defn- date-acs [year & [month day hour minute second]]
+  (cond-> {"year" #{(str year)}}
+    month
+    (assoc "month"
+           #{(str year "-" (complete-date month))})
+    day
+    (assoc "day"
+           #{(str year "-" (complete-date month) "-" (complete-date day))})
+    hour
+    (assoc "hour"
+           #{(str year "-" (complete-date month) "-" (complete-date day)
+                  "T" (complete-date hour))})
+    minute
+    (assoc "day"
+           #{(str year "-" (complete-date month) "-" (complete-date day)
+                  "T" (complete-date hour) ":" (complete-date minute))})
+    second
+    (assoc "day"
+           #{(str year "-" (complete-date month) "-" (complete-date day)
+                  "T" (complete-date hour) ":" (complete-date minute) ":" (complete-date second))})))
 
 (def date-acs-memo (memoize date-acs))
 
@@ -87,9 +104,10 @@
                                       contexts
                                       locations
                                       notes]
-                               {[year month day] :day} ;TODO r1/db handle dates correctly
+                               {day :day} ;TODO r1/db handle dates correctly
                                (date-convert (get-in (filterv (fn [[type]] (= type "occured-at")) dates)
                                                      [0 1]))
+                               year (first day)
                                data-tile-keys (->>
                                                (filter (fn [[type]]
                                                          (= type "country"))
@@ -111,7 +129,7 @@
                                                     (update acc name conj type))
                                                   (into {} (map (fn [[name]] [name #{}]) facts))
                                                   facts)
-                                          (date-acs-memo year month day)
+                                          (apply date-acs-memo day)
                                           (if (seq locations)
                                             {attrs/location-attr #{"location"}}
                                             {}))
@@ -261,7 +279,7 @@
                                                         (keys new-data-tiles)))
               result)))
         (catch #?(:clj Throwable :cljs :default) e
-          (error "Import failed" e)
+          (error e "Import failed")
           {:success false
            :message (ex-message e)
            :data {:error-data (ex-data e)}}))

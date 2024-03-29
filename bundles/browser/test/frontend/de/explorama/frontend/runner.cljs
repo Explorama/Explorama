@@ -22,8 +22,6 @@
             [de.explorama.frontend.woco.operations-test]
             [de.explorama.shared.interval.validation-test]))
 
-
-
 (doo-tests
  ;algorithms tests
  'de.explorama.frontend.algorithms.components.parameter-test

@@ -272,7 +272,6 @@
                (gp/top-level frame-id)
                action
                (assoc payload
-                      :update-usable-layouts? true
                       :send-data-acs? true
                       :scatter-axis-fallback? true
                       :raw-layouts (get-in db gp/raw-layouts))

@@ -17,6 +17,7 @@ libs/*/target
 node_modules
 
 bundles/browser/package-lock.json
+bundles/browser/resources/public/
 
 bundles/electron/Explorama-dev
 bundles/electron/dist
@@ -29,7 +30,11 @@ bundles/*/de.explorama.backend.expdb.simple-test.sqlite3
 bundles/*/de.explorama.backend.expdb.indexed-test.sqlite3
 bundles/*/target
 bundles/*/resources/main.js
-bundles/*/resources/public/*
+bundles/*/resources/public/css
+bundles/*/resources/public/fonts
+bundles/*/resources/public/img
+bundles/*/resources/public/js
+bundles/*/resources/public/assets
 bundles/*/.lein-failures
 bundles/*/.rebel_readline_history
 bundles/*/.calva/output-window

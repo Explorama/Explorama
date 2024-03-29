@@ -53,9 +53,9 @@
                       :countries #{}
                       :buckets #{}}
                      data)
-             (reduce (fn [acc [k v]]
-                       (assoc acc k (sort v)))
-                     {}))]
+             (reduce-kv (fn [acc k v]
+                          (assoc acc k (sort (filter identity v))))
+                        {}))]
     {:buckets buckets
      :datasources (tufte/p ::calc-datasources (stringify-datasource datasources))
      :years (tufte/p ::calc-years (stringify-years years))

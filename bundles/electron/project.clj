@@ -1,8 +1,8 @@
 (require '[clojure.string :as st])
 
 (def app-version "0.0.0")
-(def electron-version "28.0.0")
-(def better-sqlite3-version "9.2.2")
+(def electron-version "28.2.2")
+(def better-sqlite3-version "9.4.0")
 (def ml-regression-simple-linear-version "2.0.4")
 
 (def dev-envs {"goog.DEBUG" true
@@ -80,6 +80,7 @@
                              (add-to-path "frontend-integrations" "woco" "backend")})
 
 (def fixed-backend-test-folders #{(add-to-path "test" "backend")
+                                  (add-to-path libs-paths "data-format-lib" "test" "cljc")
                                   (add-to-path plugins-paths "backend_test")
                                   (add-to-path plugins-paths "shared_test")})
 
@@ -90,7 +91,7 @@
                      :backend-paths (vec (sort fixed-backend-folders))
                      :backend-test-paths (vec (sort (concat fixed-backend-folders
                                                             fixed-backend-test-folders)))})
-
+#_
 (println "Versions"
          {:electron electron-version
           :better-sqlite3 better-sqlite3-version
@@ -102,7 +103,7 @@
   :license {:name "Eclipse Public License - v 1.0"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/clojurescript "1.11.60"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [org.clojure/core.async "1.6.681"]
                  ;;  [metosin/jsonista "0.3.7"]
                  ;for electron
@@ -304,16 +305,7 @@
          :config {"customLaunchers" {"Chrome_no_security" {"base" "Chrome"}}
                   "reporters" ["progress"  "coverage"]
                   "coverageReporter" {"dir" "target/coverage/"
-                                      "reporters" [{"type" "text"
-                                                    "subdir" "."
-                                                    "file" "coverage.txt"}
-                                                   {"type" "text-summary"
-                                                    "subdir" "."
-                                                    "file" "text-summary.txt"}
-                                                   {"type" "json-summary"
-                                                    "subdir" "."
-                                                    "file" "json-summary.json"}
-                                                   {"type" "html"
+                                      "reporters" [{"type" "html"
                                                     "subdir" "report-html"}
                                                    {"type" "cobertura"
                                                     "subdir" "."

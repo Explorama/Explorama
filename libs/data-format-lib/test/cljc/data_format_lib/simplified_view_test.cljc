@@ -25,9 +25,9 @@
     #:data-format-lib.filter{:op    :=
                              :prop  td/category-1
                              :value (td/category-val 1 "F")}]
-   '(:or
-     #:data-format-lib.filter{:op :<, :prop td/fact-1, :value 0}
-     #:data-format-lib.filter{:op :>, :prop td/fact-1, :value 2})])
+   [:or
+    #:data-format-lib.filter{:op :<, :prop td/fact-1, :value 0}
+    #:data-format-lib.filter{:op :>, :prop td/fact-1, :value 2}]])
 
 (def ^:private simplified-di-filter
   [#:data-format-lib.filter{::sv/op   :in
@@ -56,7 +56,7 @@
    [:or
     #:data-format-lib.filter{:op    :=
                              :prop  td/org
-                             :value (td/org 1)}]
+                             :value (td/org-val 1)}]
    [:and
     #:data-format-lib.filter{:op :>=, :prop td/fact-1, :value 1}
     #:data-format-lib.filter{:op :<=, :prop td/fact-1, :value 8}]
@@ -73,7 +73,7 @@
                             :value [2015 2016]}
    #:data-format-lib.filter{::sv/op    :=
                             :prop  td/org
-                            :value (td/org 1)}
+                            :value (td/org-val 1)}
    #:data-format-lib.filter{::sv/op :in-range, :prop td/fact-1, :value [1 8]}
    #:data-format-lib.filter{::sv/op    :=
                             :prop  "title"

@@ -19,7 +19,6 @@
          data)))
 
 (defn- execute-model [{:keys [training-data attributes parameter algorithm task-id] :as task}]
-  (debug "execute-model" (dissoc task :training-data))
   (try
     (let [{ignore-backdated? :ignore-backdated?} parameter
           dependent-variable (get-in attributes [:dependent-variable 0 :value])

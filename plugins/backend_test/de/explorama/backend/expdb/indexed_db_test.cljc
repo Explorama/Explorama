@@ -42,7 +42,7 @@
                                                                  {:global-id "o2"}
                                                                  {:global-id "t1"}]
                                                   :dates [{:type "occured-at"
-                                                           :value "1997-01-02"}]
+                                                           :value "1997"}]
                                                   :texts ["test text"]}]}
                                      {:global-id "i1-1"
                                       :features [{:global-id "if1-1"
@@ -59,7 +59,7 @@
                                                                  {:global-id "o2"}
                                                                  {:global-id "t1"}]
                                                   :dates [{:type "occured-at"
-                                                           :value "1997-01-03"}]
+                                                           :value "1997-01"}]
                                                   :texts ["test text"]}]}
                                      {:global-id "i2"
                                       :features [{:global-id "if2"
@@ -171,7 +171,7 @@
               "datasource" "dsn-1",
               "location" [[15 15]],
               "type" "type1",
-              "date" "1997-01-02",
+              "date" "1997",
               "notes" "test text",
               "fact2" 2}
              {"org" ["org1" "org2"],
@@ -181,7 +181,7 @@
               "datasource" "dsn-1",
               "location" [[30 30]],
               "type" "type1",
-              "date" "1997-01-03",
+              "date" "1997-01",
               "notes" "test text",
               "fact2" 1}],
    dt-key-2 [{"org" ["org3" "org4"],
@@ -227,7 +227,7 @@
            data-tiles-result))
     (is (= (sut/event @db dt-key-1 "i1-0")
            {"id" "i1-0",
-            "date" "1997-01-02",
+            "date" "1997",
             "datasource" "dsn-1",
             "location" [[15 15]],
             "fact1" 1230812312,
@@ -249,10 +249,9 @@
                   "datasource" #{"dsn-1"},
                   "year" #{"1997"},
                   "type" #{"type1"},
-                  "month" #{"1997-1"},
+                  "month" #{"1997-01"},
                   "notes" #{"notes"},
                   "fact2" #{"decimal"},
-                  "day" #{"1997-1-2" "1997-1-3"}
                   "location" #{"location"}},
             :attributes {"org" "Context",
                          "fact1" "Fact",

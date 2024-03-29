@@ -5,7 +5,7 @@ pwd=`pwd`
 os=$1
 mode=$2
 arch=""
-bettersqlite3_version="9.2.2"
+bettersqlite3_version="9.4.0"
 bettersqlite3_v="v119"
 
 if [ $mode == "prod" ]

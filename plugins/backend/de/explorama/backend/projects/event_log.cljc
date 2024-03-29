@@ -1,9 +1,8 @@
 (ns de.explorama.backend.projects.event-log
-  (:require [de.explorama.backend.frontend-api :as fapi]
-            [de.explorama.backend.projects.core :as pcore]
+  (:require [de.explorama.backend.projects.core :as pcore]
             [de.explorama.backend.projects.persistence.event-log :as persist]
+            [de.explorama.backend.projects.persistence.project :as project-backend]
             [de.explorama.shared.common.unification.time :refer [current-ms]]
-            [de.explorama.shared.projects.ws-api :as ws-api]
             [taoensso.timbre :refer [error]]))
 
 (defonce counter (atom 0))
@@ -22,19 +21,20 @@
                     :t (current-ms)})]
     (when (pcore/user-allowed? user-info project-id)
       (try
-        (let [instance (persist/new-instance project-id)]
-          (try
-            (persist/append-lines instance [[event-id [origin frame-id event-name desc version]]])
+        (let [instance (persist/new-instance project-id)
+              project-instance (project-backend/new-instance project-id)
+              new-pdesc (-> (project-backend/read project-instance)
+                            (assoc :last-modified (current-ms)))]
+          (persist/append-lines instance [[event-id [origin frame-id event-name desc version]]])
+          (project-backend/update project-instance new-pdesc)
             ;;TODO r1/projects whats this?
             ;; (when (and inform-after-log client-id)
               ;;   (after-log-inform client-id project-id))
               ;; (when (and sync? client-id (not not-broadcast?))
               ;;   (broadcast-log client-id project-id event)))
-            (fapi/dispatch
+          #_(fapi/dispatch
              ;(partial de.explorama.backend.projects.session/to-client? client-id)
-             [ws-api/request-projects-route])
-            (catch #?(:clj Throwable :cljs :default) e
-              (error e "Could not save event:" event-desc))))
+             [ws-api/request-projects-route]))
               ;; (swap! event-queue conj (assoc event :event-id event-id)))))
         (catch #?(:clj Throwable :cljs :default) e
           (error e "Could not save event:" event-desc))))))

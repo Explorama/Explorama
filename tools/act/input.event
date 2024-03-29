@@ -1,0 +1,8 @@
+{
+  "action": "workflow_dispatch",
+  "inputs": {
+      "release_version": "v1.0.0-alpha.2",
+      "draft": true,
+      "prerelease": true
+  }
+}

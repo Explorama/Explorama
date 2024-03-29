@@ -9,8 +9,7 @@
             [data-format-lib.vpl :as vpl]
             [de.explorama.shared.common.data.attributes :as attrs]
             [taoensso.timbre :refer [error warn]]
-            [taoensso.tufte :refer [p]])
-  #?(:clj (:import [java.lang Exception])))
+            [taoensso.tufte :refer [p]]))
 
 (declare functions)
 
@@ -60,8 +59,7 @@
   (when (and (< num (count sets))
              (some nil? params))
     (error error-msg sets)
-    (throw #?(:clj (Exception. error-msg)
-              :cljs (js/Error error-msg)))))
+    (throw (ex-info error-msg {}))))
 
 
 (defonce ^:private time-attributes #{"week" "weekday" "year" "month" "day" "hour" "minute" "seconds"})
@@ -1218,7 +1216,7 @@
                            :input->output {:default {:meta-group-list-events :meta-list-events
                                                      :meta-group-list-values :meta-list-events
                                                      :meta-group-values :meta-list-events}}}}
-   (fn [instance _ descs data]
+   (fn [_instance _ descs data]
      (heal-event descs data))
    :group-by {:category :by
               :description "Groups events by a provided attributes."
@@ -1236,7 +1234,7 @@
                                                      :default false}}
                          :input->output {:default {:meta-group-list-events :meta-sub-group-list-events
                                                    :meta-list-events :meta-group-list-events}}}}
-   (fn [instance _ desc [di-data]]
+   (fn [_instance _ desc [di-data]]
      (let [{:keys [structure group element]} (meta di-data)]
        (cond (and (= :group structure)
                   (= :list group)
@@ -1281,66 +1279,66 @@
      (sort-by-operation instance di-data desc))
    :count-events {:category :aggregation
                   :description "Counts events"}
-   (fn [instance _ {:keys [join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? nil #(count %) #(+ %1 %2) :count-event)
        (operation-on-*-values di-groups nil #(count %) :count-event)))
    :distinct {:interal true}
-   (fn [instance _ {:keys [attribute join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [attribute join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? attribute #(-> % flatten distinct) #(distinct (into %1 %2)) :distinct)
        (operation-on-*-values di-groups attribute #(-> % flatten distinct) :distinct)))
    :sum {:category :aggregation
          :description "Sum"}
-   (fn [instance _ {:keys [attribute join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [attribute join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? attribute #(empty-check-apply + %) #(+ %1 %2) :sum)
        (operation-on-*-values di-groups attribute #(empty-check-apply + %) :sum)))
    :min {:category :aggregation
          :description "Min"}
-   (fn [instance _ {:keys [attribute join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [attribute join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? attribute #(apply min %) #(min %1 %2) :min)
        (operation-on-*-values di-groups attribute #(apply min %) :min)))
    :max {:category :aggregation
          :description "Max"}
-   (fn [instance _ {:keys [attribute join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [attribute join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? attribute #(apply max %) #(max %1 %2) :max)
        (operation-on-*-values di-groups attribute #(apply max %) :max)))
    :normalize {:interal true}
-   (fn [instance _ descs di-groups]
+   (fn [_instance _ descs di-groups]
      (normalize descs di-groups))
    :median {:category :aggregation
             :description "allows you to create events from grouped events sets. Just"}
-   (fn [instance _ {:keys [attribute join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [attribute join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? attribute #(median %) #(median [%1 %2]) :median)
        (operation-on-*-values di-groups attribute #(median %) :median)))
    :average {:category :aggregation
              :description "allows you to create events from grouped events sets. Just"}
-   (fn [instance _ {:keys [attribute join? join-fully?]} di-groups]
+   (fn [_instance _ {:keys [attribute join? join-fully?]} di-groups]
      (if join?
        (operation-on-*-values-join di-groups join-fully? attribute #(average %) #(average [%1 %2]) :average)
        (operation-on-*-values di-groups attribute #(average %) :average)))
    :+ {:category :nummerical
        :description "Adds values"}
-   (fn [instance _ {:keys [attribute]} di-groups]
+   (fn [_instance _ {:keys [attribute]} di-groups]
      (operation-on-*-with-merge di-groups attribute #(apply + %) 0))
    :- {:category :nummerical
        :description "Adds values"}
-   (fn [instance _ {:keys [attribute]} di-groups]
+   (fn [_instance _ {:keys [attribute]} di-groups]
      (operation-on-*-with-merge di-groups attribute #(apply - %) 0))
    :* {:category :nummerical
        :description "Adds values"}
-   (fn [instance _ {:keys [attribute]} di-groups]
+   (fn [_instance _ {:keys [attribute]} di-groups]
      (operation-on-*-with-merge di-groups attribute #(apply * %) 1))
    :/ {:category :nummerical
        :description "Adds values"}
-   (fn [instance _ {:keys [attribute]} di-groups]
+   (fn [_instance _ {:keys [attribute]} di-groups]
      (operation-on-*-with-merge di-groups attribute #(apply / %) 1))
    :select {:internal true}
-   (fn [instance _ {:keys [attribute]} [di-data]]
+   (fn [_instance _ {:keys [attribute]} [di-data]]
      (let [{:keys [structure group element]} (meta di-data)]
        (cond (and (= :group structure)
                   (= :list group)
@@ -1382,7 +1380,7 @@
                               :group group
                               :element element})))))
    :take-first {:internal true}
-   (fn [instance _ {} [di-data]]
+   (fn [_instance _ {} [di-data]]
      (let [{:keys [structure group element]} (meta di-data)]
        (cond (and (= :group structure)
                   (= :list group)
@@ -1402,7 +1400,7 @@
                               :group group
                               :element element})))))
    :take-last {:internal true}
-   (fn [instance _ {} [di-data]]
+   (fn [_instance _ {} [di-data]]
      (let [{:keys [structure group element]} (meta di-data)]
        (cond (and (= :group structure)
                   (= :list group)
@@ -1456,15 +1454,14 @@
    (fn [instance filters filter-id [data & too-many?]]
      (when (seq too-many?)
        (error error-msg filter-id data too-many?)
-       (throw #?(:clj (Exception. error-msg)
-                 :cljs (js/Error error-msg))))
+       (throw (ex-info error-msg {})))
      (meta-list-events
       (f/filter-data-api (get filters filter-id)
                          data
                          instance)))
    :apply-layout {:internal true}
-   (fn [instance _ {layouts :layouts
-                    reverse-color? :reverse-color?}
+   (fn [_instance _ {layouts :layouts
+                     reverse-color? :reverse-color?}
         [data]]
      (apply-layout-operation layouts reverse-color? data))))
 
@@ -1574,9 +1571,7 @@
          input-valid? (or every-grouped?
                           every-not-grouped?)]
      (when-not input-valid?
-       (throw (#?(:clj Exception.
-                  :cljs js/Error.)
-               "Input-Data not valid for operation. Every di needs to be grouped or a list of data."))))
+       (throw (ex-info "Input-Data not valid for operation. Every di needs to be grouped or a list of data." {}))))
    (let [result-frequency (pre-perform-operation* operations)
          result-frequency-atom (atom {:state result-frequency
                                       :removed #{}})]

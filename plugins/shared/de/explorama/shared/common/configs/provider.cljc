@@ -9,11 +9,6 @@
 
 #?(:clj (def client-configs (atom {})))
 
-(def ^:private valid-types
-  {:client #{:edn-string :string :keyword :integer :double :boolean}
-   :all #{:edn-string :string :keyword :integer :double :boolean}
-   :server #{:edn-file :edn-string :string :keyword :integer :double :boolean}})
-
 (defn- eval-type [config-name expected-type possible-values value default-value use-default-on-fail? fallback? fallback]
   (cond fallback?
         fallback
@@ -164,18 +159,14 @@
         fallback? #?(:clj false
                      :cljs (= env-type :edn-file))
         name (or name env-name)]
-    (info "Defining config" name env-type scope)
     (when-not (seq documentation)
       (throw (ex-info (str "No documentation defined for config " env-name) {})))
     (when (and env-name (not env-type))
       (throw (ex-info (str "No type defined for config " env-name) {})))
     (when-not name
       (throw (ex-info (str "No name defined for config") definition)))
-    (when-not ((valid-types :server) env-type)
-      (warn "Undefined env type" name env-type scope))
-    (when (and (or (= current-env :all)
-                   (= current-env scope))
-               ((valid-types current-env) env-type))
+    (when (or (= current-env :all)
+              (= current-env scope))
       (let [value
             (post-read-fn
              (eval-type name

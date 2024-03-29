@@ -65,6 +65,7 @@
                              (add-to-path frontend-integrations-paths "woco" "backend")})
 
 (def fixed-backend-test-folders #{(add-to-path "test" "backend")
+                                  (add-to-path libs-paths "data-format-lib" "test" "cljc")
                                   (add-to-path plugins-paths "backend_test")
                                   (add-to-path plugins-paths "shared_test")})
 
@@ -81,6 +82,8 @@
                                                                  fixed-backend-test-folders
                                                                  fixed-backend-folders))))
                      :profiling-paths (vec (sort fixed-profiling-folders))})
+
+#_#_#_#_
 (println "---------------------------")
 (println "Using the following sources (woco):")
 (pprint source-folders)
@@ -92,7 +95,7 @@
   :license {:name "Eclipse Public License - v 1.0"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/clojurescript "1.11.60"]
+                 [org.clojure/clojurescript "1.11.132"]
                  [org.clojure/core.async "1.6.681"]
 
 
@@ -271,16 +274,7 @@
          :config {"customLaunchers" {"Chrome_no_security" {"base" "Chrome"}}
                   "reporters" ["progress"  "coverage"]
                   "coverageReporter" {"dir" "target/coverage/"
-                                      "reporters" [{"type" "text"
-                                                    "subdir" "."
-                                                    "file" "coverage.txt"}
-                                                   {"type" "text-summary"
-                                                    "subdir" "."
-                                                    "file" "text-summary.txt"}
-                                                   {"type" "json-summary"
-                                                    "subdir" "."
-                                                    "file" "json-summary.json"}
-                                                   {"type" "html"
+                                      "reporters" [{"type" "html"
                                                     "subdir" "report-html"}
                                                    {"type" "cobertura"
                                                     "subdir" "."
@@ -289,11 +283,9 @@
                     ["with-profile" "test" "doo" "chrome-headless" "test-frontend" "once"]
                     ["with-profile" "test" "doo" "chrome-headless" "test-backend" "once"]]
             "test-frontend" ["do"
-                             ["shell" "make" "prepare-test"]
                              ["with-profile" "test" "doo" "chrome-headless" "test-frontend" "once"]]
             "test-backend" ["do"
-                            ["shell" "make" "prepare-test"]]
-            ;;                 ["with-profile" "test" "doo" "chrome-headless" "test-backend" "once"]]
+                            ["with-profile" "test" "doo" "chrome-headless" "test-backend" "once"]]
             ;; "build" ["do"
             ;;          "clean"
             ;;          ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-dist-folder)]

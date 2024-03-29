@@ -253,8 +253,11 @@
     (session/dispatch-to tube [ws-api/locks-client (locks/locks)])))
 
 
-(defn direct-search [tube [_ query]]
-  (direct-search/search tube query))
+(defn direct-search [{:keys [client-callback failed-callback user-info client-id]
+                      :as metas}
+                     [query]]
+   (when (user-valid? metas user-info)
+     (client-callback (direct-search/project-search query user-info))))
 
 (defn reload-projects [tube [_ user-info projects-id]]
   (when (user-valid? tube user-info)

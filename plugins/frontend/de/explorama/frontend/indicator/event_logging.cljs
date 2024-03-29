@@ -1,12 +1,10 @@
 (ns de.explorama.frontend.indicator.event-logging
-  (:require [ajax.core :as ajax]
-            [cljs.reader :as edn]
-            [de.explorama.frontend.indicator.event-replay :as e-replay]
-            [de.explorama.frontend.common.event-logging.util :as log-util]
+  (:require [de.explorama.frontend.common.event-logging.util :as log-util]
             [de.explorama.frontend.common.frontend-interface :as fi]
-            [re-frame.core :as re-frame]
             [de.explorama.frontend.indicator.config :as config]
-            [taoensso.timbre :refer [debug error]]))
+            [de.explorama.frontend.indicator.event-replay :as e-replay]
+            [re-frame.core :as re-frame]
+            [taoensso.timbre :refer [debug]]))
 
 (def event-version 1.0)
 
@@ -51,7 +49,7 @@
        (debug "no event-function found for " [event-name event-version])
        nil))))
 
-(defn- action-desc [base-op action both only-old only-new]
+(defn- action-desc [_base-op action _both _only-old _only-new]
   (case action
     nil))
 

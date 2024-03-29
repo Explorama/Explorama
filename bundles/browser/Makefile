@@ -47,6 +47,12 @@ prepare-test:
 test: prepare-test
 	lein test
 
+test-backend: prepare-test
+	lein test-backend
+
+test-frontend: prepare-test
+	lein test-frontend
+
 prepare-prod: build_mode=prod
 prepare-prod: clean-before install assets compile
 	cp -rf resources/index.html ${dist_folder}/index.html 

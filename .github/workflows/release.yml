@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        type: string
+        required: true
+      previous_release_version:
+        description: 'Previous release version'
+        type: string
+        required: true
+      draft:
+        description: 'draft?'
+        type: boolean
+        default: false
+        required: false
+      prerelease:
+        description: 'prerelease?'
+        type: boolean
+        default: false
+        required: false
+    branches:
+      - main
+
+env:
+  WINEPREFIX: ${{ github.workspace }}/home/.wine # this is a workaround for wine
+  HOME: ${{ github.workspace }}/home # this is a workaround for wine
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/explorama/images/deploy-image:latest
+    steps:
+    - name: Ensure permissions # workaround for newer git versions
+      run: |
+        chown $(whoami) -R .
+    - uses: actions/checkout@v4
+      with:
+        set-safe-directory: '*'
+        fetch-tags: true
+    - name: fetch tags # Fetching tags fetch tags seems not to work
+      run: |
+        git fetch --tags
+        git tag
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
+    - name: Browser build
+      run: |
+        echo "--------- Compile Browser version ---------"
+        cd bundles/browser
+        make prepare-prod
+        make bundle
+        cd ../../dist/
+        mv *.zip ../
+        echo "--------- done ---------"
+    - name: Electron win build
+      run: |
+        echo "--------- Compile Electron (windows) version ---------"
+        cd bundles/electron
+        make prepare-prod target_platform=win
+        mv ../../dist/electron ../../dist/electron-win
+        cd ../../
+        mv dist/electron-win dist/electron
+        cd bundles/electron
+        make bundle-win
+        cd ../../dist/electron
+        mv *.exe ../../
+        echo "--------- done ---------"
+    - name: Electron linux build
+      run: |
+        echo "--------- Compile Electron (linux) version ---------"
+        cd bundles/electron
+        make prepare-prod target_platform=linux
+        mv ../../dist/electron ../../dist/electron-linux
+        cd ../../
+        mv dist/electron-linux dist/electron
+        cd bundles/electron
+        make bundle-linux
+        cd ../../dist/electron
+        mv *.AppImage ../../
+        echo "--------- done ---------"
+    - name: Generate change log
+      run: |
+        git log --pretty="- %s" ${{ github.event.inputs.previous_release_version }}..HEAD > CHANGELOG.md
+        bb tools/changelog/changelog.clj
+    - name: Changelog and version
+      run: |
+        echo "--------- Changelog ---------"
+        cat CHANGELOG.md
+        echo "--------- Version ---------"
+        echo ${{ github.event.inputs.release_version }}
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v0.1.15
+      env:
+          GITHUB_REPOSITORY: explorama/explorama
+      with:
+        tag_name: ${{ github.event.inputs.release_version }}
+        name: ${{ github.event.inputs.release_version }}
+        body_path: CHANGELOG.md
+        files: |
+          ./Explorama-browser.zip
+          ./Explorama-linux.AppImage
+          ./Explorama-windows-portable.exe
+          ./Explorama-windows-setup.exe
+        draft: ${{ github.event.inputs.draft }}
+        prerelease: ${{ github.event.inputs.prerelease }}

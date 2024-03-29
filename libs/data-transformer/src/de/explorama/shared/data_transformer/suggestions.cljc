@@ -19,6 +19,9 @@
 (def ^:private complex-decimal-schema-en #"^[\-]{0,1}([1-9]\d{0,2}(,?\d{3})*|0)(\.\d+)+$")
 (def ^:private complex-integer-schema-en #"^[\-]{0,1}([1-9]\d{0,2}(,?\d{3})*|0)$")
 
+(def ^:private pow-decimal-schema-de #"^[\-]{0,1}\d{1}\,\d+[Ee]{1}[\-]{0,1}\d+$")
+(def ^:private pow-decimal-schema-en #"^[\-]{0,1}\d{1}\.\d+[Ee]{1}[\-]{0,1}\d+$")
+
 (def ^:private simple-decimal-schema-de #"^[\-]{0,1}[\d]+\,\d+$")
 (def ^:private complex-decimal-schema-de #"^[\-]{0,1}([1-9]\d{0,2}(.?\d{3})*|0)(\,\d+)+$")
 (def ^:private complex-integer-schema-de #"^[\-]{0,1}([1-9]\d{0,2}(.?\d{3})*|0)$")
@@ -26,18 +29,22 @@
 (defn- check-numbers [_ value]
   (cond (re-find simple-integer-schema-en value)
         {:type :integer}
+        (re-find complex-integer-schema-en value)
+        {:type :integer}
+        (re-find complex-integer-schema-de value)
+        {:type :integer}
         (re-find simple-decimal-schema-en value)
+        {:type :decimal}
+        (re-find simple-decimal-schema-de value)
         {:type :decimal}
         (re-find complex-decimal-schema-en value)
         {:type :decimal}
-        (re-find complex-integer-schema-en value)
-        {:type :integer}
-        (re-find simple-decimal-schema-de value)
-        {:type :decimal}
         (re-find complex-decimal-schema-de value)
         {:type :decimal}
-        (re-find complex-integer-schema-de value)
-        {:type :integer}
+        (re-find pow-decimal-schema-de value)
+        {:type :decimal}
+        (re-find pow-decimal-schema-en value)
+        {:type :decimal}
         :else nil))
 
 (def ^:private date-schema-1 #"^(\d{2})([\/\-\.])(\d{2})([\/\-\.])(\d{4})$")
@@ -62,6 +69,10 @@
 (def ^:private date-schema-15 #"^([a-zA-Z]{3})\.\ (\d{1,2})\,\ (\d{4})$")
 (def ^:private date-schema-16 #"^([a-zA-Z]{3})\.\ (\d{1,2})\,\ (\d{2})$")
 
+(def ^:private date-schema-17 #"^(\d{4})$")
+(def ^:private date-schema-18 #"^(\d{2})([\/\-\.])(\d{4})$")
+(def ^:private date-schema-19 #"^(\d{4})([\/\-\.])(\d{2})$")
+
 (defn- check-dates [_ value]
   ;TODO r1/mapping this could maybe faster if there is a regex/parser/lib checking all variants
   (loop [schemas [[date-schema-1 "dd.MM.YYYY" true]
@@ -79,7 +90,10 @@
                   [date-schema-13 "dd MMM. YY" false]
                   [date-schema-14 "dd MMM. YYYY" false]
                   [date-schema-15 "MMM. dd, YYYY" false]
-                  [date-schema-16 "MMM. dd, YY" false]]]
+                  [date-schema-16 "MMM. dd, YY" false]
+                  [date-schema-17 "YYYY" false]
+                  [date-schema-18 "MM.YYYY" true]
+                  [date-schema-19 "YYYY.MM" true]]]
     (if (empty? schemas)
       nil
       (let [[schema field-schema replace-dot?] (first schemas)
@@ -125,6 +139,13 @@
     {:type :text}
     nil))
 
+(defn- check-string [_ value]
+  ;TODO r1/mapping what is a good number?
+  (if (< (count value) 40)
+    {:type :string
+     :context? true}
+    nil))
+
 (defn- find-types [{{check-lines :check-lines} :suggestions}
                    content]
   (reduce (fn [acc row]
@@ -132,7 +153,7 @@
                          (update acc
                                  col-name
                                  (fnil conj [])
-                                 (loop [funcs [check-types check-dates check-locations check-numbers check-text check-ids]]
+                                 (loop [funcs [check-types check-dates check-locations check-numbers check-ids check-text check-string]]
                                    (if (empty? funcs)
                                      {:type :string}
                                      (if-let [result ((first funcs) col-name value)]
@@ -146,24 +167,29 @@
                 content)))
 
 (def ^:private type-priority
-  {:id 0
-   :location 1
-   :date 2
-   :number 3
-   :text 4
-   :string 5})
+  {[:id nil] 0
+   [:location nil] 1
+   [:date nil] 2
+   [:integer nil] 3
+   [:decimal nil] 3
+   [:text nil] 4
+   [:string true] 4
+   [:string nil] 5
+   [:default nil] 6})
 
 (defn- priotize-types [types]
   (reduce-kv (fn [acc col-name col-types]
                (let [col-types (set col-types)
                      priotize-type (reduce (fn [final-type type]
-                                             (if (< (get type-priority (:type type) 0)
-                                                    (get type-priority (:type final-type) 0))
+                                             (if (< (get type-priority [(:type type) (:context? type)] 6)
+                                                    (get type-priority [(:type final-type) (:context? type)] 6))
                                                type
                                                final-type))
-                                           {:type :string}
+                                           {:type :default}
                                            col-types)]
-                 (assoc acc col-name priotize-type)))
+                 (assoc acc col-name (if (= priotize-type {:type :default})
+                                       {:type :string}
+                                       priotize-type))))
              {}
              types))
 
@@ -172,7 +198,8 @@
    :name [:value (str/lower-case col-name)]
    :type [:value (case type
                    :integer "integer"
-                   :decimal "decimal")]})
+                   :decimal "decimal"
+                   :string "string")]})
 
 (defn- context [[col-name _]]
   {:name [:field col-name]
@@ -204,9 +231,11 @@
       [:field col-name])
     [:id-rand :uuid]))
 
-(defn- filter-types [types fitler-pred]
-  (filter (fn [[_ {:keys [type]}]]
-            (fitler-pred type))
+(defn- filter-types [types filter-pred]
+  (filter (fn [[_ {:keys [type] :as desc}]]
+            (if (set? filter-pred)
+              (filter-pred type)
+              (filter-pred desc)))
           types))
 
 (defn create [desc content]
@@ -214,11 +243,16 @@
         types (find-types desc content)
         types (priotize-types types)
         global-ids (filter-types types #{:id})
-        facts (filter-types types #{:decimal :integer})
+        facts (filter-types types (fn [{:keys [type context?]}]
+                                    (or (#{:decimal :integer} type)
+                                        (and (= type :string)
+                                             (not context?)))))
         locations (filter-types types #{:location})
         dates (filter-types types #{:date})
         texts (filter-types types #{:text})
-        contexts (filter-types types #{:string})
+        contexts (filter-types types (fn [{:keys [type context?]}]
+                                       (and (= type :string)
+                                            context?)))
         desc (merge desc
                     {:mapping {:datasource {:name [:value data-source-name]
                                             :global-id [:value (str "source-" (str/lower-case data-source-name))]}

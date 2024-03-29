@@ -22,10 +22,10 @@
                                  ws-api/based-events-route projects-api/based-events
                                  ws-api/load-head-route projects-api/load-head
                                  ws-api/delete-project-route projects-api/delete-project
+                                 ws-api/search-projects-route projects-api/direct-search
 
                                  ws-api/project-sync-event-route (partial default-fn ws-api/project-sync-event-route)
                                  ws-api/re-connect-route (partial default-fn ws-api/re-connect-route)
-                                 ws-api/search-projects-route (partial default-fn ws-api/search-projects-route)
                                  ws-api/create-snapshot-route (partial default-fn ws-api/create-snapshot-route)
                                  ws-api/delete-snapshot-route (partial default-fn ws-api/delete-snapshot-route)
                                  ws-api/server-loaded-project-route (partial default-fn ws-api/server-loaded-project-route)

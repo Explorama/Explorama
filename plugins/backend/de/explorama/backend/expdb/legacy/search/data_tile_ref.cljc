@@ -27,9 +27,9 @@
                              (dissoc value :i :type :label)
                              value)))
           {}
-          (dissoc attr-d :timestamp :valid? :advanced)))
+          (dissoc attr-d :timestamp :valid?)))
 
-(def ^:private type-strip-list #{"decimal" "integer" "notes" "External-ref" "boolean"})
+(def ^:private type-strip-list #{"decimal" "integer" "notes" "boolean"})
 
 (defn- data-tile-reduce-formdata [attribute-types formdata]
   (tufte/p ::calc-reduce-formdata

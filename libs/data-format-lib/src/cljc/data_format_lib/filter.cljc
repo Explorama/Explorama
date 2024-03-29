@@ -1,5 +1,4 @@
 (ns data-format-lib.filter
-  "Namespace containing the specifications of filters on data and the specifications for filter."
   (:require [clojure.walk :as walk]
             [cuerdas.core :as str]
             [data-format-lib.dates :as dates]
@@ -23,8 +22,7 @@
   [:schema {:registry filter-registry}
    return])
 
-(def filter? (m/validator (filter-spec ::preds)))
-(def pred? (m/validator (filter-spec ::pred)))
+(def ^:private pred? (m/validator (filter-spec ::pred)))
 
 (defn- in [v coll & _]
   (contains? (set coll) v))
@@ -61,9 +59,6 @@
               (<= p-long top-right-long)))))
 
 (defn- standard-op
-  "map of operator keywords to functions:
-  property value, predicate value -> boolean
-  pred-value might be a collection in conjunction with operator 'in'."
   [op]
   (get
    {:not=      (wrapper not=)
@@ -84,21 +79,7 @@
     :not-in-geo-rect (complement in-geo-rect)}
    op))
 
-(defn- standard-op-annotations
-  [instance op]
-  (let [op-fn (standard-op op)]
-    (fn [data-val pred-val extra]
-      (op-fn (ff/get instance data-val "content")
-             pred-val
-             extra))))
-
-(defn- number-op
-  "only contains to special cases
-   := and :not=.
-   Reasoning behind this is when the filter is for example = 1
-   and the data-value is 1.0 then the filter will return false.
-   With the == and the complement this will also work."
-  [op]
+(defn- number-op [op]
   (get {:= (safe ==)
         :not= (complement (safe ==))}
        op
@@ -122,30 +103,9 @@
     :last-x-years (partial dates/last-x-years instance)}
    op))
 
-(def ^:private get-conj
-  {:and (partial every? true?)
-   :or  (partial some true?)})
-
-(defn all-filter-maps
-  "Returns all filter-maps with they respective path."
-  [acc f-path f]
-  (if (map? f)
-    (conj acc [f-path [f]])
-    (mapcat #(all-filter-maps
-              acc
-              (conj f-path (first f))
-              %)
-            (rest f))))
-
-;------------------------------------------------------------------
-; Functions to help with compiling a single function from a filter definition
-
-(def filter-leaf? map?)
+(def ^:private filter-leaf? map?)
 
 (defn- filter-op?
-  "Returns true iff _node_ is a filter operation,
-  which is [:and|:or fn_1 fn_2 ... fn_n]"
-  ;; Beware: Intermediate nodes in clojure.walk are also vectors, so testing for vector is not enough here.
   [node]
   (and (sequential? node)
        (#{:and :or} (first node))))
@@ -153,11 +113,9 @@
 (defn- filter-func [instance {prop ::prop op ::op val ::value extra ::extra-val}]
   (let [date-filter? (= prop ::dates/full-date)
         number-filter? (number? val)
-        annotation? (= "annotation" prop)
         op-func (cond
                   date-filter? (date-op instance op)
                   number-filter? (number-op op)
-                  annotation? (standard-op-annotations instance op)
                   :else (standard-op op))
         pred-val (if (and val date-filter?)
                    (dates/parse val)
@@ -169,16 +127,14 @@
       (let [data-val (ff/get instance data prop)]
         (boolean
          (if (or (not (ff/coll? instance data-val))
-                 date-filter?
-                 annotation?)
+                 date-filter?)
            (op-func data-val pred-val extra)
            (coll-fn instance
                     #(op-func % pred-val extra)
                     data-val)))))))
 
 (defn- merge-operation-function
-  "Merges one (trivial) or more functions in one and/or operation."
-  ([op function]
+  ([_op function]
    function)
   ([op function & more-functions]
    (let [op-fn (comp boolean ({:or  some
@@ -189,18 +145,13 @@
 (defn- compile* [instance filter-node]
   (cond (filter-leaf? filter-node) (filter-func instance filter-node)
         (filter-op? filter-node) (apply merge-operation-function filter-node)
-        :default filter-node))
+        :else filter-node))
 
 (defn- compile-filter
-  "Create a single function executing the filter description, i.e. a predicate returning true or false when called on a
-  data element."
   [instance filter-definition]
   (walk/postwalk (partial compile* instance) filter-definition))
 
-;------------------------------------------------------------------
-
 (defn group-by-data
-  "Applies a filter to a collection of maps"
   [instance f ms]
   (as-> f $
     (compile-filter instance $)
@@ -209,35 +160,31 @@
     (ff/update instance $ false #(or % (ff/->ds instance [])))))
 
 (defn filter-data
-  "Applies a filter to a collection of maps"
   [instance f ms]
   (as-> f $
     (compile-filter instance $)
     (ff/filterv instance $ ms)))
 
 (defn check-datapoint
-  "Test if one single datapoint conforms to the given filter-definition.
-   Returns true/false."
   [instance f datapoint]
   (as-> f $
     (compile-filter instance $)
     ($ datapoint)))
 
-;; ==== predicate logic =============================
-(def antagonist {:=      :not=
-                 :not=   :=
+(def ^:private antagonist {:=      :not=
+                           :not=   :=
 
-                 :<=     :>
-                 :>      :<=
+                           :<=     :>
+                           :>      :<=
 
-                 :or     :and
-                 :and    :or
+                           :or     :and
+                           :and    :or
 
-                 :<      :>=
-                 :>=     :<
+                           :<      :>=
+                           :>=     :<
 
-                 :in     :not-in
-                 :not-in :in})
+                           :in     :not-in
+                           :not-in :in})
 
 (defn negate [f]
   (cond

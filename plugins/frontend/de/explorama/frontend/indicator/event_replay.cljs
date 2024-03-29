@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.indicator.event-replay
   (:require [cljs.reader :as edn]
-            [de.explorama.frontend.indicator.config :as config]
             [de.explorama.frontend.common.event-logging.util :as log-util]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.indicator.path :as ip]
@@ -99,11 +98,9 @@
 
 (re-frame/reg-event-fx
  ::replay-events
- (fn [{db :db} [_ events done-event plogs-id test-and-profile?]]
-   (let [{user :username} (fi/call-api :user-info-db-get db)
-         {events :result}
+ (fn [_ [_ events done-event plogs-id test-and-profile?]]
+   (let [{events :result}
          (pre-process-events events)]
-     (debug "INDICATOR REPLAY-EVENTS" events)
      {:dispatch [::next-replay-event
                  {:next-event (first events)
                   :rest-events (rest events)

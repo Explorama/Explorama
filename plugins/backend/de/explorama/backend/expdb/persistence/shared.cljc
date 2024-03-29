@@ -47,10 +47,7 @@
         dates))
 
 (defn- notes-> [text]
-  (cond (vector? text) (str/join "\n" text)
-        (string? text) text
-        :else
-        text))
+  text)
 
 #_datasource-gid
 (defn- datasource-> [datasource]
@@ -140,7 +137,7 @@
                                                           "year" "Date"
                                                           "month" "Date"
                                                           "day" "Date"}
-                                                   (not (str/blank? notes))
+                                                   (not-empty notes)
                                                    (assoc "notes" "Notes"))
                                                  (reduce (fn [acc [type]]
                                                            (assoc acc type "Context"))

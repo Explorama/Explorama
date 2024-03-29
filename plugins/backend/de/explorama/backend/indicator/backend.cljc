@@ -14,7 +14,7 @@
 (defn- default-fn [name & _]
   (warn "Not yet implemented" name))
 
-(defn indicator-ui-descriptions [{:keys [client-callback]}]
+(defn indicator-ui-descriptions [{:keys [client-callback]} & _]
   (client-callback config-indicator/explorama-indicator-ui))
 
 (defn init []

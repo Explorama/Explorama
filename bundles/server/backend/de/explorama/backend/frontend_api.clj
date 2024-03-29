@@ -109,15 +109,15 @@
     (route-fn (cond-> {:tube tube
                        :user-info user-info
                        :client-id client-id
-                       :broadcast-callback (fn [& params]
+                       :broadcast-callback (fn [& _params]
                                              (when broadcast-callback
                                                (warn (str "Not yet implemented" :broadcast-callback))))
                        :failed-callback (fn [& params]
                                           (when failed-callback
                                             (dispatch tube (apply conj failed-callback params))))
-                       :broadcast-notify-fn (fn [& params]
+                       :broadcast-notify-fn (fn [& _params]
                                               (warn (str "Not yet implemented" :broadcast-notify-fn)))
-                       :notify-fn (fn [& params]
+                       :notify-fn (fn [& _params]
                                     (warn (str "Not yet implemented" :notify-fn)))
                        :client-callback (fn [& params]
                                           (when client-callback

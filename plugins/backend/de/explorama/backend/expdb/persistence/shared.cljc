@@ -47,7 +47,10 @@
         dates))
 
 (defn- notes-> [text]
-  text)
+  (cond (vector? text) (str/join "\n" text)
+        (string? text) text
+        :else
+        text))
 
 #_datasource-gid
 (defn- datasource-> [datasource]

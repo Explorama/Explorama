@@ -46,7 +46,7 @@ jobs:
         git fetch --tags
         git tag
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2/repository
         key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
@@ -97,7 +97,7 @@ jobs:
         echo ${{ github.event.inputs.release_version }}
     - name: Create Release
       id: create_release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/softprops/action-gh-release@v0.1.15
       env:
           GITHUB_REPOSITORY: explorama/explorama
       with:

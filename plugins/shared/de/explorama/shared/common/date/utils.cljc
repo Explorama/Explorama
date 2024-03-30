@@ -20,18 +20,20 @@
                         3
                         :else
                         4)])
-      {:day [year month day]
-       :year [year]
-       :month [year month]
-       :quarter [year
-                 (cond (< month 4)
-                       1
-                       (< month 7)
-                       2
-                       (< month 10)
-                       3
-                       :else
-                       4)]})))
+      (let [month (or month 1)
+            day (or day 1)]
+        {:day [year month day]
+         :year [year]
+         :month [year month]
+         :quarter [year
+                   (cond (< month 4)
+                         1
+                         (< month 7)
+                         2
+                         (< month 10)
+                         3
+                         :else
+                         4)]}))))
 
 (defn complete-date [num]
   (let [num (str num)]

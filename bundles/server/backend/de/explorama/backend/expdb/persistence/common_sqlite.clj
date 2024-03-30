@@ -20,8 +20,8 @@
     (loop [result []]
       (if (.next result-set)
         (recur (conj result
-                     [(edn/read-string (.getString "key"))
-                      (edn/read-string (.getString "value"))]))
+                     [(edn/read-string (.getString result-set "key"))
+                      (edn/read-string (.getString result-set "value"))]))
         (into {} result)))
     []))
 
@@ -102,12 +102,10 @@
   (let [stm (str "SELECT key, value FROM " (table-name bucket) " WHERE key IN ( " (str/join " , " (map (fn [_] "?") (range (count keys)))) " )")
         ^Connection db (create-db db-key bucket)]
     (try
-      (let [_ (.setAutoCommit db false)
-            ^Statement dbstm (jdbc/prepare-statement db stm)
+      (let [^Statement dbstm (jdbc/prepare-statement db stm)
             _ (doseq [[idx key] (map-indexed vector keys)]
-                (.setString dbstm (inc idx) (pr-str key))
-                (.executeQuery dbstm))
-            result (.commit db)
+                (.setString dbstm (inc idx) (pr-str key)))
+            result (.executeQuery dbstm)
             result (collect-result result)]
         result)
       (catch Throwable e
@@ -124,8 +122,8 @@
       (let [_ (.setAutoCommit db false)
             dbstm (jdbc/prepare-statement db stm)
             _ (doseq [[idx key] (map-indexed vector keys)]
-                (.setString dbstm (inc idx) (pr-str key))
-                (.executeUpdate dbstm))
+                (.setString dbstm (inc idx) (pr-str key)))
+            _ (.executeUpdate dbstm)
             result (.commit db)]
         result)
       (catch Throwable e

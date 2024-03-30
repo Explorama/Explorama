@@ -7,14 +7,6 @@
 
 (def ^:private db-key "de.explorama.backend.expdb.simple.sqlite3")
 
-(def ^:private root-key "/de.explorama.backend.expdb/")
-
-(defn- base-key [schema]
-  (str root-key
-       "simple/"
-       schema
-       "/"))
-
 (deftype Backend [bucket config]
   itf/Simple
 
@@ -45,8 +37,7 @@
     (let [stm (str "SELECT key, value FROM " (table-name bucket))
           db (create-db db-key bucket)]
       (try
-        (let [_ (.setAutoCommit db false)
-              result (.executeQuery (.prepareStatement db stm))
+        (let [result (.executeQuery (.prepareStatement db stm))
               result (collect-result result)]
           result)
         (catch Throwable e

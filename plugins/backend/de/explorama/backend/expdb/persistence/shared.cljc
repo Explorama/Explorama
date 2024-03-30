@@ -1,6 +1,5 @@
 (ns de.explorama.backend.expdb.persistence.shared
   (:require [clojure.set :as set]
-            [clojure.string :as str]
             [de.explorama.backend.common.middleware.cache-invalidate :as cache-invalidate]
             [de.explorama.backend.expdb.buckets :as buckets]
             [de.explorama.backend.expdb.legacy.search.attribute-characteristics.core :as legacy-core]

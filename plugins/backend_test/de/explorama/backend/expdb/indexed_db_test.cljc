@@ -173,7 +173,8 @@
               "type" "type1",
               "date" "1997",
               "notes" "test text",
-              "fact2" 2}
+              "fact2" #?(:cljs 2
+                         :clj 2.0)}
              {"org" ["org1" "org2"],
               "fact1" 2,
               "country" "country1",
@@ -183,7 +184,8 @@
               "type" "type1",
               "date" "1997-01",
               "notes" "test text",
-              "fact2" 1}],
+              "fact2" #?(:cljs 1
+                         :clj 1.0)}],
    dt-key-2 [{"org" ["org3" "org4"],
               "fact1" 3,
               "country" "country2",
@@ -193,7 +195,8 @@
               "type" "type1",
               "date" "1998-01-05",
               "notes" "test text",
-              "fact2" 4}],
+              "fact2" #?(:cljs 4
+                         :clj 4.0)}],
    dt-key-3 [{"org" ["org5" "org6"],
               "country" "country3",
               "id" "i3",
@@ -202,7 +205,8 @@
               "type" "type2",
               "date" "1996-01-02",
               "notes" "test text",
-              "fact2" 2,
+              "fact2" #?(:cljs 2
+                         :clj 2.0),
               "fact3" 1}],
    dt-key-4 [{"org" ["org7" "org8"],
               "country" "country2",
@@ -212,7 +216,8 @@
               "type" "type2",
               "date" "1998-01-05",
               "notes" "test text",
-              "fact2" 4,
+              "fact2" #?(:cljs 4
+                         :clj 4.0),
               "fact3" 3}]})
 
 (deftest import-and-delete-tests

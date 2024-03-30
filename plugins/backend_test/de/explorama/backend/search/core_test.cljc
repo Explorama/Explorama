@@ -10,12 +10,10 @@
 (def formdata [[["datasource" "Datasource"] {:values ["datasource-1"], :timestamp 1643369508621, :valid? true}]
                [["country" "Context"] {:values ["country1"], :timestamp 1643369512702, :valid? true}]])
 
-(def gen-di-result #:di{:data-tile-ref {#?(:clj "ebc12d8f3c27c2031d00844089ac8265b522e7ed56bc117be124608628073fe3"
-                                           :cljs "011a05e289bcb4fb6f8cc40d08bb3760ec309fd8eb81fcc9b4112f9486cac512")
+(def gen-di-result #:di{:data-tile-ref {"011a05e289bcb4fb6f8cc40d08bb3760ec309fd8eb81fcc9b4112f9486cac512"
                                         {:di/identifier "search",
                                          :formdata "[[[\"datasource\" \"Datasource\"] {:values [\"datasource-1\"], :timestamp 1643369508621, :valid? true}] [[\"country\" \"Context\"] {:values [\"country1\"], :timestamp 1643369512702, :valid? true}]]"}},
-                        :operations [:filter "0b5a3a3424f0239ff14443540c3ae259fbf2bd3b4768e2596d2826562878a3b8" #?(:clj "ebc12d8f3c27c2031d00844089ac8265b522e7ed56bc117be124608628073fe3"
-                                                                                                                   :cljs "011a05e289bcb4fb6f8cc40d08bb3760ec309fd8eb81fcc9b4112f9486cac512")],
+                        :operations [:filter "0b5a3a3424f0239ff14443540c3ae259fbf2bd3b4768e2596d2826562878a3b8" "011a05e289bcb4fb6f8cc40d08bb3760ec309fd8eb81fcc9b4112f9486cac512"],
                         :filter {"0b5a3a3424f0239ff14443540c3ae259fbf2bd3b4768e2596d2826562878a3b8" [:and]}})
 
 (deftest test-gen-di

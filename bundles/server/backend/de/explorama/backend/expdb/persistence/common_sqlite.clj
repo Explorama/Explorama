@@ -116,7 +116,7 @@
       (finally (db-close db)))))
 
 (defn db-del+ [db-key bucket keys]
-  (let [stm (str "DELETE FROM " (table-name bucket) " WHERE key = ?")
+  (let [stm (str "DELETE FROM " (table-name bucket) " WHERE key IN ( " (str/join " , " (map (fn [_] "?") (range (count keys)))) " )")
         ^Connection db (create-db db-key bucket)]
     (try
       (let [_ (.setAutoCommit db false)

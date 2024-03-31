@@ -251,18 +251,18 @@
                     ;; :pretty-print    true
                     ;; :verbose true
 
-    {:id           "test"
-     :source-paths ~(vec (:frontend-test-paths source-folders))
-     :compiler     {:main            de.explorama.frontend.runner
-                    :output-to       "resources/public/js/compiled/test.js"
-                    :output-dir      "resources/public/js/compiled/test/out"
-                    :asset-path      "base/resources/public/js/compiled/test/out"
+    {:id           "test-frontend"
+     :source-paths ~(:frontend-test-paths source-folders)
+     :compiler     {:main          de.explorama.frontend.runner
+                    :output-to     "resources/public/js/compiled/test.js"
+                    :output-dir    "resources/public/js/compiled/test/out"
+                    :asset-path    "base/resources/public/js/compiled/test/out"
                     :closure-defines ~dev-envs
-                    :parallel-build  true
-                    :optimizations   :none
+                    :parallel-build true
+                    :optimizations :none
                     :language-in     :ecmascript-next}}]}
 
-  :doo {:build "test"
+  :doo {:build "test-frontend"
         :alias {:default [:chrome-headless]}
         :coverage {:packages ["de.explorama.*"]}
         :karma
@@ -273,20 +273,25 @@
          :config {"customLaunchers" {"Chrome_no_security" {"base" "Chrome"}}
                   "reporters" ["progress"  "coverage"]
                   "coverageReporter" {"dir" "target/coverage/"
-                                      "reporters" [{"type" "text"
-                                                    "subdir" "."
-                                                    "file" "coverage.txt"}
-                                                   {"type" "text-summary"
-                                                    "subdir" "."
-                                                    "file" "text-summary.txt"}
-                                                   {"type" "json-summary"
-                                                    "subdir" "."
-                                                    "file" "json-summary.json"}
-                                                   {"type" "html"
+                                      "reporters" [{"type" "html"
                                                     "subdir" "report-html"}
                                                    {"type" "cobertura"
                                                     "subdir" "."
                                                     "file" "cobertura.xml"}]}}}}
+
+  :aliases {"test-frontend" ["do"
+                             ["with-profile" "test" "doo" "chrome-headless" "test-frontend" "once"]]
+              ;; "build" ["do"
+              ;;          "clean"
+              ;;          ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-dist-folder)]
+              ;;          ["shell" ~shell-exec "gather-assets.sh" "prod"]
+              ;;          ["with-profile" "build" "cljsbuild" "once" "min"]
+              ;;          ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-dist-folder "js" "woco-sources")]]
+            "build-benchmark" ["do"
+                               ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-profiling-dist-folder)]
+                               ["shell" ~shell-exec "gather-assets.sh" "benchmark"]
+                               ["with-profile" "build" "cljsbuild" "once" "min-benchmark"]
+                               ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-profiling-dist-folder "js" "woco-sources")]]}
 
   :clean-targets ^{:protect false} ["target" "resources/public"]
 

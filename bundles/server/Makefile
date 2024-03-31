@@ -42,13 +42,14 @@ prepare-test:
 	npm install -g karma-cli 
 	npm install karma@6.4.1 karma-coverage karma-chrome-launcher karma-cljs-test karma-junit-reporter karma-htmlfile-reporter --save-dev
 
-test: prepare-test
-	lein test
-
-test-backend: lein test-backend
+test-backend: lein test
 
 test-frontend: prepare-test
 	lein test-frontend
+
+test: prepare-test
+	lein test-frontend
+	lein test
 
 prepare-prod: build_mode=prod
 prepare-prod: clean-before install assets compile

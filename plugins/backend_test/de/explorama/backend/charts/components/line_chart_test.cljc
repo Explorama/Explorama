@@ -102,7 +102,7 @@
      :data '()
      :legend {:shape :line, :color "#0067b2"}}]})
 
-;;TODO r1/charts fix this test
+;;TODO r1/tests fix this test
 #_(deftest line-chart
     (testing "monthly-line-chart"
       (is (= line-chart-month

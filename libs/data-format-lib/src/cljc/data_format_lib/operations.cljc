@@ -1651,44 +1651,47 @@
        (= 1 (count (:di/data-tile-ref data-instance)))))
 
 (defn transform [data-instance data-tile-lookup data-tile-retrieval & opts]
-  (let [{:keys [instance]
-         {data-tile-limit :data-tile-limit
-          result-limit :result-limit
-          result-chunk-size :result-chunk-size}
-         :abort-early
-         post-fn :post-fn
-         :or {instance ff/default-impl
-              result-chunk-size 1000000
-              post-fn identity}}
-        (when opts (apply hash-map opts))
-        _ (when result-limit
-            (assert (ensure-simple-operations data-instance)
-                    "Result-limit is only allowed for simple operations [:filter \"some-filter\" \"some-data-tile-set\"]"))
-        data-tile-set (retreive-data-tiles (:di/data-tile-ref data-instance)
-                                           data-tile-lookup
-                                           data-tile-retrieval
-                                           data-tile-limit
-                                           opts)]
-    (post-fn
-     (if result-limit
-       (let [data-set-key (first (keys data-tile-set))
-             result
-             (reduce (fn [acc data-tile-set]
-                       (if (<= result-limit (count acc))
-                         (throw (ex-info "Result limited exceeded"
-                                         {:events (count acc)
-                                          :reason :result-limit}))
-                         (into acc
-                               (perform-operation data-tile-set
-                                                  (:di/filter data-instance)
-                                                  (:di/operations data-instance)
-                                                  instance))))
-                     []
-                     (map (fn [partial-data-tile-set]
-                            {data-set-key (vec partial-data-tile-set)})
-                          (partition-all result-chunk-size (first (vals data-tile-set)))))]
-         result)
-       (perform-operation data-tile-set
-                          (:di/filter data-instance)
-                          (:di/operations data-instance)
-                          instance)))))
+  (if-not data-instance
+    (do (warn "Data-instance is nil")
+        [])
+    (let [{:keys [instance]
+           {data-tile-limit :data-tile-limit
+            result-limit :result-limit
+            result-chunk-size :result-chunk-size}
+           :abort-early
+           post-fn :post-fn
+           :or {instance ff/default-impl
+                result-chunk-size 1000000
+                post-fn identity}}
+          (when opts (apply hash-map opts))
+          _ (when result-limit
+              (assert (ensure-simple-operations data-instance)
+                      "Result-limit is only allowed for simple operations [:filter \"some-filter\" \"some-data-tile-set\"]"))
+          data-tile-set (retreive-data-tiles (:di/data-tile-ref data-instance)
+                                             data-tile-lookup
+                                             data-tile-retrieval
+                                             data-tile-limit
+                                             opts)]
+      (post-fn
+       (if result-limit
+         (let [data-set-key (first (keys data-tile-set))
+               result
+               (reduce (fn [acc data-tile-set]
+                         (if (<= result-limit (count acc))
+                           (throw (ex-info "Result limited exceeded"
+                                           {:events (count acc)
+                                            :reason :result-limit}))
+                           (into acc
+                                 (perform-operation data-tile-set
+                                                    (:di/filter data-instance)
+                                                    (:di/operations data-instance)
+                                                    instance))))
+                       []
+                       (map (fn [partial-data-tile-set]
+                              {data-set-key (vec partial-data-tile-set)})
+                            (partition-all result-chunk-size (first (vals data-tile-set)))))]
+           result)
+         (perform-operation data-tile-set
+                            (:di/filter data-instance)
+                            (:di/operations data-instance)
+                            instance))))))

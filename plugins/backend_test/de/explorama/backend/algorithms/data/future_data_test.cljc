@@ -7,6 +7,15 @@
             [de.explorama.backend.algorithms.test-env]
             [de.explorama.shared.common.test-data :as td]))
 
+(def some-number-1 #?(:cljs 22.857142857142854
+                      :clj 22.857142857142858))
+(def some-number-2 #?(:cljs 13.428571428571427
+                      :clj 13.428571428571429))
+(def some-number-3 #?(:cljs 10.844814241486066
+                      :clj 10.844814241486068))
+(def some-number-4 #?(:cljs 11.128482972136222
+                      :clj 11.128482972136224))
+
 (def attributes-structure-future-1
   {:algorithm :lmmr
    :attributes {:dependent-variable [{:value td/fact-1
@@ -561,11 +570,11 @@
                        data-3
                        {"date" 3}
                        [{"some-number-2" 10.0, "some-number" 19.5, "date" [2003]}
-                        {"some-number-2" 11.714285714285715, "some-number" 22.857142857142854, "date" [2004]}
-                        {"some-number-2" 13.428571428571427, "some-number" 26.214285714285715, "date" [2005]}]
+                        {"some-number-2" 11.714285714285715, "some-number" some-number-1, "date" [2004]}
+                        {"some-number-2" some-number-2, "some-number" 26.214285714285715, "date" [2005]}]
                        {:data [{"date" 4, "some-number-2" 10.0, "some-number" 19.5}
-                               {"date" 5, "some-number-2" 11.714285714285715, "some-number" 22.857142857142854}
-                               {"date" 6, "some-number-2" 13.428571428571427, "some-number" 26.214285714285715}]
+                               {"date" 5, "some-number-2" 11.714285714285715, "some-number" some-number-1}
+                               {"date" 6, "some-number-2" some-number-2, "some-number" 26.214285714285715}]
                         :mapping {["date" [2003]] 4
                                   ["date" [2004]] 5
                                   ["date" [2005]] 6}})
@@ -574,10 +583,10 @@
                        data-3
                        {"date" 3}
                        [{"some-number-2" 13, "some-number" 19.5, "date" [2003]}
-                        {"some-number-2" 14, "some-number" 22.857142857142854, "date" [2004]}
+                        {"some-number-2" 14, "some-number" some-number-1, "date" [2004]}
                         {"some-number-2" 15, "some-number" 26.214285714285715, "date" [2005]}]
                        {:data [{"date" 4, "some-number-2" 13, "some-number" 19.5}
-                               {"date" 5, "some-number-2" 14, "some-number" 22.857142857142854}
+                               {"date" 5, "some-number-2" 14, "some-number" some-number-1}
                                {"date" 6, "some-number-2" 15, "some-number" 26.214285714285715}]
                         :mapping {["date" [2003]] 4
                                   ["date" [2004]] 5
@@ -587,11 +596,11 @@
                        data-3
                        {"date" 28}
                        [{"some-number-2" 10, "some-number" 10.561145510835914, "date" [2002 3]}
-                        {"some-number-2" 11, "some-number" 10.844814241486066, "date" [2002 4]}
-                        {"some-number-2" 12, "some-number" 11.128482972136222, "date" [2002 5]}]
+                        {"some-number-2" 11, "some-number" some-number-3, "date" [2002 4]}
+                        {"some-number-2" 12, "some-number" some-number-4, "date" [2002 5]}]
                        {:data [{"date" 29, "some-number-2" 10, "some-number" 10.561145510835914}
-                               {"date" 30, "some-number-2" 11, "some-number" 10.844814241486066}
-                               {"date" 31, "some-number-2" 12, "some-number" 11.128482972136222}]
+                               {"date" 30, "some-number-2" 11, "some-number" some-number-3}
+                               {"date" 31, "some-number-2" 12, "some-number" some-number-4}]
                         :mapping {["date" [2002 3]] 29
                                   ["date" [2002 4]] 30
                                   ["date" [2002 5]] 31}})

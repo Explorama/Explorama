@@ -270,14 +270,14 @@
                                        #{nil})])))
           (persistent!)))))
 
-(defn- apply-calc-sum-by-others [grouped-result filtered-result {:keys [sum-by y-target-access sum-by-access y-axis year-month-workaround? attr group-attributes aggregation-desc]}]
+(defn- apply-calc-sum-by-others [grouped-result filtered-result {:keys [sum-by y-access sum-by-access y-axis year-month-workaround? attr group-attributes aggregation-desc]}]
   (let [{agg-default-value :default-value agg-need-attribute? :need-attribute?} (get relevant-aggregation-attributes y-axis)
         existing-sum-by-vals (set (map #(get % sum-by-access) (keys filtered-result)))
-        other-groups (reduce (fn [acc {attr-val y-target-access sum-by-val sum-by-access}]
+        other-groups (reduce (fn [acc {attr-val y-access sum-by-val sum-by-access}]
                                (cond-> acc
                                  (not (existing-sum-by-vals sum-by-val))
                                  (conj {sum-by-access remaining-group-name
-                                        y-target-access attr-val})))
+                                        y-access attr-val})))
                              []
                              grouped-result)
         group-attributes (if year-month-workaround?
@@ -293,10 +293,10 @@
                                          :always (conj [:group-by {:attributes group-attributes}])
                                          agg-need-attribute? (conj aggregation-desc)
                                                                        ;; handle for example number of events where we want to sum the number of events from other-groups
-                                         (not agg-need-attribute?) (conj [:sum {:attribute y-target-access}])
+                                         (not agg-need-attribute?) (conj [:sum {:attribute y-access}])
                                          :always (conj [:heal-event
                                                         {:policy :merge
-                                                         :descs [{:attribute y-target-access}]}]))))
+                                                         :descs [{:attribute y-access}]}]))))
       filtered-result)))
 
 (defn- gen-sum-by-op-desc [group-attributes date-keyword-attr?]

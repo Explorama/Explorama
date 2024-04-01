@@ -33,7 +33,7 @@ jobs:
         cd target/coverage
         lcov_cobertura lcov.info
         cd ../..
-        cp target/coverage/cobertura.xml cobertura_backend.xml
+        cp target/coverage/coverage.xml cobertura_backend.xml
     - name: Run frontend tests
       run: |
         lein test-frontend

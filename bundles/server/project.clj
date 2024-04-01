@@ -204,7 +204,8 @@
                               :css-dirs       ["resources/public/assets"]
                               #_#_:server-logfile false}
                    :source-paths ~(vec fixed-backend-dev-folders)}
-             :test {:dependencies [[doo "0.1.11"]]}
+             :test {:dependencies [[doo "0.1.11"]
+                                   [lein-cloverage "1.2.2"]]}
              :uberjar
              {:aot         :all
               :dependencies [[cljsjs/react "17.0.2-0-prod"]

@@ -63,7 +63,6 @@
                                    (add-to-path plugins-paths "shared_test")})
 
 (def fixed-backend-folders #{(add-to-path "backend")
-                             (add-to-path assets-paths)
                              (add-to-path plugins-paths "shared")
                              (add-to-path plugins-paths "backend")
                              (add-to-path libs-paths "cache" "src" "cljc")
@@ -180,6 +179,7 @@
                  [metosin/jsonista "0.3.8"]
                  [pneumatic-tubes/pneumatic-tubes "0.3.0" :exclusions [com.cognitect/transit-clj com.cognitect/transit-cljs]]
                  [ring/ring "1.10.0"]
+                 [ring-cors/ring-cors "0.1.1"]
 
                  ;SQLITE
                  [org.clojure/java.jdbc "0.7.12"]
@@ -208,13 +208,12 @@
              :test {:dependencies [[doo "0.1.11"]]}
              :uberjar
              {:aot         :all
-              :dependencies [[cljsjs/react "17.0.2-0-prod"]
-                             [cljsjs/react-dom "17.0.2-0-prod"]
-                             [cljsjs/react-dom-server "17.0.2-0-prod"]]
+              :dependencies [[cljsjs/react "17.0.2-0"]
+                             [cljsjs/react-dom "17.0.2-0"]
+                             [cljsjs/react-dom-server "17.0.2-0"]]
               :omit-source true
               :env         {:production true}
-              :prep-tasks  ["conf-template"
-                            ["cljsbuild" "once" "min"]
+              :prep-tasks  [["cljsbuild" "once" "min"]
                             "compile"]}}
 
   :source-paths ~(vec (:backend-paths source-folders))

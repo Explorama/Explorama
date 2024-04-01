@@ -52,10 +52,8 @@ test: prepare-test
 	lein test
 
 prepare-prod: build_mode=prod
-prepare-prod: clean-before install assets compile
-	cp -rf resources/index.html ${dist_folder}/index.html 
-	rm -rf ${dist_folder}/js/woco-sources
-	bb merge-build-assets.bb
+prepare-prod: clean-before install assets
+	compile
 	mv ${dist_folder} ${target_folder}
 
 bundle:  

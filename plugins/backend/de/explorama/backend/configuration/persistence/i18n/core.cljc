@@ -4,7 +4,8 @@
             [de.explorama.backend.configuration.persistence.labels.core :as persistence]
             [de.explorama.backend.frontend-api :as fapi]
             [de.explorama.shared.configuration.ws-api :as ws-api]
-            [i18n.translations :refer [translations]]
+            #?(:cljs [i18n.translations :refer [translations]]
+               :clj [server-i18n.translations :refer [load-translations]])
             [malli.core :as m]
             [taoensso.timbre :refer [error]]))
 
@@ -24,7 +25,8 @@
 
 (defn read-langfile []
   (or
-   (reset! langfile translations)
+   (reset! langfile #?(:cljs translations
+                       :clj (load-translations)))
    {}))
 
 (defn- validate-language [lang]

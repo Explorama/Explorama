@@ -28,7 +28,11 @@ jobs:
       run: make prepare-test
     - name: Run backend tests
       run: |
-        lein cloverage
+        pip install lcov_cobertura
+        lein cloverage --lcov
+        cd target/coverage
+        lcov_cobertura lcov.info
+        cd ../..
         cp target/coverage/cobertura.xml cobertura_backend.xml
     - name: Run frontend tests
       run: |

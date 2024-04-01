@@ -190,7 +190,8 @@
   :plugins [[lein-cljsbuild "1.1.8" :exclusions [org.apache.commons/commons-compress]]
             [lein-licenses "0.2.2"]
             [lein-shell "0.5.0"]
-            [lein-doo "0.1.11" :exclusions [org.clojure/clojure]]]
+            [lein-doo "0.1.11" :exclusions [org.clojure/clojure]]
+            [lein-cloverage "1.2.2"]]
   :min-lein-version "2.5.3"
   :profiles {:dev {:dependencies [[binaryage/devtools "1.0.7"]
                                   [nrepl "1.0.0"]
@@ -204,8 +205,7 @@
                               :css-dirs       ["resources/public/assets"]
                               #_#_:server-logfile false}
                    :source-paths ~(vec fixed-backend-dev-folders)}
-             :test {:dependencies [[doo "0.1.11"]
-                                   [lein-cloverage "1.2.2"]]}
+             :test {:dependencies [[doo "0.1.11"]]}
              :uberjar
              {:aot         :all
               :dependencies [[cljsjs/react "17.0.2-0-prod"]

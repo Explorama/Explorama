@@ -28,7 +28,7 @@ jobs:
       run: make prepare-test
     - name: Run backend tests
       run: |
-        lein test
+        lein cloverage
         cp target/coverage/cobertura.xml cobertura_backend.xml
     - name: Run frontend tests
       run: |

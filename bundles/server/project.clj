@@ -210,7 +210,8 @@
              {:aot         :all
               :omit-source true
               :env         {:production true}
-              :prep-tasks  [["cljsbuild" "once" "min"]
+              :prep-tasks  [["shell" "bb" "convert-big-defs.bb"]
+                            ["cljsbuild" "once" "min"]
                             "compile"]}}
 
   :source-paths ~(vec (:backend-paths source-folders))

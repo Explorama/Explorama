@@ -187,7 +187,7 @@
 
   :main de.explorama.backend.woco.app.server
 
-  :plugins [[lein-cljsbuild "1.1.8" :exclusions [org.apache.commons/commons-compress]]
+  :plugins [[lein-cljsbuild "1.1.8"]
             [lein-licenses "0.2.2"]
             [lein-shell "0.5.0"]
             [lein-doo "0.1.11" :exclusions [org.clojure/clojure]]
@@ -208,9 +208,6 @@
              :test {:dependencies [[doo "0.1.11"]]}
              :uberjar
              {:aot         :all
-              :dependencies [[cljsjs/react "17.0.2-0"]
-                             [cljsjs/react-dom "17.0.2-0"]
-                             [cljsjs/react-dom-server "17.0.2-0"]]
               :omit-source true
               :env         {:production true}
               :prep-tasks  [["cljsbuild" "once" "min"]
@@ -243,7 +240,7 @@
                     :output-dir      ~(add-to-path build-dist-folder "js" "woco-sources")
                     :closure-defines ~prod-envs
                     :parallel-build  true
-                    :optimizations   :simple
+                    #_#_:optimizations   :simple ;This breaks currently the build
                     :infer-externs   true
                     :language-in     :ecmascript-next}}
                     ;;debugging flags

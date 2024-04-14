@@ -1,4 +1,4 @@
-(ns de.explorama.backend.expdb.dummy-data-roadmap)
+(ns data.dummy-data-roadmap)
 
 (def data
   {:contexts   [{:global-id "plugin-hints"

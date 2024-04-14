@@ -1,13 +1,5 @@
 (ns i18n.translations)
 
-(defn translations-for-lang [translations lang]
-  (reduce (fn [acc [lang-key tl]]
-            (if-let [tl (get tl lang)]
-              (assoc acc lang-key tl)
-              acc))
-          {}
-          translations))
-
 (def translations
   {:< {:de-DE "<"
        :en-GB "<"}

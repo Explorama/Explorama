@@ -1,11 +1,10 @@
 (ns de.explorama.backend.configuration.persistence.i18n.core
-  (:require [clojure.set :as set]
-            [de.explorama.backend.configuration.ac-api :as ac-api]
+  (:require #?(:cljs [i18n.translations :refer [translations]]
+               :clj [server-i18n.translations :refer [load-translations]])
+            [clojure.set :as set]
             [de.explorama.backend.configuration.persistence.labels.core :as persistence]
             [de.explorama.backend.frontend-api :as fapi]
             [de.explorama.shared.configuration.ws-api :as ws-api]
-            #?(:cljs [i18n.translations :refer [translations]]
-               :clj [server-i18n.translations :refer [load-translations]])
             [malli.core :as m]
             [taoensso.timbre :refer [error]]))
 

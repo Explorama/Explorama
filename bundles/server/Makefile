@@ -11,6 +11,9 @@ install:
 assets:
 	bash gather-assets.sh ${build_mode}
 
+convert-resources:
+	bb convert-big-defs.bb --target "${dist_folder}/prepared/"
+
 compile:
 	lein uberjar
 
@@ -52,7 +55,7 @@ test: prepare-test
 	lein test
 
 prepare-prod: build_mode=prod
-prepare-prod: clean-before install assets compile
+prepare-prod: clean-before install assets compile convert-resources
 	rm -rf ${dist_folder}/prepared/resources/public/js/woco-sources
 	rm -rf ${dist_folder}/prepared/classes
 	rm -rf ${dist_folder}/prepared/cljsbuild-crossover

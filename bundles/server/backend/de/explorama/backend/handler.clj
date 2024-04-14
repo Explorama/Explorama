@@ -132,7 +132,7 @@
              :content "IE=edge,chrome=1"}]
      [:title "Explorama"]
      [:link {:rel "shortcut icon"
-             :href "images/favicon.ico"}]]
+             :href "img/favicon.ico"}]]
     (sort-by (fn [[_ {href :href}]] href)
              (local-assets "resources/public" "asset")))
    [:body.initial.login

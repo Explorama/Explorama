@@ -36,11 +36,11 @@
                   "sh"
                   "bash"))
 
-(def shell-build-dist-folder (shell-add-to-path ".." ".." "dist" "browser"))
-(def shell-build-profiling-dist-folder (shell-add-to-path ".." ".." "dist" "browser-profiling"))
+(def shell-build-dist-folder (shell-add-to-path ".." ".." "dist" "server"))
+(def shell-build-profiling-dist-folder (shell-add-to-path ".." ".." "dist" "server-profiling"))
 
-(def build-dist-folder (add-to-path ".." ".." "dist" "browser"))
-(def build-profiling-dist-folder (add-to-path ".." ".." "dist" "browser-profiling"))
+(def build-dist-folder (add-to-path ".." ".." "dist" "server"))
+(def build-profiling-dist-folder (add-to-path ".." ".." "dist" "server-profiling"))
 (def plugins-paths (add-to-path ".." ".." "plugins"))
 (def libs-paths (add-to-path ".." ".." "libs"))
 (def assets-paths (add-to-path ".." ".." "assets"))
@@ -88,7 +88,7 @@
                                                       fixed-backend-test-folders))})
 
 (defproject explorama app-version
-  :description "Browser version of explorama"
+  :description "Server version of explorama"
   :url "https://github.com/Explorama/Explorama"
   :license {:name "Eclipse Public License - v 1.0"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
@@ -208,6 +208,8 @@
              :test {:dependencies [[doo "0.1.11"]]}
              :uberjar
              {:aot         :all
+              :target-path ~(add-to-path build-dist-folder "prepared")
+              :resource-paths [~(add-to-path build-dist-folder "prepared" "resources")]
               :omit-source true
               :env         {:production true}
               :prep-tasks  [["shell" "bb" "convert-big-defs.bb"]
@@ -237,11 +239,12 @@
     {:id           "min"
      :source-paths ~(vec (:frontend-paths source-folders))
      :compiler     {:main            de.explorama.frontend.woco.app.core
-                    :output-to       ~(add-to-path build-dist-folder "js" "woco.js")
-                    :output-dir      ~(add-to-path build-dist-folder "js" "woco-sources")
+                    :output-to       ~(add-to-path build-dist-folder "prepared" "resources" "public" "js" "woco.js")
+                    :output-dir      ~(add-to-path build-dist-folder "prepared" "resources" "public" "js" "woco-sources")
+                    :asset-path           "js"
                     :closure-defines ~prod-envs
                     :parallel-build  true
-                    #_#_:optimizations   :simple ;This breaks currently the build
+                    :optimizations   :simple
                     :infer-externs   true
                     :language-in     :ecmascript-next}}
                     ;;debugging flags

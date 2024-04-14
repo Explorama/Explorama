@@ -8,7 +8,7 @@ npm_install=${2:-true}
 
 if [ $mode == "prod" ]
 then
-  RES_PATH="$pwd/../../dist/server/prepared"
+  RES_PATH="$pwd/../../dist/server/prepared/resources"
   echo "Gather assets for production build"
 else
   RES_PATH="$pwd/resources"

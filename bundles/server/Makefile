@@ -52,9 +52,13 @@ test: prepare-test
 	lein test
 
 prepare-prod: build_mode=prod
-prepare-prod: clean-before install assets
-	compile
-	mv ${dist_folder} ${target_folder}
+prepare-prod: clean-before install assets compile
+	rm -rf ${dist_folder}/prepared/resources/public/js/woco-sources
+	rm -rf ${dist_folder}/prepared/classes
+	rm -rf ${dist_folder}/prepared/cljsbuild-crossover
+	rm -rf ${dist_folder}/prepared/stale
+	rm -rf ${dist_folder}/prepared/explorama-0.0.0.jar
+	mv ${dist_folder}/prepared ${target_folder}
 
 bundle:  
 	cd ${dist_root} && zip -q -r Explorama-server.zip Explorama-server

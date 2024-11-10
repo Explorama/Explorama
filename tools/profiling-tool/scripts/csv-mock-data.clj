@@ -11,6 +11,58 @@
 
 (def ^:private dicts (atom {}))
 
+(defn- exclusive-0 []
+  (some (fn [_] (let [v (rand)]
+                  (when (< 0 v) v)))
+        (range 100)))
+
+(defn- normal-distribution [min max skew]
+  (loop [min min
+         max max
+         skew skew]
+    (let [u (exclusive-0)
+          v (exclusive-0)
+          num (* (Math/sqrt (* -2.0 (Math/log u))) (Math/cos (* 2.0 Math/PI v)))
+          num (+ 0.55 (/ num 10.0))]
+      (if (or (< 1 num) (< num 0))
+        (recur min max skew)
+        (let [num (Math/pow num skew)
+              num (* num (- max min))]
+          (+ num min))))))
+
+(defn- round-to-precision [precision x]
+  (let [y (+ x (if (nil? precision) 0.5 (/ precision 2)))]
+    (int
+     (- y (mod y (if (nil? precision) 1 precision))))))
+
+(defn ndist-value [values-num]
+  (normal-distribution 0 values-num 1))
+
+(defn ndist-value-int [values-num]
+  (->>
+   (normal-distribution 0 values-num 1)
+   (round-to-precision 1)))
+
+(defn ndist-value-seq [values]
+  (->>
+   (ndist-value-int (count values))
+   (get values)))
+
+#_(defn generate-values [n min max step]
+    (loop [data (mapv (fn [_] 0) (range (- max min)))
+           i 0]
+      (if (< i n)
+        (let [randNum (normal-distribution min max 1)
+              rounded (round-to-precision randNum step)]
+          (recur (update data rounded inc)
+                 (+ step i)))
+        data)))
+
+#_(spit "distribution.edn"
+        (let [data (generate-values 100000 0 1000 1)
+              sum (reduce + data)]
+          (mapv (fn [x] (double (/ x sum))) data)))
+
 (defn- generate-rand-dict [{:keys [num min max alphabet id prefix]
                             :or {min 3
                                  max 25
@@ -43,8 +95,8 @@
                             dict #{}]
                        (if (< i num)
                          (recur (inc i)
-                                (conj dict (apply str prefix (repeatedly (+ min (rand-int (inc (- max min))))
-                                                                         #(rand-nth alphabet)))))
+                                (conj dict (apply str prefix (repeatedly (+ min (ndist-value-int (inc (- max min))))
+                                                                         #(ndist-value-seq alphabet)))))
                          dict))]
             (when id
               (swap! dicts assoc id dict))
@@ -59,17 +111,17 @@
   (cond
     numbers
     (fn []
-      (rand-nth numbers))
+      (ndist-value-seq numbers))
     (and min
          max
          (zero? min))
     (fn []
-      (rand-int (inc max)))
+      (ndist-value-int (inc max)))
     (and min
          max)
     (fn []
-      (int (+ (rand (inc (- (double max)
-                            (double min))))
+      (int (+ (ndist-value (inc (- (double max)
+                                   (double min))))
               min)))))
 
 (defn- double-value-fn [{:keys [min max numbers]
@@ -81,17 +133,17 @@
   (cond
     numbers
     (fn []
-      (rand-nth numbers))
+      (ndist-value-seq numbers))
     (and min
          max
          (zero? min))
     (fn []
-      (rand (inc max)))
+      (ndist-value (inc max)))
     (and min
          max)
     (fn []
-      (+ (rand (inc (- (double max)
-                       (double min))))
+      (+ (ndist-value (inc (- (double max)
+                              (double min))))
          min))))
 
 (defn- string-value-fn [{:keys [min max]
@@ -99,9 +151,9 @@
   (assert (<= min max) "min must be less than max")
   (assert (< 0 min) "min must be greater than 0")
   (fn []
-    (str/join " " (repeatedly (int (/ (+ min (rand-int (- max min)))
+    (str/join " " (repeatedly (int (/ (+ min (ndist-value-int (- max min)))
                                       avg-length-lorem))
-                              #(rand-nth lorem)))))
+                              #(ndist-value-seq lorem)))))
 
 (defn- category-value-fn [{:keys [values dict]}]
   (assert (or (seq values)
@@ -114,11 +166,11 @@
           "dict or values must be provided")
   (cond values
         (fn []
-          (rand-nth values))
+          (ndist-value-seq values))
         dict
         (let [dict (vec (generate-rand-dict dict))]
           (fn []
-            (rand-nth dict)))))
+            (ndist-value-seq dict)))))
 
 (defn- text-value-fn [{:keys [min max]
                        :or {min 128 max 2048}}]
@@ -168,24 +220,24 @@
                             separator "-"}}]
   (assert (<= min max) "min must be less than max")
   (fn []
-    (let [year (+ min (rand-int (inc (- max min))))
+    (let [year (+ min (ndist-value-int (inc (- max min))))
           leap-year (mod year 4)
-          month (inc (rand-int 12))
-          day (inc (rand-int (case month
-                               1 31
-                               2 (if (zero? leap-year)
-                                   29
-                                   28)
-                               3 31
-                               4 30
-                               5 31
-                               6 30
-                               7 31
-                               8 31
-                               9 30
-                               10 31
-                               11 30
-                               12 31)))]
+          month (inc (ndist-value-int 11))
+          day (inc (ndist-value-int (case month
+                                      1 31
+                                      2 (if (zero? leap-year)
+                                          29
+                                          28)
+                                      3 31
+                                      4 30
+                                      5 31
+                                      6 30
+                                      7 31
+                                      8 31
+                                      9 30
+                                      10 31
+                                      11 30
+                                      12 31)))]
       (str year separator
            (if (< month 10)
              (str "0" month)
@@ -245,4 +297,5 @@
                 header-descs (nth param-set 1)
                 number-of-rows (nth param-set 2)
                 file-name (nth param-set 3)]]
+    (println "Generating " number-of-rows " rows for " file-name)
     (generate-csv header-desc header-descs number-of-rows file-name)))

@@ -1,11 +1,9 @@
 (require '[babashka.fs :as fs]
-         '[cheshire.core :as json]
          '[clojure.string :as str])
 
 (defn parse-file [file]
   (-> (fs/read-all-lines file)
-      first
-      (json/parse-string true)))
+      first))
 
 (def target-path "../gen_resources/data_tiles/")
 (def source-path "../gen_resources/exp-import/")
@@ -38,5 +36,5 @@
           data-tiles
           :encoding "UTF-8")))
 
-(doseq [file (fs/match source-path (str "regex:.*.json") {:recursive true})]
+(doseq [file (fs/match source-path (str "regex:.*.edn") {:recursive true})]
   (transform-file file))

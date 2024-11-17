@@ -45,4 +45,5 @@ bundles/*/.calva/output-window
 tools/profiling-tool/gen_src/
 tools/profiling-tool/gen_resources/
 tools/profiling-tool/gen_raw_data/
+tools/profiling-tool/target
 tools/cli-data-transformer/target/

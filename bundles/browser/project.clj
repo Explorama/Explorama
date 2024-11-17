@@ -83,11 +83,10 @@
                                                                  fixed-backend-folders))))
                      :profiling-paths (vec (sort fixed-profiling-folders))})
 
-#_#_#_#_
-(println "---------------------------")
-(println "Using the following sources (woco):")
-(pprint source-folders)
-(println "")
+#_#_#_#_(println "---------------------------")
+      (println "Using the following sources (woco):")
+    (pprint source-folders)
+  (println "")
 
 (defproject explorama app-version
   :description "Browser version of explorama"
@@ -168,11 +167,6 @@
                                   [figwheel-sidecar "0.5.20"]]
                    :plugins [[lein-figwheel "0.5.20"]]
                    :figwheel {:server-port 4000}}
-             :dev-benchmark {:dependencies [[binaryage/devtools "1.0.7"]
-                                            [nrepl "1.0.0"]
-                                            [figwheel-sidecar "0.5.20"]]
-                             :plugins [[lein-figwheel "0.5.20"]]
-                             :figwheel {:server-port 4000}}
              :test {:dependencies [[doo "0.1.11"]]}
              :build {}}
   :cljsbuild
@@ -186,23 +180,6 @@
                     :output-to            "resources/public/js/woco.js"
                     :output-dir           "resources/public/js/compiled"
                     :asset-path           "js/compiled"
-                    :closure-defines      ~dev-envs
-                    :parallel-build true
-                    :source-map-timestamp true
-                    :preloads             [devtools.preload]
-                    :external-config      {:devtools/config {:features-to-install :all}}
-                    :language-in     :ecmascript-next
-                    :npm-deps {:ml-regression-simple-linear ~ml-regression-simple-linear-version}}}
-    {:id           "dev-benchmark"
-     :source-paths ~(vec (concat (:frontend-paths source-folders)
-                                 (:backend-paths source-folders)
-                                 (:profiling-paths source-folders)))
-     :figwheel     {:on-jsload "de.explorama.frontend.woco.app.core/reload"
-                    :websocket-host :js-client-host}
-     :compiler     {:main                 de.explorama.profiling-tool.core
-                    :output-to            "resources/public/js/woco_benchmark.js"
-                    :output-dir           "resources/public/js/compiled_benchmark"
-                    :asset-path           "js/compiled_benchmark"
                     :closure-defines      ~dev-envs
                     :parallel-build true
                     :source-map-timestamp true
@@ -228,19 +205,19 @@
                     ;; :pretty-print    true
                     ;; :verbose true
 
-    {:id           "min-benchmark"
+    {:id           "test-performance"
      :source-paths ~(vec (concat (:frontend-paths source-folders)
                                  (:backend-paths source-folders)
                                  (:profiling-paths source-folders)))
-     :compiler     {:main                 de.explorama.profiling-tool.core
-                    :output-to           ~(add-to-path build-profiling-dist-folder "js" "woco.js")
-                    :output-dir          ~(add-to-path build-profiling-dist-folder "js" "woco-sources")
+     :compiler     {:main            de.explorama.profiling-tool.runner
+                    :output-to       ~(add-to-path build-profiling-dist-folder "js" "woco.js")
+                    :output-dir      ~(add-to-path build-profiling-dist-folder "js" "woco-sources")
                     :closure-defines ~prod-envs
-                    :parallel-build true
+                    :parallel-build  true
                     :optimizations   :simple
                     :infer-externs   true
                     :language-in     :ecmascript-next
-                    :npm-deps {:ml-regression-simple-linear ~ml-regression-simple-linear-version}}}
+                    :npm-deps        {:ml-regression-simple-linear ~ml-regression-simple-linear-version}}}
 
     {:id           "test-frontend"
      :source-paths ~(:frontend-test-paths source-folders)
@@ -292,8 +269,5 @@
             ;;          ["shell" ~shell-exec "gather-assets.sh" "prod"]
             ;;          ["with-profile" "build" "cljsbuild" "once" "min"]
             ;;          ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-dist-folder "js" "woco-sources")]]
-            "build-benchmark" ["do"
-                               ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-profiling-dist-folder)]
-                               ["shell" ~shell-exec "gather-assets.sh" "benchmark"]
-                               ["with-profile" "build" "cljsbuild" "once" "min-benchmark"]
-                               ["shell" "rm" "-rf" ~(shell-add-to-path shell-build-profiling-dist-folder "js" "woco-sources")]]})
+            "test-performance" ["do"
+                                ["with-profile" "test" "doo" "chrome-headless" "test-performance" "once"]]})

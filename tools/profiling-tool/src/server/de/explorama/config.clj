@@ -165,13 +165,11 @@
    :default "."
    :type :string
    :doc "Defines where the configuration directory is.
-         Gets set by the control.sh."
-   })
+         Gets set by the control.sh."})
 
 (defconfig thread-pool
   {:env :explorama-data-service-thread-pool
    :type :integer
    :default 24
    :doc "Defines how many threads are available for a pool. 
-         There might exist multiple diffrent pools."
-   })
+         There might exist multiple diffrent pools."})

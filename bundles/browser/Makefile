@@ -35,11 +35,6 @@ dev: clean-before install assets
 	cp -rf resources/index.html resources/public/index.html
 	lein with-profile dev figwheel dev
 
-dev-benchmark: build_mode=dev-benchmark
-dev-benchmark: clean-before install assets
-	cp -rf resources/index_benchmark.html resources/public/index.html
-	lein with-profile dev-benchmark figwheel dev-benchmark
-
 prepare-test:
 	npm install -g karma-cli 
 	npm install karma@6.4.1 karma-coverage karma-chrome-launcher karma-cljs-test karma-junit-reporter karma-htmlfile-reporter --save-dev
@@ -52,6 +47,9 @@ test-backend: prepare-test
 
 test-frontend: prepare-test
 	lein test-frontend
+
+test-performance: prepare-test
+	lein test-performance
 
 prepare-prod: build_mode=prod
 prepare-prod: clean-before install assets compile

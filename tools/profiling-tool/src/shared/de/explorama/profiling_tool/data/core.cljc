@@ -1,5 +1,15 @@
 (ns de.explorama.profiling-tool.data.core)
 
+(def data-a-1k-csv "data-a-1k-csv")
+(def data-a-10k-csv "data-a-10k-csv")
+(def data-a-100k-csv "data-a-100k-csv")
+(def data-a-1m-csv "data-a-1m-csv")
+
+(def data-b-1k-csv "data-b-1k-csv")
+(def data-b-10k-csv "data-b-10k-csv")
+(def data-b-100k-csv "data-b-100k-csv")
+(def data-b-1m-csv "data-b-1m-csv")
+
 (def data-a-1k "data-a-1k")
 (def data-a-10k "data-a-10k")
 (def data-a-100k "data-a-100k")

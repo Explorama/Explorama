@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.reporting.screenshot.pdf
-  (:require ["jspdf"]
-            [clojure.string :refer [join]]
+  (:require ["jspdf" :refer [jsPDF]] [clojure.string :refer [join]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [re-frame.core :as re-frame]
@@ -156,9 +155,9 @@
                        [w h] (applied-format-size dashboard-orientation)
                        margin-mm (+ pm im)
                        width-mm (- w (* 2 margin-mm))
-                       pdf-obj (-> (new js/jspdf.jsPDF #js{:orientation dashboard-orientation
-                                                           :format format
-                                                           :compress compress?})
+                       pdf-obj (-> (new jsPDF #js{:orientation dashboard-orientation
+                                                  :format format
+                                                  :compress compress?})
                                    (.setFontSize footer-fontsize))
                        {:keys [footer-height footer-meta-height] :as footer-metas} (calc-footer-metas pdf-obj frame-ids 1 1 dashboard-orientation)
                        height-mm (- h
@@ -169,9 +168,9 @@
                                       0)
                                     im)
                        [width-mm height-mm] (fit-size width-mm height-mm width height)]
-                   (cond-> (new js/jspdf.jsPDF #js{:orientation dashboard-orientation
-                                                   :format format
-                                                   :compress compress?})
+                   (cond-> (new jsPDF #js{:orientation dashboard-orientation
+                                          :format format
+                                          :compress compress?})
 
                      footer? (make-pdf-footer footer-metas)
                      :always (.addImage res
@@ -234,9 +233,9 @@
                  {:keys [sizes acc-page-height
                          pages page-mapping page-frame-id-mapping footer-meta-text]}
                  images]
-  (let [pdf-obj (-> (new js/jspdf.jsPDF #js{:orientation report-orientation
-                                            :format format
-                                            :compress compress?})
+  (let [pdf-obj (-> (new jsPDF #js{:orientation report-orientation
+                                   :format format
+                                   :compress compress?})
                     (.setFontSize footer-fontsize))
         {:keys [content-margin]} (max-page-size nil)
         footer-metas (calc-footer-metas pdf-obj
@@ -290,9 +289,9 @@
                        element-height)}))
 
 (defn make-screenshot-report [{:keys [rows dom-id image-type frame-ids module-mapping] :as params}]
-  (let [temp-pdf-obj (-> (new js/jspdf.jsPDF #js{:orientation report-orientation
-                                                 :format format
-                                                 :compress compress?})
+  (let [temp-pdf-obj (-> (new jsPDF #js{:orientation report-orientation
+                                        :format format
+                                        :compress compress?})
                          (.setFontSize footer-fontsize))
         {:keys [footer-meta-text] :as footer-metas} (calc-footer-metas temp-pdf-obj frame-ids 1 1 report-orientation)
         {:keys [max-page-width max-page-height]} (max-page-size footer-metas)

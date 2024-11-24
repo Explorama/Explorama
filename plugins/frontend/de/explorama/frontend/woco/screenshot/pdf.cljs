@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.screenshot.pdf
-  (:require ["jspdf"]
+  (:require ["jspdf" :refer [jsPDF]]
             [clojure.string :refer [join]]
             [cuerdas.core :as curedas]
             [de.explorama.frontend.common.frontend-interface :as fi]
@@ -7,7 +7,7 @@
             [re-frame.core :as re-frame]
             [de.explorama.frontend.woco.config :as config]
             [de.explorama.frontend.woco.screenshot.util :refer [calc-frames-datasources ignore-export-fn
-                                                       create-export-date type-to-fn export-css-defs]]
+                                                                create-export-date type-to-fn export-css-defs]]
             [de.explorama.frontend.woco.util.dom :refer [fit-size get-node-size]]))
 
 (def orientation "landscape") ;can also be "portrait"
@@ -136,9 +136,9 @@
         margin-mm (+ pm im)
         width-mm-org (- w (* 2 margin-mm))
         title-height (if optional-title (+ title-height margin-mm) 0)
-        pdf-obj (-> (new js/jspdf.jsPDF #js{:orientation orientation
-                                            :format format
-                                            :compress compress?})
+        pdf-obj (-> (new jsPDF #js{:orientation orientation
+                                   :format format
+                                   :compress compress?})
                     (.setFontSize footer-fontsize))
         {:keys [footer-height footer-meta-height] :as footer-metas} (calc-footer-metas pdf-obj frame-ids 1 1)
         height-mm-org (- h

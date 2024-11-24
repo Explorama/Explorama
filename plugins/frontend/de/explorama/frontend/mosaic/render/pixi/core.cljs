@@ -7,7 +7,7 @@
             [de.explorama.frontend.mosaic.render.pixi.mouse :as pm]
             [de.explorama.frontend.mosaic.render.pixi.navigation :as pn]
             [de.explorama.frontend.mosaic.render.pixi.shapes :as ps]
-            ["pixi.js" :refer [Container Graphics Texture utils Application]] 
+            ["pixi.js" :refer [Container Graphics Texture utils Application Ticker]] 
             [re-frame.core :as re-frame]
             [taoensso.timbre :refer [debug]]))
 
@@ -362,8 +362,8 @@
   (ps/text-metrics text-str args))
 
 (defn disable-tickers []
-  (let [shared-ticker (aget js/PIXI "Ticker" "shared")
-        system-ticker (aget js/PIXI "Ticker" "system")]
+  (let [shared-ticker (aget Ticker "shared")
+        system-ticker (aget Ticker "system")]
     (aset system-ticker "autoStart" false)
     (aset shared-ticker "autoStart" false)
     (when (aget system-ticker "started")

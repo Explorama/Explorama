@@ -491,8 +491,7 @@
                             layout-lookup
                             attribute-labels
                             lang]
-  (let [putil (.-utils js/PIXI)
-        {:keys [cpl factor]} (reduce (fn [{factor :factor :as acc} [path {:keys [start-x start-y end-x end-y]}]]
+  (let [{:keys [cpl factor]} (reduce (fn [{factor :factor :as acc} [path {:keys [start-x start-y end-x end-y]}]]
                                        (let [{:keys [event-count]} (get leaf->root path)
                                              tile-width (- end-x start-x)
                                              tile-height (- end-y start-y)

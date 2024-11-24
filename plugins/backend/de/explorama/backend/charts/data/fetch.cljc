@@ -1,5 +1,5 @@
 (ns de.explorama.backend.charts.data.fetch
-  (:require [data-format-lib.core :as dfl]
+  (:require [de.explorama.shared.data-format.core :as dfl]
             [de.explorama.backend.charts.attribute-characteristics :as acs]
             [de.explorama.backend.charts.config :as config]
             [de.explorama.backend.common.aggregation :as common-aggregation]

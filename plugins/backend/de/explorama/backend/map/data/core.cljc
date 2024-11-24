@@ -1,5 +1,5 @@
 (ns de.explorama.backend.map.data.core
-  (:require [data-format-lib.core :as dfl]
+  (:require [de.explorama.shared.data-format.core :as dfl]
             [de.explorama.backend.common.calculations.data-acs :as acs]
             [de.explorama.backend.common.environment.probe :as probe]
             [de.explorama.backend.common.middleware.cache :as cache]

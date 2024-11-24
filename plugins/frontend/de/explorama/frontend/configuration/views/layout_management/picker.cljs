@@ -11,7 +11,7 @@
             [de.explorama.frontend.common.views.legend :refer [attr->display-name]]
             [de.explorama.frontend.configuration.components.save-dialog :refer [layout-overlayer-save-dialog]]
             [re-frame.core :refer [subscribe dispatch]]
-            [data-format-lib.dates :as dfdates]
+            [de.explorama.shared.data-format.dates :as dfdates]
             [clojure.string :refer [join blank? lower-case replace trim]]
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]

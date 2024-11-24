@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :refer [attribute-label]]
-            [data-format-lib.aggregations :refer [number-of-events]]
+            [de.explorama.shared.data-format.aggregations :refer [number-of-events]]
             [de.explorama.frontend.ui-base.components.formular.core :refer [checkbox
                                                                 input-field select]]
             [de.explorama.frontend.algorithms.components.helper :refer [default-option-settings

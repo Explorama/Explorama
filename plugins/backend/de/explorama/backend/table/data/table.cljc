@@ -1,6 +1,6 @@
 (ns de.explorama.backend.table.data.table
   (:require [clojure.string :as string]
-            [data-format-lib.filter]
+            [de.explorama.shared.data-format.filter]
             [de.explorama.backend.table.data.fetch :refer [di-data]]
             [de.explorama.shared.table.ws-api :as ws-api]
             [de.explorama.shared.common.data.attributes :as attrs]

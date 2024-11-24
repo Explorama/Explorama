@@ -1,6 +1,6 @@
 (ns de.explorama.backend.mosaic.data.aggregation
-  (:require [data-format-lib.core :as dfl-core]
-            [data-format-lib.operations :as dfl-op]
+  (:require [de.explorama.shared.data-format.core :as dfl-core]
+            [de.explorama.shared.data-format.operations :as dfl-op]
             [de.explorama.backend.common.aggregation :as common-aggregation]
             [de.explorama.backend.common.calculations.data-acs :as data-acs]
             [de.explorama.backend.common.environment.probe :as probe]

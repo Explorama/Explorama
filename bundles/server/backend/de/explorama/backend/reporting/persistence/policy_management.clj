@@ -1,6 +1,6 @@
 (ns de.explorama.backend.reporting.persistence.policy-management
-  (:require [de.explorama.backend.abac.policy-repository :as pr]
-            [de.explorama.backend.abac.pep :as pep]
+  (:require [de.explorama.shared.abac.policy-repository :as pr]
+            [de.explorama.shared.abac.pep :as pep]
             [taoensso.timbre :refer [warn]]))
 
 (defn- policy-id

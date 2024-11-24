@@ -5,7 +5,7 @@
             [de.explorama.frontend.map.paths :as geop]
             [de.explorama.frontend.map.utils :refer [rgb->hex]]
             [re-frame.core :as re-frame]
-            [data-format-lib.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.frontend.common.i18n :as i18n]))
 
 (defn show-event-popup-fn-wrapper [db frame-id event-id event-color clicked-position]

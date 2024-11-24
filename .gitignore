@@ -41,6 +41,7 @@ bundles/*/resources/public/assets
 bundles/*/.lein-failures
 bundles/*/.rebel_readline_history
 bundles/*/.calva/output-window
+bundles/*/.shadow-cljs
 
 tools/profiling-tool/gen_src/
 tools/profiling-tool/gen_resources/

@@ -1,6 +1,6 @@
 (ns de.explorama.backend.charts.attribute-characteristics
   (:require [clojure.string :as string]
-            [data-format-lib.filter]
+            [de.explorama.shared.data-format.filter]
             [de.explorama.backend.charts.ac-api :as ac-api]
             [de.explorama.backend.charts.config :as config]
             [de.explorama.backend.charts.util :refer [attr-value

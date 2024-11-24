@@ -1,5 +1,5 @@
 (ns de.explorama.backend.charts.data.base-charts
-  (:require [data-format-lib.filter]
+  (:require [de.explorama.shared.data-format.filter]
             [de.explorama.shared.common.data.attributes :as attrs]
             [taoensso.timbre :refer [debug warn]]
             [de.explorama.backend.charts.data.colors :refer [opacity-value

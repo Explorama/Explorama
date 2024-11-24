@@ -1,8 +1,8 @@
 (ns de.explorama.frontend.mosaic.operations.util
   (:require [cljsjs.moment]
             [clojure.set :as set]
-            [data-format-lib.data-instance :as dfl-di]
-            [data-format-lib.dates :as dates]
+            [de.explorama.shared.data-format.data-instance :as dfl-di]
+            [de.explorama.shared.data-format.dates :as dates]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.shared.mosaic.common-paths :as gcp]
             [de.explorama.frontend.mosaic.data-access-layer :as gdal]
@@ -23,13 +23,13 @@
       (let [[incl-min-val excl-max-val] characteristics]
         (into [:or] (for [a (:attributes layout)]
                       [logical-op-1
-                       #:data-format-lib.filter{:op op-min,
+                       #:de.explorama.shared.data-format.filter{:op op-min,
                                                 :prop a :value incl-min-val}
-                       #:data-format-lib.filter{:op op-max,
+                       #:de.explorama.shared.data-format.filter{:op op-max,
                                                 :prop a :value excl-max-val}])))
       (into [logical-op-2] (for [a (:attributes layout)
                                  c characteristics]
-                             #:data-format-lib.filter{:op logical-op-3,
+                             #:de.explorama.shared.data-format.filter{:op logical-op-3,
                                                       :prop a :value c})))))
 
 (defn- color-filter [layout-id color-code lookup-table]
@@ -66,9 +66,9 @@
                   (= "year" data-grp-by) ::dates/year
                   (= "month" data-grp-by) ::dates/month
                   :else data-grp-by)]
-       [:or {:data-format-lib.filter/op op
-             :data-format-lib.filter/prop prop
-             :data-format-lib.filter/value (cond (#{"year" "month"} data-grp-by)
+       [:or {:de.explorama.shared.data-format.filter/op op
+             :de.explorama.shared.data-format.filter/prop prop
+             :de.explorama.shared.data-format.filter/value (cond (#{"year" "month"} data-grp-by)
                                                  (js/parseInt data-value)
                                                  (= data-value "undefined")
                                                  nil
@@ -190,9 +190,9 @@
    (let [frame-id (gp/frame-id path)
          di (get-in db (gp/data-instance path))
          new-filter
-         [:or {:data-format-lib.filter/op :=
-               :data-format-lib.filter/prop "id"
-               :data-format-lib.filter/value (gdal/get card "id")}]]
+         [:or {:de.explorama.shared.data-format.filter/op :=
+               :de.explorama.shared.data-format.filter/prop "id"
+               :de.explorama.shared.data-format.filter/value (gdal/get card "id")}]]
      {:fx [[:dispatch [:de.explorama.frontend.mosaic.core/create-copy-frame
                        frame-id
                        {:operation-desc {}

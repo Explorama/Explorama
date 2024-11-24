@@ -1,7 +1,7 @@
 (ns de.explorama.backend.map.overlayers
   (:require [clojure.string :as string]
-            [data-format-lib.aggregations :as dfl-agg]
-            [data-format-lib.operations :as dfl-op]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.operations :as dfl-op]
             [de.explorama.shared.common.data.attributes :as dattrs]
             [de.explorama.shared.common.data.locations :as locations]
             [de.explorama.shared.map.config :as config-shared-map]
@@ -73,9 +73,9 @@
 
 (defn- non-empty-attributes [& attributes]
   (into [:and]
-        (map (fn [attr] {:data-format-lib.filter/op :non-empty,
-                         :data-format-lib.filter/prop attr
-                         :data-format-lib.filter/value nil}))
+        (map (fn [attr] {:de.explorama.shared.data-format.filter/op :non-empty,
+                         :de.explorama.shared.data-format.filter/prop attr
+                         :de.explorama.shared.data-format.filter/value nil}))
         attributes))
 
 (defn- feature-layer-definiton [feature-id]

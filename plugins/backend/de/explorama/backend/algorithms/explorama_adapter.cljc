@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn]
             [clojure.set :as set]
             [clojure.string :as str]
-            [data-format-lib.data-instance :as dfl-di]
+            [de.explorama.shared.data-format.data-instance :as dfl-di]
             [de.explorama.shared.algorithms.config :as config]
             [de.explorama.backend.configuration.middleware.i18n :as i18n]
             [de.explorama.shared.common.data.attributes :as attrs]

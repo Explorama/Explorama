@@ -1,7 +1,7 @@
 (ns de.explorama.shared.common.configs.overlayers
   (:require [clojure.spec.alpha :as spec]
             [de.explorama.shared.common.configs.color-scheme]
-            [data-format-lib.aggregations :as dfl-agg]))
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]))
 
 ;; Example
 ;; (def overlay-layout-1

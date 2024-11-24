@@ -1,8 +1,8 @@
 (ns de.explorama.backend.charts.data.helper
   (:require [clojure.string :as string :refer [lower-case]]
-            [data-format-lib.dates :as df-dates]
-            [data-format-lib.filter :as dfl-filter]
-            [data-format-lib.operations :as dfl-op]
+            [de.explorama.shared.data-format.dates :as df-dates]
+            [de.explorama.shared.data-format.filter :as dfl-filter]
+            [de.explorama.shared.data-format.operations :as dfl-op]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.backend.charts.attribute-characteristics :as ac]
             [de.explorama.shared.common.unification.misc :refer [cljc-parse-int]]

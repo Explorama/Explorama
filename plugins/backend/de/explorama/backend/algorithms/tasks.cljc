@@ -1,6 +1,6 @@
 (ns de.explorama.backend.algorithms.tasks
   (:require [clojure.set :as set]
-            [data-format-lib.core :as dfl]
+            [de.explorama.shared.data-format.core :as dfl]
             [de.explorama.backend.algorithms.config :as config]
             [de.explorama.backend.algorithms.data-tiles :as data-tiles]
             [de.explorama.backend.algorithms.data.algorithm :as algo]

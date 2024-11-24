@@ -1,37 +1,37 @@
 (ns de.explorama.backend.search.filter-test
   (:require [clojure.test :refer [deftest testing is]]
             [de.explorama.backend.search.datainstance.filter :refer [fulltext->filter]]
-            [data-format-lib.date-filter :as sut]
-            [data-format-lib.filter-functions :as ff]))
+            [de.explorama.shared.data-format.date-filter :as sut]
+            [de.explorama.shared.data-format.filter-functions :as ff]))
 
 (deftest fulltext-filter-gen
   (testing "basic search"
     (is (= [:or
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "foo"}
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "bar"}
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "lorem"}
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "ippsum"}]
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "foo"}
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "bar"}
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "lorem"}
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "ippsum"}]
            (fulltext->filter "notes" false "includes" "foo bar lorem ippsum")))
-    (is (= [:or #:data-format-lib.filter{:op :includes, :prop "notes", :value "benin"}]
+    (is (= [:or #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "benin"}]
            (fulltext->filter "notes" false "includes" "benin"))))
   (testing "advanced or search"
     (is (= [:or
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "foo"}
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "bar"}
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "lorem"}
-            #:data-format-lib.filter{:op :includes, :prop "notes", :value "ippsum"}]
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "foo"}
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "bar"}
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "lorem"}
+            #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "ippsum"}]
            (fulltext->filter "notes" true "includes" "foo bar lorem ippsum")))
-    (is (= [:or #:data-format-lib.filter{:op :includes, :prop "notes", :value "benin"}]
+    (is (= [:or #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "benin"}]
            (fulltext->filter "notes" true "includes" "benin"))))
   (testing "advandced and search"
-    (is (= #:data-format-lib.filter{:op :includes, :prop "notes", :value "foo bar lorem ippsum"}
+    (is (= #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "foo bar lorem ippsum"}
            (fulltext->filter "notes" true "exact term" "foo bar lorem ippsum")))
-    (is (=  #:data-format-lib.filter{:op :includes, :prop "notes", :value "benin"}
+    (is (=  #:de.explorama.shared.data-format.filter{:op :includes, :prop "notes", :value "benin"}
             (fulltext->filter "notes" true "exact term" "benin"))))
   (testing "advandced not search"
-    (is (= #:data-format-lib.filter{:op :excludes, :prop "notes", :value "foo bar lorem ippsum"}
+    (is (= #:de.explorama.shared.data-format.filter{:op :excludes, :prop "notes", :value "foo bar lorem ippsum"}
            (fulltext->filter "notes" true "excludes" "foo bar lorem ippsum")))
-    (is (=  #:data-format-lib.filter{:op :excludes, :prop "notes", :value "benin"}
+    (is (=  #:de.explorama.shared.data-format.filter{:op :excludes, :prop "notes", :value "benin"}
             (fulltext->filter "notes" true "excludes" "benin")))))
 
 (def test-data-input

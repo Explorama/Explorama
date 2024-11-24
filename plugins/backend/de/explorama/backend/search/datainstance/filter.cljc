@@ -1,6 +1,6 @@
 (ns de.explorama.backend.search.datainstance.filter
   (:require [clojure.string :as str]
-            [data-format-lib.filter :as f]
+            [de.explorama.shared.data-format.filter :as f]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.backend.search.attribute-characteristics.api :as acs]
             [de.explorama.shared.search.conditions-utils :as cond-utils]
@@ -103,9 +103,9 @@
                     gen-date-filter
                     gen-filter)
         attr (case attr
-               "year" :data-format-lib.dates/year
-               "month" :data-format-lib.dates/month
-               "day" :data-format-lib.dates/full-date
+               "year" :de.explorama.shared.data-format.dates/year
+               "month" :de.explorama.shared.data-format.dates/month
+               "day" :de.explorama.shared.data-format.dates/full-date
                attr)]
     (cond-> [:or]
       all-values?  (conj (filter-fn :non-empty attr nil))
@@ -149,8 +149,8 @@
 (defn month->filter [attribute advanced values condition last-x-vals all-values?]
   (let [op (condition->pred-op advanced condition)
         attr (if (#{"last-x" "current"} condition)
-               :data-format-lib.dates/full-date
-               :data-format-lib.dates/month)
+               :de.explorama.shared.data-format.dates/full-date
+               :de.explorama.shared.data-format.dates/month)
         conj-ele (case op
                    :not= :and
                    :or)]
@@ -170,7 +170,7 @@
                      values)))))
 
 (defn year->filter [attribute advanced condition value from to last-x-vals all-values?]
-  (let [attr :data-format-lib.dates/year
+  (let [attr :de.explorama.shared.data-format.dates/year
         op (when value (condition->pred-op advanced condition))
         val-filter (when value (gen-date-int-filter op attr value))
         from-val from
@@ -197,7 +197,7 @@
 (defn day->filter
   [attribute advanced condition value from to last-x-vals all-values?]
   (let [;; selection by day as month day (1 to 31) not in UI yet.
-        attr :data-format-lib.dates/full-date
+        attr :de.explorama.shared.data-format.dates/full-date
         op (when value (condition->pred-op advanced condition))
         val-filter (when value (gen-date-filter op attr value))
         [value from-val to-val] [value from to]]
@@ -280,7 +280,7 @@
 
 (defn formdata->filter
   "Returns a list of predicates from the formdata.
-  The format is defined by data-format-lib.filter/pred."
+  The format is defined by de.explorama.shared.data-format.filter/pred."
   [formdata]
   (log/trace "formdata->filter" {:formdata formdata})
   (cons :and (->> (map data->filter

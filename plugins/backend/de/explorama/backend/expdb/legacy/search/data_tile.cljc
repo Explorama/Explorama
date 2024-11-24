@@ -1,6 +1,6 @@
 (ns de.explorama.backend.expdb.legacy.search.data-tile
-  (:require [data-format-lib.dates :as dfl-dates]
-            [data-format-lib.filter-functions :refer [default-impl]]
+  (:require [de.explorama.shared.data-format.dates :as dfl-dates]
+            [de.explorama.shared.data-format.filter-functions :refer [default-impl]]
             [de.explorama.backend.expdb.config :as config-expdb]
             [de.explorama.backend.expdb.query.graph :as ngraph]
             [de.explorama.shared.common.unification.misc :refer [cljc-parse-int]]))

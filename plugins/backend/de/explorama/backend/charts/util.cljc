@@ -1,7 +1,7 @@
 (ns de.explorama.backend.charts.util
   (:require [clojure.string :as string]
-            [data-format-lib.aggregations :as dfl-agg]
-            [data-format-lib.filter]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.filter]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.common.unification.time :refer [to-long]]
             [de.explorama.shared.common.unification.misc :refer [cljc-max-int

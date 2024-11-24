@@ -1,6 +1,6 @@
 (ns de.explorama.backend.search.datainstance.core
-  (:require [data-format-lib.core :as dfl-core]
-            [data-format-lib.data-instance :as di]
+  (:require [de.explorama.shared.data-format.core :as dfl-core]
+            [de.explorama.shared.data-format.data-instance :as di]
             [de.explorama.backend.common.middleware.cache :as idb-cache]
             [de.explorama.backend.expdb.middleware.ac :as dt-ref-api]
             [de.explorama.backend.search.config :as config-search]

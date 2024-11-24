@@ -4,7 +4,7 @@
   (:require [clojure.pprint :as pprint]
             [clojure.set :refer [rename-keys]]
             [clojure.test :refer [deftest is testing]]
-            [data-format-lib.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.backend.charts.data.api :as data-api]
             [de.explorama.backend.charts.data.core :as charts-core]
             [de.explorama.backend.charts.data.fetch :as data-fetch]

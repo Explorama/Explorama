@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.search.komplexe-suche
   (:require [clojure.spec.alpha :as spec]
-            [data-format-lib.data-instance :as di]
+            [de.explorama.shared.data-format.data-instance :as di]
             [de.explorama.frontend.search.views.formdata]
             [expound.alpha :as expound]))
 

@@ -1,7 +1,7 @@
 (ns de.explorama.frontend.charts.charts.legend
   (:require [clojure.string :refer [join]]
-            [data-format-lib.filter]
-            [data-format-lib.simplified-view :as dflsv]
+            [de.explorama.shared.data-format.filter]
+            [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core :refer [label tooltip]]

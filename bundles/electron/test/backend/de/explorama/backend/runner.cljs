@@ -1,12 +1,12 @@
 (ns de.explorama.backend.runner
-  (:require [data-format-lib.core-test]
-            [data-format-lib.data-test]
-            [data-format-lib.date-filter-test]
-            [data-format-lib.operations-indicator-test]
-            [data-format-lib.operations-mosaic-test]
-            [data-format-lib.operations-test]
-            [data-format-lib.simplified-view-test]
-            [data-format-lib.standard-filter-test]
+  (:require [de.explorama.shared.data-format.core-test]
+            [de.explorama.shared.data-format.data-test]
+            [de.explorama.shared.data-format.date-filter-test]
+            [de.explorama.shared.data-format.operations-indicator-test]
+            [de.explorama.shared.data-format.operations-mosaic-test]
+            [de.explorama.shared.data-format.operations-test]
+            [de.explorama.shared.data-format.simplified-view-test]
+            [de.explorama.shared.data-format.standard-filter-test]
             [de.explorama.backend.algorithms.data.future-data-test]
             [de.explorama.backend.algorithms.data.redo-test]
             [de.explorama.backend.algorithms.data.train-data-test]
@@ -49,14 +49,14 @@
             [doo.runner :refer-macros [doo-tests]]))
 
 (doo-tests
- 'data-format-lib.core-test
- 'data-format-lib.data-test
- 'data-format-lib.date-filter-test
- 'data-format-lib.operations-indicator-test
- 'data-format-lib.operations-test
- 'data-format-lib.standard-filter-test
- 'data-format-lib.simplified-view-test
- 'data-format-lib.operations-mosaic-test
+ 'de.explorama.shared.data-format.core-test
+ 'de.explorama.shared.data-format.data-test
+ 'de.explorama.shared.data-format.date-filter-test
+ 'de.explorama.shared.data-format.operations-indicator-test
+ 'de.explorama.shared.data-format.operations-test
+ 'de.explorama.shared.data-format.standard-filter-test
+ 'de.explorama.shared.data-format.simplified-view-test
+ 'de.explorama.shared.data-format.operations-mosaic-test
  'de.explorama.backend.algorithms.data.future-data-test
  'de.explorama.backend.algorithms.data.redo-test
  'de.explorama.backend.algorithms.data.train-data-test

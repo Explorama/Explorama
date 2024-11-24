@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.mosaic.views.legend
   (:require [clojure.string :as str :refer [join]]
-            [data-format-lib.simplified-view :as dflsv]
+            [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button select]]

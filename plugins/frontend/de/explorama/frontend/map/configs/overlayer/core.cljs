@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.configs.overlayer.core
   (:require [de.explorama.frontend.common.frontend-interface :as fi]
-            [data-format-lib.aggregations :as dfl-aggr]
+            [de.explorama.shared.data-format.aggregations :as dfl-aggr]
             [de.explorama.frontend.map.configs.overlayer.view :as overlayer]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.shared.map.ws-api :as ws-api]

@@ -1,9 +1,9 @@
 (ns de.explorama.frontend.mosaic.data-structure.data-format-test
-  (:require [data-format-lib.core :as dflc]
+  (:require [de.explorama.shared.data-format.core :as dflc]
             [de.explorama.frontend.mosaic.global-filter :as ggf]
             [de.explorama.frontend.mosaic.data-access-layer :as gdal]
             [de.explorama.frontend.mosaic.data-structure.cljs-impl :as gdsci]
-            [data-format-lib.filter-functions :as ff]
+            [de.explorama.shared.data-format.filter-functions :as ff]
             [cljs.test :as t :include-macros true]))
 
 (def date-test-input-org [{"date" "2012", "a" 1}
@@ -23,7 +23,7 @@
                 (gdal/g->))
                (gdal/g->
                 (dflc/filter-data
-                 [:and [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/month, :value 1}]]
+                 [:and [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/month, :value 1}]]
                  date-test-input
                  test-impl-dfl)))))
 
@@ -36,7 +36,7 @@
                (gdal/g->
 
                 (dflc/filter-data
-                 [:and [:and #:data-format-lib.filter{:op :>=, :prop :data-format-lib.dates/full-date, :value "2014-02-03"}]]
+                 [:and [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop :de.explorama.shared.data-format.dates/full-date, :value "2014-02-03"}]]
                  date-test-input
                  test-impl-dfl)))))
 
@@ -49,7 +49,7 @@
                 (gdal/g->))
                (gdal/g->
                 (dflc/filter-data
-                 [:and [:and #:data-format-lib.filter{:op :>, :prop :data-format-lib.dates/year, :value 2012}]]
+                 [:and [:and #:de.explorama.shared.data-format.filter{:op :>, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]]
                  date-test-input
                  test-impl-dfl)))))
 
@@ -62,7 +62,7 @@
               (gdal/g->))
              (gdal/g->
               (dflc/filter-data
-               [:and [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}]]
+               [:and [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]]
                date-test-input
                test-impl-dfl)))))
 
@@ -74,7 +74,7 @@
                 (gdal/g->))
                (gdal/g->
                 (dflc/filter-data
-                 #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}
+                 #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}
                  date-test-input
                  test-impl-dfl)))))
 
@@ -87,7 +87,7 @@
               (gdal/g->))
              (gdal/g->
               (dflc/filter-data
-               [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}]
+               [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]
                date-test-input
                test-impl-dfl)))))
 
@@ -99,7 +99,7 @@
                 (gdal/g->))
                (gdal/g->
                 (dflc/filter-data
-                 [:and [:and [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}]]]
+                 [:and [:and [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]]]
                  date-test-input
                  test-impl-dfl)))))
 
@@ -115,7 +115,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   [:and [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/month, :value 1}]]
+                   [:and [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/month, :value 1}]]
                    date-test-input
                    test-impl-dfl))))))
 
@@ -130,7 +130,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   [:and [:and #:data-format-lib.filter{:op :>=, :prop :data-format-lib.dates/full-date, :value "2014-02-03"}]]
+                   [:and [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop :de.explorama.shared.data-format.dates/full-date, :value "2014-02-03"}]]
                    date-test-input
                    test-impl-dfl))))))
 
@@ -146,7 +146,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   [:and [:and #:data-format-lib.filter{:op :>, :prop :data-format-lib.dates/year, :value 2012}]]
+                   [:and [:and #:de.explorama.shared.data-format.filter{:op :>, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]]
                    date-test-input
                    test-impl-dfl))))))
 
@@ -161,7 +161,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   [:and [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}]]
+                   [:and [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]]
                    date-test-input
                    test-impl-dfl))))))
 
@@ -194,7 +194,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}
+                   #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}
                    date-test-input
                    test-impl-dfl))))))
 
@@ -209,7 +209,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}]
+                   [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]
                    date-test-input
                    test-impl-dfl))))))
 
@@ -224,7 +224,7 @@
                   (gdal/g->))
                  (gdal/g->
                   (dflc/group-by-data
-                   [:and [:and [:and #:data-format-lib.filter{:op :=, :prop :data-format-lib.dates/year, :value 2012}]]]
+                   [:and [:and [:and #:de.explorama.shared.data-format.filter{:op :=, :prop :de.explorama.shared.data-format.dates/year, :value 2012}]]]
                    date-test-input
                    test-impl-dfl))))))))
 
@@ -286,7 +286,7 @@
                     (gdal/g->))
                (gdal/g->
                 (dflc/filter-data
-                 #:data-format-lib.filter{:op :=, :prop "a", :value "hello"}
+                 #:de.explorama.shared.data-format.filter{:op :=, :prop "a", :value "hello"}
                  test-input-map
                  test-impl-dfl)))))
     (t/testing (str "includes filter" " " text)
@@ -296,7 +296,7 @@
                     (gdal/->g)
                     (gdal/g->))
                (gdal/g-> (dflc/filter-data
-                          #:data-format-lib.filter{:op :includes, :prop "a", :value "hello"}
+                          #:de.explorama.shared.data-format.filter{:op :includes, :prop "a", :value "hello"}
                           test-input-map
                           test-impl-dfl)))))
     (t/testing (str "excludes filter" " " text)
@@ -306,7 +306,7 @@
                     (gdal/->g)
                     (gdal/g->))
                (gdal/g-> (dflc/filter-data
-                          #:data-format-lib.filter{:op :excludes, :prop "a", :value "hello"}
+                          #:de.explorama.shared.data-format.filter{:op :excludes, :prop "a", :value "hello"}
                           test-input-map
                           test-impl-dfl)))))
     (t/testing (str "group-by string = filter" " " text)
@@ -319,7 +319,7 @@
                      (gdal/->g)
                      (gdal/g->))
                 (gdal/g-> (dflc/group-by-data
-                           #:data-format-lib.filter{:op :=, :prop "a", :value "hello"}
+                           #:de.explorama.shared.data-format.filter{:op :=, :prop "a", :value "hello"}
                            test-input-map
                            test-impl-dfl)))))
     (t/testing (str "group-by includes filter" " " text)
@@ -332,7 +332,7 @@
                     (gdal/->g)
                     (gdal/g->))
                (gdal/g-> (dflc/group-by-data
-                          #:data-format-lib.filter{:op :includes, :prop "a", :value "hello"}
+                          #:de.explorama.shared.data-format.filter{:op :includes, :prop "a", :value "hello"}
                           test-input-map
                           test-impl-dfl)))))
     (t/testing (str "group-by excludes filter" " " text)
@@ -345,7 +345,7 @@
                      (gdal/->g)
                      (gdal/g->))
                (gdal/g-> (dflc/group-by-data
-                          #:data-format-lib.filter{:op :excludes, :prop "a", :value "hello"}
+                          #:de.explorama.shared.data-format.filter{:op :excludes, :prop "a", :value "hello"}
                           test-input-map
                           test-impl-dfl)))))
     (t/testing (str "vector values = filter" " " text)
@@ -355,7 +355,7 @@
                      (gdal/->g)
                      (gdal/g->))
                (gdal/g-> (dflc/filter-data
-                          #:data-format-lib.filter{:op := :prop "a" :value "hello"}
+                          #:de.explorama.shared.data-format.filter{:op := :prop "a" :value "hello"}
                           test-input-vector
                           test-impl-dfl)))))
     (t/testing (str "nil values >= filter" " " text)
@@ -365,7 +365,7 @@
                     (gdal/->g)
                     (gdal/g->)))
             (gdal/g-> (dflc/filter-data
-                       #:data-format-lib.filter{:op :>= :prop "c" :value 1.3}
+                       #:de.explorama.shared.data-format.filter{:op :>= :prop "c" :value 1.3}
                        test-input-map
                        test-impl-dfl))))
     (t/testing (str "nil values >= filter in vector" " " text)
@@ -373,7 +373,7 @@
                                      "b" "hello-world"
                                      "c" 2.1}]))
                (gdal/g-> (dflc/filter-data
-                          #:data-format-lib.filter{:op :>= :prop "c" :value 1.3}
+                          #:de.explorama.shared.data-format.filter{:op :>= :prop "c" :value 1.3}
                           test-input-map
                           test-impl-dfl)))))
     (t/testing (str "group-by vector values = filter" " " text)
@@ -385,7 +385,7 @@
                     (gdal/->g)
                     (gdal/g->))
                (gdal/g-> (dflc/group-by-data
-                          #:data-format-lib.filter{:op := :prop "a" :value "hello"}
+                          #:de.explorama.shared.data-format.filter{:op := :prop "a" :value "hello"}
                           test-input-vector
                           test-impl-dfl)))))))
 

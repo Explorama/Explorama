@@ -30,13 +30,13 @@
 
 (def filter-desc [:and
                   [:and
-                   {:data-format-lib.filter/op :>=, :data-format-lib.filter/prop :data-format-lib.dates/year, :data-format-lib.filter/value 2004}
-                   {:data-format-lib.filter/op :<=, :data-format-lib.filter/prop :data-format-lib.dates/year, :data-format-lib.filter/value 2016}]
+                   {:de.explorama.shared.data-format.filter/op :>=, :de.explorama.shared.data-format.filter/prop :de.explorama.shared.data-format.dates/year, :de.explorama.shared.data-format.filter/value 2004}
+                   {:de.explorama.shared.data-format.filter/op :<=, :de.explorama.shared.data-format.filter/prop :de.explorama.shared.data-format.dates/year, :de.explorama.shared.data-format.filter/value 2016}]
                   [:and
-                   {:data-format-lib.filter/op :>=, :data-format-lib.filter/prop td/fact-1, :data-format-lib.filter/value 1}
-                   {:data-format-lib.filter/op :<=, :data-format-lib.filter/prop td/fact-1, :data-format-lib.filter/value 4}]
+                   {:de.explorama.shared.data-format.filter/op :>=, :de.explorama.shared.data-format.filter/prop td/fact-1, :de.explorama.shared.data-format.filter/value 1}
+                   {:de.explorama.shared.data-format.filter/op :<=, :de.explorama.shared.data-format.filter/prop td/fact-1, :de.explorama.shared.data-format.filter/value 4}]
                   [:or
-                   {:data-format-lib.filter/op :=, :data-format-lib.filter/prop td/country, :data-format-lib.filter/value td/country-a}]])
+                   {:de.explorama.shared.data-format.filter/op :=, :de.explorama.shared.data-format.filter/prop td/country, :de.explorama.shared.data-format.filter/value td/country-a}]])
 
 
 (deftest translate-ui-desc-to-filter-desc
@@ -50,11 +50,11 @@
 
 (def filter-date [:and
                   [:and
-                   {:data-format-lib.filter/op :>=, :data-format-lib.filter/prop :data-format-lib.dates/year, :data-format-lib.filter/value 2004}
-                   {:data-format-lib.filter/op :<=, :data-format-lib.filter/prop :data-format-lib.dates/year, :data-format-lib.filter/value 2016}]
+                   {:de.explorama.shared.data-format.filter/op :>=, :de.explorama.shared.data-format.filter/prop :de.explorama.shared.data-format.dates/year, :de.explorama.shared.data-format.filter/value 2004}
+                   {:de.explorama.shared.data-format.filter/op :<=, :de.explorama.shared.data-format.filter/prop :de.explorama.shared.data-format.dates/year, :de.explorama.shared.data-format.filter/value 2016}]
                   [:and
-                   {:data-format-lib.filter/op :>=, :data-format-lib.filter/prop :data-format-lib.dates/full-date, :data-format-lib.filter/value "2004-01-31"}
-                   {:data-format-lib.filter/op :<=, :data-format-lib.filter/prop :data-format-lib.dates/full-date, :data-format-lib.filter/value "2015-01-31"}]])
+                   {:de.explorama.shared.data-format.filter/op :>=, :de.explorama.shared.data-format.filter/prop :de.explorama.shared.data-format.dates/full-date, :de.explorama.shared.data-format.filter/value "2004-01-31"}
+                   {:de.explorama.shared.data-format.filter/op :<=, :de.explorama.shared.data-format.filter/prop :de.explorama.shared.data-format.dates/full-date, :de.explorama.shared.data-format.filter/value "2015-01-31"}]])
 
 
 (deftest translate-date-filter-desc-to-date-ui-desc

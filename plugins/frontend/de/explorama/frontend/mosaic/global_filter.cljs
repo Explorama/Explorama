@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.mosaic.global-filter
   "Currently unused. Leaved here as data-format-lib protocol implementation for the internal mosaic data-structure"
-  (:require [data-format-lib.filter-functions :as ff]
+  (:require [de.explorama.shared.data-format.filter-functions :as ff]
             [de.explorama.frontend.mosaic.data-access-layer :as gdal]))
 
 (def impl

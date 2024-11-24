@@ -2,7 +2,7 @@
   (:require #?(:clj [clj-fuzzy.stemmers :refer [lancaster lovins porter]])
             #?(:clj [peco.core :as peco])
             [clojure.string :as string]
-            [data-format-lib.filter]
+            [de.explorama.shared.data-format.filter]
             [de.explorama.backend.charts.config :as config]
             [de.explorama.backend.charts.data.helper :refer [attribute-value
                                                              chart-options]]

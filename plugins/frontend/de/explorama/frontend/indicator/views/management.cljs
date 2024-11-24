@@ -4,7 +4,7 @@
   (:require [cljs.reader :as reader]
             [clojure.set :as set]
             [clojure.string :as str]
-            [data-format-lib.data-instance :as dfl-di]
+            [de.explorama.shared.data-format.data-instance :as dfl-di]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.indicator.path :as ip]

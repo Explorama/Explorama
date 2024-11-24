@@ -90,10 +90,10 @@
 
 (defn- generate-broadcast-filter [client-id target-user-infos]
   [:and
-   #:data-format-lib.filter{:op :not=, :prop :client-id, :value client-id}
+   #:de.explorama.shared.data-format.filter{:op :not=, :prop :client-id, :value client-id}
    (reduce (fn [acc {:keys [value]}]
              (conj acc
-                   #:data-format-lib.filter{:op :=, :prop :username, :value value}))
+                   #:de.explorama.shared.data-format.filter{:op :=, :prop :username, :value value}))
            [:or]
            target-user-infos)])
 

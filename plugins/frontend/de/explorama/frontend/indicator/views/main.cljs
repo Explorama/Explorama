@@ -1,8 +1,8 @@
 (ns de.explorama.frontend.indicator.views.main
   "Defines the main part where a selected Indicator can be defined."
   (:require [clojure.string :as str]
-            [data-format-lib.dates :as dfdates]
-            [data-format-lib.simplified-view :as dflsv]
+            [de.explorama.shared.data-format.dates :as dfdates]
+            [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button
@@ -163,10 +163,10 @@
   ([label attribute]
    [info-block label attribute (i18n/attribute-label attribute)]))
 
-(defn- more-data-row [{:data-format-lib.filter/keys [prop value]
+(defn- more-data-row [{:de.explorama.shared.data-format.filter/keys [prop value]
                        op ::dflsv/op}]
   (let [lang @(re-frame/subscribe [::i18n/current-language])
-        value (if (= prop :data-format-lib.dates/month)
+        value (if (= prop :de.explorama.shared.data-format.dates/month)
                 (if (vector? value)
                   (mapv #(i18n/month-name % lang) value)
                   (i18n/month-name value lang))

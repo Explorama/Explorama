@@ -1,5 +1,5 @@
 (ns de.explorama.backend.rights-roles.attribute-infos.api
-  (:require [de.explorama.backend.abac.util :as abac-util]
+  (:require [de.explorama.shared.abac.util :as abac-util]
             [clojure.string :as str]
             [de.explorama.backend.rights-roles.attribute-infos.adapter-keycloak :as keycloak]
             [de.explorama.backend.rights-roles.attribute-infos.adapter-ldap :as ldap]

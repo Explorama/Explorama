@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.settings
-  (:require [data-format-lib.filter]
+  (:require [de.explorama.shared.data-format.filter]
             [de.explorama.frontend.charts.charts.bar :as bar]
             [de.explorama.frontend.charts.charts.bubble :as bubble]
             [de.explorama.frontend.charts.charts.line :as line]

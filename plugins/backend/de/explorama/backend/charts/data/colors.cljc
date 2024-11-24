@@ -1,5 +1,5 @@
 (ns de.explorama.backend.charts.data.colors
-  (:require [data-format-lib.filter]
+  (:require [de.explorama.shared.data-format.filter]
             [de.explorama.backend.charts.config :as config]
             [de.explorama.shared.charts.util :refer [colors
                                                      colors-second-chart]]))

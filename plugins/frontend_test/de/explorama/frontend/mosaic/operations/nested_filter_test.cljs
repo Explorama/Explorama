@@ -51,32 +51,32 @@
 (deftest copy-group-filter-1
   (testing "Generates Filter for simple group-by"
     (is (= (@#'gou/nested-filter-copy [1 0] test-data-grp-1 nil)
-           [:or {:data-format-lib.filter/op :=
-                 :data-format-lib.filter/prop "category"
-                 :data-format-lib.filter/value "Category 2"}]))
+           [:or {:de.explorama.shared.data-format.filter/op :=
+                 :de.explorama.shared.data-format.filter/prop "category"
+                 :de.explorama.shared.data-format.filter/value "Category 2"}]))
     (is (= (@#'gou/nested-filter-copy [1 1] test-data-grp-1 nil)
-           [:or {:data-format-lib.filter/op :=
-                 :data-format-lib.filter/prop "category"
-                 :data-format-lib.filter/value "Category 1"}]))))
+           [:or {:de.explorama.shared.data-format.filter/op :=
+                 :de.explorama.shared.data-format.filter/prop "category"
+                 :de.explorama.shared.data-format.filter/value "Category 1"}]))))
 
 (deftest copy-group-filter-2
   (testing "Generates Filter for simple group-by"
     (is (= (@#'gou/nested-filter-copy [1 1 1 0] test-data-grp-2 nil)
            [:and
-            [:or {:data-format-lib.filter/op :=
-                  :data-format-lib.filter/prop "category"
-                  :data-format-lib.filter/value "Category 1"}]
-            [:or {:data-format-lib.filter/op :=
-                  :data-format-lib.filter/prop "tag"
-                  :data-format-lib.filter/value "Protest with intervention"}]]))
+            [:or {:de.explorama.shared.data-format.filter/op :=
+                  :de.explorama.shared.data-format.filter/prop "category"
+                  :de.explorama.shared.data-format.filter/value "Category 1"}]
+            [:or {:de.explorama.shared.data-format.filter/op :=
+                  :de.explorama.shared.data-format.filter/prop "tag"
+                  :de.explorama.shared.data-format.filter/value "Protest with intervention"}]]))
     (is (= (@#'gou/nested-filter-copy [1 0 1 0] test-data-grp-2 nil)
            [:and
-            [:or {:data-format-lib.filter/op :=
-                  :data-format-lib.filter/prop "category"
-                  :data-format-lib.filter/value "Category 2"}]
-            [:or {:data-format-lib.filter/op :=
-                  :data-format-lib.filter/prop "tag"
-                  :data-format-lib.filter/value "Tag 1"}]]))))
+            [:or {:de.explorama.shared.data-format.filter/op :=
+                  :de.explorama.shared.data-format.filter/prop "category"
+                  :de.explorama.shared.data-format.filter/value "Category 2"}]
+            [:or {:de.explorama.shared.data-format.filter/op :=
+                  :de.explorama.shared.data-format.filter/prop "tag"
+                  :de.explorama.shared.data-format.filter/value "Tag 1"}]]))))
 
 
 (def layouts-1
@@ -158,92 +158,92 @@
             #js {:color "#fb8d02", :id "7c7b8c8f-b35f-4b83-8a57-47414f0a3e43"} "layout"
             layouts-1 :=)
            [:or
-            [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 3}
-             #:data-format-lib.filter{:op :<, :prop "fact-1", :value 4}]
-            [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 3}
-             #:data-format-lib.filter{:op :<, :prop "fact-1", :value 4}]]))
+            [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 3}
+             #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 4}]
+            [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 3}
+             #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 4}]]))
     (is (=  (gou/build-filter-entry
              #js {:color "#fb8d02", :id "7c7b8c8f-b35f-4b83-8a57-47414f0a3e43"} "layout"
              layouts-1 :not=)
             [:or
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 3}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 4}]
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 3}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 4}]]))
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 3}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 4}]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 3}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 4}]]))
     (is (= (gou/build-filter-entry
             "race" "category"  layouts-2 :=)
-           [:or #:data-format-lib.filter{:op :=, :prop "category", :value "race"}]))
+           [:or #:de.explorama.shared.data-format.filter{:op :=, :prop "category", :value "race"}]))
     (is (= (gou/build-filter-entry
             "race" "category"
             layouts-2 :not=)
-           [:or #:data-format-lib.filter{:op :not=, :prop "category", :value "race"}]))
+           [:or #:de.explorama.shared.data-format.filter{:op :not=, :prop "category", :value "race"}]))
     (is (= (gou/build-filter-entry
             #js {:color nil, :id nil} "layout"
             layouts-2 :=)
            [:and
-            [:and #:data-format-lib.filter{:op :not=, :prop "category", :value "circus"}]
-            [:and #:data-format-lib.filter{:op :not=, :prop "category", :value "race"}]
-            [:and #:data-format-lib.filter{:op :not=, :prop "category", :value "theater"}]]))
+            [:and #:de.explorama.shared.data-format.filter{:op :not=, :prop "category", :value "circus"}]
+            [:and #:de.explorama.shared.data-format.filter{:op :not=, :prop "category", :value "race"}]
+            [:and #:de.explorama.shared.data-format.filter{:op :not=, :prop "category", :value "theater"}]]))
     (is (= (gou/build-filter-entry
             #js {:color nil, :id nil} "layout"
             layouts-2 :not=)
            [:or
-            [:or #:data-format-lib.filter{:op :=, :prop "category", :value "circus"}]
-            [:or #:data-format-lib.filter{:op :=, :prop "category", :value "race"}]
-            [:or #:data-format-lib.filter{:op :=, :prop "category", :value "theater"}]]))
+            [:or #:de.explorama.shared.data-format.filter{:op :=, :prop "category", :value "circus"}]
+            [:or #:de.explorama.shared.data-format.filter{:op :=, :prop "category", :value "race"}]
+            [:or #:de.explorama.shared.data-format.filter{:op :=, :prop "category", :value "theater"}]]))
 
     (is (= (gou/build-filter-entry
             #js {:color nil, :id nil} "layout"
             layouts-3 :not=)
            [:or
-            [:or #:data-format-lib.filter{:op :=, :prop "category", :value "race"}]
-            [:or #:data-format-lib.filter{:op :=, :prop "category", :value "circus"}]]))
+            [:or #:de.explorama.shared.data-format.filter{:op :=, :prop "category", :value "race"}]
+            [:or #:de.explorama.shared.data-format.filter{:op :=, :prop "category", :value "circus"}]]))
 
     (is (= (gou/build-filter-entry
             #js {:color nil, :id nil} "layout"
             layouts-4 :=)
            [:and
             [:or
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 0}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 1}]
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 0}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 1}]]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 0}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 1}]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 0}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 1}]]
             [:or
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 1}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 2}]
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 1}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 2}]]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 1}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 2}]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 1}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 2}]]
             [:or
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 3}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 4}]
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 3}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 4}]]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 3}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 4}]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 3}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 4}]]
             [:or
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 4}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 1000000}]
-             [:or #:data-format-lib.filter{:op :<, :prop "fact-1", :value 4}
-              #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 1000000}]]]))
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 4}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 1000000}]
+             [:or #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 4}
+              #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 1000000}]]]))
     (is (= (gou/build-filter-entry
             #js {:color nil, :id nil} "layout"
             layouts-4 :not=)
            [:or
             [:or
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 0}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 1}]
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 0}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 1}]]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 0}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 1}]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 0}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 1}]]
             [:or
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 1}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 2}]
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 1}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 2}]]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 1}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 2}]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 1}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 2}]]
             [:or
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 3}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 4}]
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 3}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 4}]]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 3}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 4}]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 3}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 4}]]
             [:or
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 4}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 1000000}]
-             [:and #:data-format-lib.filter{:op :>=, :prop "fact-1", :value 4}
-              #:data-format-lib.filter{:op :<, :prop "fact-1", :value 1000000}]]]))))
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 4}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 1000000}]
+             [:and #:de.explorama.shared.data-format.filter{:op :>=, :prop "fact-1", :value 4}
+              #:de.explorama.shared.data-format.filter{:op :<, :prop "fact-1", :value 1000000}]]]))))

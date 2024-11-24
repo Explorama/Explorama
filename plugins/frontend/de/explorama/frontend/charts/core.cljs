@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.core
-  (:require [data-format-lib.data-instance :as dfl-di]
+  (:require [de.explorama.shared.data-format.data-instance :as dfl-di]
             [de.explorama.frontend.charts.acs]
             [de.explorama.frontend.charts.charts.core :as charts]
             [de.explorama.frontend.charts.charts.utils :as cutils]

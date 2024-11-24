@@ -3,7 +3,7 @@
             [de.explorama.frontend.common.i18n :as i18n]
             [goog.string.format]
             [re-frame.core :as re-frame]
-            [data-format-lib.simplified-view :as dflsv]
+            [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.table.path :as path]
             [de.explorama.frontend.table.config :as config]
             [de.explorama.frontend.table.table.data :as table-data]

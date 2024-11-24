@@ -1,9 +1,9 @@
 (ns de.explorama.frontend.reporting.views.legend
   (:require [clojure.set :refer [difference union]]
             [clojure.string :refer [join]]
-            [data-format-lib.dates :as dfdates]
-            [data-format-lib.filter :as dfl-filter]
-            [data-format-lib.simplified-view :as dflsv]
+            [de.explorama.shared.data-format.dates :as dfdates]
+            [de.explorama.shared.data-format.filter :as dfl-filter]
+            [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary tooltip]]
@@ -116,10 +116,10 @@
   ([label attribute]
    [info-block label attribute (i18n/attribute-label attribute)]))
 
-(defn- more-data-row [{:data-format-lib.filter/keys [prop value]
+(defn- more-data-row [{:de.explorama.shared.data-format.filter/keys [prop value]
                        op ::dflsv/op}]
   (let [lang @(subscribe [::i18n/current-language])
-        value (if (= prop :data-format-lib.dates/month)
+        value (if (= prop :de.explorama.shared.data-format.dates/month)
                 (if (vector? value)
                   (mapv #(i18n/month-name % lang) value)
                   (i18n/month-name value lang))

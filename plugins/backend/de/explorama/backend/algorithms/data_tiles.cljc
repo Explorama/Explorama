@@ -1,5 +1,5 @@
 (ns de.explorama.backend.algorithms.data-tiles
-  (:require [data-format-lib.core :as dfl-core]
+  (:require [de.explorama.shared.data-format.core :as dfl-core]
             [de.explorama.backend.common.middleware.cache :as cache]
             [de.explorama.backend.expdb.middleware.ac :as ac-api]
             [taoensso.timbre :refer [error]]

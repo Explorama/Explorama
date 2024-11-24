@@ -1,6 +1,6 @@
 (ns de.explorama.backend.charts.data.core
-  (:require [data-format-lib.aggregations :as dfl-agg]
-            [data-format-lib.filter]
+  (:require [de.explorama.shared.data-format.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.filter]
             [de.explorama.backend.charts.data.base-charts :as base-charts]
             [de.explorama.backend.charts.data.colors :refer [color]]
             [de.explorama.backend.charts.data.wordcloud :as wordcloud]

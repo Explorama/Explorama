@@ -1,7 +1,7 @@
 (ns de.explorama.backend.indicator.calculate
   (:require [clojure.set :as set]
-            [data-format-lib.filter-functions :as ff]
-            [data-format-lib.operations :as of]
+            [de.explorama.shared.data-format.filter-functions :as ff]
+            [de.explorama.shared.data-format.operations :as of]
             [de.explorama.backend.indicator.data.core :as data]
             [de.explorama.backend.indicator.persistence.core :as persistence]))
 

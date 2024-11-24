@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.core
   (:require [clojure.data :as data]
-            [data-format-lib.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.common.queue :as ddq]

@@ -1,5 +1,5 @@
 (ns de.explorama.backend.table.data.fetch
-  (:require [data-format-lib.core :as dfl]
+  (:require [de.explorama.shared.data-format.core :as dfl]
             [de.explorama.backend.common.aggregation :as common-aggregation]
             [de.explorama.backend.common.calculations.data-acs :as calc-acs]
             [de.explorama.backend.common.middleware.cache :as cache]

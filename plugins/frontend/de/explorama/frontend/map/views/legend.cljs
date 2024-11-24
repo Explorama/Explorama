@@ -1,7 +1,7 @@
 (ns de.explorama.frontend.map.views.legend
   (:require [clojure.string :as str :refer [join trim lower-case]]
-            [data-format-lib.aggregations :as dfl-agg]
-            [data-format-lib.simplified-view :as dflsv]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core

@@ -1,5 +1,5 @@
 (ns de.explorama.backend.frontend-api
-  (:require [data-format-lib.core :as dfl.core]
+  (:require [de.explorama.shared.data-format.core :as dfl.core]
             [de.explorama.backend.abac.jwt :as jwt]
             [de.explorama.backend.common.environment.probe :as probe]
             [de.explorama.backend.concurrent :as concurrent]

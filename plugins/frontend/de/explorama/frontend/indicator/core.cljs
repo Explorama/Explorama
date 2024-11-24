@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.indicator.core
-  (:require [data-format-lib.data-instance :as dfl-di]
+  (:require [de.explorama.shared.data-format.data-instance :as dfl-di]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.indicator.config :as config]
             [de.explorama.frontend.indicator.data-instances]

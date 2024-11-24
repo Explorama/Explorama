@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.algorithms.components.legend
-  (:require [data-format-lib.simplified-view :as dflsv]
+  (:require [de.explorama.shared.data-format.simplified-view :as dflsv]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.utils.colors :refer [css-RGB-string
@@ -45,8 +45,8 @@
    (get-in db (path/data-instance-consuming path))))
 
 (defn- sort-primitives [constraints]
-  (let [indices (first-indices :data-format-lib.filter/prop constraints)]
-    (sort-by (comp indices :data-format-lib.filter/prop) constraints)))
+  (let [indices (first-indices :de.explorama.shared.data-format.filter/prop constraints)]
+    (sort-by (comp indices :de.explorama.shared.data-format.filter/prop) constraints)))
 
 (re-frame/reg-sub
  ::simplified-di-desc

@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.configs.overlayer.view
   (:require [clojure.string :as str]
-            [data-format-lib.aggregations :as dfl-agg]
+            [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [select]]

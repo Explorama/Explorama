@@ -1,5 +1,5 @@
 (ns de.explorama.backend.rights-roles.ldap.ldap-client
-  (:require [de.explorama.backend.abac.util :as abac-util]
+  (:require [de.explorama.shared.abac.util :as abac-util]
             [clj-ldap.client :as ldap]
             [clojure.string :as s]
             [de.explorama.backend.rights-roles.ldap.ldap-util :as util]))

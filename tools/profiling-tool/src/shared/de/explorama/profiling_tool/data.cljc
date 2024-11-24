@@ -1,4 +1,4 @@
-(ns de.explorama.profiling-tool.data.core)
+(ns de.explorama.profiling-tool.data)
 
 (def data-a-1k-csv "data-a-1k-csv")
 (def data-a-10k-csv "data-a-10k-csv")

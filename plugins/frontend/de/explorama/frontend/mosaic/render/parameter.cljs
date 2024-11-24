@@ -7,6 +7,7 @@
             [de.explorama.frontend.mosaic.render.common :as grc]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
             [de.explorama.frontend.mosaic.vis.config :as gvc]
+            ["pixi.js" :refer [Color]]
             [de.explorama.shared.mosaic.common-paths :as gcp]))
 
 (defrecord ContextParams [cpl-ctn
@@ -608,7 +609,7 @@
                                                    (let [values-rgb (map (fn [event]
                                                                            (let [color (gdal/first event)]
                                                                              (when (string? color)
-                                                                               (-> (js/PIXI.Color. color)
+                                                                               (-> (Color. color)
                                                                                    (.toRgbArray)))))
                                                                          current-data)
                                                          acc-values-rgb (reduce (fn [acc rgb]

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.minimap.render
-  (:require ["@pixi/core"]
+  (:require ["pixi.js" :refer [Sprite  Graphics Color Application Container]]
             [clojure.set :refer [difference]]
             [clojure.string :refer [starts-with?]]
             [taoensso.timbre :refer [error]]
@@ -27,7 +27,7 @@
   [rgb]
   (if-let [hex (get @hex-color-cache rgb)]
     hex
-    (-> (swap! hex-color-cache assoc rgb (-> (js/PIXI.Color. (clj->js (mapv #(/ % 255) rgb)))
+    (-> (swap! hex-color-cache assoc rgb (-> (Color. (clj->js (mapv #(/ % 255) rgb)))
                                              (.toNumber)))
         (get rgb))))
 
@@ -82,7 +82,7 @@
   "Get sprite with icon as texture"
   [texture-id]
   (when-let [tex (resources/texture texture-id)]
-    (when-let [sprite (js/PIXI.Sprite. tex)]
+    (when-let [sprite (Sprite. tex)]
       {:ico sprite
        :w-h-ratio (/ (aget tex "orig" "width")
                      (max (aget tex "orig" "height") 1))
@@ -116,8 +116,8 @@
   (let [{:keys [frames frames-container]} @state]
     (when-not (get frames id)
      ;; ----- initialize frame: Only when not exists
-      (let [frame (js/PIXI.Container.)
-            bg (js/PIXI.Graphics.)
+      (let [frame (Container.)
+            bg (Graphics.)
             {:keys [ico ico-original-w ico-original-h w-h-ratio]}
             (when config/minimap-render-icons?
               (icon-sprite (resources/mm-texture-id (:vertical id))))]
@@ -295,19 +295,19 @@
   "Initialize minimap application"
   [state]
   (when-let [host (:host @state)]
-    (let [app (js/PIXI.Application. (clj->js {:autoStart false
-                                              :width config/minimap-width
-                                              :height config/minimap-height
-                                              :antialias true
-                                              :resolution config/minimap-resolution
-                                              :roundPixels false
-                                              :backgroundAlpha 0
-                                              :forceCanvas true
-                                              :sharedTicker false
-                                              :view host}))
-          viewport (js/PIXI.Container.)
-          viewport-graphic (js/PIXI.Graphics.)
-          cont (js/PIXI.Container.)
+    (let [app (Application. (clj->js {:autoStart false
+                                      :width config/minimap-width
+                                      :height config/minimap-height
+                                      :antialias true
+                                      :resolution config/minimap-resolution
+                                      :roundPixels false
+                                      :backgroundAlpha 0
+                                      :forceCanvas true
+                                      :sharedTicker false
+                                      :view host}))
+          viewport (Container.)
+          viewport-graphic (Graphics.)
+          cont (Container.)
           stage (aget app "stage")]
       (aset cont "sortableChildren" true)
       (aset viewport "zIndex" 9999999)

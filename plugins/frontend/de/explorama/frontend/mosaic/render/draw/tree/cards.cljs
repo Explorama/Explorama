@@ -5,7 +5,8 @@
             [de.explorama.frontend.mosaic.render.engine :as gre]
             [de.explorama.frontend.mosaic.render.parameter :as grp]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
-            [de.explorama.frontend.mosaic.interaction.state :as tooltip]))
+            [de.explorama.frontend.mosaic.interaction.state :as tooltip]
+            ["pixi.js" :refer [Container Graphics]]))
 
 (def black [0 0 0])
 
@@ -57,11 +58,11 @@
         {:keys [path theme]}
         (gre/state instance)
         data-path (pc/data-path render-path)
-        stage (js/PIXI.Container.)
+        stage (Container.)
         frame-id (gre/frame-id instance)]
     (.addChild stage-parent stage)
-    (.addChild stage (js/PIXI.Graphics.))
-    (.addChild stage (js/PIXI.Graphics.))
+    (.addChild stage (Graphics.))
+    (.addChild stage (Graphics.))
     (gre/interaction-primitive instance
                                stage
                                "dblclick"
@@ -75,10 +76,10 @@
                                          inspector-header-y 0
                                          size-x (* 0.8 width)
                                          size-y (* 0.8 height)
-                                         inspector-stage (js/PIXI.Container.)
-                                         main-container (js/PIXI.Container.)
-                                         axes-container (js/PIXI.Container.)
-                                         background-container (js/PIXI.Container.)
+                                         inspector-stage (Container.)
+                                         main-container (Container.)
+                                         axes-container (Container.)
+                                         background-container (Container.)
                                          contexts
                                          (grp/grp-contexts data
                                                            nil
@@ -128,10 +129,10 @@
                                                   axes-container
                                                   (pc/axes-container pc/inspector-stage-index))
                                      (.addChildAt axes-container
-                                                  (js/PIXI.Container.)
+                                                  (Container.)
                                                   (pc/axes-background-container pc/inspector-stage-index))
                                      (.addChildAt axes-container
-                                                  (js/PIXI.Container.)
+                                                  (Container.)
                                                   (pc/axes-text-container pc/inspector-stage-index))
                                      (gre/move-to! instance pc/inspector-stage-index
                                                    (+ (/ inspector-margin-x max-zoom))
@@ -173,10 +174,10 @@
 (defn- group-body [instance stage-parent overview-factor optional-desc]
   (let [{:keys [start-x start-y end-x end-y]} optional-desc
         {:keys [theme]} (gre/state instance)
-        stage (js/PIXI.Container.)]
+        stage (Container.)]
     (.addChild stage-parent stage)
-    (.addChild stage (js/PIXI.Graphics.))
-    (.addChild stage (js/PIXI.Graphics.))
+    (.addChild stage (Graphics.))
+    (.addChild stage (Graphics.))
     (when optional-desc
       (gre/rect instance
                 stage

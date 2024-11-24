@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.reporting.views.text-module
-  (:require ["quill"]
+  (:require ["quill" :as quill]
             [re-frame.core :refer [dispatch reg-event-db reg-sub subscribe]]
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]
@@ -76,10 +76,10 @@
 (defn- setup-quill [instance parents tile-idx {:keys [content]}]
   (let [{:keys [toolbar no-toolbar]} @parents
         {:keys [body header]} toolbar
-        toolbar-instance (js/Quill. (str "#" (aget body "id"))
-                                    (clj->js (default-editor-config-toolbar (aget header "id"))))
-        no-toolbar-instance (js/Quill. (str "#" (aget no-toolbar "id"))
-                                       (clj->js default-editor-config-no-toolbar))]
+        toolbar-instance (quill. (str "#" (aget body "id"))
+                                 (clj->js (default-editor-config-toolbar (aget header "id"))))
+        no-toolbar-instance (quill. (str "#" (aget no-toolbar "id"))
+                                    (clj->js default-editor-config-no-toolbar))]
     ;;TODO r1/reporting optimize We should use just one instance here and toggle of the toolbar instead of an extra instance and sync the content
     (.on toolbar-instance "text-change" (partial handle-max-length
                                                  toolbar-instance
@@ -198,8 +198,8 @@
 
 (defn- read-only-setup-quill [parent module-desc]
   (let [content (get module-desc :content)
-        instance (js/Quill. (str "#" (aget @parent "id"))
-                            (clj->js default-read-only-config))]
+        instance (quill. (str "#" (aget @parent "id"))
+                         (clj->js default-read-only-config))]
     (.setContents instance (.parse js/JSON content))))
 
 (defn read-only-text-module [tile-idx module-desc]

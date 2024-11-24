@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.resources
-  (:require ["@pixi/core"]
+  (:require ["pixi.js" :refer [utils Texture]]
             [de.explorama.frontend.ui-base.components.misc.icon :as icon]
             [taoensso.timbre :refer [debug]]
             [de.explorama.frontend.woco.config :as config]
@@ -45,7 +45,7 @@
 (defn texture
   "Get texture with given id"
   [texture-id]
-  (aget js/PIXI.utils.TextureCache texture-id))
+  (aget utils.TextureCache texture-id))
 
 (defn texture-cached?
   "Checks if a texture is cached"
@@ -68,8 +68,8 @@
                                    :callback-fn (fn [r]
                                                   (js/document.body.removeChild temp-elem)
                                                   (when (and icon-id (not (texture-cached? icon-id)))
-                                                    (js/PIXI.Texture.addToCache (js/PIXI.Texture.from r)
-                                                                                icon-id)))
+                                                    (Texture.addToCache (Texture.from r)
+                                                                        icon-id)))
                                    :type :canvas}))))
 
 (defn- extract-colors

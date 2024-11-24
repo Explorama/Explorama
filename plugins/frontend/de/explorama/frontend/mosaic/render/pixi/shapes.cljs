@@ -3,6 +3,7 @@
             [de.explorama.frontend.mosaic.config :as config]
             [de.explorama.frontend.mosaic.render.config :refer [select-event?]]
             [de.explorama.frontend.mosaic.render.draw.color :as color]
+            ["pixi.js" :refer [utils Sprite Text TextStyle TextMetrics Graphics Point Color]]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]))
 
 (def ^:private double-click (atom 0))
@@ -156,9 +157,9 @@
                              %))))
 
 (defn- rgb->hex [rgb]
-  (-> (js/PIXI.Color. (if (vector? rgb)
-                        (clj->js (mapv #(/ % 255) rgb))
-                        rgb))
+  (-> (Color. (if (vector? rgb)
+                (clj->js (mapv #(/ % 255) rgb))
+                rgb))
       (.toNumber)))
 
 (defn rect [g x y w h c {:keys [a rounded? radius outline] :or {a 1}}]
@@ -202,7 +203,7 @@
   (.endFill g))
 
 (defn point [x y]
-  (js/PIXI.Point. x y))
+  (Point. x y))
 
 (defn interaction-primitive
   "stage-num is usally 0 but for header 1 because mosaic uses usally one graphics object per zoomlevel and if we want to have "
@@ -217,9 +218,9 @@
 
 (defn img [stage id x y w h {interaction :interaction
                              color :color}]
-  (let [tex-resource (aget js/PIXI.utils.TextureCache id)
+  (let [tex-resource (aget utils.TextureCache id)
         sprite (when tex-resource
-                 (js/PIXI.Sprite. tex-resource))] ; js/PIXI.Texture.WHITE)]
+                 (Sprite. tex-resource))] ; pixi-texture.WHITE)]
     (when sprite
       (when interaction
         (set! (.-eventMode sprite) "static")
@@ -234,7 +235,7 @@
 
 (defn- debug-border [stage x y w h]
   (let [border 2
-        g  (js/PIXI.Graphics.)]
+        g  (Graphics.)]
     (rect g
           x
           y
@@ -280,15 +281,15 @@
               (+ font-size 1)
               h)
           text-obj
-          (js/PIXI.Text. (str text-str postfix)
-                         (js/PIXI.TextStyle. (clj->js (cond-> {:fontSize font-size
-                                                               :fontFamily font-name
-                                                               :fill (rgb->hex font-color)
-                                                               :align align}
-                                                        (not adjust-width?)
-                                                        (merge {:wordWrap true
-                                                                :wordWrapWidth w
-                                                                :breakWords true})))))
+          (Text. (str text-str postfix)
+                 (TextStyle. (clj->js (cond-> {:fontSize font-size
+                                               :fontFamily font-name
+                                               :fill (rgb->hex font-color)
+                                               :align align}
+                                        (not adjust-width?)
+                                        (merge {:wordWrap true
+                                                :wordWrapWidth w
+                                                :breakWords true})))))
           height-factor (/ (aget text-obj "height") h)]
       (when (or (< 1 height-factor)
                 adjust-width?)
@@ -382,7 +383,7 @@
                   :fontFamily font
                   :fill font-color
                   :align pixi-align}
-        n-style (js/PIXI.TextStyle. style)
-        metrics (js/PIXI.TextMetrics.measureText (str text-str) n-style)]
+        n-style (TextStyle. style)
+        metrics (TextMetrics.measureText (str text-str) n-style)]
     {:width (.-width metrics)
      :height (.-height metrics)}))

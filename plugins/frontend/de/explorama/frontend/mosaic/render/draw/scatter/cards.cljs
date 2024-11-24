@@ -9,7 +9,8 @@
             [de.explorama.frontend.mosaic.render.draw.text-handler :as text-handler]
             [de.explorama.frontend.mosaic.render.engine :as gre]
             [de.explorama.frontend.mosaic.render.parameter :as grp]
-            [de.explorama.frontend.mosaic.render.pixi.common :as common]))
+            [de.explorama.frontend.mosaic.render.pixi.common :as common]
+            ["pixi.js" :refer [Container] ]))
 
 (defn coords
   ([offset-x offset-y index {{cpl-ctn :cpl-ctn} :params :as ctx} constraints x-relative y-relative]
@@ -70,10 +71,10 @@
                                            inspector-header-y 0
                                            size-x (* 0.8 width)
                                            size-y (* 0.8 height)
-                                           inspector-stage (js/PIXI.Container.)
-                                           main-container (js/PIXI.Container.)
-                                           axes-container (js/PIXI.Container.)
-                                           background-container (js/PIXI.Container.)
+                                           inspector-stage (Container.)
+                                           main-container (Container.)
+                                           axes-container (Container.)
+                                           background-container (Container.)
                                            contexts
                                            (grp/grp-contexts data
                                                              nil
@@ -122,10 +123,10 @@
                                                     axes-container
                                                     (common/axes-container common/inspector-stage-index))
                                        (.addChildAt axes-container
-                                                    (js/PIXI.Container.)
+                                                    (Container.)
                                                     (common/axes-background-container common/inspector-stage-index))
                                        (.addChildAt axes-container
-                                                    (js/PIXI.Container.)
+                                                    (Container.)
                                                     (common/axes-text-container common/inspector-stage-index))
                                        (gre/move-to! instance common/inspector-stage-index
                                                      (+ (/ inspector-margin-x max-zoom))

@@ -6,6 +6,7 @@
             [de.explorama.frontend.woco.path :as path]
             [re-frame.core :as re-frame]
             [reagent.core :as reagent]
+            ["pixi.js" :refer [TilingSprite utils Texture SCALE_MODES Graphics Container Application]]
             [taoensso.timbre :refer [debug]]))
 
 (def ^:private host-key "background-canvas")
@@ -244,7 +245,7 @@
 (defn- texture
   "Get texture with given id"
   [texture-id]
-  (aget js/PIXI.utils.TextureCache texture-id))
+  (aget utils.TextureCache texture-id))
 
 (defn- texture-cached?
   "Checks if a texture is cached"
@@ -257,8 +258,8 @@
       (.setAttribute temp-elem "src" fname)
       (.setAttribute temp-elem "style" "{display: none}")
       (js/document.body.appendChild temp-elem)
-      (js/PIXI.Texture.addToCache (js/PIXI.Texture.from temp-elem)
-                                  id)
+      (Texture.addToCache (Texture.from temp-elem)
+                          id)
 
       (js/document.body.removeChild temp-elem))))
 
@@ -274,7 +275,7 @@
     (cache-texture id fname)))
 
 (defn canvas []
-  (let [bg-container (js/PIXI.Container.)]
+  (let [bg-container (Container.)]
     (reagent/create-class
      {:display-name host-key
       :reagent-render
@@ -297,35 +298,35 @@
       (fn [_]
         (let [pixi-canvas (.getElementById js/document host-key)
               [width height] (workspace-dims)
-              app (js/PIXI.Application. (clj->js {:autoStart false
-                                                  :width width
-                                                  :height height
-                                                  :antialias true
-                                                  :roundPixels true
-                                                  :resolution 2
-                                                  :backgroundAlpha 0
-                                                  :sharedTicker false
-                                                  :autoDensity true
-                                                  :forceCanvas true
-                                                  :view pixi-canvas
-                                                  :scaleMode js/PIXI.SCALE_MODES.NEAREST}))
-              connecting-edges-container (js/PIXI.Container.)]
+              app (Application. (clj->js {:autoStart false
+                                          :width width
+                                          :height height
+                                          :antialias true
+                                          :roundPixels true
+                                          :resolution 2
+                                          :backgroundAlpha 0
+                                          :sharedTicker false
+                                          :autoDensity true
+                                          :forceCanvas true
+                                          :view pixi-canvas
+                                          :scaleMode SCALE_MODES.NEAREST}))
+              connecting-edges-container (Container.)]
           (.addEventListener js/window "resize" resize)
           (aset bg-container "name" "grid")
           (.addChildAt (.-stage app) bg-container 0)
           (.addChildAt bg-container
-                       (js/PIXI.TilingSprite. (texture "bg-grid-100"))
+                       (TilingSprite. (texture "bg-grid-100"))
                        large-bg-idx)
           (.addChildAt bg-container
-                       (js/PIXI.TilingSprite. (texture "bg-grid-50"))
+                       (TilingSprite. (texture "bg-grid-50"))
                        medium-bg-idx)
           (.addChildAt bg-container
-                       (js/PIXI.TilingSprite. (texture "bg-grid-25"))
+                       (TilingSprite. (texture "bg-grid-25"))
                        small-bg-idx)
           (.addChildAt bg-container
-                       (js/PIXI.TilingSprite. (texture "bg-grid-0"))
+                       (TilingSprite. (texture "bg-grid-0"))
                        tiny-bg-idx)
-          (.addChildAt connecting-edges-container (js/PIXI.Graphics.) 0)
+          (.addChildAt connecting-edges-container (Graphics.) 0)
           (.addChildAt (.-stage app) connecting-edges-container 1)
           (swap! state assoc :app app)
           (pan-zoom (:x config/default-position)

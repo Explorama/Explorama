@@ -7,6 +7,7 @@
             [de.explorama.frontend.mosaic.render.pixi.mouse :as pm]
             [de.explorama.frontend.mosaic.render.pixi.navigation :as pn]
             [de.explorama.frontend.mosaic.render.pixi.shapes :as ps]
+            ["pixi.js" :refer [Container Graphics Texture utils Application]] 
             [re-frame.core :as re-frame]
             [taoensso.timbre :refer [debug]]))
 
@@ -65,7 +66,7 @@
           (doseq [highlight-sprite (.-children highlight-container)]
             (.removeChild highlight-container highlight-sprite)
             (.destroy highlight-sprite #js {"children" true}))
-          (.addChildAt highlight-container (js/PIXI.Graphics.) 0)
+          (.addChildAt highlight-container (Graphics.) 0)
           (when (and relevant-highlights (not= 0 (count relevant-highlights)))
             ((get-in render-funcs [(pl/render-type ctx) :highlights-0])
              this highlight-container constraints ctx relevant-highlights)))))))
@@ -80,7 +81,7 @@
       (cond interactive?
             (ps/rect (.getChildAt stage stage-num) x y h w c args)
             debug-level?
-            (let [g (js/PIXI.Graphics.)]
+            (let [g (Graphics.)]
               (when (:z-index args)
                 (aset g "zIndex" (:z-index args)))
               (aset stage "sortableChildren" true)
@@ -217,8 +218,8 @@
   (gre/destroy [_]
     (when-not (:headless state)
       (doseq [[on func opts] (:listener state)
-              :let [pixi-canvas (.-view app)]]
-        (.removeEventListener pixi-canvas on func (clj->js opts)))
+              :let [canvas (.-view app)]]
+        (.removeEventListener canvas on func (clj->js opts)))
       (.destroy app false (clj->js {:children true}))))
 
   (gre/update-highlights [this {:keys [render-path grouped? row-major-index move-to select?]}]
@@ -376,19 +377,19 @@
     (let [{:keys [contexts background-color] :as state} (gre/state instance)
           {:keys [x y z zoom next-zoom]} (get state [:pos pc/main-stage-index])
           {:keys [width height host]} (gre/args instance)
-          pixi-canvas (.getElementById js/document host)
-          app (js/PIXI.Application. (clj->js {:autoStart false
-                                              :width width
-                                              :height height
-                                              :backgroundColor 0xFFFFFF
-                                              :antialias false
-                                              :roundPixels false
-                                              :resolution 2
-                                              :autoDensity true
-                                              :sharedTicker false
+          canvas (.getElementById js/document host)
+          app (Application. (clj->js {:autoStart false
+                                   :width width
+                                   :height height
+                                   :backgroundColor 0xFFFFFF
+                                   :antialias false
+                                   :roundPixels false
+                                   :resolution 2
+                                   :autoDensity true
+                                   :sharedTicker false
                                                  ;:autoResize true
-                                              :forceCanvas true
-                                              :view pixi-canvas}))
+                                   :forceCanvas true
+                                   :view canvas}))
           listener [["wheel" (pm/wheel instance) {:passive false}]
                     ["pointerdown" (pm/mousedown instance) {:passive true}]
                     ["pointermove" (pm/pointermove instance) {:passive true}]
@@ -398,17 +399,17 @@
           {{:keys [count-ctn max-zoom min-zoom #_bb-min-x #_bb-min-y #_x #_y]} :params
            factor-overview :factor-overview}
           (get-in contexts [pc/main-stage-index []])
-          root-container (js/PIXI.Container.)
-          main-container (js/PIXI.Container.)
-          axes-container (js/PIXI.Container.)
-          ui-container (js/PIXI.Container.)]
+          root-container (Container.)
+          main-container (Container.)
+          axes-container (Container.)
+          ui-container (Container.)]
       (aset root-container "name" "root")
       (aset main-container "name" "main")
       (aset axes-container "name" "axes")
       (aset ui-container "name" "ui")
       (gre/set-app! instance app)
       (doseq [[on func opts] listener]
-        (.addEventListener pixi-canvas on func (clj->js opts)))
+        (.addEventListener canvas on func (clj->js opts)))
       (gre/assoc-state! instance [:listener listener])
       (.addChildAt (.-stage app)
                    root-container
@@ -420,10 +421,10 @@
                    axes-container
                    (pc/axes-container pc/main-stage-index))
       (.addChildAt axes-container
-                   (js/PIXI.Container.)
+                   (Container.)
                    (pc/axes-background-container pc/main-stage-index))
       (.addChildAt axes-container
-                   (js/PIXI.Container.)
+                   (Container.)
                    (pc/axes-text-container pc/main-stage-index))
       (.addChildAt root-container
                    ui-container
@@ -470,7 +471,7 @@
 (defn- texture
   "Get texture with given id"
   [texture-id]
-  (aget js/PIXI.utils.TextureCache texture-id))
+  (aget utils.TextureCache texture-id))
 
 (defn- texture-cached?
   "Checks if a texture is cached"
@@ -483,8 +484,8 @@
       (.setAttribute temp-elem "src" fname)
       (.setAttribute temp-elem "style" "{display: none}")
       (js/document.body.appendChild temp-elem)
-      (js/PIXI.Texture.addToCache (js/PIXI.Texture.from temp-elem)
-                                  id)
+      (Texture.addToCache (texture.from temp-elem)
+                               id)
       (js/document.body.removeChild temp-elem))))
 
 (defn- add-assets [assets]

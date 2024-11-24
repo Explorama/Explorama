@@ -271,13 +271,13 @@
              cache
              missing-data]
             :else
-            (let [frame-container (js/PIXI.Container.)
-                  capsule-contaier (js/PIXI.Container.)
+            (let [frame-container (pixi-container.)
+                  capsule-contaier (pixi-container.)
                   render-funcs (gre/render-funcs this)]
               (.addChild container frame-container)
               (.addChild frame-container capsule-contaier)
-              (.addChildAt capsule-contaier (js/PIXI.Graphics.) 0)
-              (.addChildAt capsule-contaier (js/PIXI.Graphics.) 1)
+              (.addChildAt capsule-contaier (pixi-graphics.) 0)
+              (.addChildAt capsule-contaier (pixi-graphics.) 1)
               ((get-in render-funcs [(render-type ctx) :frames :static 1])
                this stage-key capsule-contaier constraints ctx parent-grouped? render-path)
               ((get-in render-funcs [(render-type ctx) :frames :dynamic 1])
@@ -312,18 +312,18 @@
                  cache
                  missing-data])
               :else
-              (let [frame-container (js/PIXI.Container.)
-                    capsule-contaier (js/PIXI.Container.)
-                    comment-container (js/PIXI.Container.)
-                    highlight-container (js/PIXI.Container.)
+              (let [frame-container (pixi-container.)
+                    capsule-contaier (pixi-container.)
+                    comment-container (pixi-container.)
+                    highlight-container (pixi-container.)
                     render-funcs (gre/render-funcs this)]
                 (.addChild container frame-container)
                 (.addChild frame-container capsule-contaier)
-                (.addChildAt capsule-contaier (js/PIXI.Graphics.) 0)
-                (.addChildAt capsule-contaier (js/PIXI.Graphics.) 1)
+                (.addChildAt capsule-contaier (pixi-graphics.) 0)
+                (.addChildAt capsule-contaier (pixi-graphics.) 1)
                 (.addChildAt capsule-contaier comment-container 2)
                 (.addChildAt capsule-contaier highlight-container 3)
-                (.addChildAt highlight-container (js/PIXI.Graphics.) 0)
+                (.addChildAt highlight-container (pixi-graphics.) 0)
                 ((get-in render-funcs [(render-type ctx) :frames :static 0])
                  this stage-key capsule-contaier constraints ctx parent-grouped? render-path)
                 (when content?
@@ -349,7 +349,7 @@
            missing-data]
           (and (< text-threshold z)
                (get indices static-indices-path))
-          (let [text-container (js/PIXI.Container.)
+          (let [text-container (pixi-container.)
                 render-funcs (gre/render-funcs this)]
             (.addChild container text-container)
             ((get-in render-funcs [(render-type ctx) :frames :dynamic 0])
@@ -377,9 +377,9 @@
                        (recur (inc i)
                               (if (get result (get cluster-idx i))
                                 result
-                                (let [current-container (js/PIXI.Container.)]
+                                (let [current-container (pixi-container.)]
                                   (.addChild (get container i) current-container)
-                                  (.addChildAt current-container (js/PIXI.Graphics.) 0)
+                                  (.addChildAt current-container (pixi-graphics.) 0)
                                   (assoc result
                                          (get cluster-idx i)
                                          current-container))))
@@ -519,9 +519,9 @@
                                             this stage-key children zoom render-path constraints ctx
                                             row-major-index data static-indices-path loadscreen-static-indices-path highlights grouped?)))
                   :else
-                  (let [cluster-container (js/PIXI.Container.)
+                  (let [cluster-container (pixi-container.)
                         data (custom-data state render-funcs stage-key path data-path row-major-index grouped? ctx)
-                        children (mapv (fn [_] (js/PIXI.Container.)) data)]
+                        children (mapv (fn [_] (pixi-container.)) data)]
                     (.addChild container cluster-container)
                     (doseq [child children]
                       (.addChild cluster-container child))
@@ -551,9 +551,9 @@
       (remove-pixi-obj text-container child true))
     (when (fn? (get-in render-funcs [render-type :axes]))
       (let [ir-calc-result (ir-calc ctx-params ctx)
-            background-container-content (js/PIXI.Container.)
-            background-graphics (js/PIXI.Graphics.)
-            text-container-content (js/PIXI.Container.)]
+            background-container-content (pixi-container.)
+            background-graphics (pixi-graphics.)
+            text-container-content (pixi-container.)]
         (.addChild background-container-content background-graphics)
         (.addChildAt background-container background-container-content 0)
         (.addChild text-container text-container-content)
@@ -638,7 +638,7 @@
                                                               (.getChildAt items-container 1)
                                                               true)
                                              (.addChildAt items-container
-                                                          (js/PIXI.Graphics.)
+                                                          (pixi-graphics.)
                                                           1)
                                              (close-button this items-container x size-x y size-y border-size inspector-hover-button-color))
                                      :hide (do
@@ -647,7 +647,7 @@
                                                               (.getChildAt items-container 1)
                                                               true)
                                              (.addChildAt items-container
-                                                          (js/PIXI.Graphics.)
+                                                          (pixi-graphics.)
                                                           1)
                                              (close-button this items-container x size-x y size-y border-size inspector-button-color))))
                                  (let [app (gre/app this)]
@@ -789,12 +789,12 @@
           inspector-container (pc/zoom-context-stage (gre/app this)
                                                      pc/inspector-stage-index)
           background-container (pc/background-container inspector-container pc/inspector-stage-index)
-          background-graphics (js/PIXI.Graphics.)
-          items-container (js/PIXI.Container.)
-          items-graphic (js/PIXI.Graphics.)
-          interactive-items-graphics (js/PIXI.Graphics.)
-          mask-container (js/PIXI.Container.)
-          mask-graphics (js/PIXI.Graphics.)]
+          background-graphics (pixi-graphics.)
+          items-container (pixi-container.)
+          items-graphic (pixi-graphics.)
+          interactive-items-graphics (pixi-graphics.)
+          mask-container (pixi-container.)
+          mask-graphics (pixi-graphics.)]
       (.addChildAt inspector-container items-container 3)
       (.addChildAt background-container background-graphics 0)
       (.addChildAt items-container items-graphic 0)
@@ -854,8 +854,8 @@
       (reduce (fn [indices {:keys [idx]}]
                 (let [{:keys [path]} (gre/state this)
                       app (gre/app this)
-                      current-ui-container (js/PIXI.Container.)
-                      _ (.addChild current-ui-container (js/PIXI.Graphics.))
+                      current-ui-container (pixi-container.)
+                      _ (.addChild current-ui-container (pixi-graphics.))
                       stage (pc/main-container (pc/zoom-context-stage app stage-key) stage-key)
                       _ (-> stage pc/ui-container (.addChildAt current-ui-container idx))]
                   #_(fun 0 this current-ui-container args constraints ctx render-path)
@@ -946,13 +946,13 @@
 
 (defn render [this stage-key zoom]
   (let [app (gre/app this)
-        container (js/PIXI.Container.)
+        container (pixi-container.)
         stage (pc/main-container (pc/zoom-context-stage app stage-key) stage-key)]
     (aset container "name" (str "zoom-" zoom))
     (.addChildAt stage
                  container
                  (index-access zoom))
-    (.addChildAt container (js/PIXI.Graphics.) 0)))
+    (.addChildAt container (pixi-graphics.) 0)))
 
 (defn update-zoom [this stage-key]
   (let [state (gre/state this)

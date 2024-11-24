@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.sidebar
-  (:require ["re-resizable"]
+  (:require ["re-resizable" :refer [Resizable]]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary]]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button]]
@@ -17,7 +17,7 @@
             [reagent.core :as r]))
 
 ;;TODO r1/ui-base Refactor to extra space/component - Maybe move to ui-base component
-(def resizable-comp (r/adapt-react-class (aget js/ReResizable "Resizable")))
+(def resizable-comp (r/adapt-react-class Resizable))
 
 (reg-sub
  ::sidebar

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.minimap.render
-  (:require ["pixi.js" :refer [Sprite  Graphics Color Application Container]]
+  (:require ["pixi.js" :refer [Sprite Ticker Graphics Color Application Container]]
             [clojure.set :refer [difference]]
             [clojure.string :refer [starts-with?]]
             [taoensso.timbre :refer [error]]
@@ -11,8 +11,8 @@
 (defn- disable-tickers
   "Disabled tickers in pixi to prevent performance leaks due to automatic loops (copies from mosaic)"
   []
-  (let [shared-ticker (aget js/PIXI "Ticker" "shared")
-        system-ticker (aget js/PIXI "Ticker" "system")]
+  (let [shared-ticker (aget Ticker "shared")
+        system-ticker (aget Ticker "system")]
     (aset system-ticker "autoStart" false)
     (aset shared-ticker "autoStart" false)
     (when (aget system-ticker "started")

@@ -6,7 +6,8 @@
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [de.explorama.frontend.ui-base.utils.css-classes :refer [form-hint-class]]
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
-            ["rc-slider"]))
+            ["rc-slider$default" :as Slider]
+            ["rc-slider" :refer [Range]]))
 
 (def parameter-definition
   {:value {:type [:vector :number :derefable]
@@ -105,8 +106,8 @@
 
 (def slider-reversed-class "rc-slider-reversed")
 
-(def range-slider (r/adapt-react-class (aget js/RcSlider "Range")))
-(def normal-slider (r/adapt-react-class (aget js/RcSlider "default")))
+(def normal-slider (r/adapt-react-class Slider))
+(def range-slider (r/adapt-react-class Range))
 
 (defn- calculate-auto-marks [auto-mark-count min-val max-val]
   (let [diff (- max-val min-val)

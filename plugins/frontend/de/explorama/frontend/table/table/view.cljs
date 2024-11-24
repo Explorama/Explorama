@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.table.table.view
-  (:require ["react-virtualized"]
+  (:require ["react-virtualized" :refer [Grid]]
             [clojure.string :refer [join]]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button-group
@@ -22,7 +22,7 @@
             [de.explorama.shared.table.ws-api :as ws-api]
             [de.explorama.frontend.table.util.queue :as queue-util]))
 
-(def ^:private virt-grid (r/adapt-react-class (aget js/ReactVirtualized "Grid")))
+(def ^:private virt-grid (r/adapt-react-class Grid))
 
 (def body-row-height 30)
 (def header-row-height 40)

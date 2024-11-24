@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.common.views.legend
-  (:require ["react-beautiful-dnd"]
+  (:require ["react-beautiful-dnd" :refer [DragDropContext Droppable Draggable]]
             [clojure.string :refer [lower-case]]
             [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.frontend.common.frontend-interface :as fi]
@@ -14,9 +14,9 @@
             [react-dom :as react-dom]
             [reagent.core :as r]))
 
-(def ^:private drag-drop-context (r/adapt-react-class js/ReactBeautifulDnd.DragDropContext))
-(def ^:private droppable (r/adapt-react-class js/ReactBeautifulDnd.Droppable))
-(def ^:private draggable (r/adapt-react-class js/ReactBeautifulDnd.Draggable))
+(def ^:private drag-drop-context (r/adapt-react-class DragDropContext))
+(def ^:private droppable (r/adapt-react-class Droppable))
+(def ^:private draggable (r/adapt-react-class Draggable))
 
 (def number-default-values [[0 2]
                             [2 8]

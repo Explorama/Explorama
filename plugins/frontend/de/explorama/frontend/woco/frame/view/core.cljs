@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.frame.view.core
-  (:require ["re-resizable"]
+  (:require ["re-resizable" :refer [Resizable]]
             [clojure.string :refer [join split]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.ui-base.components.frames.core :refer [vertical-frame]]
@@ -43,7 +43,7 @@
             [de.explorama.frontend.woco.screenshot.util :refer [base64-valid? download-base64-img]]
             [de.explorama.frontend.woco.workspace.states :as wws]))
 
-(def resizable-comp (r/adapt-react-class (aget js/ReResizable "Resizable")))
+(def resizable-comp (r/adapt-react-class Resizable))
 (defonce optimization-states (atom {}))
 
 (defn- frame-style

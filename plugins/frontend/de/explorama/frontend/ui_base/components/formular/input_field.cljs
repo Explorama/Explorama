@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.ui-base.components.formular.input-field
-  (:require ["react-number-format"]
+  (:require ["react-number-format" :as NumberFormat]
             [reagent.core :as reagent]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-aget]]
             [de.explorama.frontend.ui-base.components.misc.icon :refer [icon]]
@@ -117,7 +117,7 @@
                          :num-format? true
                          :step 1})
 
-(def numper-input-format (reagent/adapt-react-class js/NumberFormat))
+(def numper-input-format (reagent/adapt-react-class NumberFormat))
 
 (def error-class "invalid")
 (def caption-class "input-hint")

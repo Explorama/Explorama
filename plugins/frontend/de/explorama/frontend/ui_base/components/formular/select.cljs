@@ -2,7 +2,7 @@
   (:require
    [clojure.core.reducers :as r]
    [clojure.string :as str]
-   ["react-virtualized"]
+   ["react-virtualized" :refer [AutoSizer List]]
    [react-dom :as react-dom]
    [reagent.core :as reagent]
    [reagent.dom :as rdom]
@@ -201,8 +201,8 @@
 
 (def default-parameters-multi {:close-on-select? false})
 
-(def virt-autosizer (reagent/adapt-react-class (aget js/ReactVirtualized "AutoSizer")))
-(def virt-list (reagent/adapt-react-class (aget js/ReactVirtualized "List")))
+(def virt-autosizer (reagent/adapt-react-class AutoSizer))
+(def virt-list (reagent/adapt-react-class List))
 
 (def tab-keycode 9)
 (def esc-keycode 27)

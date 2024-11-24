@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.workspace.cubic-bezier
-  (:require ["bezier-easing"]))
+  (:require ["bezier-easing" :as BezierEasing]))
 
 
 (def nominator 24)
@@ -10,7 +10,7 @@
                     (recur (conj acc (/ n nominator)) (inc n))
                     acc)))
 
-(defonce easing-fn (js/BezierEasing 0.32,0.57 0.27, 1.02))
+(defonce easing-fn (BezierEasing 0.32,0.57 0.27, 1.02))
 
 (def curve-points (map (fn [x] [x (easing-fn x)]) slices))
 

@@ -3,7 +3,7 @@
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [reagent.core :as r]
-            ["react-virtualized"]))
+            ["react-virtualized" :refer [AutoSizer List CellMeasurer]]))
 
 (def parameter-definition
   {:rows {:type [:vector :derefable]
@@ -38,9 +38,9 @@
                  :desc "Class which will be added to list root"}})
 (def specification (parameters->malli parameter-definition nil))
 
-(def ^:private virt-list (r/adapt-react-class (aget js/ReactVirtualized "List")))
-(def ^:private virt-autosizer (r/adapt-react-class (aget js/ReactVirtualized "AutoSizer")))
-(def ^:private virt-cell-measurer (r/adapt-react-class (aget js/ReactVirtualized "CellMeasurer")))
+(def ^:private virt-list (r/adapt-react-class List))
+(def ^:private virt-autosizer (r/adapt-react-class AutoSizer))
+(def ^:private virt-cell-measurer (r/adapt-react-class CellMeasurer))
 
 (defn- no-rows-renderer []
   (r/as-element [:div {:role "row"} [:div {:role "gridcell"} "No row"]]))

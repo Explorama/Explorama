@@ -1,11 +1,16 @@
 {:source-paths ["frontend"
                 "backend"
                 "shared"
+                "frontend_test"
+                "backend_test"
+                "shared_test"
                 "../../plugins/backend"
                 "../../plugins/frontend"
                 "../../plugins/shared"
+                "../../plugins/backend_test"
+                "../../plugins/frontend_test"
+                "../../plugins/shared_test"
                 "../../assets"]
-
 
  :dependencies [[org.clojure/clojurescript "1.11.132"]
                 [org.clojure/core.async "1.6.681"]
@@ -35,7 +40,8 @@
                 [reagent/reagent "1.0.0"]
                 [re-frame/re-frame "1.2.0"]]
 
- :dev-http {8020 "public"}
+ :dev-http {8020 "public"
+            8080 "out/test"}
 
  :builds {:app
           {:target :browser
@@ -45,4 +51,9 @@
                         :external-index "target/gen/libs.js"
                         :external-index-format :esm}
            :modules
-           {:main {:init-fn de.explorama.frontend.woco.app.core/init}}}}}
+           {:main {:init-fn de.explorama.frontend.woco.app.core/init}}}
+          :test {:target :browser-test
+                 :test-dir "out/test"
+                 :js-options {:js-provider :external
+                              :external-index "target/gen/libs.js"
+                              :external-index-format :esm}}}}

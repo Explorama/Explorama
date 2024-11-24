@@ -41,6 +41,7 @@ bundles/*/.calva/output-window
 bundles/*/.shadow-cljs
 bundles/*/public/*
 !bundles/*/public/index.html
+bundles/*/out
 
 tools/profiling-tool/gen_src/
 tools/profiling-tool/gen_resources/

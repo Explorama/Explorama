@@ -42,14 +42,8 @@ prepare-test:
 test: prepare-test
 	lein test
 
-test-backend: prepare-test
-	lein test-backend
-
-test-frontend: prepare-test
-	lein test-frontend
-
-test-performance: prepare-test
-	lein test-performance
+test-watch:
+	npx shadow-cljs watch test --config-merge '{:autorun true}'
 
 prepare-prod: build_mode=prod
 prepare-prod: clean-before install assets compile

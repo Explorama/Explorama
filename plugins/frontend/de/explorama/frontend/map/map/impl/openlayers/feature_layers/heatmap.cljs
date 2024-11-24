@@ -1,13 +1,8 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.feature-layers.heatmap
-  (:require ["ol"]
-            ["ol-ext"]))
-
-(def ol-layer-heatmap (aget js/ol "layer" "Heatmap"))
-
-(def ol-source-vector (aget js/ol "source" "Vector"))
-(def ol-feature (aget js/ol "Feature"))
- (def ol-geom-point (aget js/ol "geom" "Point"))
-(def ol-proj (aget js/ol "proj"))
+  (:require ["ol" :refer [Feature proj]]
+            ["ol/layer" :refer [Heatmap]]
+            ["ol/source" :refer [Vector]]
+            ["ol/geom" :refer [Point]]))
 
 (defn- get-weight [layer-desc-fn feature]
   (let [{:keys [extrema]} (layer-desc-fn)]
@@ -18,8 +13,8 @@
 (defn create-layer [{current-desc :feature-layer-desc} 
                     {:keys [layer-id]}]
   (let [layer-desc-fn (partial current-desc layer-id)
-        vector-source (ol-source-vector.)
-        heatmap-obj (ol-layer-heatmap.
+        vector-source (Vector.)
+        heatmap-obj (Heatmap.
                      #js{:source vector-source
                          :blur 15
                          :radius 5
@@ -33,8 +28,8 @@
 (defn create-feature [{:keys [lat lng] :as desc}] 
   (let [attr-key (first (keys (dissoc desc :lat :lng)))
         attr-val (when (seq attr-key) (get desc attr-key))
-        point (ol-geom-point. (.fromLonLat ol-proj #js[lng lat]))
-        feature-obj (ol-feature. point)]
+        point (Point. (.fromLonLat proj #js[lng lat]))
+        feature-obj (Feature. point)]
     (when attr-val
       (.set feature-obj attr-key attr-val)
       (.set feature-obj "weight" attr-val))

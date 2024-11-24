@@ -1,5 +1,10 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.object-manager
-  (:require ["ol"]
+  (:require ["ol" :refer [proj Map View Feature interaction events control]]
+            ["ol/layer" :refer [Tile AnimatedCluster] :rename {Vector LayerVector}]
+            ["ol/source" :refer [XYZ TileArcGISRest TileWMS Vector Cluster]]
+            ["ol/geom" :refer [Point]]
+            ["ol/interaction" :refer [SelectCluster Hover]]
+            ["ol/Overlay" :refer [Popup]]
             ["ol-ext"]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.area :as area]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.heatmap :as heatmap]
@@ -15,36 +20,9 @@
             [taoensso.timbre :refer [warn]]
             [clojure.string :as str]))
 
-(def ol-proj (aget js/ol "proj"))
-
 (defonce ^:private db-state (atom {}))
 
-(def ol-map (aget js/ol "Map"))
-(def ol-tile-layer (aget js/ol "layer" "Tile"))
-(def ol-layer-vectortile (aget js/ol "layer" "VectorTile"))
-(def ol-source-vectortile (aget js/ol "source" "VectorTile"))
-(def ol-view (aget js/ol "View"))
-
-(def ol-feature (aget js/ol "Feature"))
-
-(def ol-source-xyz (aget js/ol "source" "XYZ"))
-(def ol-source-arcgis-rest (aget js/ol "source" "TileArcGISRest"))
-(def ol-source-wms (aget js/ol "source" "TileWMS"))
-
-(def ol-source-vector (aget js/ol "source" "Vector"))
-(def ol-source-cluster (aget js/ol "source" "Cluster"))
-(def ol-layer-animated-cluster (aget js/ol "layer" "AnimatedCluster"))
-(def ol-layer-vector (aget js/ol "layer" "Vector"))
-
-(def ol-geom-point (aget js/ol "geom" "Point"))
-
-(def ol-interaction (aget js/ol "interaction"))
-(def ol-interaction-select-cluster (aget ol-interaction "SelectCluster"))
-(def ol-interaction-hover (aget ol-interaction "Hover"))
-
-(def ol-overlaye-popup (aget js/ol "Overlay" "Popup"))
-
-(def ol-events-condition-no-modifier (aget js/ol "events" "condition" "noModifierKeys"))
+(def ol-events-condition-no-modifier (aget events "condition" "noModifierKeys"))
 
 (defn- is-touch? [e]
   (= "touch" (aget e "pointerType")))
@@ -57,22 +35,16 @@
              (is-touch? pointer-event)))))
 
 (defn- custom-default-interactions [do-panning?]
-  #js[(new (aget ol-interaction "DragPan")
+  #js[(new (aget interaction "DragPan")
            (clj->js {:condition (partial check-panning-cond do-panning?)}))
-      (new (aget ol-interaction "PinchZoom"))
-      (new (aget ol-interaction "KeyboardPan"))
-      (new (aget ol-interaction "KeyboardZoom"))
-      (new (aget ol-interaction "MouseWheelZoom"))])
+      (new (aget interaction "PinchZoom"))
+      (new (aget interaction "KeyboardPan"))
+      (new (aget interaction "KeyboardZoom"))
+      (new (aget interaction "MouseWheelZoom"))])
 
-(def ol-geojson (aget js/ol "format" "GeoJSON"))
-(def ol-mvt (aget js/ol "format" "MVT"))
-(def ol-overlay (aget js/ol "Overlay"))
-(def ol-style-style  (aget js/ol "style" "Style"))
-(def ol-style-fill  (aget js/ol "style" "Fill"))
-(def ol-style-stroke  (aget js/ol "style" "Stroke"))
 ;TODO r1/attribution
-(def ol-control-defaults (aget js/ol "control" "defaults"))
-(def ol-control-attribution (aget js/ol "control" "Attribution"))
+(def ol-control-defaults (aget control "defaults"))
+(def ol-control-attribution (aget control "Attribution"))
 
 
 (defn- create-map-instance [frame-id headless? {marker-clicked-fn :marker-clicked
@@ -84,13 +56,13 @@
                                                 area-feature-clicked-fn :area-feature-clicked
                                                 active-feature-layer-fn :active-feature-layers
                                                 do-panning? :do-panning?}]
-  (let [popup-overlay (ol-overlaye-popup. #js{:popupClass "default"
+  (let [popup-overlay (Popup. #js{:popupClass "default"
                                               :closeBox true
                                               :onshow (fn [])
                                               :onclose (fn [] (hide-popup-fn))
                                               :positioning "auto"
                                               :autoPan true})
-        obj-instance (ol-map.
+        obj-instance (Map.
                       (clj->js {:layers #js[]
                                 :overlays #js[popup-overlay]
                                 :controls (.extend (ol-control-defaults. #js{:attribution false})
@@ -98,7 +70,7 @@
                                 :interactions (custom-default-interactions do-panning?)
                                 :target (when-not headless?
                                           (util/map-canvas-id frame-id))
-                                :view (ol-view. #js{:center #js[0 0]
+                                :view (View. #js{:center #js[0 0]
                                                     :zoom 2})}))
         current-objs-fn (fn [] (get @db-state frame-id))]
     (when-not headless?
@@ -125,12 +97,12 @@
                                     :or {min-zoom 1
                                          type "default"}}]
   (let [tile-source (case type
-                      "esri" (ol-source-arcgis-rest.
+                      "esri" (TileArcGISRest.
                               #js{:url tilemap-server-url
                                   :projection "EPSG:3857"
                                   :attributions attribution
                                   :crossOrigin ""})
-                      "wms" (ol-source-wms.
+                      "wms" (TileWMS.
                              (clj->js
                               {:url tilemap-server-url
                                :params {"LAYERS" (str/split wms-layers #",")
@@ -141,12 +113,12 @@
                                :attributions attribution
                                :transition 0}))
                       ("default" "tms")
-                      (ol-source-xyz.
+                      (XYZ.
                        #js{:url tilemap-server-url
                            :projection "EPSG:3857"
                            :attributions attribution
                            :crossOrigin ""}))
-        obj-base-layer (ol-tile-layer.
+        obj-base-layer (Tile.
                         (clj->js {:source tile-source
                                   :maxZoom max-zoom
                                   :minZoom min-zoom}))]
@@ -163,16 +135,16 @@
                                       marker-highlighted-fn? :event-highlighted?
                                       localize-number-fn :localize-number}]
   (when-not (get-in @db-state [frame-id :marker-layer])
-    (let [vector-source (ol-source-vector. #js{:projection "EPSG:900913"})
-          vector-layer (ol-layer-vector. #js{:source vector-source})
+    (let [vector-source (Vector. #js{:projection "EPSG:900913"})
+          vector-layer (LayerVector. #js{:source vector-source})
 
-          cluster-source (ol-source-cluster. #js{:distance 80 ;;TODO r1/config
+          cluster-source (Cluster. #js{:distance 80 ;;TODO r1/config
                                                  :source vector-source})
-          cluster-layer (ol-layer-animated-cluster. #js{:name "Cluster"
+          cluster-layer (AnimatedCluster. #js{:name "Cluster"
                                                         :source cluster-source
                                                         :animationDuration 700
                                                         :style (partial cluster->cluster-style localize-number-fn)})
-          cluster-interaction (ol-interaction-select-cluster.
+          cluster-interaction (SelectCluster.
                                #js{:pointRadius 35
                                    :selectCluster true
                                    :spiral true
@@ -181,16 +153,16 @@
                                                           marker-highlighted-fn?
                                                           marker-stroke-color-fn
                                                           highlighted-marker-stroke-color-fn)
-                                   :condition (aget js/ol "events" "condition" "click")
-                                   ;:toggleCondition (aget js/ol "events" "condition" "click")
+                                   :condition (aget events "condition" "click")
+                                   ;:toggleCondition (aget events "condition" "click")
                                    ;:toggle true
                                    ;:multi true
                                    :style (partial cluster-interaction-style
                                                    localize-number-fn
                                                    (map-instance frame-id))})
-          hover-source (ol-source-vector. #js{:projection "EPSG:900913"})
-          hover-layer (ol-layer-vector. #js{:source hover-source})
-          hover-interaction (ol-interaction-hover.
+          hover-source (Vector. #js{:projection "EPSG:900913"})
+          hover-layer (LayerVector. #js{:source hover-source})
+          hover-interaction (Hover.
                              #js{:cursor "pointer"
                                  :layerFilter (fn [l]
                                                 (= l cluster-layer))})]
@@ -307,7 +279,7 @@
                                                                                  marker-stroke-color-fn
                                                                                  highlighted-marker-stroke-color-fn
                                                                                  marker-data)
-                                           feature (ol-feature. (ol-geom-point. (.fromLonLat ol-proj #js[lon lat])))]
+                                           feature (Feature. (Point. (.fromLonLat proj #js[lon lat])))]
                                        (.setStyle feature style-desc)
                                        (.set feature "id" marker-id)
                                        (.set feature "data" marker-data)

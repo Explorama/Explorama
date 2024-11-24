@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.state-handler
-  (:require ["ol"]
+  (:require ["ol" :refer [extent proj] :as ol]
             ["ol-ext"]
             [clojure.set :as set]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-number?]]
@@ -15,10 +15,6 @@
             [taoensso.timbre :refer [warn]]))
 
 (defonce ^:private db (atom {}))
-
-(def ol-extent (aget js/ol "extent"))
-
-(def ol-proj (aget js/ol "proj"))
 
 (defn- render-map [frame-id {track-view-position-fn :track-view-position-change} obj-manager-instance]
   (let [map-obj (object-proto/map-instance obj-manager-instance)
@@ -83,11 +79,11 @@
   (let [map-obj (object-proto/map-instance obj-manager)
         marker-layer (object-proto/get-marker-layer obj-manager)
         extent (when marker-layer (.getExtent (.getSource marker-layer)))
-        area-size (when extent (.getArea ol-extent extent))
+        area-size (when extent (.getArea extent extent))
         view-obj (.getView map-obj)
         new-zoom (min (.getMaxZoom view-obj)
                       max-data-zoom)
-        new-center (when extent (.getCenter ol-extent extent))]
+        new-center (when extent (.getCenter extent extent))]
     (cond (> area-size 0)
           (.fit view-obj
                 extent
@@ -97,7 +93,7 @@
           (do
             (.setZoom view-obj (min (.getMaxZoom view-obj)
                                     max-data-zoom))
-            (.setCenter view-obj (.getCenter ol-extent extent))))))
+            (.setCenter view-obj (.getCenter extent extent))))))
 
 (defn- display-markers [obj-manager {max-data-zoom :move-data-max-zoom} frame-id]
   (let [map-obj (object-proto/map-instance obj-manager)
@@ -264,7 +260,7 @@
                                          title-attributes
                                          display-attributes)
         [lat lon] coordinates
-        coords (.fromLonLat ol-proj #js[lon lat])]
+        coords (.fromLonLat proj #js[lon lat])]
     (.setProperty (aget popup-obj "element" "style")
                   "--layoutColor"
                   title-color)
@@ -281,7 +277,7 @@
         [lat lon] position]
     (when (and zoom position)
       (.setZoom view zoom)
-      (.setCenter view (.fromLonLat ol-proj #js[lon lat]))
+      (.setCenter view (.fromLonLat proj #js[lon lat]))
       (when (.getTarget map)
         (.renderSync map)))))
 
@@ -329,9 +325,9 @@
                                          (.getFirstCoordinate
                                           (.getGeometry f)))
                                        (array-seq cluster)))
-              coords-extent (.boundingExtent ol-extent
+              coords-extent (.boundingExtent extent
                                              all-coords)
-              area-size (.getArea ol-extent coords-extent)]
+              area-size (.getArea extent coords-extent)]
 
           (if  (> area-size 0)
             (do (.fit view-obj
@@ -340,7 +336,7 @@
                 (.renderSync map-obj)
                 (recur))
             (do
-              (.setCenter view-obj (.getCenter ol-extent coords-extent))
+              (.setCenter view-obj (.getCenter extent coords-extent))
               (select-cluster-with-marker obj-manager marker-id)))))
       (do
         (.setZoom view-obj @(move-data-max-zoom))
@@ -631,10 +627,10 @@
     (destroy-instance frame-id)))
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not (aget js/ol "exploramaInitDone")
+  (when-not (aget ol "exploramaInitDone")
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-    (aset js/ol "PluggableMap" "prototype" "getEventPixel"
+    (aset ol "PluggableMap" "prototype" "getEventPixel"
           (fn [event]
             (this-as this
                      (let [scale @(workspace-scale-fn)
@@ -652,7 +648,7 @@
                                           (aget size "1"))
                                        (aget viewportPosition "height"))
                                     scale)])))))
-    (aset js/ol "exploramaInitDone" true)))
+    (aset ol "exploramaInitDone" true)))
 
 (defn create-instance [frame-id obj-manager-instance {:keys [workspace-scale]
                                                       :as extra-fns}]

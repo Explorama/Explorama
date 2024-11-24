@@ -1,23 +1,16 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.feature-layers.area
-  (:require [clojure.string :as str]
+  (:require ["ol/layer" :refer [VectorImage]]
+            ["ol/source" :refer [Vector]]
+            ["ol/style" :refer [Style Fill Stroke]]
+            ["ol/format" :refer [EsriJSON GeoJSON]]
+            [clojure.string :as str]
             [de.explorama.frontend.map.utils :refer [rgb-hex-parser]]))
-
-(def ol-geojson (aget js/ol "format" "EsriJSON"))
-(def ol-map (aget js/ol "Map"))
-(def ol-layer-vector (aget js/ol "layer" "Vector"))
-(def ol-layer-vector-image (aget js/ol "layer" "VectorImage"))
-(def ol-source-vector (aget js/ol "source" "Vector"))
-(def ol-view (aget js/ol "View"))
-(def ol-style-style  (aget js/ol "style" "Style"))
-(def ol-style-fill  (aget js/ol "style" "Fill"))
-(def ol-style-stroke  (aget js/ol "style" "Stroke"))
-(def ol-format-geojson (aget js/ol "format" "GeoJSON"))
 
 (def default-color [238 238 238 0.25])
 
-(def default-stlye (ol-style-style. #js{:stroke (ol-style-stroke. #js{:color "rgba(75, 79, 83, 0.5)"
+(def default-stlye (Style. #js{:stroke (Stroke. #js{:color "rgba(75, 79, 83, 0.5)"
                                                                       :width 1})
-                                        :fill (ol-style-fill. #js{:color (str "rgba(" (str/join "," default-color) ")")})}))
+                                        :fill (Fill. #js{:color (str "rgba(" (str/join "," default-color) ")")})}))
 
 (defn area-color [area-data]
   (if-let [c (:color area-data)]
@@ -70,7 +63,7 @@
            (.then (.json response)
                   (fn [result]
                     (.addFeatures vector-source
-                                  (.readFeatures (ol-geojson.)
+                                  (.readFeatures (EsriJSON.)
                                                  result
                                                  #js{:dataProjection "EPSG:4326",
                                                      :featureProjection "EPSG:3857"})))))))
@@ -89,13 +82,13 @@
         geojson-obj (when (seq file-path)
                       (geojson-object file-path))
         vector-source (case type
-                        "esri" (ol-source-vector.)
-                        "geojson" (ol-source-vector. #js{:features (.readFeatures (ol-format-geojson.)
+                        "esri" (Vector.)
+                        "geojson" (Vector. #js{:features (.readFeatures (GeoJSON.)
                                                                                   geojson-obj
                                                                                   #js{:dataProjection "EPSG:4326"
                                                                                       :featureProjection "EPSG:3857"})})
-                        (ol-source-vector.))
-        vector-layer (ol-layer-vector-image.
+                        (Vector.))
+        vector-layer (VectorImage.
                       #js{:source vector-source
                           :style (fn [feature]
                                    (let [data-key (feature-properties->data-key feature-properties

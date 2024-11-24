@@ -1,23 +1,15 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.feature-layers.movement
-  (:require ["ol"]
-            ["ol-ext"]))
-
-(def ol-style-style (aget js/ol "style" "Style"))
-(def ol-style-stroke (aget js/ol "style" "Stroke"))
-(def ol-style-flow-line (aget js/ol "style" "FlowLine"))
-
-(def ol-layer-vector-image (aget js/ol "layer" "VectorImage"))
-(def ol-source-vector (aget js/ol "source" "Vector"))
-(def ol-overlay-popup (aget js/ol "Overlay" "Popup"))
-(def ol-interaction-hover (aget js/ol "interaction" "Hover"))
-
-(def ol-feature (aget js/ol "Feature"))
-(def ol-geom-line-string (aget js/ol "geom" "LineString"))
-(def ol-proj (aget js/ol "proj"))
+  (:require ["ol" :refer [Feature proj]]
+            ["ol/style" :refer [Style Stroke FlowLine]]
+            ["ol/geom" :refer [LineString]]
+            ["ol/layer" :refer [VectorImage]]
+            ["ol/source" :refer [Vector]]
+            ["ol/interaction" :refer [Hover]]
+            ["ol/Overlay" :refer [Popup]]))
 
 (defonce ^:private default-style
-  (ol-style-style.
-   #js{:stroke (ol-style-stroke. #js{:color #js[255 255 255 0.1]
+  (Style.
+   #js{:stroke (Stroke. #js{:color #js[255 255 255 0.1]
                                      :width 1})}))
 (def arrow-color "rgba(27, 28, 30, 0.4)")
 (def hover-color "rgb(16, 163, 163)")
@@ -32,7 +24,7 @@
                     (.getLastCoordinate)
                     (aget 1)
                     -)
-        flow-style (ol-style-flow-line.
+        flow-style (FlowLine.
                     #js{:color color
                         :color2 color
                         :width start-width
@@ -46,12 +38,12 @@
 (defn create-layer [{localize-num-fn :localize-number
                      attribute-label-fn :attribute-label}
                     _]
-  (let [vector-source (ol-source-vector.)
-        vector-layer (ol-layer-vector-image. #js{:source vector-source
+  (let [vector-source (Vector.)
+        vector-layer (VectorImage. #js{:source vector-source
                                                  :style (partial get-style arrow-color)})
-        popup-layer (ol-overlay-popup. #js{:className "tooltips"
+        popup-layer (Popup. #js{:className "tooltips"
                                            :offsetBox 5})
-        hover-interaction (ol-interaction-hover.
+        hover-interaction (Hover.
                            #js{:cursor "pointer"
                                :layers #js[vector-layer]
                                :hitTolerance 2})
@@ -90,10 +82,10 @@
 (defn create-arrow-feature [{:keys [from to weight original attribute]}]
   (let [[from-lat from-lon] from
         [to-lat to-lon] to
-        line-string (ol-geom-line-string.
-                     #js[(.fromLonLat ol-proj #js[to-lon to-lat])
-                         (.fromLonLat ol-proj #js[from-lon from-lat])])
-        feature-obj (ol-feature. line-string)]
+        line-string (LineString.
+                     #js[(.fromLonLat proj #js[to-lon to-lat])
+                         (.fromLonLat proj #js[from-lon from-lat])])
+        feature-obj (Feature. line-string)]
     (.set feature-obj "weight" weight)
     (.set feature-obj "original" original)
     (.set feature-obj "attribute" attribute)

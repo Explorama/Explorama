@@ -6,7 +6,7 @@
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [de.explorama.frontend.ui-base.utils.css-classes :refer [form-hint-class]]
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
-            [cljsjs.rc-slider]))
+            ["rc-slider"]))
 
 (def parameter-definition
   {:value {:type [:vector :number :derefable]

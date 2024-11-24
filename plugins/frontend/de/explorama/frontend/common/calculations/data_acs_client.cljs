@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.common.calculations.data-acs-client
-  (:require [cljsjs.moment]))
+  (:require ["moment"]))
 
 (defn date<- [date-str]
   (if (string? date-str)

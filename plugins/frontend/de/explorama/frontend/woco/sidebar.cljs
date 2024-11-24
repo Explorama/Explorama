@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.sidebar
-  (:require [cljsjs.re-resizable]
+  (:require ["re-resizable"]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary]]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button]]

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.minimap.render
-  (:require [cljsjs.pixi-legacy]
+  (:require ["@pixi/core"]
             [clojure.set :refer [difference]]
             [clojure.string :refer [starts-with?]]
             [taoensso.timbre :refer [error]]

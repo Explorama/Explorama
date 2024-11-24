@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.operations.filter
-  (:require [cljsjs.moment]
+  (:require ["moment"]
             [re-frame.core :as re-frame]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.charts.path :as path]))

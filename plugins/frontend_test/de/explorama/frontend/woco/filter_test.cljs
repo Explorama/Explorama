@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.woco.filter-test
   (:require [cljs.test :refer-macros [deftest testing is]]
-            [cljsjs.moment]
+            ["moment"]
             [de.explorama.frontend.woco.frame.filter.util :as util]
             [de.explorama.shared.common.test-data :as td]))
 

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.pie
-  (:require [cljsjs.chartjs]
+  (:require ["chart.js/auto"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-aget]]

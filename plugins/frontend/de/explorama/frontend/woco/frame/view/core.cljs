@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.frame.view.core
-  (:require [cljsjs.re-resizable]
+  (:require ["re-resizable"]
             [clojure.string :refer [join split]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.ui-base.components.frames.core :refer [vertical-frame]]

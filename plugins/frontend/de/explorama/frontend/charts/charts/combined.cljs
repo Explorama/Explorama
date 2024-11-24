@@ -1,7 +1,7 @@
 (ns de.explorama.frontend.charts.charts.combined
-  (:require [cljsjs.chartjs]
-            [cljsjs.chartjs-adapter-date-fns]
-            [cljsjs.date-fns]
+  (:require ["chart.js/auto"]
+            ["chartjs-adapter-date-fns"]
+            ["date-fns"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-aget]]

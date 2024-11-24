@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.common.views.legend
-  (:require [cljsjs.react-beautiful-dnd]
+  (:require ["react-beautiful-dnd"]
             [clojure.string :refer [lower-case]]
             [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.frontend.common.frontend-interface :as fi]

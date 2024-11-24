@@ -1,7 +1,7 @@
 (ns de.explorama.frontend.algorithms.components.charts
-  (:require [cljsjs.chartjs]
-            [cljsjs.chartjs-adapter-date-fns]
-            [cljsjs.date-fns]
+  (:require ["chart.js/auto"]
+            ["chartjs-adapter-date-fns"]
+            ["date-fns"]
             [de.explorama.frontend.ui-base.utils.interop :refer [format safe-aget]]
             [goog.string :as gstring]
             [goog.string.format]

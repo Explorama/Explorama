@@ -1,5 +1,5 @@
 (ns de.explorama.backend.expdb.temp-import.csv-parser
-  (:require [cljsjs.papaparse]))
+  (:require ["papaparse"]))
 
 (def ^:private default-desc {:separator ","
                              :quote "\""

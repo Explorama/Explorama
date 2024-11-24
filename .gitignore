@@ -16,15 +16,12 @@ libs/*/.calva/output-window
 libs/*/target
 node_modules
 
-bundles/browser/package-lock.json
 bundles/browser/resources/public/
 
 bundles/electron/Explorama-dev
 bundles/electron/dist
-bundles/electron/package-lock.json
 bundles/electron/prebuild
 
-bundles/server/package-lock.json
 bundles/server/resources/converted/
 
 bundles/*/de.explorama.backend.expdb.simple.sqlite3

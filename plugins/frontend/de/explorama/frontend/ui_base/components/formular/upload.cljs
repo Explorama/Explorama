@@ -2,7 +2,7 @@
   (:require
    [clojure.string :as clj-str]
    [reagent.core :as reagent]
-   [cljsjs.resumable.js]
+   ["resumablejs"]
    [cljs.reader :as reader]
    [de.explorama.frontend.ui-base.components.formular.button :refer [button]]
    [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary]]

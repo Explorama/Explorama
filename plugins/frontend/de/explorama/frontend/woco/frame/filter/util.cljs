@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.frame.filter.util
-  (:require [cljsjs.moment]
+  (:require ["moment"]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.data-format.date-filter :as df]))
 

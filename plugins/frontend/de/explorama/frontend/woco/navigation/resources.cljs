@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.resources
-  (:require [cljsjs.pixi-legacy]
+  (:require ["@pixi/core"]
             [de.explorama.frontend.ui-base.components.misc.icon :as icon]
             [taoensso.timbre :refer [debug]]
             [de.explorama.frontend.woco.config :as config]

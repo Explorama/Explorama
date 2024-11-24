@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.table.table.view
-  (:require [cljsjs.react-virtualized]
+  (:require ["react-virtualized"]
             [clojure.string :refer [join]]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button-group

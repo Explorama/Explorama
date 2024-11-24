@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.screenshot.pdf
-  (:require [cljsjs.jspdf]
+  (:require ["jspdf"]
             [clojure.string :refer [join]]
             [cuerdas.core :as curedas]
             [de.explorama.frontend.common.frontend-interface :as fi]

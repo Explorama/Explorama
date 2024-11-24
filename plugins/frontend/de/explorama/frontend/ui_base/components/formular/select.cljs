@@ -2,7 +2,7 @@
   (:require
    [clojure.core.reducers :as r]
    [clojure.string :as str]
-   [cljsjs.react-virtualized]
+   ["react-virtualized"]
    [react-dom :as react-dom]
    [reagent.core :as reagent]
    [reagent.dom :as rdom]

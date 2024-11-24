@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.notes.states
-  (:require cljsjs.quill
+  (:require "quill"
             [reagent.core :as r]
             [de.explorama.frontend.woco.config :as config]))
 

@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.feature-layers.movement
-  (:require [cljsjs.openlayers]
-            [cljsjs.openlayers-ol-ext]))
+  (:require ["ol"]
+            ["ol-ext"]))
 
 (def ol-style-style (aget js/ol "style" "Style"))
 (def ol-style-stroke (aget js/ol "style" "Stroke"))

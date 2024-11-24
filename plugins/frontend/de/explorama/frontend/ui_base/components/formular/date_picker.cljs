@@ -1,8 +1,6 @@
 (ns de.explorama.frontend.ui-base.components.formular.date-picker
   (:require [reagent.core :as r]
             [de.explorama.shared.common.unification.time :as t]
-            [blueprintjs-core]
-            [blueprintjs-datetime :refer [DateInput DateRangeInput]]
             [de.explorama.frontend.ui-base.components.common.core :refer [label tooltip error-boundary]]
             [de.explorama.frontend.ui-base.utils.css-classes :refer [form-hint-class input-parent-class input-text-class]]
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
@@ -64,8 +62,8 @@
              :desc "Will be triggered, if user clicks outside of input field"}})
 (def specification (parameters->malli parameter-definition nil))
 
-(def date-range-input (r/adapt-react-class DateRangeInput))
-(def date-input (r/adapt-react-class DateInput))
+#_(def date-range-input (r/adapt-react-class DateRangeInput))
+#_(def date-input (r/adapt-react-class DateInput))
 
 (def en-GB-days-short ["Su" "Mo" "Tu" "We" "Th" "Fr" "Sa"])
 (def en-GB-months ["January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December"])
@@ -154,13 +152,13 @@
                 (value->date value)
                 (val-or-deref value))
         value (value->date value)]
-    [date-input (cond-> (assoc (apply-default-params params)
-                               :value value)
-                  on-change (assoc :on-change
-                                   (fn [d user-change?]
-                                     (when user-change?
-                                       (on-change (cond-> d
-                                                    selected-as-string? (t/obj->date-str)))))))]))
+    #_[date-input (cond-> (assoc (apply-default-params params)
+                                 :value value)
+                    on-change (assoc :on-change
+                                     (fn [d user-change?]
+                                       (when user-change?
+                                         (on-change (cond-> d
+                                                      selected-as-string? (t/obj->date-str)))))))]))
 
 (defn- range-date-input [{:keys [value on-change selected-as-string?] :as params}]
   (let [value (or (val-or-deref value)
@@ -168,16 +166,16 @@
         value (when value [(value->date (first value))
                            (value->date (second value))])]
     [:div {:class input-group-class}
-     [date-range-input (cond-> (assoc (apply-default-params params)
-                                      :value value)
-                         on-change (assoc :on-change
-                                          (fn [drange]
-                                            (let [[sdate edate :as drange] (js->clj drange)]
-                                              (when drange
-                                                (on-change (if  selected-as-string?
-                                                             [(t/obj->date-str sdate)
-                                                              (t/obj->date-str edate)]
-                                                             drange)))))))]]))
+     #_[date-range-input (cond-> (assoc (apply-default-params params)
+                                        :value value)
+                           on-change (assoc :on-change
+                                            (fn [drange]
+                                              (let [[sdate edate :as drange] (js->clj drange)]
+                                                (when drange
+                                                  (on-change (if  selected-as-string?
+                                                               [(t/obj->date-str sdate)
+                                                                (t/obj->date-str edate)]
+                                                               drange)))))))]]))
 
 (defn ^:export date-picker [params]
   (let [params (merge default-parameters params)]

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.projects.core
-  (:require [cljsjs.moment]
+  (:require ["moment"]
             [clojure.set :as cl-set]
             [clojure.string :as st]
             [de.explorama.frontend.common.frontend-interface :as fi]

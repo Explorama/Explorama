@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.search.views.components.location
-  (:require [cljsjs.openlayers]
-            [cljsjs.openlayers-ol-ext]
+  (:require ["ol"]
+            ["ol-ext"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button]]

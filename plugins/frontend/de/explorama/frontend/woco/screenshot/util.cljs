@@ -3,7 +3,7 @@
             [de.explorama.frontend.ui-base.utils.css-classes :refer [export-ignore-class]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
-            [cljsjs.html-to-image-mod]
+            ["html-to-image-mod"]
             [re-frame.core :as re-frame]
             [de.explorama.frontend.woco.util.date :refer [timestamp->date-str timestamp->time-str]]))
 

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.mosaic.render.pixi.core
-  (:require [cljsjs.pixi-legacy]
+  (:require ["@pixi/core"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.mosaic.render.engine :as gre]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]

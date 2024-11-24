@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.feature-layers.heatmap
-  (:require [cljsjs.openlayers]
-            [cljsjs.openlayers-ol-ext]))
+  (:require ["ol"]
+            ["ol-ext"]))
 
 (def ol-layer-heatmap (aget js/ol "layer" "Heatmap"))
 

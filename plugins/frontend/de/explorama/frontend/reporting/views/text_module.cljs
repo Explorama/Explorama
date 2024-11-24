@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.reporting.views.text-module
-  (:require cljsjs.quill
+  (:require "quill"
             [re-frame.core :refer [dispatch reg-event-db reg-sub subscribe]]
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]

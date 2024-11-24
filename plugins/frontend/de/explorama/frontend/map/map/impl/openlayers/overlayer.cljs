@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.overlayer
-  (:require [cljsjs.openlayers]
-            [cljsjs.openlayers-ol-ext]
+  (:require ["ol"]
+            ["ol-ext"]
             [clojure.string :as str]
             [taoensso.timbre :refer [warn]]))
 

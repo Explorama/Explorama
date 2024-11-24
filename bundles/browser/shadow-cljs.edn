@@ -1,92 +1,46 @@
-{:source-paths
- ["frontend"
-  "backend"
-  "frontend-integrations/woco/frontend"
-  "frontend-integrations/woco/backend"
-  "../../frontend-integrations/woco/backend"
-  "../../frontend-integrations/woco/backend"
-  "../plugins/backend"
-  "../plugins/frontend"
-  "../plugins/shared"
-  "../libs/cache/src"
-  "../libs/data-format-lib/cljc"
-  "../ui-base/src/cljs/lib"
-  "../../assets"]
+{:source-paths ["frontend"
+                "backend"
+                "shared"
+                "../../plugins/backend"
+                "../../plugins/frontend"
+                "../../plugins/shared"
+                "../../assets"]
 
 
- :dependencies
- [[org.clojure/clojure "1.11.1"]
-  [org.clojure/clojurescript "1.11.132"]
-  [org.clojure/core.async "1.6.681"]
+ :dependencies [[org.clojure/clojurescript "1.11.132"]
+                [org.clojure/core.async "1.6.681"]
 
 
-  [mount "0.1.17"]
-  [cljsjs/quill "1.3.7-0"]
+                [mount "0.1.17"]
 
                  ;; Common
-  [com.taoensso/timbre "5.1.2"]
-  [com.taoensso/tufte "2.2.0"]
+                [com.taoensso/timbre "5.1.2"]
+                [com.taoensso/tufte "2.2.0"]
 
-  [expound/expound "0.9.0"] ;TODO r1/deps remove this once we do not use spec any more
-  [io.github.cljsjs/papaparse "5.4.1-0"]
+                [expound/expound "0.9.0"] ;TODO r1/deps remove this once we do not use spec any more
 
                  ;; Client-side
-  [cljsjs/moment "2.29.4-0"]
-  [io.github.cljsjs/bezier-easing "2.1.0-0"]
-  [metosin/malli "0.12.0"]
-  [cljsjs/blueprintjs-core "4.6.0-0"]
-  [cljsjs/blueprintjs-datetime "4.3.2-0"]
-  [cljsjs/react-beautiful-dnd "12.2.0-2"]
-  [cljsjs/rc-slider "9.7.1-1"]
-  [cljsjs/resumable.js "1.1.0-0"]
-  [cljsjs/date-fns "2.30.0-0"]
-  [cljsjs/react-tooltip-lite "1.11.2-0" :exclusions [cljsjs/react-dom]]
-  [cljsjs/react-virtualized "9.21.1-0"]
-  [cljsjs/react-window "1.8.7-0"]
-  [cljsjs/react-number-format "4.4.4-0"]
+                [metosin/malli "0.12.0"]
 
-  [com.andrewmcveigh/cljs-time "0.5.2"]
-  [clj-time/clj-time "0.15.2"]
-  [org.clojure/math.combinatorics "0.2.0"]
+                [com.andrewmcveigh/cljs-time "0.5.2"]
+                [clj-time/clj-time "0.15.2"]
+                [org.clojure/math.combinatorics "0.2.0"]
 
-                 ;;1.11.11-1 is a forked version with fixing scrollbars which contains changes from https://github.com/2knu/html-to-image/tree/with_scrollbar_fixes
-  [io.github.cljsjs/html-to-image-mod "1.11.11-1"]
-  [cljsjs/jspdf "2.5.1-0"]
-  [cljsjs/pixi-legacy "7.2.4-0"]
-  [cljsjs/react-toastify "9.1.3-0" :exclusions [cljsjs/react-dom]]
-  [cljsjs/re-resizable "6.9.9-0" :exclusions [cljsjs/react-dom]]
-  [cljsjs/react-autosuggest "10.0.2-0" :exclusions [cljsjs/react-dom]]
-  [day8.re-frame/http-fx "0.2.4" :exclusions [cljsjs/react-dom]]
-  [re-frame-utils/re-frame-utils "0.1.0" :exclusions [cljsjs/react-dom]]
-  [funcool/cuerdas "2022.06.16-403"]
-  [cljsjs/crypto-js "4.1.1-0"]
+                [day8.re-frame/http-fx "0.2.4"]
+                [re-frame-utils/re-frame-utils "0.1.0"]
+                [funcool/cuerdas "2022.06.16-403"]
 
-  [cljsjs/chartjs "3.9.1-0"]
-  [io.github.cljsjs/chartjs-adapter-date-fns "2.0.0-0" :exclusions [cljsjs/chartjs]]
-  [cljsjs/moment "2.29.4-0"]
-  [cljsjs/vis "4.21.0-1"]
-  [io.github.cljsjs/react-d3-cloud "1.0.5-0"]
-  [cljsjs/seedrandom "3.0.5-0"]
-  [cljsjs/openlayers "6.15.1-0"]
-  [io.github.cljsjs/openlayers-ol-ext "3.2.30-0"]
+                [prismatic/dommy "1.1.0"]
 
-  [prismatic/dommy "1.1.0"]
+                [reagent/reagent "1.0.0"]
+                [re-frame/re-frame "1.2.0"]]
 
-  [reagent/reagent "1.0.0"]
-  [cljsjs/react "17.0.2-0"]
-  [cljsjs/react-dom "17.0.2-0"]
-  [cljsjs/react-dom-server "17.0.2-0"]
-  [re-frame/re-frame "1.2.0"]]
+ :dev-http {8020 "public"}
 
- :dev-http
- {8020 "public"}
-
- :builds
- {:app
-  {:target :browser
-   :output-dir "public/js"
-   :asset-path "/js"
-
-   :modules
-   {:main ; becomes public/js/main.js
-    {:init-fn starter.browser/init}}}}}
+ :builds {:app
+          {:target :browser
+           :output-dir "public/js"
+           :asset-path "/js"
+           
+           :modules
+           {:main {:init-fn de.explorama.frontend.woco.app.core/init}}}}}

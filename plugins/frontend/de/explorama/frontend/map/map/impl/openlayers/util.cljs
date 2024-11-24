@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.util
-  (:require [cljsjs.openlayers]
-            [cljsjs.openlayers-ol-ext]
+  (:require ["ol"]
+            ["ol-ext"]
             [clojure.string :as str]
             [de.explorama.frontend.map.utils :refer [rgb-hex-parser font-color]]
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]))

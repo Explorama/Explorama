@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.api.notifications
-  (:require [cljsjs.react-toastify]
+  (:require ["react-toastify"]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary tooltip]]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button]]

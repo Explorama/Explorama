@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.mosaic.operations.util
-  (:require [cljsjs.moment]
+  (:require ["moment"]
             [clojure.set :as set]
             [de.explorama.shared.data-format.data-instance :as dfl-di]
             [de.explorama.shared.data-format.dates :as dates]

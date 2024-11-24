@@ -3,7 +3,7 @@
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [reagent.core :as r]
-            [cljsjs.react-virtualized]))
+            ["react-virtualized"]))
 
 (def parameter-definition
   {:rows {:type [:vector :derefable]

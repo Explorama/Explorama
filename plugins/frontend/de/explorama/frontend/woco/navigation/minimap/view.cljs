@@ -6,7 +6,7 @@
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.woco.navigation.util :refer [z-factor]]
-            [cljsjs.pixi-legacy]))
+            ["@pixi/core"]))
 
 (re-frame/reg-event-db
  ::toggle

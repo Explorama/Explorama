@@ -1,7 +1,7 @@
 (ns de.explorama.frontend.charts.charts.bar
-  (:require [cljsjs.chartjs]
-            [cljsjs.chartjs-adapter-date-fns]
-            [cljsjs.date-fns]
+  (:require ["chart.js/auto"]
+            ["chartjs-adapter-date-fns"]
+            ["date-fns"]
             [de.explorama.frontend.charts.charts.combined :as comb]
             [de.explorama.frontend.charts.path :as path]))
 

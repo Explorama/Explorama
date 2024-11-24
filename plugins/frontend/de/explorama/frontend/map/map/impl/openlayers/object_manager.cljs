@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.object-manager
-  (:require [cljsjs.openlayers]
-            [cljsjs.openlayers-ol-ext]
+  (:require ["ol"]
+            ["ol-ext"]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.area :as area]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.heatmap :as heatmap]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.movement :as movement]

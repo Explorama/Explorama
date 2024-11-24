@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.reporting.screenshot.pdf
-  (:require [cljsjs.jspdf]
+  (:require ["jspdf"]
             [clojure.string :refer [join]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]

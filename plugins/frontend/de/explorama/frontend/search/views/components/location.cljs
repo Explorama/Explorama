@@ -1,6 +1,12 @@
 (ns de.explorama.frontend.search.views.components.location
-  (:require ["ol"]
-            ["ol-ext"]
+  (:require ["ol" :as ol :refer [Map View]]
+            ["ol/layer" :refer [Tile Vector]]
+            ["ol/source" :refer [Vector XYZ]
+             :rename {Vector SourceVector XYZ SourceXYZ}]
+            ["ol/interaction" :refer [DrawRegular]]
+            ["ol/events" :refer [condition]]
+            ["ol/format" :refer [GeoJSON]]
+            [shadow.loader :as loader]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button]]
@@ -8,22 +14,13 @@
             [reagent.core :as reagent]
             [de.explorama.frontend.search.config :refer [geo-config]]))
 
-(def ^:private Tile (aget js/ol "layer" "Tile"))
-(def ^:private Vector (aget js/ol "layer" "Vector"))
-(def ^:private SourceVector (aget js/ol "source" "Vector"))
-(def ^:private SourceXYZ (aget js/ol "source" "XYZ"))
-(def ^:private Map (aget js/ol "Map"))
-(def ^:private View (aget js/ol "View"))
-(def ^:private RegularInteraction (aget js/ol "interaction" "DrawRegular"))
-(def ^:private condnever (aget js/ol "events" "condition" "never"))
-(def ^:private GeoJSON (aget js/ol "format" "GeoJSON"))
 (def ^:private default-proj "EPSG:900913")
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not (aget js/ol "exploramaInitDone")
+  (when-not (aget ol "exploramaInitDone")
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-    (aset js/ol "PluggableMap" "prototype" "getEventPixel"
+    (aset ol "PluggableMap" "prototype" "getEventPixel"
           (fn [event]
             (this-as this
                      (let [scale @workspace-scale-fn
@@ -41,9 +38,10 @@
                                           (aget size "1"))
                                        (aget viewportPosition "height"))
                                     scale)])))))
-    (aset js/ol "exploramaInitDone" true)))
+    (aset ol "exploramaInitDone" true)))
 
 (defn- new-map-instance [target rect-state internal-state init-value woco-zoom]
+  (loader/load "ol-ext")
   (set-event-pixel-fn woco-zoom)
   (let [init-value (filterv number? init-value)
         init-value (if (= 4 (count init-value))
@@ -62,14 +60,14 @@
         vectorsource-obj (SourceVector.)
         vector-obj (Vector. #js{:name "BoundingBox"
                                 :source vectorsource-obj})
-        interaction (RegularInteraction. #js{:source (.getSource vector-obj)
-                                             :sides 4
-                                             :canRotate false
-                                             :condition (fn [e]
-                                                          (and @rect-state
-                                                               (= 0 (aget e "originalEvent" "button"))))
-                                             :centerCondition condnever
-                                             :squareCondition condnever})]
+        interaction (DrawRegular. #js{:source (.getSource vector-obj)
+                                      :sides 4
+                                      :canRotate false
+                                      :condition (fn [e]
+                                                   (and @rect-state
+                                                        (= 0 (aget e "originalEvent" "button"))))
+                                      :centerCondition condition.never
+                                      :squareCondition condition.never})]
     (when-not (empty? init-value)
       (let [features (.readFeatures (GeoJSON.)
                                     (clj->js {"type" "LineString",

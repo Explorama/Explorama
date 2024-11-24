@@ -37,8 +37,8 @@
 
                 [prismatic/dommy "1.1.0"]
 
-                [reagent/reagent "1.0.0"]
-                [re-frame/re-frame "1.2.0"]]
+                [reagent/reagent "1.2.0"]
+                [re-frame/re-frame "1.4.3"]]
 
  :dev-http {8020 "public"
             8080 "out/test"}
@@ -47,13 +47,7 @@
           {:target :browser
            :output-dir "public/js"
            :asset-path "/resources"
-           :js-options {:js-provider :external
-                        :external-index "target/gen/libs.js"
-                        :external-index-format :esm}
            :modules
            {:main {:init-fn de.explorama.frontend.woco.app.core/init}}}
           :test {:target :browser-test
-                 :test-dir "out/test"
-                 :js-options {:js-provider :external
-                              :external-index "target/gen/libs.js"
-                              :external-index-format :esm}}}}
+                 :test-dir "out/test"}}}

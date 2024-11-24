@@ -1,11 +1,11 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.object-manager
-  (:require ["ol" :refer [proj Map View Feature interaction events control]]
+  (:require ["ol" :as ol :refer [proj Map View Feature interaction events control]]
             ["ol/layer" :refer [Tile AnimatedCluster] :rename {Vector LayerVector}]
             ["ol/source" :refer [XYZ TileArcGISRest TileWMS Vector Cluster]]
             ["ol/geom" :refer [Point]]
             ["ol/interaction" :refer [SelectCluster Hover]]
             ["ol/Overlay" :refer [Popup]]
-            ["ol-ext"]
+            [shadow.loader :as loader]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.area :as area]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.heatmap :as heatmap]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.movement :as movement]
@@ -22,14 +22,12 @@
 
 (defonce ^:private db-state (atom {}))
 
-(def ol-events-condition-no-modifier (aget events "condition" "noModifierKeys"))
-
 (defn- is-touch? [e]
   (= "touch" (aget e "pointerType")))
 
 (defn- check-panning-cond [do-panning? map-browser-event]
   (when-let [pointer-event (aget map-browser-event "originalEvent")]
-    (and (ol-events-condition-no-modifier map-browser-event)
+    (and ((aget events "condition" "noModifierKeys") map-browser-event)
          (aget pointer-event "isPrimary")
          (or (do-panning? (inc (aget pointer-event "button")))
              (is-touch? pointer-event)))))
@@ -42,11 +40,6 @@
       (new (aget interaction "KeyboardZoom"))
       (new (aget interaction "MouseWheelZoom"))])
 
-;TODO r1/attribution
-(def ol-control-defaults (aget control "defaults"))
-(def ol-control-attribution (aget control "Attribution"))
-
-
 (defn- create-map-instance [frame-id headless? {marker-clicked-fn :marker-clicked
                                                 hide-popup-fn :hide-popup
                                                 highlight-event-fn :highlight-event
@@ -57,21 +50,21 @@
                                                 active-feature-layer-fn :active-feature-layers
                                                 do-panning? :do-panning?}]
   (let [popup-overlay (Popup. #js{:popupClass "default"
-                                              :closeBox true
-                                              :onshow (fn [])
-                                              :onclose (fn [] (hide-popup-fn))
-                                              :positioning "auto"
-                                              :autoPan true})
+                                  :closeBox true
+                                  :onshow (fn [])
+                                  :onclose (fn [] (hide-popup-fn))
+                                  :positioning "auto"
+                                  :autoPan true})
         obj-instance (Map.
                       (clj->js {:layers #js[]
                                 :overlays #js[popup-overlay]
-                                :controls (.extend (ol-control-defaults. #js{:attribution false})
-                                                   #js[(ol-control-attribution. #js{:collapsible false})])
+                                :controls (.extend (new (aget control "defaults") #js{:attribution false})
+                                                   #js[(new (aget control "Attribution") #js{:collapsible false})])
                                 :interactions (custom-default-interactions do-panning?)
                                 :target (when-not headless?
                                           (util/map-canvas-id frame-id))
                                 :view (View. #js{:center #js[0 0]
-                                                    :zoom 2})}))
+                                                 :zoom 2})}))
         current-objs-fn (fn [] (get @db-state frame-id))]
     (when-not headless?
       (add-mouse-leave-handler obj-instance track-view-position-fn))
@@ -139,11 +132,11 @@
           vector-layer (LayerVector. #js{:source vector-source})
 
           cluster-source (Cluster. #js{:distance 80 ;;TODO r1/config
-                                                 :source vector-source})
+                                       :source vector-source})
           cluster-layer (AnimatedCluster. #js{:name "Cluster"
-                                                        :source cluster-source
-                                                        :animationDuration 700
-                                                        :style (partial cluster->cluster-style localize-number-fn)})
+                                              :source cluster-source
+                                              :animationDuration 700
+                                              :style (partial cluster->cluster-style localize-number-fn)})
           cluster-interaction (SelectCluster.
                                #js{:pointRadius 35
                                    :selectCluster true
@@ -446,4 +439,5 @@
     (destroy-instance frame-id extra-fns)))
 
 (defn create-instance [frame-id extra-fns]
+  (loader/load "ol-ext")
   (->OpenlayersObjectManager frame-id extra-fns))

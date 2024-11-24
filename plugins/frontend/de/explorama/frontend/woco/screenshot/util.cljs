@@ -3,7 +3,7 @@
             [de.explorama.frontend.ui-base.utils.css-classes :refer [export-ignore-class]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
-            ["html-to-image-mod"]
+            ["html-to-image-mod" :refer [toJpeg toSvg toBlob toCanvas toPixelData toPng]]
             [re-frame.core :as re-frame]
             [de.explorama.frontend.woco.util.date :refer [timestamp->date-str timestamp->time-str]]))
 
@@ -23,12 +23,12 @@
 
 (defn type-to-fn [type]
   (case type
-    (:jpg :jpeg) js/HtmlToImage.toJpeg
-    :svg js/HtmlToImage.toSvg
-    :blob js/HtmlToImage.toBlob
-    :canvas js/HtmlToImage.toCanvas
-    :pixel js/HtmlToImage.toPixelData
-    js/HtmlToImage.toPng))
+    (:jpg :jpeg) toJpeg
+    :svg toSvg
+    :blob toBlob
+    :canvas toCanvas
+    :pixel toPixelData
+    toPng))
 
 (defn base64-valid? [base64-st]
   (and (string? base64-st)

@@ -1,8 +1,8 @@
 (ns de.explorama.frontend.woco.login
   (:require [re-frame.core :as re-frame]
-            [vimsical.re-frame.fx.track :as track]
             [de.explorama.frontend.woco.api.registry :as registry]
             [de.explorama.frontend.woco.path :as path]
+            [de.explorama.frontend.common.tracks :as tracks]
             [de.explorama.frontend.woco.util.api :refer [db-get-error-boundary]]))
 
 (re-frame/reg-sub
@@ -47,13 +47,13 @@
 (re-frame/reg-event-fx
  ::dispose-track
  (fn [cofx event]
-   {::track/dispose
+   {::tracks/dispose
     {:id 1}}))
 
 (re-frame/reg-event-fx
  ::check-rights
  (fn [cofx event]
-   {::track/register
+   {::tracks/register
     {:id 1
      :subscription [::reg-init-event]
      :event-fn (fn [event-maps]

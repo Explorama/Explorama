@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.state-handler
   (:require ["ol" :refer [extent proj] :as ol]
-            ["ol-ext"]
             [clojure.set :as set]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-number?]]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.area :as area]

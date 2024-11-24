@@ -1,13 +1,12 @@
 (ns de.explorama.frontend.mosaic.render.pixi.core
-  (:require ["@pixi/core"]
-            [de.explorama.frontend.common.frontend-interface :as fi]
+  (:require [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.mosaic.render.engine :as gre]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
             [de.explorama.frontend.mosaic.render.pixi.lod :as pl]
             [de.explorama.frontend.mosaic.render.pixi.mouse :as pm]
             [de.explorama.frontend.mosaic.render.pixi.navigation :as pn]
             [de.explorama.frontend.mosaic.render.pixi.shapes :as ps]
-            ["pixi.js" :refer [Container Graphics Texture utils Application Ticker]] 
+            ["pixi.js" :refer [Container Graphics utils Texture Application Ticker]]
             [re-frame.core :as re-frame]
             [taoensso.timbre :refer [debug]]))
 
@@ -378,18 +377,18 @@
           {:keys [x y z zoom next-zoom]} (get state [:pos pc/main-stage-index])
           {:keys [width height host]} (gre/args instance)
           canvas (.getElementById js/document host)
-          app (Application. (clj->js {:autoStart false
-                                   :width width
-                                   :height height
-                                   :backgroundColor 0xFFFFFF
-                                   :antialias false
-                                   :roundPixels false
-                                   :resolution 2
-                                   :autoDensity true
-                                   :sharedTicker false
+          app (Application. (clj->js {:autoStart false}
+                                     :width width
+                                     :height height
+                                     :backgroundColor 0xFFFFFF
+                                     :antialias false
+                                     :roundPixels false
+                                     :resolution 2
+                                     :autoDensity true
+                                     :sharedTicker false
                                                  ;:autoResize true
-                                   :forceCanvas true
-                                   :view canvas}))
+                                     :forceCanvas true
+                                     :view canvas))
           listener [["wheel" (pm/wheel instance) {:passive false}]
                     ["pointerdown" (pm/mousedown instance) {:passive true}]
                     ["pointermove" (pm/pointermove instance) {:passive true}]
@@ -471,7 +470,7 @@
 (defn- texture
   "Get texture with given id"
   [texture-id]
-  (aget utils.TextureCache texture-id))
+  (aget utils "TextureCache" texture-id))
 
 (defn- texture-cached?
   "Checks if a texture is cached"
@@ -484,8 +483,8 @@
       (.setAttribute temp-elem "src" fname)
       (.setAttribute temp-elem "style" "{display: none}")
       (js/document.body.appendChild temp-elem)
-      (Texture.addToCache (texture.from temp-elem)
-                               id)
+      (Texture.addToCache (Texture.from temp-elem)
+                          id)
       (js/document.body.removeChild temp-elem))))
 
 (defn- add-assets [assets]

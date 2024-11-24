@@ -3,7 +3,6 @@
             ["ol/interaction" :refer [Interaction]]
             ["ol/style" :refer [Circle Fill Stroke Style Chart Text]]
             ["ol/geom" :refer [Polygon]]
-            ["ol-ext"]
             [clojure.string :as str]
             [de.explorama.frontend.map.utils :refer [rgb-hex-parser font-color]]
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]))

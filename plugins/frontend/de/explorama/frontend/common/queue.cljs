@@ -1,7 +1,7 @@
 (ns de.explorama.frontend.common.queue
   (:require [re-frame.core :as re-frame]
-            [taoensso.timbre :refer [debug info]]
-            [vimsical.re-frame.fx.track :as track]))
+            [taoensso.timbre :refer [debug]]
+            [de.explorama.frontend.common.tracks :as tracks]))
 
 (def ^:private event-blacklist #{:de.explorama.frontend.common.projects.core/next-replay-event :de.explorama.frontend.common.projects.core/project-loaded})
 
@@ -50,26 +50,7 @@
   (= (:task-id (get-in db (job frame-id)))
      task-id))
 
-(defn- register-fx
-  [track-or-tracks]
-  (try
-    (track/register-fx track-or-tracks)
-    (catch js/Error
-           e
-      (info e)
-      {})))
 
-(defn- dispose-fx
-  [track-or-tracks]
-  (try
-    (track/dispose-fx track-or-tracks)
-    (catch js/Error
-           e
-      (info e)
-      {})))
-
-(re-frame/reg-fx ::register register-fx)
-(re-frame/reg-fx ::dispose dispose-fx)
 
 (re-frame/reg-sub
  ::finished?
@@ -209,7 +190,7 @@
 (re-frame/reg-event-fx
  ::track-register-finished?
  (fn [_ [_ frame-id]]
-   {::register
+   {::tracks/register
     {:id [::close frame-id]
      :subscription [::finished? frame-id]
      :event-fn (fn [finished?]
@@ -219,13 +200,13 @@
 (re-frame/reg-event-fx
  ::track-dispose-finished?
  (fn [_ [_ frame-id]]
-   {::dispose
+   {::tracks/dispose
     {:id [::close frame-id]}}))
 
 (re-frame/reg-event-fx
  ::track-register-job
  (fn [_ [_ frame-id]]
-   {::register
+   {::tracks/register
     {:id [::job frame-id]
      :subscription [::job frame-id]
      :event-fn (fn [_]
@@ -234,13 +215,13 @@
 (re-frame/reg-event-fx
  ::track-dispose-job
  (fn [_ [_ frame-id]]
-   {::dispose
+   {::tracks/dispose
     {:id [::job frame-id]}}))
 
 (re-frame/reg-event-fx
  ::track-register-queue
  (fn [_ [_ frame-id]]
-   {::register
+   {::tracks/register
     {:id [::queue frame-id]
      :subscription [::queue frame-id]
      :event-fn (fn [_]
@@ -249,5 +230,5 @@
 (re-frame/reg-event-fx
  ::track-dispose-queue
  (fn [_ [_ frame-id]]
-   {::dispose
+   {::tracks/dispose
     {:id [::queue frame-id]}}))

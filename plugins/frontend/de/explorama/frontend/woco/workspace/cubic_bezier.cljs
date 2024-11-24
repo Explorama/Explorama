@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.workspace.cubic-bezier
-  (:require "bezier-easing"))
+  (:require ["bezier-easing"]))
 
 
 (def nominator 24)

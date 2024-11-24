@@ -39,6 +39,8 @@ bundles/*/.lein-failures
 bundles/*/.rebel_readline_history
 bundles/*/.calva/output-window
 bundles/*/.shadow-cljs
+bundles/*/public/*
+!bundles/*/public/index.html
 
 tools/profiling-tool/gen_src/
 tools/profiling-tool/gen_resources/

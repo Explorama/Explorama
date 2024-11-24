@@ -40,7 +40,9 @@
  :builds {:app
           {:target :browser
            :output-dir "public/js"
-           :asset-path "/js"
-           
+           :asset-path "/resources"
+           :js-options {:js-provider :external
+                        :external-index "target/gen/libs.js"
+                        :external-index-format :esm}
            :modules
            {:main {:init-fn de.explorama.frontend.woco.app.core/init}}}}}

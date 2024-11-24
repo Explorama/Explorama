@@ -1,6 +1,7 @@
 (ns de.explorama.frontend.common.validation
   (:require [clojure.set :as set]
             [malli.core :as m]
+            [malli.error :as me]
             [taoensso.timbre :refer [error]]))
 
 (def ^:private debug? ^boolean goog.DEBUG)
@@ -10,11 +11,11 @@
 (defn enable-validation [namespaces-]
   (swap! validates set/union (into #{} (set namespaces-))))
 
-(defmacro validate? [event spec desc]
+(defn validate? [event spec desc]
   (when debug?
-    `(when (and (or (@validates (namespace ~event))
-                    (@validates ~event))
-                (not (m/validate ~spec ~desc)))
-       (error ~event
-              (-> (m/explain ~spec ~desc)
-                  (me/humanize))))))
+    (when (and (or (@validates (namespace event))
+                   (@validates event))
+               (not (m/validate spec desc)))
+      (error event
+             (-> (m/explain spec desc)
+                 (me/humanize))))))

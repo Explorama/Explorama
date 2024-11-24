@@ -5,9 +5,6 @@ set -eu
 pwd=`pwd`
 mode=$1
 
-echo "npm install"
-npm install
-
 if [ $mode == "prod" ]
 then
   RES_PATH="$pwd/../../dist/browser"
@@ -22,13 +19,7 @@ fi
 
 if [ $mode == "dev" ]
 then
-  RES_PATH="$pwd/resources/public/"
-  echo "Gather assets for dev build"
-fi
-
-if [ $mode == "dev-benchmark" ]
-then
-  RES_PATH="$pwd/resources/public/"
+  RES_PATH="$pwd/public/"
   echo "Gather assets for dev build"
 fi
 

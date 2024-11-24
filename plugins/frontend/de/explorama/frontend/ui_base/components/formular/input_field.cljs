@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.ui-base.components.formular.input-field
-  (:require "react-number-format"
+  (:require ["react-number-format"]
             [reagent.core :as reagent]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-aget]]
             [de.explorama.frontend.ui-base.components.misc.icon :refer [icon]]

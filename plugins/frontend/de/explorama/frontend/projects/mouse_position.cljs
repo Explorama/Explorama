@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.projects.mouse-position
-  (:require "crypto-js"
+  (:require ["crypto-js"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.tubes :as tubes]
             [de.explorama.frontend.projects.path :as pp]

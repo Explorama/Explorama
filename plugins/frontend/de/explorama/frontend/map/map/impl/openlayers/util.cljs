@@ -1,34 +1,19 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.util
-  (:require ["ol"]
+  (:require ["ol" :refer [coordinate proj extent Feature]]
+            ["ol/interaction" :refer [Interaction]]
+            ["ol/style" :refer [Circle Fill Stroke Style Chart Text]]
+            ["ol/geom" :refer [Polygon]]
             ["ol-ext"]
             [clojure.string :as str]
             [de.explorama.frontend.map.utils :refer [rgb-hex-parser font-color]]
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]))
 
-(def ol-interaction (aget js/ol "interaction"))
-(def ol-interaction-interaction (aget ol-interaction "Interaction"))
-(def ol-coordinate (aget js/ol "coordinate"))
-
-(def ol-proj (aget js/ol "proj"))
-
-(def ol-style-stroke (aget js/ol "style" "Stroke"))
-(def ol-style-fill (aget js/ol "style" "Fill"))
-(def ol-style-circle (aget js/ol "style" "Circle"))
-(def ol-style-style (aget js/ol "style" "Style"))
-(def ol-style-chart (aget js/ol "style" "Chart"))
-(def ol-style-text (aget js/ol "style" "Text"))
-
-(def ol-extent (aget js/ol "extent"))
-
-(def ol-feature (aget js/ol "Feature"))
-(def ol-geom-polygon (aget js/ol "geom" "Polygon"))
-
-(def ^:private invisible-stroke (ol-style-stroke. #js{:color (str "rgba(1,1,1,0)")
+(def ^:private invisible-stroke (Stroke. #js{:color (str "rgba(1,1,1,0)")
                                                       :width 1}))
-(def ^:private style-border (ol-style-style. #js{:image (ol-style-circle. #js{:fill (ol-style-fill. #js{:color "#fff"})
+(def ^:private style-border (Style. #js{:image (Circle. #js{:fill (Fill. #js{:color "#fff"})
                                                                               :radius 25
                                                                               :stroke invisible-stroke})}))
-(def ^:private white-circle-16 (ol-style-circle. #js{:fill (ol-style-fill. #js{:color "#fff"})
+(def ^:private white-circle-16 (Circle. #js{:fill (Fill. #js{:color "#fff"})
                                                      :radius 16
                                                      :stroke invisible-stroke}))
 
@@ -50,11 +35,11 @@
                                                  (highlighted-marker-stroke-color-fn)
                                                  (stroke-color-fn))) ")")
             z-index (if is-highlighted? 3 2)
-            circle-style (ol-style-circle. #js{:fill (ol-style-fill. #js{:color fill-color})
+            circle-style (Circle. #js{:fill (Fill. #js{:color fill-color})
                                                :radius radius
-                                               :stroke (ol-style-stroke. #js{:color stroke-color
+                                               :stroke (Stroke. #js{:color stroke-color
                                                                              :width 2})})
-            result-style (ol-style-style. #js{:image circle-style
+            result-style (Style. #js{:image circle-style
                                               :zIndex z-index})]
         (swap! marker-style-cache assoc style-key result-style)
         result-style))))
@@ -73,13 +58,13 @@
             colors-vec (clj->js (map (fn [c] (str "rgb(" (str/join "," (rgb-hex-parser c)) ")"))
                                      (keys color-counts)))
             data-vec (clj->js (vals color-counts))
-            style-outer (ol-style-style. #js{:image (ol-style-chart. #js{:type "donut"
+            style-outer (Style. #js{:image (Chart. #js{:type "donut"
                                                                          :radius 25
                                                                          :data data-vec
                                                                          :colors colors-vec
                                                                          :stroke invisible-stroke})})
-            style-inner (ol-style-style. #js{:image white-circle-16
-                                             :text (ol-style-text. #js{:font "bold 12px 'Arial'"
+            style-inner (Style. #js{:image white-circle-16
+                                             :text (Text. #js{:font "bold 12px 'Arial'"
                                                                        :text (localize-number-fn num-features)})})
             cluster-style (if (> num-features 1)
                             #js[style-border style-outer style-inner]
@@ -91,7 +76,7 @@
   (let [cluster (.get f "features")
         cluster-size (aget cluster "length")]
     (if-let [coords-extent (aget cluster "coordsCached")]
-      (let [area-size (.getArea ol-extent coords-extent)]
+      (let [area-size (.getArea extent coords-extent)]
         (when (> area-size 0)
           (.fit (.getView instance)
                 coords-extent
@@ -100,9 +85,9 @@
                                        (.getFirstCoordinate
                                         (.getGeometry f)))
                                      (array-seq cluster)))
-            coords-extent (.boundingExtent ol-extent
+            coords-extent (.boundingExtent extent
                                            all-coords)
-            area-size (.getArea ol-extent coords-extent)]
+            area-size (.getArea extent coords-extent)]
         (aset cluster "coordsCached" coords-extent)
         (when (> area-size 0)
           (.fit (.getView instance)
@@ -114,9 +99,9 @@
                                        (.getFirstCoordinate
                                         (.getGeometry f)))
                                      (array-seq cluster)))
-            coords-extent (.boundingExtent ol-extent
+            coords-extent (.boundingExtent extent
                                            all-coords)
-            area-size (.getArea ol-extent coords-extent)
+            area-size (.getArea extent coords-extent)
             cluster-style (if (> cluster-size 1)
                             (cluster->cluster-style localize-number-fn f res)
                             #js[(.getStyle (aget cluster "0"))])]
@@ -158,7 +143,7 @@
 
 (defn get-view-port [map-instance]
   (let [view-obj (.getView map-instance)
-        [lon lat] (js->clj (.toLonLat ol-proj (.getCenter view-obj)))]
+        [lon lat] (js->clj (.toLonLat proj (.getCenter view-obj)))]
     {:center [lat lon]
      :zoom (.getZoom view-obj)}))
 
@@ -193,7 +178,7 @@
                           (.getFeatures marker-layer event-pixel))
         cluster-features (when cluster-layer
                            (.getFeatures cluster-layer event-pixel))
-        [lon lat] (.toLonLat ol-proj (.getCoordinateFromPixel map-obj event-pixel))
+        [lon lat] (.toLonLat proj (.getCoordinateFromPixel map-obj event-pixel))
         event-coords [lat lon]
         all-promises ((comp vec flatten conj) [open-cluster-features marker-features cluster-features]
                                               (mapv (fn [[_ v]]
@@ -293,7 +278,7 @@
         delta (if (aget browser-event "shiftKey")
                 -1 1)
         view (.getView map-instance)]
-    (.zoomByDelta ol-interaction-interaction view delta anchor 250)
+    (.zoomByDelta Interaction view delta anchor 250)
     (.preventDefault browser-event)))
 
 (defn map-double-click-handler [current-objs-fn marker-dbl-clicked-fn e]
@@ -345,18 +330,18 @@
                                                 (.getFirstCoordinate
                                                  (.getGeometry f)))
                                               (array-seq cluster)))
-                     hull (.convexHull ol-coordinate all-coords)]
+                     hull (.convexHull coordinate all-coords)]
                  (.set (aget e "feature") "convexHull" hull)
                  hull)
                hull)]
     (.clear hover-source)
     (if (<= (aget cluster "length") @(max-marker-hover))
       (do (.addFeature hover-source
-                       (ol-feature. (ol-geom-polygon. #js[hull])))
+                       (Feature. (Polygon. #js[hull])))
           (.addFeatures hover-source
                         cluster))
       (.addFeature hover-source
-                   (ol-feature. (ol-geom-polygon. #js[hull]))))))
+                   (Feature. (Polygon. #js[hull]))))))
 
 (defn map-hover-leave-handler [hover-source _]
   (.clear hover-source))

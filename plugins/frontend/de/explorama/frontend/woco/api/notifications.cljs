@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.api.notifications
-  (:require ["react-toastify"]
+  (:require ["react-toastify" :refer [ToastContainer toast]]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary tooltip]]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button]]
@@ -18,8 +18,8 @@
                      ;:close-on-click false
                      :position "bottom-right"})
 
-(def notification-comp (reagent/adapt-react-class (aget js/ReactToastify "ToastContainer")))
-(def notification-func (aget js/ReactToastify "toast"))
+(def notification-comp (reagent/adapt-react-class ToastContainer))
+(def notification-func toast)
 
 (defn- info [message notification-config]
   (if (map? notification-config)

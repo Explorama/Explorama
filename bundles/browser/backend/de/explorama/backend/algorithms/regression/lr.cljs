@@ -5,7 +5,7 @@
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.common.unification.misc :refer [cljc-uuid]]
             [de.explorama.shared.common.unification.time :refer [current-ms]]
-            [ml-regression-simple-linear :as lib]
+            ["ml-regression-simple-linear" :as lib]
             [taoensso.timbre :refer [debug]]))
 
 (defn- backdated-calc [instance attributes data]

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.wordcloud
-  (:require ["react-d3-cloud"]
+  (:require ["react-d3-cloud" :as ReactD3Cloud]
             ["seedrandom"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
@@ -13,7 +13,7 @@
             [de.explorama.frontend.charts.util.queue :as queue-util]
             [de.explorama.shared.charts.ws-api :as ws-api]))
 
-(def d3-cloud (reagent/adapt-react-class js/ReactD3Cloud))
+(def d3-cloud (reagent/adapt-react-class ReactD3Cloud))
 
 (defonce chart-id-prefix "vis_wordcloud-")
 (def margin 25)

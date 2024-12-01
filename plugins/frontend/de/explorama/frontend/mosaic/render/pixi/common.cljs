@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.mosaic.render.pixi.common)
 
-(defn modifier [event]
+(defn modifier [^js event]
   {:ctrl (-> event .-data .-originalEvent .-ctrlKey)
    :alt (-> event .-data .-originalEvent .-altKey)
    :shift (-> event .-data .-originalEvent .-shiftKey)})
@@ -128,7 +128,7 @@
 
 (def main-stage-index 0)
 (def inspector-stage-index 1)
-(defn zoom-context-stage [app idx]
+(defn zoom-context-stage [^js app idx]
   (.getChildAt (.-stage app)
                idx))
 (defn find-stage-idx [state]
@@ -142,7 +142,7 @@
      1 1
      0))
   ([stage stage-key]
-   (.getChildAt stage (main-container stage-key))))
+   (.getChildAt ^js stage (main-container stage-key))))
 
 (defn axes-container
   ([stage-key]
@@ -150,13 +150,13 @@
      1 2
      1))
   ([stage stage-key]
-   (.getChildAt stage (axes-container stage-key))))
+   (.getChildAt ^js stage (axes-container stage-key))))
 
 (defn axes-background-container
   ([_]
    0)
   ([stage stage-key]
-   (.getChildAt stage (axes-background-container stage-key))))
+   (.getChildAt ^js stage (axes-background-container stage-key))))
 
 (defn axes-background-container-direct [stage stage-key]
   (axes-background-container (axes-container stage stage-key)
@@ -165,7 +165,7 @@
 (defn axes-text-container
   ([_]
    1)
-  ([stage stage-key]
+  ([^js stage stage-key]
    (.getChildAt stage (axes-text-container stage-key))))
 
 (defn axes-text-container-direct [stage stage-key]
@@ -178,9 +178,9 @@
      1 0
      0))
   ([stage stage-key]
-   (.getChildAt stage (background-container stage-key))))
+   (.getChildAt ^js stage (background-container stage-key))))
 
 (defn ui-container
   ([_] 2)
   ([stage stage-key]
-   (.getChildAt stage (ui-container stage-key))))
+   (.getChildAt ^js stage (ui-container stage-key))))

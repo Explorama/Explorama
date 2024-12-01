@@ -8,13 +8,13 @@
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]))
 
 (def ^:private invisible-stroke (Stroke. #js{:color (str "rgba(1,1,1,0)")
-                                                      :width 1}))
+                                             :width 1}))
 (def ^:private style-border (Style. #js{:image (Circle. #js{:fill (Fill. #js{:color "#fff"})
-                                                                              :radius 25
-                                                                              :stroke invisible-stroke})}))
+                                                            :radius 25
+                                                            :stroke invisible-stroke})}))
 (def ^:private white-circle-16 (Circle. #js{:fill (Fill. #js{:color "#fff"})
-                                                     :radius 16
-                                                     :stroke invisible-stroke}))
+                                            :radius 16
+                                            :stroke invisible-stroke}))
 
 (defonce fit-view-opts (clj->js {:padding [50, 50, 50, 50]}))
 
@@ -35,11 +35,11 @@
                                                  (stroke-color-fn))) ")")
             z-index (if is-highlighted? 3 2)
             circle-style (Circle. #js{:fill (Fill. #js{:color fill-color})
-                                               :radius radius
-                                               :stroke (Stroke. #js{:color stroke-color
-                                                                             :width 2})})
+                                      :radius radius
+                                      :stroke (Stroke. #js{:color stroke-color
+                                                           :width 2})})
             result-style (Style. #js{:image circle-style
-                                              :zIndex z-index})]
+                                     :zIndex z-index})]
         (swap! marker-style-cache assoc style-key result-style)
         result-style))))
 
@@ -58,21 +58,22 @@
                                      (keys color-counts)))
             data-vec (clj->js (vals color-counts))
             style-outer (Style. #js{:image (Chart. #js{:type "donut"
-                                                                         :radius 25
-                                                                         :data data-vec
-                                                                         :colors colors-vec
-                                                                         :stroke invisible-stroke})})
+                                                       :radius 25
+                                                       :data data-vec
+                                                       :colors colors-vec
+                                                       :stroke invisible-stroke})})
             style-inner (Style. #js{:image white-circle-16
-                                             :text (Text. #js{:font "bold 12px 'Arial'"
-                                                                       :text (localize-number-fn num-features)})})
+                                    :text (Text. #js{:font "bold 12px 'Arial'"
+                                                     :text (localize-number-fn num-features)})})
+            ^js feature-0 (aget features "0")
             cluster-style (if (> num-features 1)
                             #js[style-border style-outer style-inner]
-                            #js[(.getStyle (aget features "0"))])]
+                            #js[(.getStyle feature-0)])]
         (aset features "cachedStyle" cluster-style)
         cluster-style))))
 
-(defn cluster-interaction-style [localize-number-fn instance f res]
-  (let [cluster (.get f "features")
+(defn cluster-interaction-style [localize-number-fn ^js instance f res]
+  (let [^js cluster (.get f "features")
         cluster-size (aget cluster "length")]
     (if-let [coords-extent (aget cluster "coordsCached")]
       (let [area-size (.getArea extent coords-extent)]
@@ -80,7 +81,7 @@
           (.fit (.getView instance)
                 coords-extent
                 fit-view-opts)))
-      (let [all-coords (clj->js (map (fn [f]
+      (let [all-coords (clj->js (map (fn [^js f]
                                        (.getFirstCoordinate
                                         (.getGeometry f)))
                                      (array-seq cluster)))
@@ -94,16 +95,17 @@
                 fit-view-opts))))
     (if-let [cluster-style (aget cluster "cachedStyle")]
       cluster-style
-      (let [all-coords (clj->js (map (fn [f]
+      (let [all-coords (clj->js (map (fn [^js f]
                                        (.getFirstCoordinate
                                         (.getGeometry f)))
                                      (array-seq cluster)))
             coords-extent (.boundingExtent extent
                                            all-coords)
             area-size (.getArea extent coords-extent)
+            ^js cluster-0 (aget cluster "0")
             cluster-style (if (> cluster-size 1)
                             (cluster->cluster-style localize-number-fn f res)
-                            #js[(.getStyle (aget cluster "0"))])]
+                            #js[(.getStyle cluster-0)])]
         (when (> area-size 0)
           (.fit (.getView instance)
                 coords-extent
@@ -126,7 +128,7 @@
 (defn find-cluster-for-feature
   "Finds the cluster-feature which contains the given feature-obj.
    Clusters are always based on the current zoom level."
-  [cluster-layer feature-obj]
+  [^js cluster-layer feature-obj]
   (some (fn [c]
           (when (and (.get c "features")
                      (some #(= feature-obj %)
@@ -134,13 +136,13 @@
             c))
         (array-seq (.getFeatures (.getSource cluster-layer)))))
 
-(defn add-mouse-leave-handler [map-instance track-view-position-fn]
+(defn add-mouse-leave-handler [^js map-instance track-view-position-fn]
   (.addEventListener (.getViewport map-instance)
                      "mouseleave"
                      (fn [_]
                        (track-view-position-fn true))))
 
-(defn get-view-port [map-instance]
+(defn get-view-port [^js map-instance]
   (let [view-obj (.getView map-instance)
         [lon lat] (js->clj (.toLonLat proj (.getCenter view-obj)))]
     {:center [lat lon]
@@ -148,12 +150,12 @@
 
 (defn map-click-handler [current-objs-fn active-feature-layer-fn marker-clicked-fn overlayer-feature-clicked-fn
                          area-feature-clicked-fn highlight-event-fn hide-popup-fn e]
-  (let [{:keys [cluster-interaction
-                cluster-layer
-                marker-layer
+  (let [{:keys [^js cluster-interaction
+                ^js cluster-layer
+                ^js marker-layer
                 feature-layer
                 overlayer]
-         map-obj :map} (current-objs-fn)
+         ^js map-obj :map} (current-objs-fn)
         event-pixel (aget e "pixel")
         active-feature-layer (active-feature-layer-fn)
         active-feature-layers (into {}
@@ -180,10 +182,10 @@
         [lon lat] (.toLonLat proj (.getCoordinateFromPixel map-obj event-pixel))
         event-coords [lat lon]
         all-promises ((comp vec flatten conj) [open-cluster-features marker-features cluster-features]
-                                              (mapv (fn [[_ v]]
+                                              (mapv (fn [[_ ^js v]]
                                                       (.getFeatures v event-pixel))
                                                     active-overlayers)
-                                              (mapv (fn [[_ v]]
+                                              (mapv (fn [[_ ^js v]]
                                                       (when v
                                                         (.getFeatures v event-pixel)))
                                                     active-feature-layers))]
@@ -227,23 +229,22 @@
                                                ;Find the first overlayer with a feature
                                                (some (fn [[k v]]
                                                        (when (> (aget v "length") 0)
-                                                         [k (-> v
-                                                                (aget 0)
-                                                                .getProperties
-                                                                js->clj
-                                                                (dissoc "geometry"))]))
+                                                         (let [^js elm-0 (aget v 0)]
+                                                           [k (-> elm-0
+                                                                  .getProperties
+                                                                  js->clj
+                                                                  (dissoc "geometry"))])))
                                                      overlayers-results))
                    clicked-feature-layer-feature (when (and (not clicked-feature-obj)
                                                             cluster-features
                                                             (= (aget cluster-features "length") 0))
                                                ;Find the first feature-layer with a feature
-                                                   (some (fn [[k v]]
+                                                   (some (fn [[k ^js v]]
                                                            (when (and v (> (aget v "length") 0))
-                                                             [k (-> v
-                                                                    (aget 0)
-                                                                    .getProperties
-                                                                    js->clj
-                                                                    (dissoc "geometry"))]))
+                                                             (let [^js elm-0 (aget v 0)]
+                                                               [k (-> (.getProperties elm-0)
+                                                                      js->clj
+                                                                      (dissoc "geometry"))])))
                                                          feature-layers-results))
                    [event-id location {fillColor :fillColor}]
                    (when clicked-feature-obj
@@ -271,7 +272,7 @@
                      (seq feature-layers-results)) (hide-popup-fn)))))))
 
 (defn fake-double-click-zoom [e]
-  (let [map-instance (aget e "map")
+  (let [^js map-instance (aget e "map")
         browser-event (aget e "originalEvent")
         anchor (aget e "coordinate")
         delta (if (aget browser-event "shiftKey")
@@ -281,9 +282,9 @@
     (.preventDefault browser-event)))
 
 (defn map-double-click-handler [current-objs-fn marker-dbl-clicked-fn e]
-  (let [{:keys [cluster-interaction
-                cluster-layer
-                marker-layer]} (current-objs-fn)
+  (let [{:keys [^js cluster-interaction
+                ^js cluster-layer
+                ^js marker-layer]} (current-objs-fn)
         event-pixel (aget e "pixel")
         open-cluster-features (.getFeatures (.getLayer cluster-interaction)
                                             event-pixel)
@@ -321,11 +322,11 @@
                  (fake-double-click-zoom e)
                  (marker-dbl-clicked-fn (aget e "originalEvent") event-id)))))))
 
-(defn map-hover-enter-handler [hover-source max-marker-hover e]
+(defn map-hover-enter-handler [^js hover-source max-marker-hover e]
   (let [hull (.get (aget e "feature") "convexHull")
         cluster (.get (aget e "feature") "features")
         hull (if-not hull
-               (let [all-coords (clj->js (map (fn [f]
+               (let [all-coords (clj->js (map (fn [^js f]
                                                 (.getFirstCoordinate
                                                  (.getGeometry f)))
                                               (array-seq cluster)))

@@ -188,7 +188,7 @@
                 cluster-interaction
                 cluster-hover
                 hover-layer]} (get @db-state frame-id)
-        geo-obj (map-instance frame-id)]
+        ^js geo-obj (map-instance frame-id)]
     (if geo-obj
       (do
         (.removeLayer geo-obj marker-layer)
@@ -233,7 +233,7 @@
 (defn- remove-marker [frame-id marker-ids {hide-popup :hide-popup
                                            get-popup-desc :get-popup-desc}]
   (let [all-markers (vals (marker-objs frame-id marker-ids))
-        marker-layer (get-in @db-state [frame-id :marker-source])]
+        ^js marker-layer (get-in @db-state [frame-id :marker-source])]
     (if marker-layer
       (do
         (when (and (:event-id (get-popup-desc))
@@ -278,12 +278,12 @@
                                        (.set feature "data" marker-data)
                                        [marker-id feature])))
                               markers-data)
-        marker-source (get-in @db-state [frame-id :marker-source])]
+        ^js marker-source (get-in @db-state [frame-id :marker-source])]
     (.addFeatures marker-source (clj->js (vec (vals created-markers))))
     (swap! db-state update-in [frame-id :markers] merge created-markers)))
 
 (defn- destroy-instance [frame-id extra-fns]
-  (let [geo-obj (map-instance frame-id)]
+  (let [^js geo-obj (map-instance frame-id)]
     (remove-marker-layer frame-id extra-fns)
     (if geo-obj
       (.setTarget geo-obj nil)

@@ -60,7 +60,7 @@
         data-path (pc/data-path render-path)
         stage (Container.)
         frame-id (gre/frame-id instance)]
-    (.addChild stage-parent stage)
+    (.addChild ^js stage-parent stage)
     (.addChild stage (Graphics.))
     (.addChild stage (Graphics.))
     (gre/interaction-primitive instance
@@ -69,7 +69,7 @@
                                (fn [_ _ _e]
                                  (when-not (:inspector? (gre/state instance))
                                    (let [data (gdal/second (get-data path data-path))
-                                         main-stage (.-stage (gre/app instance))
+                                         main-stage (.-stage ^js (gre/app instance))
                                          {:keys [width height]} (gre/args instance)
                                          inspector-margin-x 50
                                          inspector-margin-y 50
@@ -112,7 +112,7 @@
                                      (gre/assoc-in-state! instance
                                                           [:contexts pc/inspector-stage-index]
                                                           contexts)
-                                     (.addChildAt main-stage
+                                     (.addChildAt ^js main-stage
                                                   inspector-stage
                                                   pc/inspector-stage-index),
                                      (aset inspector-stage "name" "inspector-stage")
@@ -175,9 +175,9 @@
   (let [{:keys [start-x start-y end-x end-y]} optional-desc
         {:keys [theme]} (gre/state instance)
         stage (Container.)]
-    (.addChild stage-parent stage)
-    (.addChild stage (Graphics.))
-    (.addChild stage (Graphics.))
+    (.addChild ^js stage-parent stage)
+    (.addChild ^js stage (Graphics.))
+    (.addChild ^js stage (Graphics.))
     (when optional-desc
       (gre/rect instance
                 stage

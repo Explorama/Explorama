@@ -40,7 +40,7 @@
    (.focus instance)
    (set-edit-mode frame-id)))
 
-(defn update-formatting [instance frame-id]
+(defn update-formatting [^js instance frame-id]
   (when instance
     (try
       (set-formatting frame-id
@@ -49,7 +49,7 @@
 
 (defn format-text
   ([frame-id op]
-   (when-let [instance @(get-instance frame-id)]
+   (when-let [^js instance @(get-instance frame-id)]
      (.format instance
               op
               (not (boolean (aget (.getFormat instance)
@@ -58,7 +58,7 @@
      (focus instance frame-id)
      nil))
   ([frame-id op new-val]
-   (when-let [instance @(get-instance frame-id)]
+   (when-let [^js instance @(get-instance frame-id)]
      (if-let [_already-applied? (boolean
                                  (= new-val
                                     (aget (.getFormat instance)
@@ -70,7 +70,7 @@
      nil)))
 
 (defn clean-format [frame-id _op]
-  (when-let [instance @(get-instance frame-id)]
+  (when-let [^js instance @(get-instance frame-id)]
     (when-let [sel (.getSelection instance)]
       (.removeFormat instance sel))
     (update-formatting instance frame-id)

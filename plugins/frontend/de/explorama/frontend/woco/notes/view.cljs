@@ -17,7 +17,7 @@
                                                              in-edit-mode? in-hover-mode? notes-id set-edit-mode set-hover-mode]]
             [de.explorama.frontend.woco.workspace.states :as wws]))
 
-(defn- handle-max-length [instance delta _ source]
+(defn- handle-max-length [^js instance delta _ source]
   (try
     (let [text-length (.getLength instance)]
       (when (and (= source "user")

@@ -12,7 +12,7 @@
 
 (defn- update-highlights-cards [this state stage-key render-path row-major-index]
   (let [wrapper-indices-path [stage-key :wrapper render-path row-major-index]
-        wrapper-container (get-in state [:indices wrapper-indices-path 0])]
+        ^js wrapper-container (get-in state [:indices wrapper-indices-path 0])]
     (when (and (get-in state [[:pos stage-key] :init 1])
                wrapper-container)
       (.removeChild (.-parent wrapper-container)
@@ -38,9 +38,9 @@
                     wrapper-container (get-in state [:indices idx 0])]]
         (when (and (get-in state [[:pos stage-key] :init 1])
                    wrapper-container)
-          (.removeChild (.-parent wrapper-container)
+          (.removeChild ^js (.-parent wrapper-container)
                         wrapper-container)
-          (.destroy wrapper-container #js {"children" true})
+          (.destroy ^js wrapper-container #js {"children" true})
           (gre/assoc-in-state! this [:indices idx] nil)
           (letfn [(content-path [zoom]
                     [:indices [stage-key :content :static zoom render-path row-major-index]])]
@@ -58,24 +58,24 @@
                                   ((get-in render-funcs [(pl/render-type ctx) :relevant-highlights])
                                    this stage-key render-path ctx highlights grouped? pl/cluster-data))
           static-indices-path [stage-key :base :static 0 render-path]
-          frame-container (get cache static-indices-path)]
+          ^js frame-container (get cache static-indices-path)]
       (when frame-container
         (let [capsule-contaier (.getChildAt frame-container 0)
               highlight-container (.getChildAt capsule-contaier 3)]
           (doseq [highlight-sprite (.-children highlight-container)]
-            (.removeChild highlight-container highlight-sprite)
-            (.destroy highlight-sprite #js {"children" true}))
+            (.removeChild ^js highlight-container highlight-sprite)
+            (.destroy ^js highlight-sprite #js {"children" true}))
           (.addChildAt highlight-container (Graphics.) 0)
           (when (and relevant-highlights (not= 0 (count relevant-highlights)))
             ((get-in render-funcs [(pl/render-type ctx) :highlights-0])
              this highlight-container constraints ctx relevant-highlights)))))))
 
-(deftype Pixi [^:unsynchronized-mutable app
+(deftype Pixi [^js ^:unsynchronized-mutable app
                render-funcs
                ^:unsynchronized-mutable args
                ^:unsynchronized-mutable state]
   gre/Engine
-  (gre/rect [_ stage x y h w c {interactive? :interactive? stage-num :stage debug-level? :debug-level? :or {stage-num 1} :as args}]
+  (gre/rect [_ ^js stage x y h w c {interactive? :interactive? stage-num :stage debug-level? :debug-level? :or {stage-num 1} :as args}]
     (when-not (:headless state)
       (cond interactive?
             (ps/rect (.getChildAt stage stage-num) x y h w c args)
@@ -84,34 +84,34 @@
               (when (:z-index args)
                 (aset g "zIndex" (:z-index args)))
               (aset stage "sortableChildren" true)
-              (.addChild stage g)
+              (.addChild ^js stage g)
               (ps/rect g x y h w c args))
             :else
-            (ps/rect (.getChildAt stage 0) x y h w c args))))
+            (ps/rect (.getChildAt ^js stage 0) x y h w c args))))
 
   (gre/rect [_ stage x y h w c]
     (when-not (:headless state)
-      (ps/rect (.getChildAt stage 0) x y h w c {})))
+      (ps/rect (.getChildAt ^js stage 0) x y h w c {})))
 
   (gre/circle [_ stage x y r c]
     (when-not (:headless state)
-      (ps/circle (.getChildAt stage 0) x y r c {})))
+      (ps/circle (.getChildAt ^js stage 0) x y r c {})))
 
   (gre/circle [_ stage x y r c {interactive? :interactive? stage-num :stage :or {stage-num 1} :as args}]
     (when-not (:headless state)
       (if interactive?
-        (ps/circle (.getChildAt stage stage-num) x y r c args)
-        (ps/circle (.getChildAt stage 0) x y r c args))))
+        (ps/circle (.getChildAt ^js stage stage-num) x y r c args)
+        (ps/circle (.getChildAt ^js stage 0) x y r c args))))
 
   (gre/polygon [_ stage points c {interactive? :interactive? stage-num :stage :or {stage-num 1} :as args}]
     (when-not (:headless state)
       (if interactive?
-        (ps/polygon (.getChildAt stage stage-num) points c args)
-        (ps/polygon (.getChildAt stage 0) points c args))))
+        (ps/polygon (.getChildAt ^js stage stage-num) points c args)
+        (ps/polygon (.getChildAt ^js stage 0) points c args))))
 
   (gre/polygon [_ stage points c]
     (when-not (:headless state)
-      (ps/polygon (.getChildAt stage 0) points c {})))
+      (ps/polygon (.getChildAt ^js stage 0) points c {})))
 
   (gre/point [_ x y]
     (when-not (:headless state)
@@ -159,7 +159,7 @@
 
   (gre/update-theme [_ color]
     (when-not (:headless state)
-      (aset (.-renderer app) "background" "color" color)))
+      (aset (.-renderer ^js app) "background" "color" color)))
 
   (gre/state [_]
     state)
@@ -311,7 +311,7 @@
                           [pc/main-stage-index pc/inspector-stage-index]
                           [pc/main-stage-index])]
         (let [wrapper-indices-path [stage-key :wrapper render-path row-major-index]
-              wrapper-container (get-in state [:indices wrapper-indices-path 0])]
+              ^js wrapper-container (get-in state [:indices wrapper-indices-path 0])]
           (when wrapper-container
             (.removeChild (.-parent wrapper-container)
                           wrapper-container)
@@ -330,11 +330,11 @@
                 relevant-annotations ((get-in render-funcs [(pl/render-type ctx) :relevant-annotations])
                                       this stage-key render-path ctx grouped? pl/cluster-data)
                 static-indices-path [stage-key :base :static 0 render-path]
-                frame-container (get cache static-indices-path)]
+                ^js frame-container (get cache static-indices-path)]
             (when frame-container
               (let [capsule-contaier (.getChildAt frame-container 0)
                     comment-container (.getChildAt capsule-contaier 2)]
-                (doseq [comment-sprite (.-children comment-container)]
+                (doseq [^js comment-sprite (.-children comment-container)]
                   (.removeChild comment-container)
                   (.destroy comment-sprite #js {"children" true}))
                 (when (and relevant-annotations (not= 0 (count relevant-annotations)))

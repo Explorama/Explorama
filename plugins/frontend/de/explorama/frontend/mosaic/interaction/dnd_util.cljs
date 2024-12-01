@@ -38,7 +38,7 @@
                           :target path
                           :target-event e}
                          scale
-                         (.-nativeEvent event)))
+                         (.-nativeEvent ^js event)))
     (reset! drop-target nil)))
 
 (defn draggable-container

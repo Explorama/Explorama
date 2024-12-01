@@ -96,11 +96,11 @@
     (>= 1.0 z) [[medium-bg-idx 1]]
     :else [[large-bg-idx 1]]))
 
-(defn- bg-container [app]
-  (.getChildAt (.-stage app) 0))
+(defn- bg-container [^js app]
+  ^js (.getChildAt (.-stage app) 0))
 
-(defn- get-connecting-edges-container [app]
-  (.getChildAt (.-stage app) 1))
+(defn- get-connecting-edges-container [^js app]
+  ^js (.getChildAt (.-stage app) 1))
 
 (defn- center-pos [{[width height] :size [x y] :coords}]
   (when (and width height x y)
@@ -108,7 +108,7 @@
      (+ y (/ height 2))]))
 
 (defn draw-edges [frames]
-  (when-let [app (:app @state)]
+  (when-let [^js app (:app @state)]
     (let [g (.getChildAt (get-connecting-edges-container app) 0)
           center-window (into {} (map (fn [[fid fdesc]]
                                         [fid (center-pos fdesc)])
@@ -143,7 +143,7 @@
 
 
 (defn remove-edges []
-  (let [app (:app @state)
+  (let [^js app (:app @state)
         g (.getChildAt (get-connecting-edges-container app) 0)]
     (.clear g)
     (.render (.-renderer app) (.-stage app))))
@@ -197,7 +197,7 @@
 (defn pan-zoom [x y z]
   (swap! state assoc :x x :y y :z z)
   (when (:app @state)
-    (let [app (:app @state)
+    (let [^js app (:app @state)
           [width height] (workspace-dims)
           active-sprites (calc-active-tiling z)
           active-sprites-set (into #{} (map first active-sprites))
@@ -208,7 +208,7 @@
       (aset (.getChildAt (bg-container (:app @state)) tiny-bg-idx) "visible" (boolean (active-sprites-set tiny-bg-idx)))
       (set-position connecting-edges x y z)
       (doseq [[tiling-sprite-idx alpha] active-sprites]
-        (let [tiling-sprite (.getChildAt (bg-container app) tiling-sprite-idx)]
+        (let [^js tiling-sprite (.getChildAt ^js (bg-container app) tiling-sprite-idx)]
           (set! (.-y (.-scale tiling-sprite)) z)
           (set! (.-x (.-scale tiling-sprite)) z)
           (set-size tiling-sprite (/ width z) (/ height z))
@@ -222,8 +222,8 @@
 (re-frame/reg-event-fx
  ::reset
  (fn [{db :db}]
-   (when-let [app (:app @state)]
-     (let [g (.getChildAt (get-connecting-edges-container app) 0)]
+   (when-let [^js app (:app @state)]
+     (let [g (.getChildAt ^js (get-connecting-edges-container app) 0)]
        (.clear g)
        (.render (.-renderer app) (.-stage app)))
      (pan-zoom (:x config/default-position)
@@ -232,12 +232,12 @@
    nil))
 
 (defn resize []
-  (when-let [app (:app @state)]
+  (when-let [^js app (:app @state)]
     (let [z (:z @state)
           [width height] (workspace-dims)
           active-sprites (calc-active-tiling z)]
       (doseq [[tiling-sprite-idx _] active-sprites]
-        (set-size (.getChildAt (bg-container app) tiling-sprite-idx)
+        (set-size (.getChildAt ^js (bg-container app) tiling-sprite-idx)
                   (/ width z) (/ height z)))
       (.resize (.-renderer app) width height)
       (.render (.-renderer app) (.-stage app)))))
@@ -341,7 +341,7 @@
       :component-will-unmount
       (fn [_]
         (remove-edges)
-        (.destroy (:app @state))
+        (.destroy ^js (:app @state))
         (reset! state nil))})))
 
                      

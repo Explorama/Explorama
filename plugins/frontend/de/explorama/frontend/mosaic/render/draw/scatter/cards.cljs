@@ -63,7 +63,7 @@
                                  "dblclick"
                                  (fn [_ _ _e]
                                    (when-not (:inspector? (gre/state instance))
-                                     (let [main-stage (.-stage (gre/app instance))
+                                     (let [main-stage (.-stage ^js (gre/app instance))
                                            frame-id (gre/frame-id instance)
                                            {:keys [width height]} (gre/args instance)
                                            inspector-margin-x 50
@@ -106,7 +106,7 @@
                                        (gre/assoc-in-state! instance
                                                             [:contexts common/inspector-stage-index]
                                                             contexts)
-                                       (.addChildAt main-stage
+                                       (.addChildAt ^js main-stage
                                                     inspector-stage
                                                     common/inspector-stage-index),
                                        (aset inspector-stage "name" "inspector-stage")

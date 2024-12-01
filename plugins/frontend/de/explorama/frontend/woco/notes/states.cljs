@@ -62,13 +62,13 @@
     instance))
 
 (defn get-note-content [frame-id]
-  (when-let [instance (deref (get-instance frame-id))]
+  (when-let [^js instance (deref (get-instance frame-id))]
     (->> instance
          (.getContents)
          (.stringify js/JSON))))
 
 (defn set-instance-content [frame-id content]
-  (when-let [instance (deref (get-instance frame-id))]
+  (when-let [^js instance (deref (get-instance frame-id))]
     (.setContents instance (js/JSON.parse content))))
 
 (defn copy-note-state [source-frame-id target-frame-id]

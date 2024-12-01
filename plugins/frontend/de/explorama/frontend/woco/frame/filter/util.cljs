@@ -12,7 +12,7 @@
   (when dobj
     (js/moment dobj)))
 
-(defn moment->date [mobj]
+(defn moment->date [^js mobj]
   (when mobj
     (.toDate mobj)))
 
@@ -34,13 +34,13 @@
     date-obj
     (.format date-obj date-format)))
 
-(defn is-before? [mobj1 mobj2]
+(defn is-before? [^js mobj1 mobj2]
   (try
     (.isBefore mobj1 mobj2)
     (catch :default e
       false)))
 
-(defn is-after? [mobj1 mobj2]
+(defn is-after? [^js mobj1 mobj2]
   (try
     (.isAfter mobj1 mobj2)
     (catch :default e

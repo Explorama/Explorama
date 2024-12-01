@@ -14,8 +14,8 @@
     (map (fn [event]
            (let [independent-values  (mapv #(get event %) independent-variables)]
              (-> (assoc event "id" (cljc-uuid))
-                 (assoc dependent-variable (.predict instance
-                                                      (first independent-values))))))
+                 (assoc dependent-variable (.predict ^js instance
+                                                     (first independent-values))))))
          data)))
 
 (defn- execute-model [{:keys [training-data attributes parameter algorithm task-id] :as task}]
@@ -93,7 +93,7 @@
 (deftype LinearRegression []
   alg/Algorithm
   (algorithm-key [_] :linear-regression)
-  (create-model [_ task] 
+  (create-model [_ task]
     task)
   (execute-model [_ task]
     (execute-model task)))

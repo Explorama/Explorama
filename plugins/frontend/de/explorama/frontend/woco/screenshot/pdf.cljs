@@ -35,7 +35,7 @@
 ;; PDF config: See http://raw.githack.com/MrRio/jsPDF/master/docs/jsPDF.html
 ;Orientation of the first page
 
-(defn- calc-footer-metas [pdf-obj frame-ids page-num max-pages]
+(defn- calc-footer-metas [^js pdf-obj frame-ids page-num max-pages]
   (let [{page-label    :pdf-footer-page
          created-by    :pdf-footer-created
          export-displayed-datasources :export-displayed-datasources}
@@ -91,7 +91,7 @@
                       ;; :always (int))
      :footer-width footer-desc-width}))
 
-(defn- make-pdf-footer [pdf-obj {:keys [footer-text footer-meta-text footer-meta-height footer-width footer-height page-str]}]
+(defn- make-pdf-footer [^js pdf-obj {:keys [footer-text footer-meta-text footer-meta-height footer-width footer-height page-str]}]
   (let [[w h] applied-format-size
         {:keys [pm im]} format-size-mm
         content-margin (+ im pm)
@@ -129,7 +129,7 @@
 
 (defn finalize-pdf [node res
                     {:keys [type optional-title-sub-vec file-name frame-ids callback-fn] :as params}
-                    & [sidebar-res sidebar-node]]
+                    & [^js sidebar-res sidebar-node]]
   (let [optional-title (when optional-title-sub-vec @(re-frame/subscribe optional-title-sub-vec))
         {:keys [pm im]} format-size-mm
         [w h] applied-format-size
@@ -156,7 +156,7 @@
                                  (get-node-size sidebar-node)]
                              (fit-size width-mm-org height-mm-org width-scrn height-scrn)))]
     (cond-> pdf-obj
-      footer? (make-pdf-footer footer-metas)
+      footer? ^js (make-pdf-footer footer-metas)
       optional-title (->
                       (.setTextColor 70)
                       (.setFontSize 20)
@@ -164,12 +164,12 @@
                       (.text margin-mm
                              title-height
                              optional-title))
-      :always (.addImage res
-                         (name type)
-                         margin-mm
-                         (+ margin-mm title-height)
-                         width-mm
-                         height-mm)
+      :always ^js (.addImage res
+                             (name type)
+                             margin-mm
+                             (+ margin-mm title-height)
+                             width-mm
+                             height-mm)
       sidebar-res (.addImage sidebar-res
                              (name type)
                              (+ margin-mm (- width-mm width-scrn-mm))

@@ -10,20 +10,20 @@
 (defonce ^:private default-style
   (Style.
    #js{:stroke (Stroke. #js{:color #js[255 255 255 0.1]
-                                     :width 1})}))
+                            :width 1})}))
 (def arrow-color "rgba(27, 28, 30, 0.4)")
 (def hover-color "rgb(16, 163, 163)")
 
-(defn- get-style [color feature _]
+(defn- get-style [color ^js feature _]
   (let [weight (.get feature "weight")
         start-width (* 1 weight) ; arrow-point
         end-width 2 ; arrow-end
         geometry (.getGeometry feature)
         z-index 5 #_(-> feature
-                    (.getGeometry)
-                    (.getLastCoordinate)
-                    (aget 1)
-                    -)
+                        (.getGeometry)
+                        (.getLastCoordinate)
+                        (aget 1)
+                        -)
         flow-style (FlowLine.
                     #js{:color color
                         :color2 color
@@ -40,9 +40,9 @@
                     _]
   (let [vector-source (Vector.)
         vector-layer (VectorImage. #js{:source vector-source
-                                                 :style (partial get-style arrow-color)})
+                                       :style (partial get-style arrow-color)})
         popup-layer (Popup. #js{:className "tooltips"
-                                           :offsetBox 5})
+                                :offsetBox 5})
         hover-interaction (Hover.
                            #js{:cursor "pointer"
                                :layers #js[vector-layer]
@@ -51,9 +51,9 @@
     (.on hover-interaction
          "hover"
          (fn [e]
-           (when-let [old-feature @hovered-feature]
+           (when-let [^js old-feature @hovered-feature]
              (.setStyle old-feature (get-style arrow-color old-feature nil)))
-           (let [feature (aget e "feature")
+           (let [^js feature (aget e "feature")
                  feature-style (get-style hover-color feature nil)
                  attribute-name (.get feature "attribute")
                  value (.get feature "original")]
@@ -61,15 +61,15 @@
              (reset! hovered-feature feature)
              (.show popup-layer
                     (aget e "coordinate")
-                    (str (attribute-label-fn attribute-name) 
-                         ": " 
+                    (str (attribute-label-fn attribute-name)
+                         ": "
                          (if (number? value)
                            (localize-num-fn value)
                            value))))))
     (.on hover-interaction
          "leave"
          (fn [e]
-           (let [feature @hovered-feature
+           (let [^js feature @hovered-feature
                  feature-style (get-style arrow-color feature nil)]
              (.setStyle feature feature-style)
              (reset! hovered-feature nil)
@@ -91,21 +91,21 @@
     (.set feature-obj "attribute" attribute)
     feature-obj))
 
-(defn add-arrows [{:keys [vector-source]} arrow-objs]
+(defn add-arrows [{:keys [^js vector-source]} arrow-objs]
   (.addFeatures vector-source
                 (clj->js arrow-objs)))
 
-(defn display-layer [map-instance {:keys [vector-layer
-                                          popup-layer
-                                          hover-interaction]}]
+(defn display-layer [^js map-instance {:keys [vector-layer
+                                              popup-layer
+                                              hover-interaction]}]
   (.addOverlay map-instance popup-layer)
   (.addLayer map-instance vector-layer)
   (.addInteraction map-instance hover-interaction))
 
-(defn- destroy-and-hide [map-instance {:keys [vector-layer
-                                              popup-layer
-                                              hover-interaction
-                                              vector-source]}]
+(defn- destroy-and-hide [^js map-instance {:keys [vector-layer
+                                                  popup-layer
+                                                  hover-interaction
+                                                  vector-source]}]
   (.removeOverlay map-instance popup-layer)
   (.removeLayer map-instance vector-layer)
   (.removeInteraction map-instance hover-interaction)

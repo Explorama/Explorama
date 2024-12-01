@@ -17,7 +17,7 @@
     (str "rgba(" (str/join "," (rgb-hex-parser c)) "," (:opacity area-data) ")")
     (str "rgba(" (str/join "," default-color) ")")))
 
-(defn- feature-properties->data-key [feature-properties feature]
+(defn- feature-properties->data-key [feature-properties ^js feature]
   (select-keys (js->clj (.getProperties feature))
                (keys feature-properties)))
 
@@ -57,7 +57,7 @@
                                "resultType" "tile"
                                "f" "json"})
 
-(defn- load-from-url [url vector-source]
+(defn- load-from-url [url ^js vector-source]
   (.then (js/fetch url)
          (fn [response]
            (.then (.json response)
@@ -113,11 +113,11 @@
     {:vector-source vector-source
      :vector-layer vector-layer}))
 
-(defn- destroy-and-hide [map-instance {:keys [vector-layer vector-source]}]
+(defn- destroy-and-hide [^js map-instance {:keys [vector-layer vector-source]}]
   (.removeLayer map-instance vector-layer)
   (.clear vector-source))
 
-(defn display-layer [map-instance {:keys [vector-layer vector-source]}]
+(defn display-layer [^js map-instance {:keys [vector-layer vector-source]}]
   (.addLayer map-instance vector-layer))
 
 (defn destroy-layer [map-instance layer-obj extra-fns]

@@ -47,7 +47,7 @@
                                                                :width 2})
                                  :fill (Fill. #js{:color "rgba(255, 0, 0, 0.2)"})})})
 
-(defn- styling-function [feature]
+(defn- styling-function [^js feature]
   (let [feature-type (.getType (.getGeometry feature))]
     (if-let [feature-style (get styles feature-type)]
       feature-style

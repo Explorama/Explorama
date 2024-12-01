@@ -22,7 +22,7 @@
     ;https://github.com/openlayers/openlayers/issues/13283
     (aset ol "PluggableMap" "prototype" "getEventPixel"
           (fn [event]
-            (this-as this
+            (this-as ^js this
                      (let [scale @workspace-scale-fn
                            viewportPosition (.getBoundingClientRect (.getViewport this))
                            size (clj->js
@@ -85,7 +85,7 @@
                                         :featureProjection
                                         (get-in geo-config [:source :projection] default-proj)})]
         (.fit view
-              (.getExtent (.getGeometry (aget features 0)))
+              (.getExtent ^js (.getGeometry (aget features 0)))
               #js{:padding #js[5 15 5 15]})
         (.addFeatures vectorsource-obj
                       features)))
@@ -96,9 +96,9 @@
            (.clear vectorsource-obj)))
     (.on interaction "drawend"
          (fn [_]
-           (let [geo (->> (.getFeatures vectorsource-obj)
-                          first
-                          .getGeometry)
+           (let [features (.getFeatures vectorsource-obj)
+                 ^js feature (first features)
+                 ^js geo (.getGeometry feature)
                  geo-clone (.clone geo)
                  coords (-> geo-clone
                             (.transform (get-in geo-config [:source :projection] default-proj)
@@ -161,7 +161,7 @@
            [:div {:class "map-input unselected"
                   :on-click (fn []
                               (reset! alter-state true)
-                              (.updateSize (:map @instance)))}
+                              (.updateSize ^js (:map @instance)))}
             [:span {:class "hint-text"} passive-label]
             [location-react-comp
              dom-id instance alter-state

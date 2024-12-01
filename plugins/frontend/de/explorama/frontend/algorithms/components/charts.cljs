@@ -223,7 +223,7 @@
    {:component-did-mount #(show-line-chart frame-id chart-id chart-data size)
     :component-will-unmount (fn [this]
                               (let [[_ chart-id chart-data] (reagent/argv this)
-                                    instance (get @chart-instances chart-id)]
+                                    ^js instance (get @chart-instances chart-id)]
                                 (when instance
                                   (swap! chart-instances dissoc chart-id)
                                   (.destroy instance))))

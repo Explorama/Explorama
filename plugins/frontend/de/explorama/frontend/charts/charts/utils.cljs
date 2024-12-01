@@ -17,7 +17,7 @@
   (boolean (get @instances frame-id)))
 
 (defn clean-instance [frame-id]
-  (let [instance (get @instances frame-id)]
+  (let [^js instance (get @instances frame-id)]
     (when instance
       (swap! instances dissoc frame-id)
       (.destroy instance)
@@ -233,7 +233,7 @@
   ([frame-id data x y height width theme]
    (trace (str "Update chart") {:frame-id frame-id :data data :x x :y y :height height})
    (let [chart-instance (get @instances frame-id)
-         chart-data (.-data chart-instance)
+         ^js chart-data (.-data chart-instance)
          data (if (map? data)
                 [data]
                 data)]
@@ -325,24 +325,24 @@
   (error "Chart component crashed: " error info))
 
 (defn dataset-visible? [frame-id idx]
-  (when-let [instance (get @instances frame-id)]
+  (when-let [^js instance (get @instances frame-id)]
     (.isDatasetVisible instance idx)))
 
 (defn show-dataset [frame-id idx flag]
-  (when-let [instance (get @instances frame-id)]
+  (when-let [^js instance (get @instances frame-id)]
     (if flag
       (.show instance idx)
       (.hide instance idx))))
 
 (defn toggle-dataset [frame-id idx]
-  (when-let [instance (get @instances frame-id)]
+  (when-let [^js instance (get @instances frame-id)]
     (if (.isDatasetVisible instance idx)
       (.hide instance idx)
       (.show instance idx))))
 
 (defn pie-show-dataset [frame-id idx flag]
   (when-let [instance (get @instances frame-id)]
-    (when-let [metadata (.getDatasetMeta instance 0)]
+    (when-let [metadata (.getDatasetMeta ^js instance 0)]
       (-> (aget metadata "data" idx)
           (aset "hidden" (not (boolean flag))))
       (.update instance))))

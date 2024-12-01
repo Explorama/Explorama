@@ -35,7 +35,7 @@
 ;; PDF config: See http://raw.githack.com/MrRio/jsPDF/master/docs/jsPDF.html
 ;Orientation of the first page
 
-(defn- calc-footer-metas [pdf-obj frame-ids page-num max-pages orientation]
+(defn- calc-footer-metas [^js pdf-obj frame-ids page-num max-pages orientation]
   (let [{page-label    :pdf-footer-page
          created-by    :pdf-footer-created
          export-displayed-datasources :export-displayed-datasources}
@@ -94,7 +94,7 @@
                       ;; :always (int))
      :footer-width footer-desc-width}))
 
-(defn- make-pdf-footer [pdf-obj {:keys [curr-page orientation max-page footer-text footer-meta-text footer-meta-height footer-width footer-height page-str]}]
+(defn- make-pdf-footer [^js pdf-obj {:keys [curr-page orientation max-page footer-text footer-meta-text footer-meta-height footer-width footer-height page-str]}]
   (let [[w h] (applied-format-size orientation)
         {:keys [pm im]} format-size-mm
         content-margin (+ im pm)
@@ -187,7 +187,7 @@
 ;Orientation of the first page
 (def report-orientation "portrait")
 
-(defn- add-pdf-images [sizes images content-margin current-pdf page-elements]
+(defn- add-pdf-images [sizes images content-margin ^js current-pdf page-elements]
   (let [first-element (first page-elements)]
     (reduce (fn [acc-page-height element]
               (let [idx (if (= element "header")
@@ -253,7 +253,7 @@
                              (calc-footer-metas current-pdf
                                                 (get page-frame-id-mapping current-page)
                                                 current-page pages report-orientation))]
-          (cond-> current-pdf
+          (cond-> ^js current-pdf
             (not= current-page 1)
             (.addPage format report-orientation)
             (not= current-page 1)

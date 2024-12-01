@@ -48,7 +48,7 @@
 
 (defn- rect
   "Draws an rectangle to pixi container g (copied from mosaic)"
-  [g ^number x ^number y ^number h ^number w c {:keys [a] :or {a 1}}]
+  [^js g ^number x ^number y ^number h ^number w c {:keys [a] :or {a 1}}]
   (.beginFill g (if (number? c)
                   c
                   (rgb->hex c)) a)
@@ -113,7 +113,7 @@
   "Renders a frame as a container. Only updates changed attributes"
   [state {:keys [id di ^number left ^number top ^number full-width ^number full-height
                  color-group color ^number z-index ^boolean is-minimized?]}]
-  (let [{:keys [frames frames-container]} @state]
+  (let [{:keys [frames ^js frames-container]} @state]
     (when-not (get frames id)
      ;; ----- initialize frame: Only when not exists
       (let [frame (Container.)
@@ -190,7 +190,7 @@
          removed-frames (difference (set (keys frames))
                                     new-ids-set)]
      (doseq [id removed-frames]
-       (when-let [{:keys [frame]} (get frames id)]
+       (when-let [{:keys [^js frame]} (get frames id)]
          (.destroy frame
                    (clj->js {:children true})))
        (swap! state update :frames dissoc id))))
@@ -244,11 +244,11 @@
                          (* config/minimap-render-padding-horizontal transform-z))
 
           transform-y (+ (* transform-z (- t))
-                         (* config/minimap-render-padding-vertical transform-z))]
+                         (* config/minimap-render-padding-vertical transform-z))
+          ^js renderer (aget app "renderer")]
       (remove-frames state frame-set)
       (set-position stage transform-x transform-y transform-z)
-      (-> (aget app "renderer")
-          (.render stage)))))
+      (.render renderer stage))))
 
 (defn render-viewport
   "Renders the woco viewport (visible part on workspace)"
@@ -257,7 +257,8 @@
                      ^number vx ^number vy ^number vz
                      ^number vw ^number vh
                      ^boolean force-rerender?]} @state]
-    (let [stage (aget app "stage")]
+    (let [^js stage (aget app "stage")
+          ^js renderer (aget app "renderer")]
       ;; ---- Position -----
       (when (or force-rerender?
                 (not= vx x)
@@ -282,8 +283,7 @@
                 {:a config/minimap-viewport-alpha})
           (set-size viewport-container width height)))
 
-      (-> (aget app "renderer")
-          (.render stage))
+      (.render renderer stage)
       (swap! state assoc
              :vx x
              :vy y
@@ -308,7 +308,7 @@
           viewport (Container.)
           viewport-graphic (Graphics.)
           cont (Container.)
-          stage (aget app "stage")]
+          ^js stage (aget app "stage")]
       (aset cont "sortableChildren" true)
       (aset viewport "zIndex" 9999999)
       (.addChild viewport viewport-graphic)

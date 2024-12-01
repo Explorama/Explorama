@@ -537,7 +537,7 @@
                              (reset! mouse-down-state nil)
                              (drag-frame-end %))
              :on-click (fn [e]
-                         (let [e (.-nativeEvent e)]
+                         (let [e (.-nativeEvent ^js e)]
                            (when (and (.-ctrlKey e)
                                       (wwconfig/select-event? e))
                              (dispatch [:de.explorama.frontend.woco.workspace.multiselect/selection-strg source-frame-id]))))

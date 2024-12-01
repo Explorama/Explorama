@@ -14,7 +14,7 @@
 
 (defonce chart-id-prefix "vis_combined-")
 
-(defn- generate-labels [use-dataset-label-only? selected-y-options chart]
+(defn- generate-labels [use-dataset-label-only? selected-y-options ^js chart]
   (let [datasets (js->clj (safe-aget chart "data" "datasets"))]
     (clj->js
      (vec

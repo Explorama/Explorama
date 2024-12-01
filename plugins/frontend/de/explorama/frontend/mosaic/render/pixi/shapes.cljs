@@ -34,8 +34,8 @@
     (let [click-fn #(func (pc/modifier %)
                           (pc/coords %)
                           %)]
-      (.on container "click" click-fn)
-      (.on container "touchstart" click-fn))
+      (.on ^js container "click" click-fn)
+      (.on ^js container "touchstart" click-fn))
     (= on "dblclick")
     (let [click-fn (fn [e]
                      (let [time (get-time)
@@ -54,12 +54,12 @@
                                  (pc/coords e)
                                  e))
                          (reset! double-click time))))]
-      (.on container "click" click-fn)
-      (.on container "touchstart" click-fn))
+      (.on ^js container "click" click-fn)
+      (.on ^js container "touchstart" click-fn))
 
     (= on "hover")
     (do
-      (.on container
+      (.on ^js container
            "pointerover"
            (fn [e]
              (if (= delay-ms :instant)
@@ -84,14 +84,14 @@
                                           :show)))
                                 delay-ms)))))
       (when track-move?
-        (.on container
+        (.on ^js container
              "pointermove"
              (fn [e]
                (func (pc/modifier e)
                      (pc/coords e)
                      path
                      :move))))
-      (.on container
+      (.on ^js container
            "pointerout"
            (fn [e]
              (reset! hover-active? false)
@@ -102,20 +102,20 @@
                    :hide))))
     (= on "dragndrop")
     (do
-      (.on container
+      (.on ^js container
            "pointerdown"
            (fn [e]
-             (let [event (-> e .-data .-originalEvent)
-                   x (.-pageX event)
-                   y (.-pageY event)]
+             (let [event (-> ^js e .-data .-originalEvent)
+                   x (.-pageX ^js event)
+                   y (.-pageY ^js event)]
                (when (select-event? event)
                  (reset! mouse-down-atom [x y e event path])))))
-      (.on container
+      (.on ^js container
            "pointermove"
            (fn [e]
-             (let [event (-> e .-data .-originalEvent)
-                   x (.-pageX event)
-                   y (.-pageY event)]
+             (let [event (-> ^js e .-data .-originalEvent)
+                   x (.-pageX ^js event)
+                   y (.-pageY ^js event)]
                (when @mouse-down-atom
                  (let [[sx sy e _ cpath] @mouse-down-atom]
                    (when (and (= cpath path)
@@ -134,7 +134,7 @@
                              path)
                            (aget e "data" "originalEvent"))
                      (reset! mouse-down-atom nil)))))))
-      (.on container
+      (.on ^js container
            "pointerout"
            (fn [e]
              (when @mouse-down-atom
@@ -152,7 +152,7 @@
                          (aget e "data" "originalEvent")))))
              (reset! mouse-down-atom nil))))
     :else
-    (.on container on #(func (pc/modifier %)
+    (.on ^js container on #(func (pc/modifier %)
                              (pc/coords %)
                              %))))
 
@@ -164,7 +164,7 @@
 
 (defn rect [g x y w h c {:keys [a rounded? radius outline] :or {a 1}}]
   (when outline
-    (.lineStyle g (clj->js {:width (:width outline)
+    (.lineStyle ^js g (clj->js {:width (:width outline)
                             :color (condp = (:color outline)
                                      :auto-0
                                      (rgb->hex (get (color/font-color c a) 0))
@@ -173,34 +173,34 @@
                                      :auto-2
                                      (rgb->hex (get (color/font-color c a) 2))
                                      (rgb->hex (:color outline)))})))
-  (.beginFill g (rgb->hex c) a)
+  (.beginFill ^js g (rgb->hex c) a)
   (if rounded?
-    (.drawRoundedRect g
+    (.drawRoundedRect ^js g
                       x
                       y
                       w
                       h
                       radius)
-    (.drawRect g
+    (.drawRect ^js g
                x
                y
                w
                h))
-  (.endFill g))
+  (.endFill ^js g))
 
 (defn circle [g x y r c {:keys [a] :or {a 1}}]
-  (.beginFill g (rgb->hex c) a)
-  (.drawCircle g
+  (.beginFill ^js g (rgb->hex c) a)
+  (.drawCircle ^js g
                x
                y
                r)
-  (.endFill g))
+  (.endFill ^js g))
 
 (defn polygon [g points c {:keys [a] :or {a 1}}]
-  (.beginFill g (rgb->hex c) a)
-  (.drawPolygon g
+  (.beginFill ^js g (rgb->hex c) a)
+  (.drawPolygon ^js g
                 (clj->js points))
-  (.endFill g))
+  (.endFill ^js g))
 
 (defn point [x y]
   (Point. x y))
@@ -208,12 +208,12 @@
 (defn interaction-primitive
   "stage-num is usally 0 but for header 1 because mosaic uses usally one graphics object per zoomlevel and if we want to have "
   [stage on func path stage-num & [opts]]
-  (set! (.-eventMode (.getChildAt stage stage-num)) "static")
+  (set! (.-eventMode ^js (.getChildAt ^js stage stage-num)) "static")
   (interaction-handler {:on on
                         :func func
                         :path path
                         :opts opts}
-                       (.getChildAt stage stage-num)))
+                       (.getChildAt ^js stage stage-num)))
 
 
 (defn img [stage id x y w h {interaction :interaction
@@ -223,15 +223,15 @@
                  (Sprite. tex-resource))] ; pixi-texture.WHITE)]
     (when sprite
       (when interaction
-        (set! (.-eventMode sprite) "static")
+        (set! (.-eventMode ^js sprite) "static")
         (interaction-handler interaction sprite))
-      (set! (.-x sprite) x)
-      (set! (.-y sprite) y)
-      (set! (.-width sprite) w)
-      (set! (.-height sprite) h)
+      (set! (.-x ^js sprite) x)
+      (set! (.-y ^js sprite) y)
+      (set! (.-width ^js sprite) w)
+      (set! (.-height ^js sprite) h)
       (when color
-        (set! (.-tint sprite) (rgb->hex color)))
-      (.addChild stage sprite))))
+        (set! (.-tint ^js sprite) (rgb->hex color)))
+      (.addChild ^js stage sprite))))
 
 (defn- debug-border [stage x y w h]
   (let [border 2
@@ -264,7 +264,7 @@
            h
            "#FF6666"
            (assoc {} :debug-level? true :z-index 3))
-    (.addChild stage g)))
+    (.addChild ^js stage g)))
 
 (defn text [stage text-str x y w h {:keys [font-size font-color align angle vertical-align debug? postfix adjust-width?]
                                     :or {font-size 12
@@ -308,7 +308,7 @@
                                     (< i iterations))
                              (let [new-text (subs text-str 0 (max 0 (- (count text-str) skip)))]
                                (aset text-obj "text" (str new-text postfix))
-                               (.updateText text-obj)
+                               (.updateText ^js text-obj)
                                (recur (/ (aget text-obj "width") w)
                                       (inc i)
                                       new-text))
@@ -321,12 +321,12 @@
                                              :wordWrap true
                                              :wordWrapWidth w
                                              :breakWords true})
-                  (.updateText text-obj))
+                  (.updateText ^js text-obj))
               new-text (if (< 2 height-factor)
                          (let [new-text (subs new-text 0 (max 0 (int (* 2 (/ (count new-text)
                                                                              height-factor)))))]
                            (aset text-obj "text" (str new-text postfix))
-                           (.updateText text-obj)
+                           (.updateText ^js text-obj)
                            new-text)
                          new-text)
               new-text (if (< generosity height-factor)
@@ -337,7 +337,7 @@
                                     (< i iterations))
                              (let [new-text (subs text-str 0 (max 0 (- (count text-str) skip)))]
                                (aset text-obj "text" (str new-text postfix))
-                               (.updateText text-obj)
+                               (.updateText ^js text-obj)
                                (recur (/ (aget text-obj "height") h)
                                       (inc i)
                                       new-text))
@@ -366,7 +366,7 @@
           (debug-border stage x y w h)))
       (when angle
         (aset text-obj "angle" angle))
-      (.addChild stage text-obj))
+      (.addChild ^js stage text-obj))
     (catch :default _
       nil)))
 

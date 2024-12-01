@@ -103,7 +103,7 @@
                                                 (.removeEventListener host "wheel" zoom-handler)
                                                 (reset! state nil)
                                                 (when app
-                                                  (.destroy app false (clj->js {:children true}))))})))
+                                                  (.destroy ^js app false (clj->js {:children true}))))})))
 
 (defn minimap [x y z]
   (let [frames-infos @(re-frame/subscribe [:de.explorama.frontend.woco.frame.api/frames-positions])

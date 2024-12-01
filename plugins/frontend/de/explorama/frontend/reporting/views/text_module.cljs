@@ -11,7 +11,7 @@
             [taoensso.timbre :refer [error]]))
 
 ;workaround for handling maxlength, because there is no property in quill for it
-(defn handle-max-length [instance callback-fn delta _ source]
+(defn handle-max-length [^js instance callback-fn delta _ source]
   (try
     (when (= source "user")
       (let [^number text-length (.getLength instance)]
@@ -100,7 +100,7 @@
 
 (reg-event-db
  ::edit-content
- (fn [db [_ tile-idx instance]]
+ (fn [db [_ tile-idx ^js instance]]
    (let [content (when instance (.stringify js/JSON (.getContents instance)))
          blank? (when (seq content)
                   (re-matches  #"^\{\"ops\":\[\{\"insert\":\"[ (\\t)(\\n)(\\v)(\\f)(\\r)]+\"\}\]\}$" content))]
@@ -151,7 +151,7 @@
                              (setup-quill instances parents tile-idx state))
       :component-did-update (fn [this argv]
                               (when (not= argv (r/argv this))
-                                (.setContents (get @instances :no-toolbar) (.parse js/JSON @content))))
+                                (.setContents ^js (get @instances :no-toolbar) (.parse js/JSON @content))))
       :reagent-render (fn [tile-idx _]
                         (let [keep-open? (= tile-idx @(subscribe [::keep-open]))
                               show-toolbar? (or keep-open? @focus?)]
@@ -159,7 +159,7 @@
                            ;; Quill instance with designated header div
                            [:div {:on-mouse-leave #(do (reset! focus? false)
                                                        (when content
-                                                         (.setContents (get @instances :no-toolbar)
+                                                         (.setContents ^js (get @instances :no-toolbar)
                                                                        (.parse js/JSON @content))))
                                   :on-click #(dispatch [::keep-open tile-idx])
                                   :style {:display (if show-toolbar? "flex" "none") ;TODO r1/css create a class or use one
@@ -178,7 +178,7 @@
                            ;; Quill instance without header
                            [:div {:on-mouse-enter #(do (reset! focus? true)
                                                        (when content
-                                                         (.setContents (get @instances :toolbar)
+                                                         (.setContents ^js (get @instances :toolbar)
                                                                        (.parse js/JSON @content))))
                                   :style {:display (if show-toolbar? "none" "block")
                                           :width "100%"

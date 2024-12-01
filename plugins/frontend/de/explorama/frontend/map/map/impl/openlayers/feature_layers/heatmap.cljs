@@ -22,7 +22,7 @@
     {:heatmap heatmap-obj
      :vector-source vector-source}))
 
-(defn display-layer [map-instance {:keys [heatmap]}]
+(defn display-layer [^js map-instance {:keys [heatmap]}]
   (.addLayer map-instance heatmap))
 
 (defn create-feature [{:keys [lat lng] :as desc}] 
@@ -35,12 +35,12 @@
       (.set feature-obj "weight" attr-val))
     feature-obj))
 
-(defn add-features [{:keys [vector-source]} heatmap-features]
+(defn add-features [{:keys [^js vector-source]} heatmap-features]
   (when vector-source
     (.addFeatures vector-source
                   (clj->js heatmap-features))))
 
-(defn- destroy-and-hide [map-instance {:keys [heatmap
+(defn- destroy-and-hide [^js map-instance {:keys [^js heatmap
                                               vector-source]}]
   (when heatmap
     (.removeLayer map-instance heatmap))

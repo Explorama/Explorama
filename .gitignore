@@ -29,6 +29,9 @@ bundles/*/de.explorama.backend.expdb.indexed.sqlite3
 bundles/*/de.explorama.backend.expdb.simple-test.sqlite3
 bundles/*/de.explorama.backend.expdb.indexed-test.sqlite3
 bundles/*/target
+bundles/*/vite-target
+bundles/*/loader.js
+bundles/*/assets/
 bundles/*/resources/main.js
 bundles/*/resources/public/css
 bundles/*/resources/public/fonts

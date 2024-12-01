@@ -6,7 +6,14 @@
     "author": "Explorama e.V.",
     "license": "EPL-1.0",
     "description": "TODO",
-    "moduleResolution": "node",
+    "type": "module",
+    "scripts": {
+        "shadow-dev": "npx shadow-cljs watch app",
+        "vite-dev": "vite",
+        "dev": "shadow-cljs -A:dev watch app & vite",
+        "vite-build": "vite build",
+        "vite-preview": "vite preview"
+    },
     "dependencies": {
         "bezier-easing": "^2.1.0",
         "chart.js": "^3.9.1",
@@ -14,7 +21,7 @@
         "crypto-js": "^4.2.0",
         "date-fns": "^4.1.0",
         "html-to-image-mod": "^1.11.11-1",
-        "jspdf": "1.5.3",
+        "jspdf": "2.5.2",
         "ml-regression-simple-linear": "2.0.4",
         "moment": "^2.30.1",
         "ol": "^7.5.2",
@@ -44,6 +51,11 @@
         "karma-coverage": "^2.2.1",
         "karma-htmlfile-reporter": "^0.3.8",
         "karma-junit-reporter": "^2.0.1",
-        "shadow-cljs": "^2.28.20"
+        "shadow-cljs": "^2.28.20",
+        "@eslint/js": "^9.3.0",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^9.1.0",
+        "prettier": "3.2.5",
+        "vite": "^5.1.3" 
     }
 }

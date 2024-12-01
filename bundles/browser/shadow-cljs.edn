@@ -12,9 +12,7 @@
                 "../../plugins/shared_test"
                 "../../assets"]
 
- :dependencies [[org.clojure/clojurescript "1.11.132"]
-                [org.clojure/core.async "1.6.681"]
-
+ :dependencies [[binaryage/devtools "1.0.5"]
 
                 [mount "0.1.17"]
 
@@ -37,17 +35,20 @@
 
                 [prismatic/dommy "1.1.0"]
 
-                [reagent/reagent "1.2.0"]
-                [re-frame/re-frame "1.4.3"]]
+                [reagent/reagent "1.0.0"]
+                [re-frame/re-frame "1.2.0"]]
 
- :dev-http {8020 "public"
+ :dev-http {8020 "vite-target/"
             8080 "out/test"}
 
  :builds {:app
           {:target :browser
-           :output-dir "public/js"
-           :asset-path "/resources"
-           :modules
-           {:main {:init-fn de.explorama.frontend.woco.app.core/init}}}
+           :modules {:main {:init-fn de.explorama.frontend.woco.app.core/init}}
+           :output-dir "vite-target"
+           :js-options {:js-provider :external
+                        :external-index "loader.js"
+                        :external-index-format :esm}
+           :devtools {:preloads [devtools.preload
+                                 shadow.remote.runtime.cljs.browser]}}
           :test {:target :browser-test
                  :test-dir "out/test"}}}

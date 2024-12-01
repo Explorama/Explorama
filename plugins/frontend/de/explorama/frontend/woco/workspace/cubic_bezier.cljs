@@ -10,7 +10,7 @@
                     (recur (conj acc (/ n nominator)) (inc n))
                     acc)))
 
-(defonce easing-fn (BezierEasing 0.32,0.57 0.27, 1.02))
+(defonce easing-fn (.default ^js BezierEasing 0.32 0.57 0.27 1.02))
 
 (def curve-points (map (fn [x] [x (easing-fn x)]) slices))
 

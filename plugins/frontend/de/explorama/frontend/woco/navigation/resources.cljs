@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.resources
-  (:require ["pixi.js" :refer [utils Texture]]
+  (:require ["pixi.js-legacy" :refer [utils Texture]]
             [de.explorama.frontend.ui-base.components.misc.icon :as icon]
             [taoensso.timbre :refer [debug]]
             [de.explorama.frontend.woco.config :as config]

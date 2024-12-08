@@ -6,7 +6,7 @@
             [de.explorama.frontend.mosaic.render.pixi.mouse :as pm]
             [de.explorama.frontend.mosaic.render.pixi.navigation :as pn]
             [de.explorama.frontend.mosaic.render.pixi.shapes :as ps]
-            ["pixi.js" :refer [Container Graphics utils Texture Application Ticker]]
+            ["pixi.js-legacy" :refer [Container Graphics utils Texture Application Ticker]]
             [re-frame.core :as re-frame]
             [taoensso.timbre :refer [debug]]))
 

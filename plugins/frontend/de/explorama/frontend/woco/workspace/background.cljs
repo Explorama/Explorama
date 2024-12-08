@@ -6,7 +6,7 @@
             [de.explorama.frontend.woco.path :as path]
             [re-frame.core :as re-frame]
             [reagent.core :as reagent]
-            ["pixi.js" :refer [TilingSprite utils Texture SCALE_MODES Graphics Container Application]]
+            ["pixi.js-legacy" :refer [TilingSprite utils Texture SCALE_MODES Graphics Container Application]]
             [taoensso.timbre :refer [debug]]))
 
 (def ^:private host-key "background-canvas")

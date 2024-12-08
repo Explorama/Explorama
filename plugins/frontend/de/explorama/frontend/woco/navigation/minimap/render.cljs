@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.navigation.minimap.render
-  (:require ["pixi.js" :refer [Sprite Ticker Graphics Color Application Container]]
+  (:require ["pixi.js-legacy" :refer [Sprite Ticker Graphics Color Application Container]]
             [clojure.set :refer [difference]]
             [clojure.string :refer [starts-with?]]
             [taoensso.timbre :refer [error]]

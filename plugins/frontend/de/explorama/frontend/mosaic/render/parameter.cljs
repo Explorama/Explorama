@@ -7,7 +7,7 @@
             [de.explorama.frontend.mosaic.render.common :as grc]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
             [de.explorama.frontend.mosaic.vis.config :as gvc]
-            ["pixi.js" :refer [Color]]
+            ["pixi.js-legacy" :refer [Color]]
             [de.explorama.shared.mosaic.common-paths :as gcp]))
 
 (defrecord ContextParams [cpl-ctn

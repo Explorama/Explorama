@@ -3,7 +3,7 @@
             [de.explorama.frontend.mosaic.config :as config]
             [de.explorama.frontend.mosaic.render.config :refer [select-event?]]
             [de.explorama.frontend.mosaic.render.draw.color :as color]
-            ["pixi.js" :refer [utils Sprite Text TextStyle TextMetrics Graphics Point Color]]
+            ["pixi.js-legacy" :refer [utils Sprite Text TextStyle TextMetrics Graphics Point Color]]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]))
 
 (def ^:private double-click (atom 0))

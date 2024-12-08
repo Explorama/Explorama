@@ -6,7 +6,7 @@
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
             [de.explorama.frontend.mosaic.render.pixi.shapes :as grps]
             [de.explorama.shared.mosaic.ws-api :as ws-api]
-            ["pixi.js" :refer [Container Graphics]]
+            ["pixi.js-legacy" :refer [Container Graphics]]
             [taoensso.timbre :refer [error]]))
 
 (defn- index-access [zoom]

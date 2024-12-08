@@ -10,7 +10,7 @@
             [de.explorama.frontend.mosaic.render.engine :as gre]
             [de.explorama.frontend.mosaic.render.parameter :as grp]
             [de.explorama.frontend.mosaic.render.pixi.common :as common]
-            ["pixi.js" :refer [Container] ]))
+            ["pixi.js-legacy" :refer [Container] ]))
 
 (defn coords
   ([offset-x offset-y index {{cpl-ctn :cpl-ctn} :params :as ctx} constraints x-relative y-relative]

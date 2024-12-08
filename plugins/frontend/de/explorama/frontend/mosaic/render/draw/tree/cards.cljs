@@ -6,7 +6,7 @@
             [de.explorama.frontend.mosaic.render.parameter :as grp]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
             [de.explorama.frontend.mosaic.interaction.state :as tooltip]
-            ["pixi.js" :refer [Container Graphics]]))
+            ["pixi.js-legacy" :refer [Container Graphics]]))
 
 (def black [0 0 0])
 

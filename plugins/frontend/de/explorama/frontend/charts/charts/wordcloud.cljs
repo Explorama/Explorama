@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.wordcloud
-  (:require ["react-d3-cloud" :as ReactD3Cloud]
+  (:require ["react-d3-cloud$default" :as ReactD3Cloud]
             ["seedrandom"]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]

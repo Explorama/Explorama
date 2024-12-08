@@ -4,7 +4,7 @@
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [clojure.string :as clj-str]
             [reagent.core :as r]
-            ["react-tooltip-lite" :as react-tooltip-lite]))
+            ["react-tooltip-lite$default" :as react-tooltip-lite]))
 
 (def parameter-definition
   {:text {:type [:string :component :derefable]

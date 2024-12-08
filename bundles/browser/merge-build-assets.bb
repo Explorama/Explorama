@@ -7,7 +7,7 @@
 (:import java.nio.file.Paths)
 
 (def separator (java.io.File/separator))
-(def directory (str ".." separator ".." separator "dist" separator "browser"))
+(def directory (str "vite-target"))
 (def html-file "index.html")
 (def target-file (str directory separator html-file))
 
@@ -64,8 +64,6 @@
 (spit target-file @index-file :encoding "UTF-8")
 
 (println "   > cleanup folders:")
-(println "     > Delete css/")
-(delete-directory-recursive (io/file (str directory separator "css")))
 (println "     > Delete fonts/")
 (delete-directory-recursive (io/file (str directory separator "fonts")))
 

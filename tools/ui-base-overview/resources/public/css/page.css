@@ -97,7 +97,7 @@ body {
 }
 
 .explorama-logo {
-  background-image: url("../img/explorama-logo.svg");
+  background-image: url("public/img/explorama-logo.svg");
   background-size: cover;
   border: 0px;
   width: 30px;

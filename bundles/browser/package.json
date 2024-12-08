@@ -7,13 +7,6 @@
     "license": "EPL-1.0",
     "description": "TODO",
     "type": "module",
-    "scripts": {
-        "shadow-dev": "npx shadow-cljs watch app",
-        "vite-dev": "vite",
-        "dev": "shadow-cljs -A:dev watch app & vite",
-        "vite-build": "vite build",
-        "vite-preview": "vite preview"
-    },
     "dependencies": {
         "bezier-easing": "^2.1.0",
         "chart.js": "^3.9.1",

@@ -12,6 +12,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     minify: false,
+    target: "es2020",
     terserOptions: {
       compress: false,
       mangle: false,

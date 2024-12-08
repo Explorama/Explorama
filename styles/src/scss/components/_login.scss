@@ -2,7 +2,7 @@
 @use '../base/colormap' as *;
 
 body.login {
-	background: url(../img/woco-bg-login.jpg) center center / cover no-repeat, #182f3d;
+	background: url(/public/img/woco-bg-login.jpg) center center / cover no-repeat, #182f3d;
 
 	.login-logo {
 		width: 100px;

@@ -117,7 +117,7 @@
                          :num-format? true
                          :step 1})
 
-(def numper-input-format (reagent/adapt-react-class NumberFormat))
+(def numper-input-format (reagent/adapt-react-class (aget NumberFormat "NumericFormat")))
 
 (def error-class "invalid")
 (def caption-class "input-hint")

@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.charts.charts.wordcloud
   (:require ["react-d3-cloud$default" :as ReactD3Cloud]
-            ["seedrandom"]
+            ["seedrandom$default" :as seedrandom]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [input-field
@@ -13,6 +13,7 @@
             [de.explorama.frontend.charts.util.queue :as queue-util]
             [de.explorama.shared.charts.ws-api :as ws-api]))
 
+(js/console.info seedrandom)
 (def d3-cloud (reagent/adapt-react-class ReactD3Cloud))
 
 (defonce chart-id-prefix "vis_wordcloud-")
@@ -274,7 +275,7 @@
                                          {:text (i18n/attribute-label text)
                                           :value val})
                                        data)
-                            rnd-gen (js/Math.seedrandom. (str data))
+                            rnd-gen (seedrandom. (str data))
                             new-height (calc-height frame-id height)]
                         (when data
                           [d3-cloud {:data data

@@ -19,6 +19,15 @@ There are currently three versions of Explorama
 ### Browser
 The browser version is the easiest to develop for. Just run `make dev` and open the `localhost:4000` file in your browser.
 
+> [!IMPORTANT]
+>
+> Currently you have to use:
+```
+npx shadow-cljs build
+vite build --mode development
+npx shadow-cljs watch app
+```
+
 ### Electron
 The electron version is a bit more complicated. You need to run `make dev` and `make dev-app` in two different terminals. Then you can open the electron app.
 

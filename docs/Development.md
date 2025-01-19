@@ -23,7 +23,7 @@ The browser version is the easiest to develop for. Just run `make dev` and open 
 >
 > Currently you have to use:
 ```
-npx shadow-cljs build
+npx shadow-cljs compile app 
 vite build --mode development
 npx shadow-cljs watch app
 ```

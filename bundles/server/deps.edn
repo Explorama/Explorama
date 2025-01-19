@@ -1,0 +1,50 @@
+{:aliases
+ {:test {:extra-paths ["backend_test"
+                       "../../plugins/backend_test"
+                       "../../plugins/shared_test"]}
+  :dev {:extra-paths ["dev/backend"]
+        :jvm-opts ["-XX:+UnlockExperimentalVMOptions"
+                   "-XX:+UseShenandoahGC"
+                   "-XX:ShenandoahGCHeuristics=compact"
+                   "--add-opens" "java.base/jdk.internal.misc=ALL-UNNAMED"
+                   "-Dio.netty.tryReflectionSetAccessible=true"]}
+  :prod {:jvm-opts ["-XX:+UnlockExperimentalVMOptions"
+                    "-XX:+UseShenandoahGC"
+                    "-XX:ShenandoahGCHeuristics=compact"
+                    "--add-opens" "java.base/jdk.internal.misc=ALL-UNNAMED"
+                    "-Dio.netty.tryReflectionSetAccessible=true"]}}
+
+
+ :paths ["frontend"
+         "shared"
+         "backend_test"
+         "shared_test"
+         "../../plugins/backend"
+         "../../plugins/shared"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/core.async {:mvn/version "1.6.681"}
+        com.taoensso/timbre {:mvn/version "5.1.2"}
+        com.taoensso/tufte {:mvn/version "2.2.0"}
+        metosin/malli {:mvn/version "0.12.0"}
+        clj-time/clj-time {:mvn/version "0.15.2"}
+        org.clojure/math.combinatorics {:mvn/version "0.2.0"}
+        org.clojars.pntblnk/clj-ldap {:mvn/version "0.0.17"}
+        clj-fuzzy/clj-fuzzy {:mvn/version "0.4.1"}
+        org.apache.commons/commons-math3 {:mvn/version "3.6.1"}
+        org.clojure/data.csv {:mvn/version "1.0.1"}
+        org.clojure/math.numeric-tower {:mvn/version "0.0.5"}
+        peco/peco {:mvn/version "0.1.6"}
+        yogthos/config {:mvn/version "1.2.0"}
+        commons-io/commons-io {:mvn/version "2.15.0"}
+        com.cognitect/transit-cljs {:mvn/version "0.8.280"}
+        com.cognitect/transit-clj {:mvn/version "1.0.333"}
+        compojure/compojure {:mvn/version "1.7.1"}
+        http-kit/http-kit {:mvn/version "2.7.0"}
+        metosin/jsonista {:mvn/version "0.3.8"}
+        pneumatic-tubes/pneumatic-tubes {:mvn/version "0.3.0"
+                                         :exclusions [com.cognitect/transit-clj com.cognitect/transit-cljs]}
+        ring/ring {:mvn/version "1.10.0"}
+        ring-cors/ring-cors {:mvn/version "0.1.1"}
+        org.clojure/java.jdbc {:mvn/version "0.7.12"}
+        org.xerial/sqlite-jdbc {:mvn/version "3.34.0"}}}

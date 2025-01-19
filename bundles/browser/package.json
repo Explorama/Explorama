@@ -8,6 +8,7 @@
     "description": "TODO",
     "type": "module",
     "dependencies": {
+        "@deck.gl-community/editable-layers": "^9.0.3",
         "@deck.gl-community/layers": "^9.0.3",
         "bezier-easing": "^2.1.0",
         "chart.js": "^3.9.1",

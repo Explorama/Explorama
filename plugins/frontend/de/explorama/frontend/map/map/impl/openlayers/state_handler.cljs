@@ -1,5 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.state-handler
-  (:require ["ol" :refer [extent proj] :as ol]
+  (:require [cljsjs.openlayers]
+            [cljsjs.openlayers-ol-ext]
             [clojure.set :as set]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-number?]]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.area :as area]
@@ -15,9 +16,13 @@
 
 (defonce ^:private db (atom {}))
 
+(def ol-extent (aget js/ol "extent"))
+
+(def ol-proj (aget js/ol "proj"))
+
 (defn- render-map [frame-id {track-view-position-fn :track-view-position-change} obj-manager-instance]
-  (let [^js map-obj (object-proto/map-instance obj-manager-instance)
-        [^js cluster-layer] (object-proto/get-cluster-layer obj-manager-instance)]
+  (let [map-obj (object-proto/map-instance obj-manager-instance)
+        [cluster-layer] (object-proto/get-cluster-layer obj-manager-instance)]
     (cond
       (and map-obj
            (not (.getTarget map-obj)))
@@ -30,14 +35,14 @@
       (.refresh (.getSource cluster-layer)))))
 
 (defn- update-zoom-layers [obj-manager frame-id]
-  (when-let [^js base-layer-obj (object-proto/get-base-layer-obj obj-manager
+  (when-let [base-layer-obj (object-proto/get-base-layer-obj obj-manager
                                                              (get-in @db [frame-id :current-base]))]
     (let [new-max-zoom (.getMaxZoom base-layer-obj)
           new-min-zoom (.getMinZoom base-layer-obj)
-          ^js map (object-proto/map-instance obj-manager)
-          [^js cluster-layer] (object-proto/get-cluster-layer obj-manager)]
+          map (object-proto/map-instance obj-manager)
+          [cluster-layer] (object-proto/get-cluster-layer obj-manager)]
 
-      (when-let [^js marker-layer (object-proto/get-marker-layer obj-manager)]
+      (when-let [marker-layer (object-proto/get-marker-layer obj-manager)]
         (.setMaxZoom marker-layer new-max-zoom)
         (.setMinZoom marker-layer new-min-zoom))
 
@@ -46,13 +51,13 @@
         (.setMinZoom cluster-layer new-min-zoom))
 
       (when-let [view-obj (when map
-                                (.getView map))]
+                            (.getView map))]
         (.setMaxZoom view-obj new-max-zoom)
         (.setMinZoom view-obj new-min-zoom)))))
 
 (defn- switch-base-layer [obj-manager frame-id base-layer-id]
   (when (seq base-layer-id)
-    (let [^js map-obj (object-proto/map-instance obj-manager)
+    (let [map-obj (object-proto/map-instance obj-manager)
           base-layer-obj (object-proto/get-base-layer-obj obj-manager base-layer-id)
           layers (.getLayers map-obj)]
       (.forEach layers (fn [layer _ _]
@@ -65,7 +70,7 @@
         (.insertAt layers 0 base-layer-obj)))))
 
 (defn- resize-map [obj-manager]
-  (let [^js map-obj (object-proto/map-instance obj-manager)]
+  (let [map-obj (object-proto/map-instance obj-manager)]
     (.updateSize map-obj)))
 
 (defn- set-marker-data [frame-id marker-data]
@@ -75,14 +80,14 @@
   (get-in @db [frame-id :marker-data]))
 
 (defn- move-to-data [obj-manager max-data-zoom]
-  (let [^js map-obj (object-proto/map-instance obj-manager)
+  (let [map-obj (object-proto/map-instance obj-manager)
         marker-layer (object-proto/get-marker-layer obj-manager)
-        extent (when marker-layer (.getExtent (.getSource ^js marker-layer)))
-        area-size (when extent (.getArea extent extent))
+        extent (when marker-layer (.getExtent (.getSource marker-layer)))
+        area-size (when extent (.getArea ol-extent extent))
         view-obj (.getView map-obj)
         new-zoom (min (.getMaxZoom view-obj)
                       max-data-zoom)
-        new-center (when extent (.getCenter extent extent))]
+        new-center (when extent (.getCenter ol-extent extent))]
     (cond (> area-size 0)
           (.fit view-obj
                 extent
@@ -92,10 +97,10 @@
           (do
             (.setZoom view-obj (min (.getMaxZoom view-obj)
                                     max-data-zoom))
-            (.setCenter view-obj (.getCenter extent extent))))))
+            (.setCenter view-obj (.getCenter ol-extent extent))))))
 
 (defn- display-markers [obj-manager {max-data-zoom :move-data-max-zoom} frame-id]
-  (let [^js map-obj (object-proto/map-instance obj-manager)
+  (let [map-obj (object-proto/map-instance obj-manager)
         [cluster-layer
          cluster-interaction
          cluster-hover
@@ -121,7 +126,7 @@
     (swap! db assoc-in [frame-id :clustering?] false)))
 
 (defn- display-marker-cluster [obj-manager {max-data-zoom :move-data-max-zoom} frame-id]
-  (let [^js map-obj (object-proto/map-instance obj-manager)
+  (let [map-obj (object-proto/map-instance obj-manager)
         [cluster-layer
          cluster-interaction
          cluster-hover
@@ -165,12 +170,12 @@
     (when (and cluster-layer
                cluster-interaction
                (.get cluster-layer "addedToMap"))
-      (let [source (.getSource (.getLayer ^js cluster-interaction))]
-        (doseq [f (array-seq (.getFeatures ^js source))]
+      (let [source (.getSource (.getLayer cluster-interaction))]
+        (doseq [f (array-seq (.getFeatures source))]
           (let [sel (.get f "features")
                 feature (when sel (aget sel "0"))]
             (when feature
-              (.setStyle ^js f
+              (.setStyle f
                          (marker-data->circle-style (partial marker-highlighted-fn? (.get feature "id"))
                                                     marker-stroke-color-fn
                                                     highlighted-marker-stroke-color-fn
@@ -182,7 +187,7 @@
                           :as extra-fns}
                          frame-id
                          marker-id]
-  (when-let [^js marker-obj (get (object-proto/get-marker-objs obj-manager [marker-id]) marker-id)]
+  (when-let [marker-obj (get (object-proto/get-marker-objs obj-manager [marker-id]) marker-id)]
     (let [feature-data (.get marker-obj "data")
           style-desc (marker-data->circle-style (constantly true)
                                                 marker-stroke-color-fn
@@ -199,7 +204,7 @@
                              :as extra-fns}
                             frame-id
                             marker-id]
-  (let [^js marker-obj (get (object-proto/get-marker-objs obj-manager [marker-id]) marker-id)
+  (let [marker-obj (get (object-proto/get-marker-objs obj-manager [marker-id]) marker-id)
         feature-data (.get marker-obj "data")
         style-desc (marker-data->circle-style (constantly false)
                                               marker-stroke-color-fn
@@ -220,7 +225,7 @@
   (let [marker-data (get-marker-data frame-id)
         all-markers (object-proto/get-marker-objs obj-manager to-update-ids)]
 
-    (doseq [[k ^js m] all-markers]
+    (doseq [[k m] all-markers]
       (let [feature-data (get marker-data k)
             style-desc (marker-data->circle-style (partial marker-highlighted? k)
                                                   marker-stroke-color-fn
@@ -238,7 +243,7 @@
   (get-in @db [frame-id :events event-id]))
 
 (defn- hide-popup [_ obj-manager]
-  (let [^js popup-obj (object-proto/get-popup obj-manager)]
+  (let [popup-obj (object-proto/get-popup obj-manager)]
     (.hide popup-obj)))
 
 (defn- display-popup [frame-id
@@ -259,7 +264,7 @@
                                          title-attributes
                                          display-attributes)
         [lat lon] coordinates
-        coords (.fromLonLat proj #js[lon lat])]
+        coords (.fromLonLat ol-proj #js[lon lat])]
     (.setProperty (aget popup-obj "element" "style")
                   "--layoutColor"
                   title-color)
@@ -271,12 +276,12 @@
     (update-open-cluster-styles obj-manager extra-fns)))
 
 (defn- move-to [obj-manager zoom position]
-  (let [^js map (object-proto/map-instance obj-manager)
+  (let [map (object-proto/map-instance obj-manager)
         view (.getView map)
         [lat lon] position]
     (when (and zoom position)
       (.setZoom view zoom)
-      (.setCenter view (.fromLonLat proj #js[lon lat]))
+      (.setCenter view (.fromLonLat ol-proj #js[lon lat]))
       (when (.getTarget map)
         (.renderSync map)))))
 
@@ -286,7 +291,7 @@
 (defn- select-cluster-with-marker [obj-manager marker-id]
   (let [feature-obj (get (object-proto/get-marker-objs obj-manager [marker-id]) marker-id)
         [cluster-layer
-         ^js cluster-interaction] (object-proto/get-cluster-layer obj-manager)
+         cluster-interaction] (object-proto/get-cluster-layer obj-manager)
         cluster-obj (when (and feature-obj cluster-layer)
                       (find-cluster-for-feature cluster-layer
                                                 feature-obj))]
@@ -309,10 +314,10 @@
                                                   :cluster-layer cluster-layer}))))
 
 (defn- move-to-marker [obj-manager {move-data-max-zoom :move-data-max-zoom} frame-id marker-id]
-  (let [^js map-obj (object-proto/map-instance obj-manager)
-        ^js view-obj (.getView map-obj)
-        ^js marker-obj (get (object-proto/get-marker-objs obj-manager [marker-id])
-                            marker-id)
+  (let [map-obj (object-proto/map-instance obj-manager)
+        view-obj (.getView map-obj)
+        marker-obj (get (object-proto/get-marker-objs obj-manager [marker-id])
+                        marker-id)
         clustering? (get-in @db [frame-id :clustering?])
         [cluster-layer] (object-proto/get-cluster-layer obj-manager)]
     (if clustering?
@@ -320,13 +325,13 @@
         (let [cluster-obj (find-cluster-for-feature cluster-layer
                                                     marker-obj)
               cluster (.get cluster-obj "features")
-              all-coords (clj->js (map (fn [^js f]
+              all-coords (clj->js (map (fn [f]
                                          (.getFirstCoordinate
                                           (.getGeometry f)))
                                        (array-seq cluster)))
-              coords-extent (.boundingExtent extent
+              coords-extent (.boundingExtent ol-extent
                                              all-coords)
-              area-size (.getArea extent coords-extent)]
+              area-size (.getArea ol-extent coords-extent)]
 
           (if  (> area-size 0)
             (do (.fit view-obj
@@ -335,7 +340,7 @@
                 (.renderSync map-obj)
                 (recur))
             (do
-              (.setCenter view-obj (.getCenter extent coords-extent))
+              (.setCenter view-obj (.getCenter ol-extent coords-extent))
               (select-cluster-with-marker obj-manager marker-id)))))
       (do
         (.setZoom view-obj @(move-data-max-zoom))
@@ -344,8 +349,8 @@
                                  (.getFirstCoordinate)))))))
 
 (defn- hide-markers-with-id [obj-manager marker-ids]
-  (let [^js marker-layer (object-proto/get-marker-layer obj-manager)
-        ^js marker-source (.getSource marker-layer)
+  (let [marker-layer (object-proto/get-marker-layer obj-manager)
+        marker-source (.getSource marker-layer)
         all-ids (object-proto/marker-ids obj-manager)
         to-display-marker-ids (set/difference (set all-ids)
                                               (set marker-ids))
@@ -361,8 +366,8 @@
                                                                                  :available-ids-count (count all-ids)})))
       (warn "No markern-ids given to hide."))))
 (defn- display-all-markers [obj-manager]
-  (let [^js marker-layer (object-proto/get-marker-layer obj-manager)
-        ^js marker-source (.getSource marker-layer)
+  (let [marker-layer (object-proto/get-marker-layer obj-manager)
+        marker-source (.getSource marker-layer)
         all-ids (object-proto/marker-ids obj-manager)
         all-marker-objs (->> all-ids
                              (object-proto/get-marker-objs obj-manager)
@@ -373,13 +378,13 @@
       (.addFeatures marker-source all-marker-objs))))
 
 (defn- temp-hide-marker-layer [obj-manager]
-  (let [^js map-obj (object-proto/map-instance obj-manager)
+  (let [map-obj (object-proto/map-instance obj-manager)
         [cluster-layer
          _
          _
          hover-layer] (object-proto/get-cluster-layer obj-manager)
-        ^js marker-layer (object-proto/get-marker-layer obj-manager)
-        ^js marker-source (when marker-layer (.getSource marker-layer))]
+        marker-layer (object-proto/get-marker-layer obj-manager)
+        marker-source (when marker-layer (.getSource marker-layer))]
     (when (and marker-layer (.get marker-layer "addedToMap"))
       (.removeLayer map-obj marker-layer)
       (.set marker-layer "tempHidden" true))
@@ -396,13 +401,13 @@
       (.renderSync map-obj))))
 
 (defn- restore-temp-hidden-marker-layer [obj-manager]
-  (let [^js map-obj (object-proto/map-instance obj-manager)
+  (let [map-obj (object-proto/map-instance obj-manager)
         [cluster-layer
          _
          _
          hover-layer] (object-proto/get-cluster-layer obj-manager)
-        ^js marker-layer (object-proto/get-marker-layer obj-manager)
-        ^js marker-source (when marker-layer (.getSource marker-layer))]
+        marker-layer (object-proto/get-marker-layer obj-manager)
+        marker-source (when marker-layer (.getSource marker-layer))]
     (when (and marker-source
                (or (.get marker-layer "tempHidden")
                    (.get cluster-layer "tempHidden")))
@@ -435,7 +440,7 @@
   (let [map-obj (object-proto/map-instance obj-manager)
         overlayer-obj (object-proto/get-overlayer-obj obj-manager overlayer-id)]
     (when (and map-obj overlayer-obj)
-      (.addLayer ^js map-obj overlayer-obj)
+      (.addLayer map-obj overlayer-obj)
       (aset overlayer-obj "addedToMap" true)
       (swap! db update-in [frame-id :overlayer]
              (fnil conj #{}) overlayer-id))))
@@ -447,7 +452,7 @@
   (let [map-obj (object-proto/map-instance obj-manager)
         overlayer-obj (object-proto/get-overlayer-obj obj-manager overlayer-id)]
     (when (and map-obj overlayer-obj)
-      (.removeLayer ^js map-obj overlayer-obj)
+      (.removeLayer map-obj overlayer-obj)
       (aset overlayer-obj "addedToMap" false)
       (swap! db update-in [frame-id :overlayer]
              disj overlayer-id))))
@@ -626,14 +631,14 @@
     (destroy-instance frame-id)))
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not (aget ol "exploramaInitDone")
+  (when-not (aget js/ol "exploramaInitDone")
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-    (aset ol "PluggableMap" "prototype" "getEventPixel"
+    (aset js/ol "PluggableMap" "prototype" "getEventPixel"
           (fn [event]
             (this-as this
                      (let [scale @(workspace-scale-fn)
-                           viewportPosition (.getBoundingClientRect (.getViewport ^js this))
+                           viewportPosition (.getBoundingClientRect (.getViewport this))
                            size (clj->js
                                  [(aget viewportPosition "width")
                                   (aget viewportPosition "height")])]
@@ -647,7 +652,7 @@
                                           (aget size "1"))
                                        (aget viewportPosition "height"))
                                     scale)])))))
-    (aset ol "exploramaInitDone" true)))
+    (aset js/ol "exploramaInitDone" true)))
 
 (defn create-instance [frame-id obj-manager-instance {:keys [workspace-scale]
                                                       :as extra-fns}]

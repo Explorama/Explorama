@@ -1,0 +1,6 @@
+{:watch-dirs ["frontend" "backend" "shared"]
+ :css-dirs ["../../assets/css"]
+ :ring-server-options {:port 8020}
+ :reload-clj-files #{:cljc}
+ :log-level :info
+ :connect-url "ws://localhost:8020/figwheel-connect"}

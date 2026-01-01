@@ -1,5 +1,7 @@
 (ns de.explorama.frontend.common.calculations.data-acs-client
-  (:require ["moment$default" :as moment]))
+  (:require ["moment" :as momentModule]))
+
+(def moment (.-default momentModule))
 
 (defn date<- [date-str]
   (if (string? date-str)

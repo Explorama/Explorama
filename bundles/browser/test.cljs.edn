@@ -1,0 +1,4 @@
+^{:watch-dirs ["test" "frontend" "backend" "shared"]
+  :css-dirs ["assets/css"]
+  :auto-testing true}
+{:main de.explorama.test-runner}

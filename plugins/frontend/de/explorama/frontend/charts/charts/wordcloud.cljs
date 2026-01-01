@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.charts.charts.wordcloud
-  (:require ["react-d3-cloud$default" :as ReactD3Cloud]
-            ["seedrandom$default" :as seedrandom]
+  (:require ["react-d3-cloud" :as ReactD3CloudModule]
+            ["seedrandom" :as seedrandomModule]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.formular.core :refer [input-field
@@ -13,6 +13,8 @@
             [de.explorama.frontend.charts.util.queue :as queue-util]
             [de.explorama.shared.charts.ws-api :as ws-api]))
 
+(def seedrandom (.-default seedrandomModule))
+(def ReactD3Cloud (.-default ReactD3CloudModule))
 (js/console.info seedrandom)
 (def d3-cloud (reagent/adapt-react-class ReactD3Cloud))
 

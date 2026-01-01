@@ -6,7 +6,7 @@
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [de.explorama.frontend.ui-base.utils.css-classes :refer [form-hint-class]]
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
-            ["rc-slider$default" :as Slider]
+            ["rc-slider" :as SliderModule]
             ["rc-slider" :refer [Range]]))
 
 (def parameter-definition
@@ -106,6 +106,7 @@
 
 (def slider-reversed-class "rc-slider-reversed")
 
+(def Slider (.-default SliderModule))
 (def normal-slider (r/adapt-react-class Slider))
 (def range-slider (r/adapt-react-class Range))
 

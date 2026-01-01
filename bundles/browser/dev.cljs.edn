@@ -1,0 +1,12 @@
+^{:watch-dirs ["frontend" "backend" "shared" "../../plugins/backend/" "../../plugins/frontend/" "../../plugins/shared/"]
+  :css-dirs ["../../assets/css"]
+  :auto-bundle :webpack
+  :reload-clj-files #{:cljc}
+  :hot-reload-cljs true}
+{:main de.explorama.frontend.woco.app.core
+ :output-to "resources/public/js/out/main.js"
+ :output-dir "resources/public/js/out"
+ :asset-path "/js/out"
+ :optimizations :none
+ :source-map true
+ :preloads [devtools.preload]}

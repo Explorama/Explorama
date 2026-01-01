@@ -1,14 +1,53 @@
-# style
+# Styles Build System
 
-## Development
+Modern npm scripts build system for Explorama styles
 
-### Setup
+## Quick Start
 
-1. Install [Grunt's CLI](https://gruntjs.com/getting-started) globally.
-2. Change to this project's root directory.
-3. Run `npm install` to install this project's dependencies.
-4. Run `grunt init` to initialize your local repository.
-5. Run `grunt` to start the web server and start developing!
+```bash
+npm install
+npm run dev          # Development with watch + live reload (port 8020)
+npm run build        # Standard build
+npm run build:prod   # Production build with minification
+```
 
-All necessary files are automatically built in the `dist` directory when developing with the web server running.
-If you simply want to build based on the current source files, run `grunt build`.
+## Main Commands
+
+| Command              | Description                              |
+| -------------------- | ---------------------------------------- |
+| `npm run dev`        | Build + watch files + live reload server |
+| `npm run build`      | SVG optimization → SASS → copy assets    |
+| `npm run build:prod` | Build + CSS minification                 |
+| `npm run init`       | Initialize repo (all tasks + emails)     |
+
+## Individual Tasks
+
+**SASS:** `sass:dist`, `sass:emails`, `sass:watch`
+**SVG:** `svgmin` (optimize), `svgcss` (generate iconmap)
+**Copy:** `copy:fonts`, `copy:img`, `copy:img-mosaic`, `copy:img-svg`, `copy:dist-other`, `copy:browser-dev`
+**Other:** `cssmin` (minify CSS), `emails` (inline CSS for email templates)
+
+## Project Structure
+
+```
+src/scss/          → SASS source
+src/img/svg/       → SVG icons (auto-converted to $imap)
+src/fonts/         → Fonts
+other/             → Pre-compiled vendor CSS
+dist/              → Build output
+```
+
+## Build Pipeline
+
+1. Minify SVGs (`svgo`)
+2. Generate SASS iconmap with data URIs
+3. Compile SCSS to CSS (`sass`)
+4. Copy assets to dist
+5. [Production only] Minify CSS (`lightningcss`)
+
+## Legacy Script
+
+```bash
+./build.sh dev      # Uses npm run build
+./build.sh prod     # Uses npm run build:prod
+```

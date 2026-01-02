@@ -722,7 +722,7 @@ div[id^='woco_frame-ki'] .window__body>div:not(.legend__panel) {
 }
 
 .window-placement-overlay {
-    cursor: url(/public/img/window-placement.svg), cell;
+    cursor: url(/img/window-placement.svg), cell;
     backdrop-filter: var(--backdrop-filter);
 
     .card {

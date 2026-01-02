@@ -117,9 +117,9 @@
     --bg-warning: #{color('red-50')};
     --bg-hint: #{color('yellow-50')};
     --bg-success: #{color('green-50')};
-    --bg-woco: url('/public/img/woco-bg.jpg');
+    --bg-woco: url('/img/woco-bg.jpg');
 
-    --bg-page: url('/public/img/bgpage.png');
+    --bg-page: url('/img/bgpage.png');
     --bg-page-gradient-top: #{color('gray-50')};
     --bg-page-gradient-bottom: #{color('white')};
 
@@ -149,7 +149,7 @@
 
     --backdrop-filter: saturate(0.9) brightness(0.9);
 
-    --logo: url("/public/img/explorama_black.svg");
+    --logo: url("/img/explorama_black.svg");
 }
 
 @mixin dark-theme {
@@ -179,9 +179,9 @@
     --bg-warning: #{color('red-900', .25)};
     --bg-hint: #{color('yellow-900', .25)};
     --bg-success: #{color('green-800', .25)};
-    --bg-woco: url('/public/img/woco-bg-dark.jpg');
+    --bg-woco: url('/img/woco-bg-dark.jpg');
 
-    --bg-page: url('/public/img/bgpage-dark.png');
+    --bg-page: url('/img/bgpage-dark.png');
     --bg-page-gradient-top: #{color('gray-900')};
     --bg-page-gradient-bottom: #{color('gray-800')};
 
@@ -211,7 +211,7 @@
 
     --backdrop-filter: saturate(0.9) brightness(0.7);
 
-    --logo: url("/public/img/explorama_white.svg");
+    --logo: url("/img/explorama_white.svg");
 }
 
 :root {

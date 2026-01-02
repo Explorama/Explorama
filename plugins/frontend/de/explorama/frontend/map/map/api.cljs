@@ -4,7 +4,9 @@
             [de.explorama.frontend.map.map.protocol.object-manager :as obj-protocol]
             [de.explorama.frontend.map.map.protocol.state-handler :as state-protocol]
             [taoensso.timbre :refer-macros [error warn]]
-            [taoensso.tufte :as tufte]))
+            [taoensso.tufte :as tufte]
+            ["ol" :as ol]
+            ["ol-ext" :as ol-ext]))
 
 (def map-type :openlayers)
 
@@ -123,19 +125,19 @@
 (defn create-marker-layers [frame-id]
   (when-let [obj-manager (get-obj-manager frame-id)]
     (when-not (obj-protocol/marker-layer-created? obj-manager)
-      (tufte/p 
+      (tufte/p
        ::create-marker-layer
        (obj-protocol/create-marker-layer obj-manager)))))
 
 (defn create-markers [frame-id marker-data]
   (when-let [obj-manager (get-obj-manager frame-id)]
     (when-not (obj-protocol/marker-layer-created? obj-manager)
-      (obj-protocol/create-marker-layer obj-manager)) 
-    
+      (obj-protocol/create-marker-layer obj-manager))
+
     (tufte/p
      ::create-markers
      (obj-protocol/create-markers obj-manager marker-data))
-    
+
     (when-let [state-handler (get-state-handler frame-id)]
       (tufte/p
        ::display-marker-cluster
@@ -149,7 +151,7 @@
 
 (defn update-marker-styles [frame-id to-be-updated]
   (when-let [state-handler (get-state-handler frame-id)]
-    (tufte/p 
+    (tufte/p
      ::update-marker-styles
      (state-protocol/update-marker-styles state-handler to-be-updated))))
 
@@ -202,7 +204,7 @@
     (state-protocol/view-position state-handler)))
 
 (defn hide-markers-with-id [frame-id marker-ids]
-  (when-let [state-handler (get-state-handler frame-id)] 
+  (when-let [state-handler (get-state-handler frame-id)]
     (state-protocol/hide-markers-with-id state-handler marker-ids)))
 
 (defn display-all-markers [frame-id]
@@ -263,7 +265,7 @@
 
 (defn get-feature-layer-obj [frame-id feature-layer-id]
   (when-let [obj-manager (get-obj-manager frame-id)]
-    (obj-protocol/get-feature-layer-obj obj-manager feature-layer-id))) 
+    (obj-protocol/get-feature-layer-obj obj-manager feature-layer-id)))
 
 (defn create-arrow-features [frame-id feature-layer-id arrow-descs]
   (when-let [obj-manager (get-obj-manager frame-id)]

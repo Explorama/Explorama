@@ -11,7 +11,8 @@
             [goog.string.format]
             [re-frame.core :as re-frame]
             [reagent.core :as r]
-            [taoensso.timbre :refer [error]]))
+            [taoensso.timbre :refer [error]]
+            ["moment" :as momentModule]))
 
 (def input-val (r/atom ""))
 
@@ -24,7 +25,7 @@
    (get-in db [:projects :share-project :is-active?] false)))
 
 (defn pdf-name [project-id]
-  (str (.format (js/moment) "YYYY-MM-DDTHH-mm-ss") "---" project-id ".pdf"))
+  (str (.format momentModule "YYYY-MM-DDTHH-mm-ss") "---" project-id ".pdf"))
 
 (defn user-label [all-users username]
   (first

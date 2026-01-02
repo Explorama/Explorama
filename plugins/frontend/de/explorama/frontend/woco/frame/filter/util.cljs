@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.woco.frame.filter.util
-  (:require ["moment"]
+  (:require ["moment" :as momentModule]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.data-format.date-filter :as df]))
 
@@ -10,7 +10,7 @@
 
 (defn date->moment [dobj]
   (when dobj
-    (js/moment dobj)))
+    (momentModule dobj)))
 
 (defn moment->date [^js mobj]
   (when mobj
@@ -21,7 +21,7 @@
    Used for dates as needed by UI description."
   [date-str]
   (cond (string? date-str)
-        (js/moment date-str date-format)
+        (momentModule date-str date-format)
         (instance? js/Date date-str)
         (date->moment date-str)
         :else date-str))
@@ -47,10 +47,10 @@
       false)))
 
 (defn date-min [& dates]
-  (.min js/moment (clj->js (mapv date<- dates))))
+  (.min momentModule (clj->js (mapv date<- dates))))
 
 (defn date-max [& dates]
-  (.max js/moment (clj->js (mapv date<- dates))))
+  (.max momentModule (clj->js (mapv date<- dates))))
 
 (defn year-min [& dates]
   (apply min (mapv #(if (number? %)
@@ -182,7 +182,6 @@
                             (desc-to-filter attribute (ui-selection-types attribute) value textsearch?)))
                         selected-ui-attributes)))))
 
-
 ;#######################
 ;    Filter description to UI description
 ;#######################
@@ -201,7 +200,6 @@
      {prop {:std (vec [from-val to-val])}}
      {prop {:std from-val}}))) ;;Handle :includes filter, little bit dirty here
 
-
 (defn- to-date
   ([prop start end]
    (case prop
@@ -212,7 +210,6 @@
    (case prop
      :de.explorama.shared.data-format.dates/month {"date" {:month [:value value :label value]}}
      {"date" {(keyword prop) [{:value value :label value}]}})))
-
 
 (defn- parse-date
   " Parse date filter condition to a map:
@@ -240,7 +237,6 @@
                                        value (get filter-map :de.explorama.shared.data-format.filter/value)]
                                    (to-date prop value)))
                 filters))))
-
 
 (defn- parse
   " Parse filter conditions to a map:

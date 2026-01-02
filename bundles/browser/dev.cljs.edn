@@ -9,4 +9,5 @@
  :asset-path "/js/out"
  :optimizations :none
  :source-map true
- :preloads [devtools.preload]}
+ :preloads [devtools.preload]
+ :after-load de.explorama.frontend.woco.app.core/reload}

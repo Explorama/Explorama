@@ -109,7 +109,7 @@
                                                            :gridLines {:offsetGridLines true}})}
                                                (map-indexed vector y))}})]
     (when chart-data
-      (cutils/save-instance frame-id ((.-default ChartJS) context (clj->js chart-data)))
+      (cutils/save-instance frame-id (ChartJS context (clj->js chart-data)))
       (cutils/update-chart frame-id)
       (cutils/resize-chart frame-id height width))
     (when render-done

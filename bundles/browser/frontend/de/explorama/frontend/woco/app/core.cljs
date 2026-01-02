@@ -47,3 +47,5 @@
   (reporting-plugin-core/init)
   (expdb/init)
   (rights-roles-core/init))
+
+(init)

@@ -16,7 +16,8 @@ libs/*/.calva/output-window
 libs/*/target
 node_modules
 
-bundles/browser/resources/public/
+bundles/browser/resources/public/*
+!bundles/browser/resources/public/index.html
 
 bundles/electron/Explorama-dev
 bundles/electron/dist

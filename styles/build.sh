@@ -42,6 +42,7 @@ function main {
 
   build
 
+  mv $distFolder/css/style.css $distFolder/css/3_style.css
   mv $distFolder/* $targetFolder/
 }
 

@@ -5,10 +5,8 @@ Modern npm scripts build system for Explorama styles
 ## Quick Start
 
 ```bash
-npm install
-npm run dev          # Development with watch + live reload (port 8020)
-npm run build        # Standard build
-npm run build:prod   # Production build with minification
+./build.sh dev      # Uses npm run build
+./build.sh prod     # Uses npm run build:prod
 ```
 
 ## Main Commands
@@ -44,10 +42,3 @@ dist/              → Build output
 3. Compile SCSS to CSS (`sass`)
 4. Copy assets to dist
 5. [Production only] Minify CSS (`lightningcss`)
-
-## Legacy Script
-
-```bash
-./build.sh dev      # Uses npm run build
-./build.sh prod     # Uses npm run build:prod
-```

@@ -1,12 +1,10 @@
 (ns de.explorama.frontend.map.map.api
-  (:require [de.explorama.frontend.map.map.impl.deckgl.object-manager :as obj-manager]
-            [de.explorama.frontend.map.map.impl.deckgl.state-handler :as state-handler]
+  (:require [de.explorama.frontend.map.map.impl.openlayers.object-manager :as openlayers-obj]
+            [de.explorama.frontend.map.map.impl.openlayers.state-handler :as openlayers-state]
             [de.explorama.frontend.map.map.protocol.object-manager :as obj-protocol]
             [de.explorama.frontend.map.map.protocol.state-handler :as state-protocol]
             [taoensso.timbre :refer-macros [error warn]]
-            [taoensso.tufte :as tufte]
-            ["ol" :as ol]
-            ["ol-ext" :as ol-ext]))
+            [taoensso.tufte :as tufte]))
 
 (def map-type :openlayers)
 
@@ -14,11 +12,11 @@
 
 (defn- create-object-manager [frame-id extra-fns]
   (case map-type
-    :openlayers (obj-manager/create-instance frame-id extra-fns)))
+    :openlayers (openlayers-obj/create-instance frame-id extra-fns)))
 
 (defn- create-state-handler [frame-id object-manager-instance extra-fns]
   (case map-type
-    :openlayers (state-handler/create-instance frame-id object-manager-instance extra-fns)))
+    :openlayers (openlayers-state/create-instance frame-id object-manager-instance extra-fns)))
 
 (defn create-instance [frame-id extra-fns]
   (if-let [instances (get @instances frame-id)]

@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.util
   (:require ["ol/interaction/Interaction" :as InteractionModule]
-            ["ol/coordinate" :as coordinate]
+            ["ol/coordinate" :refer [convexHull]]
             ["ol/proj" :as proj]
             ["ol/style/Stroke" :as StrokeModule]
             ["ol/style/Fill" :as FillModule]
@@ -346,7 +346,7 @@
                                                 (.getFirstCoordinate
                                                  (.getGeometry f)))
                                               (array-seq cluster)))
-                     hull (coordinate/convexHull all-coords)]
+                     hull (convexHull all-coords)]
                  (.set (aget e "feature") "convexHull" hull)
                  hull)
                hull)]

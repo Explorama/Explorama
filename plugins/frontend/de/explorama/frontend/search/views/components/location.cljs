@@ -19,28 +19,29 @@
 (def ^:private default-proj "EPSG:900913")
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not @workarounds/initialized?
+  ;; issue #60
+  #_(when-not @workarounds/initialized?
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-    (aset js/ol "PluggableMap" "prototype" "getEventPixel"
-          (fn [event]
-            (this-as ^js this
-                     (let [scale @(workspace-scale-fn)
-                           viewportPosition (.getBoundingClientRect (.getViewport this))
-                           size (clj->js
-                                 [(aget viewportPosition "width")
-                                  (aget viewportPosition "height")])]
-                       (clj->js [(/ (/ (* (- (aget event "clientX")
-                                             (aget viewportPosition "left"))
-                                          (aget size "0"))
-                                       (aget viewportPosition "width"))
-                                    scale)
-                                 (/ (/ (* (- (aget event "clientY")
-                                             (aget viewportPosition "top"))
-                                          (aget size "1"))
-                                       (aget viewportPosition "height"))
-                                    scale)])))))
-    (reset! workarounds/initialized? true)))
+      (aset (.-ol js/window) "PluggableMap" "prototype" "getEventPixel"
+            (fn [event]
+              (this-as ^js this
+                       (let [scale @(workspace-scale-fn)
+                             viewportPosition (.getBoundingClientRect (.getViewport this))
+                             size (clj->js
+                                   [(aget viewportPosition "width")
+                                    (aget viewportPosition "height")])]
+                         (clj->js [(/ (/ (* (- (aget event "clientX")
+                                               (aget viewportPosition "left"))
+                                            (aget size "0"))
+                                         (aget viewportPosition "width"))
+                                      scale)
+                                   (/ (/ (* (- (aget event "clientY")
+                                               (aget viewportPosition "top"))
+                                            (aget size "1"))
+                                         (aget viewportPosition "height"))
+                                      scale)])))))
+      (reset! workarounds/initialized? true)))
 
 (defn- new-map-instance [target rect-state internal-state init-value woco-zoom]
   (set-event-pixel-fn woco-zoom)
@@ -48,29 +49,34 @@
         init-value (if (= 4 (count init-value))
                      init-value
                      [])
-        layers #js[(new Tile/default (clj->js (merge {:source (new SourceXYZ/default
-                                                                   (clj->js (merge {:projection default-proj
-                                                                                    :crossOrigin ""}
-                                                                                   (:source geo-config))))}
-                                                     (dissoc geo-config :source))))]
-        view (new View/default #js{:zoom 0
-                                   :center #js[0 0]})
-        map-obj (new Map/default #js{:target target
-                                     :view view
-                                     :layers layers})
-        vectorsource-obj (new SourceVector/default)
-        vector-obj (new Vector/default #js{:name "BoundingBox"
-                                           :source vectorsource-obj})
-        interaction (new RegularInteraction/default #js{:source (.getSource vector-obj)
-                                                        :sides 4
-                                                        :canRotate false
-                                                        :condition (fn [e]
-                                                                     (and @rect-state
-                                                                          (= 0 (aget e "originalEvent" "button"))))
-                                                        :centerCondition condition/never
-                                                        :squareCondition condition/never})]
+        layers #js[(new (.-default Tile)
+                        (clj->js (merge {:source (new (.-default SourceXYZ)
+                                                      (clj->js (merge {:projection default-proj
+                                                                       :crossOrigin ""}
+                                                                      (:source geo-config))))}
+                                        (dissoc geo-config :source))))]
+        view (new (.-default View)
+                  #js{:zoom 0
+                      :center #js[0 0]})
+        map-obj (new (.-default Map)
+                     #js{:target target
+                         :view view
+                         :layers layers})
+        vectorsource-obj (new (.-default SourceVector))
+        vector-obj (new (.-default Vector)
+                        #js{:name "BoundingBox"
+                            :source vectorsource-obj})
+        interaction (new (.-default RegularInteraction)
+                         #js{:source (.getSource vector-obj)
+                             :sides 4
+                             :canRotate false
+                             :condition (fn [e]
+                                          (and @rect-state
+                                               (= 0 (aget e "originalEvent" "button"))))
+                             :centerCondition condition/never
+                             :squareCondition condition/never})]
     (when-not (empty? init-value)
-      (let [features (.readFeatures (new GeoJSON/default)
+      (let [features (.readFeatures (new (.-default GeoJSON))
                                     (clj->js {"type" "LineString",
                                               "coordinates" [[(get init-value 3)
                                                               (get init-value 0)]

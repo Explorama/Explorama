@@ -21,9 +21,9 @@
 
 (defonce ^:private point-circle-style
   (new CircleStyle #js{:radius 3
-                               :fill (new Fill #js{:color "magenta"})
-                               :stroke (new Stroke #js{:color "red"
-                                                               :width 1})}))
+                       :fill (new Fill #js{:color "magenta"})
+                       :stroke (new Stroke #js{:color "red"
+                                               :width 1})}))
 
 (def ^:private marker-scale 0.12)
 (def ^:private marker-image-height 250)
@@ -31,34 +31,34 @@
 
 (defonce ^:private marker-icon
   (new Icon #js{:scale marker-scale
-                        :anchor #js[0.5, y-anchor],
-                        :anchorXUnits "fraction"
-                        :anchorYUnits "pixel"
-                        :src "img/marker.png"}))
+                :anchor #js[0.5, y-anchor],
+                :anchorXUnits "fraction"
+                :anchorYUnits "pixel"
+                :src "img/marker.png"}))
 
 (defonce ^:private styles
   {"Point" (new Style #js{:image marker-icon})
    "LineString" (new Style #js{:stroke (new Stroke #js{:color "green"
-                                                                       :width 3})})
+                                                       :width 3})})
    "MultiLineString" (new Style #js{:stroke (new Stroke #js{:color "green"
-                                                                            :width 3})})
+                                                            :width 3})})
    "MultiPoint" (new Style #js{:image marker-icon})
    "MultiPolygon" (new Style #js{:stroke (new Stroke #js{:color "rgb(75, 79, 83)"
-                                                                         :width 2})
-                                         :fill (new Fill #js{:color "rgba(54, 70, 85, 0.15)"})})
+                                                         :width 2})
+                                 :fill (new Fill #js{:color "rgba(54, 70, 85, 0.15)"})})
    "Polygon" (new Style #js{:stroke (new Stroke #js{:color "rgb(75, 79, 83)"
-                                                                    :lineDash #js[4]
-                                                                    :width 3})
-                                    :fill (new Fill #js{:color "rgba(54, 70, 85, 0.15)"})})
+                                                    :lineDash #js[4]
+                                                    :width 3})
+                            :fill (new Fill #js{:color "rgba(54, 70, 85, 0.15)"})})
    "GeometryCollection" (new Style #js{:stroke (new Stroke #js{:color "magenta"
-                                                                               :width 2})
-                                               :fill (new Fill #js{:color "magenta"})
-                                               :image (new CircleStyle #js{:radius 10
-                                                                                   :fill nil
-                                                                                   :stroke (new Stroke #js{:color "magenta"})})})
+                                                               :width 2})
+                                       :fill (new Fill #js{:color "magenta"})
+                                       :image (new CircleStyle #js{:radius 10
+                                                                   :fill nil
+                                                                   :stroke (new Stroke #js{:color "magenta"})})})
    "Circle" (new Style #js{:stroke (new Stroke #js{:color "red"
-                                                                   :width 2})
-                                   :fill (new Fill #js{:color "rgba(255, 0, 0, 0.2)"})})})
+                                                   :width 2})
+                           :fill (new Fill #js{:color "rgba(255, 0, 0, 0.2)"})})})
 
 (defn- styling-function [feature]
   (let [feature-type (.getType (.getGeometry feature))]
@@ -73,12 +73,12 @@
 
 (defn create-geojson [_ geojson-obj]
   (let [vector-source (new VectorSource #js{:features (.readFeatures (new GeoJSON)
-                                                                             geojson-obj
-                                                                             #js{:dataProjection "EPSG:4326"
-                                                                                 :featureProjection "EPSG:3857"})})
+                                                                     geojson-obj
+                                                                     #js{:dataProjection "EPSG:4326"
+                                                                         :featureProjection "EPSG:3857"})})
         vector-layer (new VectorLayer #js{:source vector-source
-                                                  :style styling-function
-                                                  :zIndex 4})]
+                                          :style styling-function
+                                          :zIndex 4})]
     vector-layer))
 
 (def ^:private default-url-query "query?where=1%3D1&outFields=*&returnGeometry=true&f=geojson")
@@ -91,8 +91,8 @@
                        (str server-url query)
                        (str server-url default-url-query))
         vector-source (new VectorSource #js{:format (new GeoJSON)
-                                                    :url complete-url})
+                                            :url complete-url})
         vector-layer (new VectorLayer #js{:source vector-source
-                                                  :style styling-function
-                                                  :zIndex 4})]
+                                          :style styling-function
+                                          :zIndex 4})]
     vector-layer))

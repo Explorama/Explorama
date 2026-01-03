@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.state-handler
-  (:require ["ol/PluggableMap" :as PluggableMapModule]
-            ["ol/extent" :as extent]
+  (:require ["ol/extent" :as extent]
             ["ol/proj" :as proj]
             [clojure.set :as set]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-number?]]
@@ -15,8 +14,6 @@
             [de.explorama.frontend.map.map.util :as util]
             [de.explorama.frontend.woco.workarounds.map :as workarounds]
             [taoensso.timbre :refer [warn]]))
-
-(def PluggableMap (.-default PluggableMapModule))
 
 (defonce ^:private db (atom {}))
 
@@ -630,28 +627,29 @@
     (destroy-instance frame-id)))
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not @workarounds/initialized?
+  #_ ;; issue #60
+    (when-not @workarounds/initialized?
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-    (aset (.-ol js/window) "PluggableMap" "prototype" "getEventPixel"
-          (fn [event]
-            (this-as this
-                     (let [scale @(workspace-scale-fn)
-                           viewportPosition (.getBoundingClientRect (.getViewport this))
-                           size (clj->js
-                                 [(aget viewportPosition "width")
-                                  (aget viewportPosition "height")])]
-                       (clj->js [(/ (/ (* (- (aget event "clientX")
-                                             (aget viewportPosition "left"))
-                                          (aget size "0"))
-                                       (aget viewportPosition "width"))
-                                    scale)
-                                 (/ (/ (* (- (aget event "clientY")
-                                             (aget viewportPosition "top"))
-                                          (aget size "1"))
-                                       (aget viewportPosition "height"))
-                                    scale)])))))
-    (reset! workarounds/initialized? true)))
+      (aset (.-ol js/window) "PluggableMap" "prototype" "getEventPixel"
+            (fn [event]
+              (this-as this
+                       (let [scale @(workspace-scale-fn)
+                             viewportPosition (.getBoundingClientRect (.getViewport this))
+                             size (clj->js
+                                   [(aget viewportPosition "width")
+                                    (aget viewportPosition "height")])]
+                         (clj->js [(/ (/ (* (- (aget event "clientX")
+                                               (aget viewportPosition "left"))
+                                            (aget size "0"))
+                                         (aget viewportPosition "width"))
+                                      scale)
+                                   (/ (/ (* (- (aget event "clientY")
+                                               (aget viewportPosition "top"))
+                                            (aget size "1"))
+                                         (aget viewportPosition "height"))
+                                      scale)])))))
+      (reset! workarounds/initialized? true)))
 
 (defn create-instance [frame-id obj-manager-instance {:keys [workspace-scale]
                                                       :as extra-fns}]

@@ -42,7 +42,7 @@
 
     ;; Build styles
     (println "Building styles...")
-    (shell {:dir "../../styles"} "bash build.sh" mode)
+    (shell {:dir "../../styles"} (str "bash build.sh " mode))
     (println "")
 
     ;; Create target directories

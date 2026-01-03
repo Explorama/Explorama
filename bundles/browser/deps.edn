@@ -37,4 +37,6 @@
 
  :aliases {:dev {:main-opts ["-m" "figwheel.main" "--build" "dev" "--repl"]}
            :test {:extra-paths ["test"]
-                  :main-opts ["-m" "figwheel.main" "--build" "test" "--repl"]}}}
+                  :main-opts ["-m" "figwheel.main" "--build" "test"]}
+           :prod {:main-opts ["-m" "figwheel.main" "--build-once" "prod"]}}}
+

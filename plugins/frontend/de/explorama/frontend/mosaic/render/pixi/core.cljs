@@ -1,14 +1,12 @@
 (ns de.explorama.frontend.mosaic.render.pixi.core
-  (:require [de.explorama.frontend.common.frontend-interface :as fi]
-            [de.explorama.frontend.mosaic.render.engine :as gre]
+  (:require [de.explorama.frontend.mosaic.render.engine :as gre]
             [de.explorama.frontend.mosaic.render.pixi.common :as pc]
             [de.explorama.frontend.mosaic.render.pixi.lod :as pl]
             [de.explorama.frontend.mosaic.render.pixi.mouse :as pm]
             [de.explorama.frontend.mosaic.render.pixi.navigation :as pn]
             [de.explorama.frontend.mosaic.render.pixi.shapes :as ps]
             ["pixi.js-legacy" :refer [Container Graphics utils Texture Application Ticker]]
-            [re-frame.core :as re-frame]
-            [taoensso.timbre :refer [debug]]))
+            [re-frame.core :as re-frame]))
 
 (defn- update-highlights-cards [this state stage-key render-path row-major-index]
   (let [wrapper-indices-path [stage-key :wrapper render-path row-major-index]
@@ -386,7 +384,7 @@
                                      :resolution 2
                                      :autoDensity true
                                      :sharedTicker false
-                                                 ;:autoResize true
+                                     ;:autoResize true
                                      :forceCanvas true
                                      :view canvas))
           listener [["wheel" (pm/wheel instance) {:passive false}]

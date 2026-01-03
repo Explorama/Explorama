@@ -1,9 +1,6 @@
 (ns de.explorama.frontend.mosaic.render.draw.common-cards
-  (:require [clojure.walk :as cw]
-            [de.explorama.frontend.common.frontend-interface :as fi]
-            [de.explorama.frontend.mosaic.config :as config]
+  (:require [de.explorama.frontend.mosaic.config :as config]
             [de.explorama.frontend.mosaic.data-access-layer :as gdal]
-            [de.explorama.frontend.mosaic.data.data :as gdb]
             [de.explorama.frontend.mosaic.path :as gp]
             [de.explorama.frontend.mosaic.render.actions :as gra]
             [de.explorama.frontend.mosaic.render.cache :as grc]
@@ -18,7 +15,7 @@
 (def hightlight-color [255 0 255])
 
 ;DEBUGGING ONLY - comment out when done
-(def ^:private debugging? false)
+(def ^:private debugging? true)
 (when debugging?
   (error "Card rendering is currently in debugging mode"))
 

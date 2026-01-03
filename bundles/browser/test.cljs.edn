@@ -1,4 +1,11 @@
-^{:watch-dirs ["test" "frontend" "backend" "shared"]
+^{:watch-dirs ["test" "frontend" "backend" "shared" "../../plugins/backend" "../../plugins/frontend" "../../plugins/shared"]
   :css-dirs ["resources/public/css"]
-  :auto-testing true}
-{:main de.explorama.test-runner}
+  :auto-testing true
+  :open-url false
+  :ring-server-options {:port 8021}}
+{:main de.explorama.test-runner
+ :output-to "target/test/out/main.js"
+ :output-dir "target/test/out"
+ :asset-path "/out"
+ :optimizations :none
+ :source-map true}

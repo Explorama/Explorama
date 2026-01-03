@@ -1,6 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.util
   (:require ["ol/interaction/Interaction" :as InteractionModule]
-            ["ol/coordinate" :refer [convexHull]]
+            ["ol-ext/geom/ConvexHull.js" :as ConvexHullModule]
             ["ol/proj" :as proj]
             ["ol/style/Stroke" :as StrokeModule]
             ["ol/style/Fill" :as FillModule]
@@ -15,6 +15,7 @@
             [de.explorama.frontend.map.utils :refer [rgb-hex-parser font-color]]
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]))
 
+(def convex-hull (.-default ConvexHullModule))
 (def Interaction (.-default InteractionModule))
 (def Stroke (.-default StrokeModule))
 (def Fill (.-default FillModule))
@@ -346,7 +347,7 @@
                                                 (.getFirstCoordinate
                                                  (.getGeometry f)))
                                               (array-seq cluster)))
-                     hull (convexHull all-coords)]
+                     hull (convex-hull  #js[all-coords])]
                  (.set (aget e "feature") "convexHull" hull)
                  hull)
                hull)]

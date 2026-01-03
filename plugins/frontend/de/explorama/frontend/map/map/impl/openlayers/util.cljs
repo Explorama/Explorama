@@ -25,14 +25,14 @@
 (def Feature (.-default FeatureModule))
 (def Polygon (.-default PolygonModule))
 
-(def ^:private invisible-stroke (new Stroke #js{:color (str "rgba(1,1,1,0)")
-                                                        :width 1}))
+(def ^:private invisible-stroke (new Stroke #js{:color "rgba(1,1,1,0)"
+                                                :width 1}))
 (def ^:private style-border (new Style #js{:image (new CircleStyle #js{:fill (new Fill #js{:color "#fff"})
-                                                                                       :radius 25
-                                                                                       :stroke invisible-stroke})}))
+                                                                       :radius 25
+                                                                       :stroke invisible-stroke})}))
 (def ^:private white-circle-16 (new CircleStyle #js{:fill (new Fill #js{:color "#fff"})
-                                                            :radius 16
-                                                            :stroke invisible-stroke}))
+                                                    :radius 16
+                                                    :stroke invisible-stroke}))
 
 (defonce fit-view-opts (clj->js {:padding [50, 50, 50, 50]}))
 
@@ -53,11 +53,11 @@
                                                  (stroke-color-fn))) ")")
             z-index (if is-highlighted? 3 2)
             circle-style (new CircleStyle #js{:fill (new Fill #js{:color fill-color})
-                                                      :radius radius
-                                                      :stroke (new Stroke #js{:color stroke-color
-                                                                                      :width 2})})
+                                              :radius radius
+                                              :stroke (new Stroke #js{:color stroke-color
+                                                                      :width 2})})
             result-style (new Style #js{:image circle-style
-                                                :zIndex z-index})]
+                                        :zIndex z-index})]
         (swap! marker-style-cache assoc style-key result-style)
         result-style))))
 
@@ -76,13 +76,13 @@
                                      (keys color-counts)))
             data-vec (clj->js (vals color-counts))
             style-outer (new Style #js{:image (new Chart #js{:type "donut"
-                                                                             :radius 25
-                                                                             :data data-vec
-                                                                             :colors colors-vec
-                                                                             :stroke invisible-stroke})})
+                                                             :radius 25
+                                                             :data data-vec
+                                                             :colors colors-vec
+                                                             :stroke invisible-stroke})})
             style-inner (new Style #js{:image white-circle-16
-                                               :text (new Text #js{:font "bold 12px 'Arial'"
-                                                                           :text (localize-number-fn num-features)})})
+                                       :text (new Text #js{:font "bold 12px 'Arial'"
+                                                           :text (localize-number-fn num-features)})})
 
             cluster-style (if (> num-features 1)
                             #js[style-border style-outer style-inner]

@@ -26,8 +26,8 @@
 (def default-color [238 238 238 0.25])
 
 (def default-stlye (new Style #js{:stroke (new Stroke #js{:color "rgba(75, 79, 83, 0.5)"
-                                                                          :width 1})
-                                          :fill (new Fill #js{:color (str "rgba(" (str/join "," default-color) ")")})}))
+                                                          :width 1})
+                                  :fill (new Fill #js{:color (str "rgba(" (str/join "," default-color) ")")})}))
 
 (defn area-color [area-data]
   (if-let [c (:color area-data)]
@@ -101,9 +101,9 @@
         vector-source (case type
                         "esri" (new VectorSource)
                         "geojson" (new VectorSource #js{:features (.readFeatures (new GeoJSON)
-                                                                                         geojson-obj
-                                                                                         #js{:dataProjection "EPSG:4326"
-                                                                                             :featureProjection "EPSG:3857"})})
+                                                                                 geojson-obj
+                                                                                 #js{:dataProjection "EPSG:4326"
+                                                                                     :featureProjection "EPSG:3857"})})
                         (new VectorSource))
         vector-layer (new VectorImageLayer
                           #js{:source vector-source
@@ -134,10 +134,10 @@
   (.removeLayer map-instance vector-layer)
   (.clear vector-source))
 
-(defn display-layer [^js map-instance {:keys [vector-layer vector-source]}]
+(defn display-layer [^js map-instance {:keys [vector-layer _vector-source]}]
   (.addLayer map-instance vector-layer))
 
-(defn destroy-layer [map-instance layer-obj extra-fns]
+(defn destroy-layer [map-instance layer-obj _extra-fns]
   (destroy-and-hide map-instance layer-obj))
 
 (defn hide-layer [map-instance layer-obj]

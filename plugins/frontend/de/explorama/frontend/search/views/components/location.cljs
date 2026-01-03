@@ -5,6 +5,7 @@
             [re-frame.core :as re-frame]
             [reagent.core :as reagent]
             [de.explorama.frontend.search.config :refer [geo-config]]
+            [de.explorama.frontend.woco.workarounds.map :as workarounds]
             ["ol/layer/Tile" :as Tile]
             ["ol/layer/Vector" :as Vector]
             ["ol/source/Vector" :as SourceVector]
@@ -18,7 +19,7 @@
 (def ^:private default-proj "EPSG:900913")
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not (aget js/ol "exploramaInitDone")
+  (when-not @workarounds/initialized?
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
     (aset js/ol "PluggableMap" "prototype" "getEventPixel"
@@ -39,7 +40,7 @@
                                           (aget size "1"))
                                        (aget viewportPosition "height"))
                                     scale)])))))
-    (aset js/ol "exploramaInitDone" true)))
+    (reset! workarounds/initialized? true)))
 
 (defn- new-map-instance [target rect-state internal-state init-value woco-zoom]
   (set-event-pixel-fn woco-zoom)

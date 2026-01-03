@@ -23,7 +23,7 @@
 (defonce ^:private default-style
   (new Style
        #js{:stroke (new Stroke #js{:color #js[255 255 255 0.1]
-                                           :width 1})}))
+                                   :width 1})}))
 (def arrow-color "rgba(27, 28, 30, 0.4)")
 (def hover-color "rgb(16, 163, 163)")
 
@@ -53,9 +53,9 @@
                     _]
   (let [vector-source (new VectorSource)
         vector-layer (new VectorImageLayer #js{:source vector-source
-                                                       :style (partial get-style arrow-color)})
+                                               :style (partial get-style arrow-color)})
         popup-layer (new Popup #js{:className "tooltips"
-                                           :offsetBox 5})
+                                   :offsetBox 5})
         hover-interaction (new Hover
                                #js{:cursor "pointer"
                                    :layers #js[vector-layer]
@@ -81,7 +81,7 @@
                            value))))))
     (.on hover-interaction
          "leave"
-         (fn [e]
+         (fn [_e]
            (let [feature @hovered-feature
                  feature-style (get-style arrow-color feature nil)]
              (.setStyle feature feature-style)

@@ -1,5 +1,6 @@
 (ns de.explorama.frontend.map.map.impl.openlayers.state-handler
-  (:require ["ol/extent" :as extent]
+  (:require ["ol/PluggableMap" :as PluggableMapModule]
+            ["ol/extent" :as extent]
             ["ol/proj" :as proj]
             [clojure.set :as set]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-number?]]
@@ -7,12 +8,15 @@
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.heatmap :as heatmap]
             [de.explorama.frontend.map.map.impl.openlayers.feature-layers.movement :as movement]
             [de.explorama.frontend.map.map.impl.openlayers.util :refer [add-mouse-leave-handler
-                                                                        cluster-interaction-feature find-cluster-for-feature fit-view-opts gen-popup-content get-view-port
+                                                                        find-cluster-for-feature fit-view-opts gen-popup-content get-view-port
                                                                         marker-data->circle-style]]
             [de.explorama.frontend.map.map.protocol.object-manager :as object-proto]
             [de.explorama.frontend.map.map.protocol.state-handler :as proto]
             [de.explorama.frontend.map.map.util :as util]
+            [de.explorama.frontend.woco.workarounds.map :as workarounds]
             [taoensso.timbre :refer [warn]]))
+
+(def PluggableMap (.-default PluggableMapModule))
 
 (defonce ^:private db (atom {}))
 
@@ -626,10 +630,10 @@
     (destroy-instance frame-id)))
 
 (defn- set-event-pixel-fn [workspace-scale-fn]
-  (when-not (aget js/ol "exploramaInitDone")
+  (when-not @workarounds/initialized?
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-    (aset js/ol "PluggableMap" "prototype" "getEventPixel"
+    (aset (.-ol js/window) "PluggableMap" "prototype" "getEventPixel"
           (fn [event]
             (this-as this
                      (let [scale @(workspace-scale-fn)
@@ -647,7 +651,7 @@
                                           (aget size "1"))
                                        (aget viewportPosition "height"))
                                     scale)])))))
-    (aset js/ol "exploramaInitDone" true)))
+    (reset! workarounds/initialized? true)))
 
 (defn create-instance [frame-id obj-manager-instance {:keys [workspace-scale]
                                                       :as extra-fns}]

@@ -194,7 +194,7 @@
                                                               marker-stroke-color-fn
                                                               highlighted-marker-stroke-color-fn)
                                        :condition condition/click
-                                       ;:toggleCondition (aget js/ol "events" "condition" "click")
+                                       ;:toggleCondition (aget (.-ol js/window) "events" "condition" "click")
                                        ;:toggle true
                                        ;:multi true
                                        :style (partial cluster-interaction-style

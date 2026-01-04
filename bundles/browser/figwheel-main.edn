@@ -2,5 +2,5 @@
  :css-dirs ["resources/public/css"]
  :ring-server-options {:port 8020}
  :reload-clj-files #{:cljc}
- :log-level :info
+ :log-level :debug
  :connect-url "ws://localhost:8020/figwheel-connect"}

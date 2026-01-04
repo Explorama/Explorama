@@ -10,4 +10,5 @@
  :optimizations :none
  :source-map true
  :preloads [devtools.preload]
- :after-load de.explorama.frontend.woco.app.core/reload}
+ :after-load de.explorama.frontend.woco.app.core/reload
+ :closure-defines {de.explorama.frontend.woco.config/debug? true}}

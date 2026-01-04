@@ -375,18 +375,18 @@
           {:keys [x y z zoom next-zoom]} (get state [:pos pc/main-stage-index])
           {:keys [width height host]} (gre/args instance)
           canvas (.getElementById js/document host)
-          app (Application. (clj->js {:autoStart false}
-                                     :width width
-                                     :height height
-                                     :backgroundColor 0xFFFFFF
-                                     :antialias false
-                                     :roundPixels false
-                                     :resolution 2
-                                     :autoDensity true
-                                     :sharedTicker false
-                                     ;:autoResize true
-                                     :forceCanvas true
-                                     :view canvas))
+          app (Application. (clj->js {:autoStart false
+                                      :width width
+                                      :height height
+                                      :backgroundColor 0xFFFFFF
+                                      :antialias false
+                                      :roundPixels false
+                                      :resolution 2
+                                      :autoDensity true
+                                      :sharedTicker false
+                                      ;:autoResize true
+                                      :forceCanvas true
+                                      :view canvas}))
           listener [["wheel" (pm/wheel instance) {:passive false}]
                     ["pointerdown" (pm/mousedown instance) {:passive true}]
                     ["pointermove" (pm/pointermove instance) {:passive true}]

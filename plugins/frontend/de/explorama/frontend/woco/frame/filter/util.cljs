@@ -1,67 +1,71 @@
 (ns de.explorama.frontend.woco.frame.filter.util
-  (:require ["moment" :as momentModule]
+  (:require ["date-fns" :refer [parse format isBefore isAfter min max getYear]]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.data-format.date-filter :as df]))
 
 ;char for .. when pruning text
 (def prune-char \u2026) ;".." \u2025
 
-(def date-format "YYYY-MM-DD")
+(def date-format "yyyy-MM-dd")
 
 (defn date->moment [dobj]
   (when dobj
-    (momentModule dobj)))
+    (if (string? dobj)
+      (js/Date. dobj)
+      dobj)))
 
 (defn moment->date [^js mobj]
   (when mobj
-    (.toDate mobj)))
+    (if (instance? js/Date mobj)
+      mobj
+      (js/Date. mobj))))
 
 (defn date<-
-  "Parse date-str as a Moment object, using date format \"YYYY-MM-DD\".
+  "Parse date-str as a Date object, using date format \"yyyy-MM-dd\".
    Used for dates as needed by UI description."
   [date-str]
   (cond (string? date-str)
-        (momentModule date-str date-format)
+        (parse date-str date-format (js/Date.))
         (instance? js/Date date-str)
         (date->moment date-str)
         :else date-str))
 
 (defn date->
-  "Format date-obj as a Date string, using date format \"YYYY-MM-DD\".
+  "Format date-obj as a Date string, using date format \"yyyy-MM-dd\".
    Used for dates as needed by Filter description."
   [date-obj]
   (if (string? date-obj)
     date-obj
-    (.format date-obj date-format)))
+    (format date-obj date-format)))
 
 (defn is-before? [^js mobj1 mobj2]
   (try
-    (.isBefore mobj1 mobj2)
+    (isBefore mobj1 mobj2)
     (catch :default e
       false)))
 
 (defn is-after? [^js mobj1 mobj2]
   (try
-    (.isAfter mobj1 mobj2)
+    (isAfter mobj1 mobj2)
     (catch :default e
       false)))
 
 (defn date-min [& dates]
-  (.min momentModule (clj->js (mapv date<- dates))))
+  (min (clj->js (mapv date<- dates))))
 
 (defn date-max [& dates]
-  (.max momentModule (clj->js (mapv date<- dates))))
+  (max (clj->js (mapv date<- dates))))
 
 (defn year-min [& dates]
   (apply min (mapv #(if (number? %)
                       %
-                      (-> % date<- .year))
+                      (-> % date<- getYear))
                    dates)))
 
 (defn year-max [& dates]
   (apply max (mapv #(if (number? %)
                       %
-                      (-> % date<- .year))
+                      (-> % date<- getYear))
                    dates)))
 
 ;#######################

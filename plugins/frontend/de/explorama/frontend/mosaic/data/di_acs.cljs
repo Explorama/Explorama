@@ -5,7 +5,8 @@
             [de.explorama.frontend.mosaic.path :as gp]
             [de.explorama.shared.mosaic.ws-api :as ws-api]
             [re-frame.core :as re-frame]
-            [taoensso.timbre :refer [error]]))
+            [taoensso.timbre :refer [error]]
+            ["date-fns" :refer [format]]))
 
 (re-frame/reg-event-db
  ::constraints-stopped
@@ -40,12 +41,12 @@
           (filter #(not (blacklist %)))
           set))))
 
-(defn- resolve-date-vals [[from-moment-obj to-moment-obj]]
+(defn- resolve-date-vals [[from-date-obj to-date-obj]]
   (try
-    [(.format from-moment-obj "YYYY-MM-DD")
-     (.format to-moment-obj "YYYY-MM-DD")]
+    [(format from-date-obj "yyyy-MM-dd")
+     (format to-date-obj "yyyy-MM-dd")]
     (catch :default e
-      (error e "Failed to resolve date-vals" from-moment-obj to-moment-obj)
+      (error e "Failed to resolve date-vals" from-date-obj to-date-obj)
       nil)))
 
 (re-frame/reg-sub

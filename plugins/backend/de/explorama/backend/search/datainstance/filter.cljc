@@ -4,7 +4,8 @@
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.backend.search.attribute-characteristics.api :as acs]
             [de.explorama.shared.search.conditions-utils :as cond-utils]
-            [taoensso.timbre :refer [warn] :as log]))
+            [taoensso.timbre :refer [warn] :as log]
+            #?(:cljs ["date-fns" :refer [format]])))
 
 (defn condition->pred-op [advanced condition]
   (if (and advanced condition)
@@ -127,7 +128,8 @@
 
 (defn moment->date-str [date]
   (if date
-    (.format date "YYYY-MM-DD")
+    #?(:cljs (format date "yyyy-MM-dd")
+       :clj (.format date "yyyy-MM-dd"))
     nil))
 
 (defn date->filter [attribute advanced condition selected-date start-date end-date]

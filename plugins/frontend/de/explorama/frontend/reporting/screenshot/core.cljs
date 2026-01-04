@@ -4,7 +4,7 @@
             [de.explorama.frontend.reporting.screenshot.pdf :refer [make-screenshot-pdf]]
             [de.explorama.frontend.reporting.screenshot.png :refer [make-screenshot-with-details]]
             [de.explorama.frontend.reporting.config :as config]
-            ["moment" :as momentModule]))
+            ["date-fns" :refer [format]]))
 
 (defn- make-screenshot [{:keys [dom-id export-type add-export-details?] :as params}]
   (cond
@@ -44,7 +44,7 @@
      (-> {:dom-id (config/export-dom-id context-id)
           :export-type type
           :image-type type
-          :file-name (str label "-" (.format momentModule "YYYY-MM-DDTHH-mm-ss"))
+          :file-name (str label "-" (format (js/Date.) "yyyy-MM-dd'T'HH-mm-ss"))
           :type reporting-type
           :add-export-details? add-export-details?
           :callback-fn callback-fn}

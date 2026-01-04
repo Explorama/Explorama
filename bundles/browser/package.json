@@ -7,7 +7,9 @@
   "license": "EPL-1.0",
   "description": "TODO",
   "scripts": {
-    "build": "./build.sh"
+    "build": "./build.sh",
+    "test": "./run-tests.sh",
+    "test:watch": "npx web-test-runner --watch --files \"target/test/out/main_bundle.js/main.js\" --config web-test-runner.config.js"
   },
   "dependencies": {
     "bezier-easing": "^2.1.0",
@@ -40,6 +42,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
+    "@web/test-runner": "^0.20.2",
+    "@web/test-runner-playwright": "^0.11.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "karma": "^6.4.1",

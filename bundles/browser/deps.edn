@@ -48,6 +48,5 @@
                               "-c" "de.explorama.test-runner"]}
            :prod {:main-opts ["-m" "cljs.main"
                               "-co" "prod-opts.edn"
-                              "-c" "de.explorama.frontend.woco.app.core"
-                              "-O" "advanced"]}}}
+                              "-c" "de.explorama.frontend.woco.app.core"]}}}
 

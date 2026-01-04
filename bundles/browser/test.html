@@ -7,6 +7,14 @@
 <body>
     <h1>ClojureScript Tests</h1>
     <div id="app"></div>
-    <script src="target/test/out/main_bundle.js/main.js"></script>
+    <div id="test-output"></div>
+    <script type="module">
+        // Load the test bundle
+        import('./target/test/out/main_bundle.js/main.js').catch(err => {
+            console.error('Failed to load tests:', err);
+            document.getElementById('test-output').innerHTML =
+                '<div style="color: red;">Failed to load tests: ' + err.message + '</div>';
+        });
+    </script>
 </body>
 </html>

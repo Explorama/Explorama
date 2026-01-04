@@ -8,9 +8,6 @@ assets/css
 assets/fonts 
 assets/img
 
-temp
-
-dist
 test-dist
 figwheel_server.log
 libs/*/.calva/output-window
@@ -19,6 +16,8 @@ node_modules
 
 bundles/browser/resources/public/*
 !bundles/browser/resources/public/index.html
+bundles/browser/dist/*
+!bundles/browser/dist/index.html
 
 bundles/electron/Explorama-dev
 bundles/electron/dist

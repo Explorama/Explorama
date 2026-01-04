@@ -15,7 +15,7 @@
 (def hightlight-color [255 0 255])
 
 ;DEBUGGING ONLY - comment out when done
-(def ^:private debugging? true)
+(def ^:private debugging? false)
 (when debugging?
   (error "Card rendering is currently in debugging mode"))
 

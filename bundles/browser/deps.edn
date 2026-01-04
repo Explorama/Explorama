@@ -40,9 +40,7 @@
                                 "../../plugins/backend_test"
                                 "../../plugins/frontend_test"
                                 "../../plugins/shared_test"]
-                  :main-opts ["-m" "cljs.main"
-                              "-co" "test-opts.edn"
-                              "-c" "de.explorama.test-runner"]}
+                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner"]}
            :prod {:main-opts ["-m" "cljs.main"
                               "-co" "prod-opts.edn"
                               "-c" "de.explorama.frontend.woco.app.core"]}}}

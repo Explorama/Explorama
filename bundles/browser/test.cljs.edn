@@ -1,0 +1,11 @@
+^{:watch-dirs ["frontend" "backend" "shared" "test"
+               "../../plugins/backend" "../../plugins/frontend" "../../plugins/shared"
+               "../../plugins/backend_test" "../../plugins/frontend_test" "../../plugins/shared_test"]
+  :auto-bundle :webpack
+  :launch-js ["chromium" "--headless" "--disable-gpu" "--no-sandbox" "--disable-dev-shm-usage" "--repl" :open-url]}
+{:main de.explorama.test-runner
+ :output-to "target/test/out/main.js"
+ :output-dir "target/test/out"
+ :asset-path "/target/test/out"
+ :optimizations :none
+ :source-map true}

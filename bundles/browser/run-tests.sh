@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "Compiling ClojureScript tests..."
+echo "Running ClojureScript tests in Chrome..."
+mkdir -p target/test-results
 clojure -M:test
 
 echo ""
-echo "Running tests in browser..."
-npx web-test-runner --files "target/test/out/main_bundle.js/main.js" --config web-test-runner.config.js
+echo "Test report saved to: target/test-results/junit.xml"

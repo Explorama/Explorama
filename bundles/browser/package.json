@@ -8,8 +8,7 @@
   "description": "TODO",
   "scripts": {
     "build": "./build.sh",
-    "test": "./run-tests.sh",
-    "test:watch": "npx web-test-runner --watch --files \"target/test/out/main_bundle.js/main.js\" --config web-test-runner.config.js"
+    "test": "./run-tests.sh"
   },
   "dependencies": {
     "bezier-easing": "^2.1.0",
@@ -42,16 +41,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.3.0",
-    "@web/test-runner": "^0.20.2",
-    "@web/test-runner-playwright": "^0.11.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "karma": "^6.4.1",
-    "karma-chrome-launcher": "^3.2.0",
-    "karma-cljs-test": "^0.1.0",
-    "karma-coverage": "^2.2.1",
-    "karma-htmlfile-reporter": "^0.3.8",
-    "karma-junit-reporter": "^2.0.1",
     "prettier": "3.2.5",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1"

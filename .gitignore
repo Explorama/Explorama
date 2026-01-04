@@ -11,6 +11,7 @@ assets/img
 temp
 
 dist
+test-dist
 figwheel_server.log
 libs/*/.calva/output-window
 libs/*/target

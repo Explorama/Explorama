@@ -2,10 +2,10 @@
                "../../plugins/backend" "../../plugins/frontend" "../../plugins/shared"
                "../../plugins/backend_test" "../../plugins/frontend_test" "../../plugins/shared_test"]
   :auto-bundle :webpack
-  :launch-js ["chromium" "--headless" "--disable-gpu" "--no-sandbox" "--disable-dev-shm-usage" "--repl" :open-url]}
+  :launch-js ["chromium" "--disable-gpu" "--remote-debugging-port=9222" "--disable-dev-shm-usage" "--repl" :open-url]}
 {:main de.explorama.test-runner
- :output-to "target/test/out/main.js"
- :output-dir "target/test/out"
- :asset-path "/target/test/out"
+ :output-to "test-dist/out/main.js"
+ :output-dir "test-dist/out"
+ :asset-path "target/out"
  :optimizations :none
  :source-map true}

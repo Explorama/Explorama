@@ -37,9 +37,6 @@
 
  :aliases {:dev {:main-opts ["-m" "figwheel.main" "--build" "dev" "--repl"]}
            :test {:extra-paths ["test"
-                                "test/backend"
-                                "test/frontend"
-                                "test/shared"
                                 "../../plugins/backend_test"
                                 "../../plugins/frontend_test"
                                 "../../plugins/shared_test"]

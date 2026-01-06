@@ -37,7 +37,6 @@
                        failed-send-timeout)
         (warn "[frontend] Send failed - Backend is not available" {:event event})))))
 
-
 (defn listen [e]
   (let [event e]
     (when (vector? event)
@@ -56,7 +55,7 @@
                    5))
   {})
 
-(defn init-tube [{db :db} [_ user-info after-fxs]]
+(defn init-tube [_ [_ _user-info after-fxs]]
   (when after-fxs
     {:fx after-fxs}))
 

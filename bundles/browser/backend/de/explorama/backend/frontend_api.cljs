@@ -33,7 +33,7 @@
   (dispatch event))
 
 (defn- route-wrapper [route-fn [_ metas & params]]
-  (let [{:keys [client-callback failed-callback async-callback user-info client-id broadcast-callback broadcast-filter custom]}
+  (let [{:keys [client-callback failed-callback async-callback user-info client-id broadcast-callback _broadcast-filter custom]}
         (when (map? metas) metas)
         ignore-first? (and (map? metas)
                            (or client-callback broadcast-callback user-info client-id))
@@ -44,15 +44,15 @@
                  (into [metas] params))]
     (route-fn (cond-> {:user-info user-info
                        :client-id client-id
-                       :broadcast-callback (fn [& params]
+                       :broadcast-callback (fn [& _params]
                                              (when broadcast-callback
                                                (warn (str "Not yet implemented" :broadcast-callback))))
                        :failed-callback (fn [& params]
                                           (when failed-callback
                                             (dispatch (apply conj failed-callback params))))
-                       :broadcast-notify-fn (fn [& params]
+                       :broadcast-notify-fn (fn [& _params]
                                               (warn (str "Not yet implemented" :broadcast-notify-fn)))
-                       :notify-fn (fn [& params]
+                       :notify-fn (fn [& _params]
                                     (warn (str "Not yet implemented" :notify-fn)))
                        :client-callback (fn [& params]
                                           (when client-callback
@@ -76,7 +76,6 @@
           (route-wrapper route-fn request)
           :else
           (error "[backend] No route found for " event))))
-
 
 (defn init []
   (debug "[backend] Init frontend API")

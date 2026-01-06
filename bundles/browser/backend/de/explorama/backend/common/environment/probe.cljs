@@ -1,3 +1,3 @@
 (ns de.explorama.backend.common.environment.probe)
 
-(defn rate-exception [e])
+(defn rate-exception [_e])

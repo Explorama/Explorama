@@ -17,7 +17,9 @@ node_modules
 bundles/browser/resources/public/*
 !bundles/browser/resources/public/index.html
 bundles/browser/dist/*
-!bundles/browser/dist/index.html
+!bundles/browser/dist/index.html.template
+
+cljs-test-runner-out
 
 bundles/electron/Explorama-dev
 bundles/electron/dist

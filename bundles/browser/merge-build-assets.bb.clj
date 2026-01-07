@@ -7,8 +7,10 @@
 (:import java.nio.file.Paths)
 
 (def separator (java.io.File/separator))
-(def directory (str "vite-target"))
+(def directory (str (or (first *command-line-args*) "dist")))
+(def html-template "index.html.template")
 (def html-file "index.html")
+(def source-file (str directory separator html-template))
 (def target-file (str directory separator html-file))
 
 (defn delete-directory-recursive
@@ -19,7 +21,7 @@
   (io/delete-file file))
 
 (println "--- Merge assets into index.html for production build ---")
-(def index-file (atom (slurp (str directory separator html-file))))
+(def index-file (atom (slurp source-file)))
 
 (def css-includes (re-seq (re-pattern "<link rel=\"stylesheet\" href=\".*\" type=\"text/css\">")
                           @index-file))

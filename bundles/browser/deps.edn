@@ -6,8 +6,8 @@
          "../../plugins/frontend"
          "../../plugins/shared"
          "../../assets"]
- :deps {org.clojure/clojure {:mvn/version "1.11.1"}
-        org.clojure/clojurescript {:mvn/version "1.11.132"}
+ :deps {org.clojure/clojure {:mvn/version "1.12.4"}
+        org.clojure/clojurescript {:mvn/version "1.12.134"}
         com.bhauman/figwheel-main {:mvn/version "0.2.18"}
         com.bhauman/cljs-test-display {:mvn/version "0.1.1"}
 
@@ -28,7 +28,7 @@
 
         day8.re-frame/http-fx {:mvn/version "0.2.4"}
         re-frame-utils/re-frame-utils {:mvn/version "0.1.0"}
-        funcool/cuerdas {:mvn/version "2022.06.16-403"}
+        funcool/cuerdas {:mvn/version "2023.10.15-405"}
 
         prismatic/dommy {:mvn/version "1.1.0"}
 
@@ -42,7 +42,15 @@
                                 "../../plugins/backend_test"
                                 "../../plugins/frontend_test"
                                 "../../plugins/shared_test"]
-                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner"]}
+                  :extra-deps {olical/cljs-test-runner {:mvn/version "3.8.1"}}
+                  :main-opts ["-m" "cljs-test-runner.main" "-r" ".*" "-x" "chrome-headless"]}
+           :web-test {:extra-paths ["test"
+                                    "../../plugins/backend_test"
+                                    "../../plugins/frontend_test"
+                                    "../../plugins/shared_test"]
+                      :main-opts ["-m" "cljs.main"
+                                  "-co" "test-build.edn"
+                                  "-c" "de.explorama.test-runner"]}
            :prod {:main-opts ["-m" "cljs.main"
                               "-co" "prod-opts.edn"
                               "-c" "de.explorama.frontend.woco.app.core"]}}}

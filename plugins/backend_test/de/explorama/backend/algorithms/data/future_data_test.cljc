@@ -1,5 +1,6 @@
 (ns de.explorama.backend.algorithms.data.future-data-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require #?(:clj [clojure.test :refer [deftest is testing]]
+               :cljs [cljs.test :refer-macros [deftest is testing]])
             [de.explorama.backend.algorithms.data.algorithm :as algo]
             [de.explorama.backend.algorithms.data.features :as feat]
             [de.explorama.backend.algorithms.data.test-common :refer [data

@@ -1,0 +1,7 @@
+{:output-to "out/test/test.js"
+ :output-dir "out/test"
+ :main de.explorama.test-runner
+ :optimizations :none
+ :target :bundle
+ :pretty-print true
+ :source-map true}

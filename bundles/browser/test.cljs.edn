@@ -5,9 +5,7 @@
   :auto-bundle :webpack
   :reload-clj-files #{:cljc}
   :auto-testing true
-  :launch-js ["chromium"
-              "--disable-dev-shm" "--disable-gpu" "--remote-debugging-port=9222"
-              "--repl" :open-url]}
+  :launch-js "./figwheel-headless.sh"}
 {:main de.explorama.test-runner
  :output-to "target/public/cljs-out/test/main.js"
  :output-dir "target/public/cljs-out/test"

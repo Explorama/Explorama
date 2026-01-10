@@ -14,12 +14,12 @@ libs/*/.calva/output-window
 libs/*/target
 node_modules
 
-bundles/browser/resources/public/*
-!bundles/browser/resources/public/index.html
-bundles/browser/dist/*
-!bundles/browser/dist/index.html.template
-bundles/browser/figwheel-headless.sh
-bundles/browser/report.xml
+bundles/*/resources/public/*
+!bundles/*/resources/public/index.html
+bundles/*/dist/*
+!bundles/*/dist/index.html.template
+bundles/*/figwheel-headless.sh
+bundles/*/report.xml
 
 browser_check.edn
 electron_check.edn

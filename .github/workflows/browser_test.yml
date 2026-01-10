@@ -31,15 +31,5 @@ jobs:
       - name: Run tests
         run: |
           npm run test-ci
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            report.xml
-      - name: Upload test results
-        uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: test-results
-          path: report.xml
+      - name: Write to Job Summary
+        run: cat report.xml >> $GITHUB_STEP_SUMMARY

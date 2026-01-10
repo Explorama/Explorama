@@ -29,25 +29,17 @@ jobs:
           npm install
           mv figwheel-headless-ci.sh.template figwheel-headless.sh
       - name: Run tests
-        continue-on-error: true
         run: |
-          timeout 90s clj -M:test
-          cat target/public/cljs-out/test/js-environment.log
-      - name: Run tests
-        continue-on-error: true
-        run: |
-          cat target/public/cljs-out/test/js-environment.log
-      - name: Run tests
-        run: npm run test-ci
+          npm run test-ci
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           files: |
-            bundles/browser/report.xml
+            report.xml
       - name: Upload test results
         uses: actions/upload-artifact@v6
         if: always()
         with:
           name: test-results
-          path: bundles/browser/report.xml
+          path: report.xml

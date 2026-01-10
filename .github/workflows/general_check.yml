@@ -47,12 +47,5 @@ jobs:
           clj-kondo --lint $(bash ../tools/list-files ./backend) --lint $(bash ../tools/list-files ./frontend) --lint $(bash ../tools/list-files ./shared) --lint $(bash ../tools/list-files ./backend_test) --lint $(bash ../tools/list-files ./frontend_test) --lint $(bash ../tools/list-files ./shared_test) --config '{:output {:format :edn}}' > ../plugins_check.edn
       - name: generate clj-kondo report
         run: bb tools/clj-kondo-report/clj-kondo-report.clj
-      - name: Add Clj-Kondo PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: report.md
       - name: Write to Job Summary
         run: cat report.md >> $GITHUB_STEP_SUMMARY
-

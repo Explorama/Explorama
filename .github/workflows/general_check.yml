@@ -8,13 +8,17 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
   clj-kondo:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/build-image:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: apk add --no-cache tar
       - name: Cache dependencies
         uses: actions/cache@v5

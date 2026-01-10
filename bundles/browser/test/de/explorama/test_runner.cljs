@@ -141,10 +141,16 @@
 
 ;; Report methods
 (defmethod report [:cljs.test/default :pass] [m]
-  (swap! test-results update :test-cases conj (assoc m :type :pass :name (:current-test @test-results) :ns (:current-ns @test-results))))
+  (swap! test-results update :test-cases conj
+         (assoc m :type :pass
+                :name (:current-test @test-results)
+                :ns (:current-ns @test-results))))
 
 (defmethod report [:cljs.test/default :fail] [m]
-  (swap! test-results update :test-cases conj (assoc m :type :fail))
+  (swap! test-results update :test-cases conj
+         (assoc m :type :fail
+                :name (:current-test @test-results)
+                :ns (:current-ns @test-results)))
   (let [{:keys [expected actual message file line]} m]
     (println (str "  FAIL: " (or message "Assertion failed")))
     (println (str "    Expected: " (pr-str expected)))
@@ -153,7 +159,10 @@
       (println (str "    Location: " file (when line (str ":" line)))))))
 
 (defmethod report [:cljs.test/default :error] [m]
-  (swap! test-results update :test-cases conj (assoc m :type :error))
+  (swap! test-results update :test-cases conj
+         (assoc m :type :error
+                :name (:current-test @test-results)
+                :ns (:current-ns @test-results)))
   (let [{:keys [actual message file line]} m]
     (println (str "  ERROR: " (or message "Test error")))
     (println (str "    " (pr-str actual)))

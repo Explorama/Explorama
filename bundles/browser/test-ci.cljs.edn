@@ -1,0 +1,15 @@
+^{:watch-dirs ["frontend" "backend" "shared" "../../plugins/backend" "../../plugins/frontend" "../../plugins/shared" "test"
+               "../../plugins/backend_test" "../../plugins/frontend_test" "../../plugins/shared_test"]
+  :extra-main-files {:testing {:main de.explorama.test-runner-ci}}
+  :css-dirs ["resources/public/css"]
+  :auto-bundle :webpack
+  :reload-clj-files #{:cljc}
+  :auto-testing true
+  :launch-js "./figwheel-headless.sh"}
+{:main de.explorama.test-runner
+ :output-to "target/public/cljs-out/test/main.js"
+ :output-dir "target/public/cljs-out/test"
+ :asset-path "/cljs-out/test"
+ :optimizations :none
+ :pretty-print true
+ :source-map true}

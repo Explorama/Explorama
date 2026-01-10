@@ -14,7 +14,8 @@
                     "--add-opens" "java.base/jdk.internal.misc=ALL-UNNAMED"
                     "-Dio.netty.tryReflectionSetAccessible=true"]}}
 
- :paths ["shared"
+ :paths ["backend"
+         "shared"
          "../../plugins/backend"
          "../../plugins/shared"]
 

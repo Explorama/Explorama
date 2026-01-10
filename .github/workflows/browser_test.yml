@@ -27,7 +27,7 @@ jobs:
       - name: Prepare test
         run: |
           npm install
-          mv figwheel-headless.sh.template figwheel-headless.sh
+          mv figwheel-headless-ci.sh.template figwheel-headless.sh
       - name: Run tests
         continue-on-error: true
         run: |

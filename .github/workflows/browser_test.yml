@@ -34,6 +34,10 @@ jobs:
           timeout 90s clj -M:test
           cat target/public/cljs-out/test/js-environment.log
       - name: Run tests
+        continue-on-error: true
+        run: |
+          cat target/public/cljs-out/test/js-environment.log
+      - name: Run tests
         run: npm run test-ci
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2

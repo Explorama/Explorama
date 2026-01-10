@@ -29,6 +29,8 @@ jobs:
           npm install
           mv figwheel-headless.sh.template figwheel-headless.sh
       - name: Run tests
+        run: clj -M:test
+      - name: Run tests
         run: npm run test-ci
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -42,4 +44,3 @@ jobs:
         with:
           name: test-results
           path: bundles/browser/report.xml
-

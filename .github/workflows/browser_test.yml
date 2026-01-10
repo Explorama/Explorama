@@ -31,5 +31,8 @@ jobs:
       - name: Run tests
         run: |
           npm run test-ci
-      - name: Write to Job Summary
-        run: cat report.xml >> $GITHUB_STEP_SUMMARY
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: "**/*report.xml"

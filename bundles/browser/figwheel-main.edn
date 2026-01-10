@@ -1,5 +1,4 @@
 {:watch-dirs ["frontend" "backend" "shared" "../../plugins/backend" "../../plugins/frontend" "../../plugins/shared"]
- :css-dirs ["resources/public/css"]
  :ring-server-options {:port 8020}
  :reload-clj-files #{:cljc}
  :log-level :debug

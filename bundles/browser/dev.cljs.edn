@@ -1,5 +1,5 @@
 ^{:watch-dirs ["frontend" "backend" "shared" "../../plugins/backend/" "../../plugins/frontend/" "../../plugins/shared/"]
-  :css-dirs ["resources/public"]
+  :css-dirs ["resources/public/css"]
   :auto-bundle :webpack
   :reload-clj-files #{:cljc}
   :hot-reload-cljs true}

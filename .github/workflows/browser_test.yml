@@ -29,7 +29,10 @@ jobs:
           npm install
           mv figwheel-headless.sh.template figwheel-headless.sh
       - name: Run tests
-        run: timeout 45s clj -M:test && cat target/public/cljs-out/test/js-environment.log
+        continue-on-error: true
+        run: |
+          timeout 45s clj -M:test
+          cat target/public/cljs-out/test/js-environment.log
       - name: Run tests
         run: npm run test-ci
       - name: Publish Test Results

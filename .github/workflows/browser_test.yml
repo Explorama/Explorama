@@ -17,28 +17,29 @@ jobs:
       run:
         working-directory: ./bundles/browser
     steps:
-    - uses: actions/checkout@v4
-    - run: apk add --no-cache tar
-    - name: Cache dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: "m2-browser-${{ hashFiles('bundles/browser/deps.edn') }}"
-    - name: Prepare test
-      run: |
-        npm install
-        mkdir -p target/test-results
-    - name: Run tests
-      run: clojure -M:test
-    - name: Publish Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always()
-      with:
-        files: |
-          bundles/browser/target/test-results/junit.xml
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-results
-        path: bundles/browser/target/test-results/junit.xml
+      - uses: actions/checkout@v4
+      - run: apk add --no-cache tar
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: "m2-browser-${{ hashFiles('bundles/browser/deps.edn') }}-${{ hashFiles('bundles/browser/package-lock.json') }}"
+      - name: Prepare test
+        run: |
+          npm install
+          mkdir -p target/test-results
+      - name: Run tests
+        run: npm run test-ci
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            bundles/browser/report.xml
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: bundles/browser/report.xml
+

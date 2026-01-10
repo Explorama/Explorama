@@ -67,9 +67,10 @@
             [de.explorama.backend.expdb.middleware.indexed-db-test]
             [cljs.test :refer [report]]
             [clojure.string :as str]
-            [figwheel.main.testing :refer [run-tests-async test-result-data]]))
+            [figwheel.main.testing :refer [run-tests-async]]))
 
 (defonce test-results (atom {:test-cases [] :current-ns nil :current-test nil}))
+(defonce test-case-counter (atom {}))
 
 (defn- escape-xml [s]
   (when s
@@ -81,8 +82,11 @@
         (str/replace "'" "&apos;"))))
 
 (defn- format-test-case-xml [{:keys [ns name type message expected actual file line]}]
-  (let [test-name name
-        class-name ns]
+  (let [class-name ns
+        key [class-name name]
+        count (get @test-case-counter key 0)
+        test-name  (str name "-" count)]
+    (swap! test-case-counter update key #(if % (inc %) 1))
     (str "    <testcase name=\"" (escape-xml test-name) "\" "
          "classname=\"" (escape-xml class-name) "\">\n"
          (case type
@@ -138,53 +142,25 @@
   (swap! test-results update :test-cases conj
          (assoc m :type :fail
                 :name (:current-test @test-results)
-                :ns (:current-ns @test-results)))
-  (let [{:keys [expected actual message file line]} m]
-    (println (str "  FAIL: " (or message "Assertion failed")))
-    (println (str "    Expected: " (pr-str expected)))
-    (println (str "      Actual: " (pr-str actual)))
-    (when file
-      (println (str "    Location: " file (when line (str ":" line)))))))
+                :ns (:current-ns @test-results))))
 
 (defmethod report [:cljs.test/default :error] [m]
   (swap! test-results update :test-cases conj
          (assoc m :type :error
                 :name (:current-test @test-results)
-                :ns (:current-ns @test-results)))
-  (let [{:keys [actual message file line]} m]
-    (println (str "  ERROR: " (or message "Test error")))
-    (println (str "    " (pr-str actual)))
-    (when file
-      (println (str "    Location: " file (when line (str ":" line)))))))
+                :ns (:current-ns @test-results))))
 
 (defmethod report [:cljs.test/default :summary] [m]
-  (let [tests (group-by :type (:test-cases @test-results))
-        pass (count (:pass tests))
-        fail (count (:fail tests))
-        error (count (:error tests))
-        junit-xml (generate-junit-xml m)]
-    (println "\n================================================================================")
-    (println "                             TEST SUMMARY")
-    (println "================================================================================")
-    (println (str "Tests run:  " (+ pass fail error)))
-    (println (str "  Passed:   " pass))
-    (println (str "  Failed:   " fail))
-    (println (str "  Errors:   " error))
-    (println "================================================================================")
-    (if (and (zero? fail) (zero? error))
-      (println "\n✓ ALL TESTS PASSED\n")
-      (println (str "\n✗ TESTS FAILED (" (+ fail error) " issues)\n")))
-    {:pass pass :failed fail :error error}))
+  (let [junit-xml (generate-junit-xml m)]
+    (println "### report start ###")
+    (println junit-xml)
+    (println "### report end ###")))
 
 (defmethod report [:cljs.test/default :begin-test-ns] [m]
-  (swap! test-results assoc :current-ns (:ns m))
-  (println (str "\nTesting " (name (:ns m)))))
+  (swap! test-results assoc :current-ns (:ns m)))
 
 (defmethod report [:cljs.test/default :begin-test-var] [m]
   (swap! test-results assoc :current-test (:var m)))
-
-(defmethod report [:cljs.test/default :end-run-tests] [m]
-  (reset! test-result-data @test-results))
 
 (defn -main [& _args]
   (try

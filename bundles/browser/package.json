@@ -9,6 +9,7 @@
   "scripts": {
     "build": "./build.sh",
     "test": "clj -M:test",
+    "test-ci": "bb run-tests-ci.bb.clj",
     "dev": "clj -M:dev"
   },
   "dependencies": {

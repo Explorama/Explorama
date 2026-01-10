@@ -1,6 +1,5 @@
 ^{:watch-dirs ["frontend" "backend" "shared" "../../plugins/backend" "../../plugins/frontend" "../../plugins/shared" "test"
                "../../plugins/backend_test" "../../plugins/frontend_test" "../../plugins/shared_test"]
-  :extra-main-files {:testing {:main de.explorama.test-runner}}
   :css-dirs ["resources/public/css"]
   :auto-bundle :webpack
   :reload-clj-files #{:cljc}

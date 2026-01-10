@@ -19,6 +19,7 @@ bundles/browser/resources/public/*
 bundles/browser/dist/*
 !bundles/browser/dist/index.html.template
 bundles/browser/figwheel-headless.sh
+bundles/browser/report.xml
 
 cljs-test-runner-out
 

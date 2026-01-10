@@ -19,7 +19,7 @@ bundles/*/resources/public/*
 bundles/*/dist/*
 !bundles/*/dist/index.html.template
 bundles/*/figwheel-headless.sh
-bundles/*/report.xml
+bundles/*/*report.xml
 
 browser_check.edn
 electron_check.edn

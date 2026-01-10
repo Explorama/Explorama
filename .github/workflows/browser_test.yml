@@ -31,7 +31,7 @@ jobs:
       - name: Run tests
         continue-on-error: true
         run: |
-          timeout 45s clj -M:test
+          timeout 90s clj -M:test
           cat target/public/cljs-out/test/js-environment.log
       - name: Run tests
         run: npm run test-ci

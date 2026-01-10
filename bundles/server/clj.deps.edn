@@ -1,5 +1,5 @@
 {:aliases
- {:test {:extra-paths ["backend_test"
+ {:test {:extra-paths ["test/backend"
                        "../../plugins/backend_test"
                        "../../plugins/shared_test"]}
   :dev {:extra-paths ["dev/backend"]
@@ -14,11 +14,7 @@
                     "--add-opens" "java.base/jdk.internal.misc=ALL-UNNAMED"
                     "-Dio.netty.tryReflectionSetAccessible=true"]}}
 
-
- :paths ["frontend"
-         "shared"
-         "backend_test"
-         "shared_test"
+ :paths ["shared"
          "../../plugins/backend"
          "../../plugins/shared"]
 

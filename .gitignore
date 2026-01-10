@@ -21,6 +21,10 @@ bundles/browser/dist/*
 bundles/browser/figwheel-headless.sh
 bundles/browser/report.xml
 
+browser_check.edn
+electron_check.edn
+server_check.edn
+
 cljs-test-runner-out
 
 bundles/electron/Explorama-dev

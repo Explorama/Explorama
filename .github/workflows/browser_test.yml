@@ -27,7 +27,7 @@ jobs:
       - name: Prepare test
         run: |
           npm install
-          mkdir -p target/test-results
+          mv figwheel-headless.sh.template figwheel-headless.sh
       - name: Run tests
         run: npm run test-ci
       - name: Publish Test Results

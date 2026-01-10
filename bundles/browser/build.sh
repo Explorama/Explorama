@@ -24,7 +24,7 @@ cp -r resources/public/css dist/
 cp -r resources/public/fonts dist/
 cp -r resources/public/img dist/
 
-# Inline CSS into HTML to avoid CORS issues with file:// protocol
+# Inline CSS into HTML to avoid CORS issues
 echo "Inlining CSS into HTML..."
 bb merge-build-assets.bb.clj
 

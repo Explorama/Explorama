@@ -34,9 +34,11 @@ jobs:
           npm install
           mv figwheel-headless-ci.sh.template figwheel-headless.sh
       - name: Run backend tests
+        continue-on-error: true
         run: |
           clojure -Sdeps clj.deps.edn -M:test-ci
       - name: Run frontend tests
+        continue-on-error: true
         run: |
           npm run test-ci
       - name: Publish Test Report

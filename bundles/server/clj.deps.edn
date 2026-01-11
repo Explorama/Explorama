@@ -8,6 +8,12 @@
                      "-d" "test/backend"
                      "-d" "../../plugins/backend_test"
                      "-d" "../../plugins/shared_test"]}
+  :test-ci {:extra-paths ["test/backend"
+                          "../../plugins/backend_test"
+                          "../../plugins/shared_test"]
+            :extra-deps {org.clojure/tools.namespace {:mvn/version "1.5.0"}
+                         ring/ring-mock {:mvn/version "0.4.0"}}
+            :main-opts ["-m" "de.explorama.backend.test-runner-ci"]}
   :dev {:extra-paths ["dev/backend"
                       "test/backend"
                       "../../plugins/backend_test"

@@ -4,7 +4,10 @@
                        "../../plugins/shared_test"]
          :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}
                       ring/ring-mock {:mvn/version "0.4.0"}}
-         :main-opts ["-m" "cognitect.test-runner"]}
+         :main-opts ["-m" "cognitect.test-runner"
+                     "-d" "test/backend"
+                     "-d" "../../plugins/backend_test"
+                     "-d" "../../plugins/shared_test"]}
   :dev {:extra-paths ["dev/backend"
                       "test/backend"
                       "../../plugins/backend_test"
@@ -56,6 +59,10 @@
         metosin/jsonista {:mvn/version "0.3.8"}
         pneumatic-tubes/pneumatic-tubes {:mvn/version "0.3.0"
                                          :exclusions [com.cognitect/transit-clj com.cognitect/transit-cljs]}
+
+        buddy/buddy-core {:mvn/version "1.10.1"}
+        buddy/buddy-sign {:mvn/version "3.4.1"}
+        funcool/cuerdas {:mvn/version "2023.10.15-405"}
         ring/ring {:mvn/version "1.10.0"}
         ring-cors/ring-cors {:mvn/version "0.1.1"}
         org.clojure/java.jdbc {:mvn/version "0.7.12"}

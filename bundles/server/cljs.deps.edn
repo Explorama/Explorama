@@ -36,20 +36,20 @@
         re-frame/re-frame {:mvn/version "1.2.0"}}
 
  :aliases {:dev {:main-opts ["-m" "figwheel.main" "--build" "dev" "--repl"]}
-           :test {:extra-paths ["test"
+           :test {:extra-paths ["test/frontend"
                                 "../../plugins/backend_test"
                                 "../../plugins/frontend_test"
                                 "../../plugins/shared_test"]
                   :test {:extra-paths ["test"]}
                   :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner"]}
-           :test-ci {:extra-paths ["test"
+                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.frontend.test-runner"]}
+           :test-ci {:extra-paths ["test/frontend"
                                    "../../plugins/backend_test"
                                    "../../plugins/frontend_test"
                                    "../../plugins/shared_test"]
                      :test {:extra-paths ["test"]}
                      :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-                     :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner-ci"]}
+                     :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.frontend.test-runner-ci"]}
            :prod {:main-opts ["-m" "cljs.main"
                               "-co" "prod-opts.edn"
                               "-c" "de.explorama.frontend.woco.app.core"]}}}

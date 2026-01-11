@@ -114,7 +114,7 @@
         grouped-by-ns (group-by :ns test-cases)
         timestamp (.toISOString (js/Date.))]
     (str "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-         "<testsuites tests=\"" test "\" failures=\"" fail "\" errors=\"" error "\" time=\"0\">\n"
+         "<testsuites name=\"Explorama Browser Tests\" tests=\"" test "\" failures=\"" fail "\" errors=\"" error "\" time=\"0\">\n"
          (apply str
                 (for [[ns-name tests] grouped-by-ns]
                   (let [ns-tests (count tests)

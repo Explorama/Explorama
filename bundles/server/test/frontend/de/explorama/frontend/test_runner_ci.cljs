@@ -126,8 +126,5 @@
   (swap! test-results assoc :current-test (:var m)))
 
 (defn -main [& _args]
-  (try
-    (run-tests-async 10000)
-    (catch :default e
-      (println e))))
+  (run-tests-async 10000))
 

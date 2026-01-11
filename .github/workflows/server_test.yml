@@ -22,23 +22,28 @@ jobs:
       run:
         working-directory: ./bundles/server
     steps:
-    - uses: actions/checkout@v6
-    - run: apk add --no-cache tar
-    - name: Cache dependencies
-      uses: actions/cache@v5
-      with:
-        path: ~/.m2/repository
-        key: "m2-server-${{ hashFiles('bundles/server/clj.deps.edn') }}-${{ hashFiles('bundles/server/cljs.deps.edn') }}"
-    - name: Prepare test
-      run: npm install
-    - name: Run backend tests
-      run: |
-        clojure -M:test-ci
-    - name: Run frontend tests
-      run: |
-        npm run test-ci
-    - name: Publish Test Report
-      uses: mikepenz/action-junit-report@v5
-      if: success() || failure()
-      with:
-        report_paths: "**/*report.xml"
+      - uses: actions/checkout@v6
+      - run: apk add --no-cache tar
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: "m2-server-${{ hashFiles('bundles/server/clj.deps.edn') }}-${{ hashFiles('bundles/server/cljs.deps.edn') }}"
+      - name: Prepare test
+        run: |
+          npm install
+          mv figwheel-headless-ci.sh.template figwheel-headless.sh
+      - name: Prepare test
+        run: npm install
+      - name: Run backend tests
+        run: |
+          clojure -M:test-ci
+      - name: Run frontend tests
+        run: |
+          npm run test-ci
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: "**/*report.xml"
+

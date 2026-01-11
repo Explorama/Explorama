@@ -33,11 +33,9 @@ jobs:
         run: |
           npm install
           mv figwheel-headless-ci.sh.template figwheel-headless.sh
-      - name: Prepare test
-        run: npm install
       - name: Run backend tests
         run: |
-          clojure -M:test-ci
+          clojure -Sdeps clj.deps.edn -M:test-ci
       - name: Run frontend tests
         run: |
           npm run test-ci

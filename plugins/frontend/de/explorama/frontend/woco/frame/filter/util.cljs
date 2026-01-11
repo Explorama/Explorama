@@ -41,13 +41,13 @@
 (defn is-before? [^js mobj1 mobj2]
   (try
     (isBefore mobj1 mobj2)
-    (catch :default e
+    (catch :default _e
       false)))
 
 (defn is-after? [^js mobj1 mobj2]
   (try
     (isAfter mobj1 mobj2)
-    (catch :default e
+    (catch :default _e
       false)))
 
 (defn date-min [& dates]
@@ -242,7 +242,7 @@
                                    (to-date prop value)))
                 filters))))
 
-(defn- parse
+(defn- parse-filter
   " Parse filter conditions to a map:
 
     [:and
@@ -275,7 +275,7 @@
   [filter]
   (if (df/filter-contains-date? filter)
     (parse-date filter)
-    (parse filter)))
+    (parse-filter filter)))
 
 (defn filter-desc->ui-desc
   "Transform the Filter description to UI App description.

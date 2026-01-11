@@ -35,8 +35,9 @@
                                  (get data dependent-variable))
                                (:data training-data))
 
-          instance (lib/default. (clj->js training-data-x)
-                                 (clj->js training-data-y))
+          instance (new (.-default lib)
+                        (clj->js training-data-x)
+                        (clj->js training-data-y))
 
           result (mapv (fn [value]
                          (.predict instance (double value)))

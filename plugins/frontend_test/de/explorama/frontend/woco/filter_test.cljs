@@ -4,14 +4,14 @@
             [de.explorama.shared.common.test-data :as td]
             ["date-fns" :refer [isEqual parseISO]]))
 
-(def app-state {:selected-ui               {td/country      {:std [{:value td/country-a
-                                                                    :label  td/country-a}]}
-                                            td/org {:std [{:value "Foo"
-                                                           :label "Foo"}
-                                                          {:value "Bar"
-                                                           :label "Bar"}]}
-                                            td/fact-1   {:std [1 4]}
-                                            "date"         {:year [2004 2016]}}
+(def app-state {:selected-ui {td/country      {:std [{:value td/country-a
+                                                      :label  td/country-a}]}
+                              td/org {:std [{:value "Foo"
+                                             :label "Foo"}
+                                            {:value "Bar"
+                                             :label "Bar"}]}
+                              td/fact-1   {:std [1 4]}
+                              "date"         {:year [2004 2016]}}
                 :selected-ui-attributes [["date" :year]
                                          [td/fact-1 :std]
                                          [td/country :std]]

@@ -1,11 +1,9 @@
-{:paths ["frontend"
-         "backend"
-         "shared"
+{:paths ["src"
+         "../shared"
          "resources"
-         "../../plugins/backend"
-         "../../plugins/frontend"
-         "../../plugins/shared"
-         "../../assets"]
+         "../../../plugins/backend"
+         "../../../plugins/shared"
+         "../../../assets"]
  :deps {org.clojure/clojure {:mvn/version "1.12.4"}
         org.clojure/clojurescript {:mvn/version "1.12.134"}
         com.bhauman/figwheel-main {:mvn/version "0.2.18"}
@@ -39,16 +37,14 @@
 
  :aliases {:dev {:main-opts ["-m" "figwheel.main" "--build" "dev" "--repl"]}
            :test {:extra-paths ["test"
-                                "../../plugins/backend_test"
-                                "../../plugins/frontend_test"
-                                "../../plugins/shared_test"]
+                                "../../../plugins/backend_test"
+                                "../../../plugins/shared_test"]
                   :test {:extra-paths ["test"]}
                   :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
                   :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner"]}
            :test-ci {:extra-paths ["test"
-                                   "../../plugins/backend_test"
-                                   "../../plugins/frontend_test"
-                                   "../../plugins/shared_test"]
+                                   "../../../plugins/backend_test"
+                                   "../../../plugins/shared_test"]
                      :test {:extra-paths ["test"]}
                      :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
                      :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner-ci"]}

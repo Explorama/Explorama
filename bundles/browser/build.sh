@@ -39,6 +39,8 @@ mv dist/img dist/explorama-browser/
 
 cd dist
 
-zip -r explorama-browser.zip explorama-browser
+zip -r Explorama-browser.zip explorama-browser
+
+cd ..
 
 echo "Done"

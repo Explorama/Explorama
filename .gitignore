@@ -14,6 +14,7 @@ libs/*/.calva/output-window
 libs/*/target
 node_modules
 
+bundles/browser/explorama-browser.zip
 bundles/*/resources/public/*
 !bundles/*/resources/public/index.html
 bundles/*/dist/*

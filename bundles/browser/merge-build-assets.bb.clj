@@ -6,7 +6,7 @@
 (:import java.nio.file.Files)
 (:import java.nio.file.Paths)
 
-(def separator (java.io.File/separator))
+(def separator java.io.File/separator)
 (def directory (str (or (first *command-line-args*) "dist")))
 (def html-template "index.html.template")
 (def html-file "index.html")
@@ -36,11 +36,13 @@
         f (io/file (str directory separator css-file))]
     (when (.isFile f)
       (let [content (-> (slurp f :encoding "UTF-8")
+                        (str/replace "url(/img" "url(img")
+                        (str/replace "url(\"/img" "url(\"img")
                         (str/replace "url(\"../" "url(\"")
                         (str/replace "url(../" "url("))
             _ (println "   > Replace css-file link with inline resource" {:length (count content)
                                                                           :replace-include css-include})
-            font-includes (re-seq #"fonts/\S+.woff2" content)
+            font-includes (re-seq #"\/fonts/\S+.woff2" content)
             content (reduce (fn [content font-include]
                               (let [font-file (-> (str directory separator font-include)
                                                   (str/replace "\\" separator)
@@ -70,4 +72,3 @@
 (delete-directory-recursive (io/file (str directory separator "fonts")))
 
 (println "--- Done ---")
-              

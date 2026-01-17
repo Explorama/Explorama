@@ -10,6 +10,7 @@ rm -rf dist/css
 rm -rf dist/fonts
 rm -rf dist/img
 rm -rf dist/explorama-browser
+rm -rf dist/explorama-browser.zip
 
 # Gather assets (using dev mode to skip cssmin for now)
 echo "Gathering assets..."

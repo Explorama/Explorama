@@ -22,6 +22,8 @@ bundles/*/dist/*
 bundles/**/figwheel-headless.sh
 bundles/**/*report.xml
 
+bundles/server/resources/roadmap.edn
+
 browser_check.edn
 electron_check.edn
 server_check.edn

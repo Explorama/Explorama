@@ -14,5 +14,5 @@
                              target-obj)]
     (if (:valid? pdp-result)
       (try (callback (:policy pdp-result))
-           (catch #?(:clj Throwable :cljs :default) _ (callback)))
+           (catch Throwable _ (callback)))
       (failed-function (:failed pdp-result)))))

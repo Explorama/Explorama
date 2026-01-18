@@ -2,7 +2,7 @@
   (:require [de.explorama.shared.abac.pip :as pip]
             [de.explorama.shared.abac.policy-repository :as pr]
             [de.explorama.shared.abac.util :as util]
-            #?(:clj [taoensso.timbre :refer [error]])))
+            [taoensso.timbre :refer [error]]))
 
 (defn attribute-check
   [attr
@@ -104,12 +104,11 @@
         (:user body)
         (:data body)))
 
-#?(:clj
-   (def pdp-call-route
-     ["/pdp-call"
-      {:post {:handler (fn [{params :parameters}]
-                         (error "not implemented")
-                         {:status 200
-                          :body {:result (-> params
-                                             call-request
-                                             (select-keys [:valid? :failed]))}})}}]))
+(def pdp-call-route
+  ["/pdp-call"
+   {:post {:handler (fn [{params :parameters}]
+                      (error "not implemented")
+                      {:status 200
+                       :body {:result (-> params
+                                          call-request
+                                          (select-keys [:valid? :failed]))}})}}])

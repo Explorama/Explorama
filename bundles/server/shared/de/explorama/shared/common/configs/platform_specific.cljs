@@ -13,10 +13,10 @@
   (defconfig ;TODO r1/config make this proxy url?
     {:name :explorama-origin
      :type :string
-     :default ""
+     :default "localhost:4001"
      :scope :client
      :overwritable? true
-     :doc "Defines if the application is running in multi user mode."}))
+     :doc "Defines the explorama server url"}))
 
 (def explorama-asset-origin
   (defconfig ;TODO r1/config make this proxy url?
@@ -25,4 +25,4 @@
      :default ""
      :scope :client
      :overwritable? true
-     :doc "Defines if the application is running in multi user mode."}))
+     :doc "Defines the assets origin"}))

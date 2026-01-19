@@ -1,26 +1,13 @@
 (ns de.explorama.backend.handler
-  (:require [clojure.java.io :as io]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [compojure.core :refer [defroutes GET]]
             [compojure.handler :refer [site]]
-            [compojure.route :refer [files resources]]
             [de.explorama.backend.common.environment.probe :as probe]
             [de.explorama.backend.frontend-api :as frontend-api]
-            [de.explorama.shared.common.configs.provider :as configp]
-            [hiccup.page :refer [html5]]
-            [jsonista.core :as json]
             [pneumatic-tubes.httpkit :refer [websocket-handler]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [ring.util.response :refer [content-type not-found response]]
+            [ring.util.response :refer [not-found]]
             [taoensso.timbre :as log]))
-
-(def ^:dynamic *app-name*
-  "The file name of the JS app."
-  "app.js")
-
-(def ^:dynamic *app-source*
-  "The source of the app file."
-  (io/resource "public/js/compiled/woco.js"))
 
 (defmacro gen-error [fnc]
   `(try
@@ -31,27 +18,6 @@
        (error e#)
        {:status 400
         :body {:msg (.getMessage e#)}})))
-
-#_
-(defn apply-to-all-buckets [bucket default-bucket f]
-  (try
-    (cond bucket
-          (f (buckets/new-instance bucket))
-          default-bucket
-          (f (buckets/new-instance default-bucket))
-          :else
-          (let [result
-                (mapv (fn [[bucket-key]]
-                        [bucket-key (f (buckets/new-instance bucket-key))])
-                      config/bucket-config)]
-            {:response-data (into {} result)
-             :success (every? (fn [[_ {success :success}]]
-                                success)
-                              result)}))
-    (catch Throwable t
-      (log/error t)
-      {:success false
-       :message "Something went wrong."})))
 
 (defmulti parse-param first)
 
@@ -99,68 +65,14 @@
     (catch Throwable e
       (log/error e))))
 
-(defn- files-only [files]
-  (filter #(.isFile %) files))
-
-(defn- local-assets [path path-to]
-  (let [replacement-path (-> (str/replace path "\\" "/")
-                             (str/replace "//" "/"))]
-    (into []
-          (comp (map #(str/replace % "\\" "/"))
-                (map #(str/replace-first %
-                                         replacement-path
-                                         ""))
-                (map #(str path-to %))
-                (filter #(str/ends-with? % ".css"))
-                (map (fn [path]
-                       [:link {:rel "stylesheet"
-                               :href path
-                               :type "text/css"}])))
-          (->> (io/file path)
-               file-seq
-               files-only))))
-
 (defn prepend [s prefix-line]
   (str prefix-line "\n" s))
 
-(defn page []
-  (html5
-   (into
-    [:head
-     [:meta {:charset "utf-8"}]
-     [:meta {:http-equiv "X-UA-Compatible"
-             :content "IE=edge,chrome=1"}]
-     [:title "Explorama"]
-     [:link {:rel "shortcut icon"
-             :href "img/favicon.ico"}]]
-    (sort-by (fn [[_ {href :href}]] href)
-             (local-assets "resources/public" "asset")))
-   [:body.initial.login
-    [:div#app]
-    [:script {:src "js/woco.js"}]
-    [:script "de.explorama.frontend.woco.app.core.init();"]]))
-
 (defroutes routes
-  (GET "/" [] (page))
-  (GET "/ws" req
+  (GET "/ws" _req
     (if true ; Ignoring token validation for now
       (websocket-handler (frontend-api/routes->tubes))
       {:status 403}))
-  (GET "/js/woco.js" [app]
-    (log/info "Loading js" {:app app :app-name *app-name* :app-source *app-source*})
-    (-> (slurp "resources/public/js/woco.js" :encoding "UTF-8")
-        (prepend
-         (str "const EXPLORAMA_CLIENT_CONFIG = '"
-              (json/write-value-as-string @configp/client-configs)
-              "';"))
-        response
-        (content-type "application/javascript;charset=UTF-8")))
-  (resources "/js/compiled/" {:root "public/js/compiled/"})
-  (resources "/asset/assets/css/" {:root "public/assets/css/"})
-  (resources "/asset/assets/fonts/" {:root "public/assets/fonts/"})
-  (resources "/img/" {:root "public/assets/img/"})
-  (resources "/asset/assets/fonts/" {:root "public/assets/img/"})
-  (resources "/asset/assets/img/" {:root "public/assets/img/"})
   (not-found "")
   #_(fn [{{req :query} :parameters :as req-raw}]
       (println "user-info" req req-raw)

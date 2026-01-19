@@ -1,9 +1,9 @@
 (ns de.explorama.frontend.woco.app.core
   (:require
    ;;This must be on first place to ensure that fi api is set first
+   [de.explorama.frontend.woco.api.core]
    [de.explorama.frontend.woco.config :as frontend-config]
    [de.explorama.shared.common.logging :as logging]
-   [de.explorama.frontend.woco.api.core]
    [de.explorama.frontend.configuration.core :as configuration-core]
    [de.explorama.frontend.data-atlas.core :as data-atlas-core]
    [de.explorama.frontend.indicator.core :as indicator]
@@ -32,18 +32,21 @@
     (info "Starting Explorama..")
     (woco-core/init)
     (rights-roles-core/init)
-    (configuration-core/init)
-    (projects-core/init)
-    (expdb/init)
-    (data-atlas-core/init)
-    (table-core/init)
-    (charts-core/init)
-    (mosaic-core/init)
-    (map-core/init)
-    (search-core/init)
-    (indicator/init)
-    (algorithms-core/init)
-    (reporting-plugin-core/init)
+    (.setTimeout js/window
+                 (fn []
+                   (configuration-core/init)
+                   (projects-core/init)
+                   (expdb/init)
+                   (data-atlas-core/init)
+                   (table-core/init)
+                   (charts-core/init)
+                   (mosaic-core/init)
+                   (map-core/init)
+                   (search-core/init)
+                   (indicator/init)
+                   (algorithms-core/init)
+                   (reporting-plugin-core/init))
+                 500)
     (info "Frontend started")
     (catch :default e
       (error e "Initalization failed - force app crash")

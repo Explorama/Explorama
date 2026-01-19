@@ -19,6 +19,26 @@
        {:status 400
         :body {:msg (.getMessage e#)}})))
 
+#_(defn apply-to-all-buckets [bucket default-bucket f]
+    (try
+      (cond bucket
+            (f (buckets/new-instance bucket))
+            default-bucket
+            (f (buckets/new-instance default-bucket))
+            :else
+            (let [result
+                  (mapv (fn [[bucket-key]]
+                          [bucket-key (f (buckets/new-instance bucket-key))])
+                        config/bucket-config)]
+              {:response-data (into {} result)
+               :success (every? (fn [[_ {success :success}]]
+                                  success)
+                                result)}))
+      (catch Throwable t
+        (log/error t)
+        {:success false
+         :message "Something went wrong."})))
+
 (defmulti parse-param first)
 
 (defmethod parse-param :default [[_ _]] nil)

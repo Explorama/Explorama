@@ -69,98 +69,98 @@
                                         :vertical config/details-view-vertical-namespace})
      (js/console.log "init woco event")
      {:dispatch-later [{:ms 3000 :dispatch [:de.explorama.frontend.woco.page/update-workspace-rect]}] ;; Otherwise container is not mounted -> size is wrong
-      :dispatch-n (concat [[:de.explorama.frontend.common.tubes/init-tube user-info
-                            [[:backend-tube [ws-api/roles-and-users]
-                              {:client-callback [ws-api/roles-and-users-result]}]
-                             [:dispatch [fi-ws-api/user-preferences :backend-tube]]]]
-                           [::registry/register-ui-service :update-user-info-event-vec
-                            [:de.explorama.frontend.common.tubes/update-user-info]]
+      :dispatch-n [[:de.explorama.frontend.common.tubes/init-tube user-info
+                    [[:backend-tube [ws-api/roles-and-users]
+                      {:client-callback [ws-api/roles-and-users-result]}]
+                     [:dispatch [fi-ws-api/user-preferences :backend-tube]]]]
+                   [::registry/register-ui-service :update-user-info-event-vec
+                    [:de.explorama.frontend.common.tubes/update-user-info]]
 
-                           [:de.explorama.frontend.woco.navigation.control/reset-position true]
-                           [::registry/register-ui-service
-                            :clean-workspace
-                            ::clean-workspace
-                            [::clean-workspace]]
-                           [::registry/register-ui-service :modules "details-view-sidebar" details-view/sidebar-view]
-                           [::registry/register-ui-service :modules "presentation-sidebar-window" presentation-sidebar/sidebar-view]
-                           [::registry/register-ui-service
-                            :welcome-section
-                            ::welcome/cards
-                            {:order 10
-                             :render-fn welcome/cards}]
-                           [::registry/register-ui-service
-                            :welcome-section
-                            ::welcome/tips
-                            {:order 30
-                             :render-fn welcome/tips}]
-                           [::tools/register {:id "workspace-export"
-                                              :action-key :export
-                                              :icon "icon-download"
-                                              :tooltip-text [::i18n/translate :menusection-export]
-                                              :title "Export"
-                                              :tool-group :project
-                                              :sort-order 200
-                                              :action [:de.explorama.frontend.woco.screenshot.core/export-tab]}]
-                           [::tools/register {:id "reporting-export"
-                                              :action-key :export
-                                              :icon "icon-download"
-                                              :tooltip-text [::i18n/translate :menusection-export]
-                                              :title "Export"
-                                              :tool-group :reporting
-                                              :sort-order 200
-                                              :action [:de.explorama.frontend.woco.screenshot.core/export-tab]}]
-                           (when explorama-multi-user
-                             [::tools/register {:id "woco-logout" ;Move to rights-roles itself?
-                                                :icon "icon-sign-out"
-                                                :action logout-event
-                                                :action-key :*
-                                                :sort-order 2
-                                                :tool-group :header
-                                                :header-group :right
-                                                :tooltip-text [::i18n/translate :log-out-tooltip]}])
-                           [::tools/register {:id "presentation-edit"
-                                              :icon "icon-presentation"
-                                              :action-key :presentation
-                                              :action [:de.explorama.frontend.woco.presentation.core/toggle-modes :editing :standard]
-                                              :tool-group :header
-                                              :header-group :left
-                                              :sort-order 4
-                                              :tooltip-text [::i18n/translate :presentation-mode]}]
-                           [::tools/register {:id "details-view"
-                                              :icon "icon-details-view"
-                                              :action [::details-view/open-details-view false]
-                                              :action-key :*
-                                              :sort-order 1
-                                              :tool-group :header
-                                              :header-group :middle
-                                              :tooltip-text [::i18n/translate :details-view-title]}]
-                           [::tools/register {:icon :note
-                                              :sort-order 6
-                                              :action-key :*
-                                              :tooltip-text [::i18n/translate :notes]
-                                              :id config/note-id
-                                              :tool-group :bar
-                                              :bar-group :middle
-                                              :vertical config/notes-vertical-str
-                                              :action [::notes/spawn-new-note]}]
-                           (fi/call-api [:tabs :register-event-vec]
-                                        {:context-id (str config/default-namespace (random-uuid))
-                                         :content-context :project
-                                         :origin config/default-namespace
-                                         :label (re-frame/subscribe (fi/call-api :statusbar-display-sub-vec))
-                                         :on-render page/workspace
-                                         :active? true})
-                           [::registry/register-ui-service :modules config/note-id notes-view/view]
-                           (papi-register config/notes-vertical-str plugin-impl/desc)
-                           [::overlay/register ::welcome/page welcome/page]
-                           [::wwc/init]
-                           [::wwce/init]
-                           [::wns/init]
-                           [::wapt/init]]
+                   [:de.explorama.frontend.woco.navigation.control/reset-position true]
+                   [::registry/register-ui-service
+                    :clean-workspace
+                    ::clean-workspace
+                    [::clean-workspace]]
+                   [::registry/register-ui-service :modules "details-view-sidebar" details-view/sidebar-view]
+                   [::registry/register-ui-service :modules "presentation-sidebar-window" presentation-sidebar/sidebar-view]
+                   [::registry/register-ui-service
+                    :welcome-section
+                    ::welcome/cards
+                    {:order 10
+                     :render-fn welcome/cards}]
+                   [::registry/register-ui-service
+                    :welcome-section
+                    ::welcome/tips
+                    {:order 30
+                     :render-fn welcome/tips}]
+                   [::tools/register {:id "workspace-export"
+                                      :action-key :export
+                                      :icon "icon-download"
+                                      :tooltip-text [::i18n/translate :menusection-export]
+                                      :title "Export"
+                                      :tool-group :project
+                                      :sort-order 200
+                                      :action [:de.explorama.frontend.woco.screenshot.core/export-tab]}]
+                   [::tools/register {:id "reporting-export"
+                                      :action-key :export
+                                      :icon "icon-download"
+                                      :tooltip-text [::i18n/translate :menusection-export]
+                                      :title "Export"
+                                      :tool-group :reporting
+                                      :sort-order 200
+                                      :action [:de.explorama.frontend.woco.screenshot.core/export-tab]}]
+                   (when explorama-multi-user
+                     [::tools/register {:id "woco-logout" ;Move to rights-roles itself?
+                                        :icon "icon-sign-out"
+                                        :action logout-event
+                                        :action-key :*
+                                        :sort-order 2
+                                        :tool-group :header
+                                        :header-group :right
+                                        :tooltip-text [::i18n/translate :log-out-tooltip]}])
+                   [::tools/register {:id "presentation-edit"
+                                      :icon "icon-presentation"
+                                      :action-key :presentation
+                                      :action [:de.explorama.frontend.woco.presentation.core/toggle-modes :editing :standard]
+                                      :tool-group :header
+                                      :header-group :left
+                                      :sort-order 4
+                                      :tooltip-text [::i18n/translate :presentation-mode]}]
+                   [::tools/register {:id "details-view"
+                                      :icon "icon-details-view"
+                                      :action [::details-view/open-details-view false]
+                                      :action-key :*
+                                      :sort-order 1
+                                      :tool-group :header
+                                      :header-group :middle
+                                      :tooltip-text [::i18n/translate :details-view-title]}]
+                   [::tools/register {:icon :note
+                                      :sort-order 6
+                                      :action-key :*
+                                      :tooltip-text [::i18n/translate :notes]
+                                      :id config/note-id
+                                      :tool-group :bar
+                                      :bar-group :middle
+                                      :vertical config/notes-vertical-str
+                                      :action [::notes/spawn-new-note]}]
+                   (fi/call-api [:tabs :register-event-vec]
+                                {:context-id (str config/default-namespace (random-uuid))
+                                 :content-context :project
+                                 :origin config/default-namespace
+                                 :label (re-frame/subscribe (fi/call-api :statusbar-display-sub-vec))
+                                 :on-render page/workspace
+                                 :active? true})
+                   [::registry/register-ui-service :modules config/note-id notes-view/view]
+                   (papi-register config/notes-vertical-str plugin-impl/desc)
+                   [::overlay/register ::welcome/page welcome/page]
+                   [::wwc/init]
+                   [::wwce/init]
+                   [::wns/init]
+                   [::wapt/init]]
 
                           ; Overlay configuration - removed for now, because its not suitable for a
                           ; customer release
-                          #_(overlayer-config/events user-info))})))
+      #_(overlayer-config/events user-info)})))
 
 (re-frame/reg-event-fx
  ::clean-workspace
@@ -206,6 +206,7 @@
   (re-frame/dispatch [::scale/update-scale-info]))
 
 (defn ^:export init []
+  (js/console.log "init woco")
   (dev-setup)
   (mount/start)
   (re-frame/dispatch-sync [::db/initialize])
@@ -218,8 +219,6 @@
 
 (zoom-handler/register-handler)
 (fullscreen-handler/register-handler)
-
-
 
 ;; disables default contextmenu when browser console is closed
 (.addEventListener js/document "contextmenu" #(when (and config/disable-default-context-menu?

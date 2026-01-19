@@ -31,8 +31,10 @@
   (try
     (info "Starting Explorama..")
     (woco-core/init)
+    (rights-roles-core/init)
     (configuration-core/init)
     (projects-core/init)
+    (expdb/init)
     (data-atlas-core/init)
     (table-core/init)
     (charts-core/init)
@@ -42,8 +44,6 @@
     (indicator/init)
     (algorithms-core/init)
     (reporting-plugin-core/init)
-    (expdb/init)
-    (rights-roles-core/init)
     (info "Frontend started")
     (catch :default e
       (error e "Initalization failed - force app crash")

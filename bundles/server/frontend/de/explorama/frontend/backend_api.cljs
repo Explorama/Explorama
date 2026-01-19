@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.backend-api
-  (:require [clojure.string :as clj-str]
-            [de.explorama.frontend.common.frontend-interface :as fi]
+  (:require [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.shared.common.configs.platform-specific :as config-shared-platform]
             [de.explorama.frontend.woco.config :as wconfig]
@@ -39,7 +38,7 @@
   (try
     (tubes/dispatch tube-spec event)
     (catch :default e
-      (js/console.error "Error dispatching event" e)))
+      (js/console.error "Error dispatching event" (first event) e)))
   {})
 
 (defn dispatch-n [events]
@@ -48,6 +47,7 @@
   {})
 
 (defn init-tube [{db :db} [_ user-info after-fxs]]
+  (js/console.log "init-tube" user-info)
   (when (nil? @tube-instance)
     (let [client-id (fi/call-api :client-id-db-get db)]
       (reset! tube-instance

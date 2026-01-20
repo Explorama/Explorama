@@ -1,0 +1,8 @@
+{:optimizations :advanced
+ :output-dir "resources/public/js/compiled"
+ :output-to "resources/public/js/compiled/explorama.js"
+ :source-map "resources/public/js/compiled/explorama.js.map"
+ :pretty-print false
+ :infer-externs true
+ :warnings {:undeclared-ns true
+            :undeclared-var true}}

@@ -75,7 +75,6 @@
                      [:dispatch [fi-ws-api/user-preferences :backend-tube]]]]
                    [::registry/register-ui-service :update-user-info-event-vec
                     [:de.explorama.frontend.common.tubes/update-user-info]]
-
                    [:de.explorama.frontend.woco.navigation.control/reset-position true]
                    [::registry/register-ui-service
                     :clean-workspace

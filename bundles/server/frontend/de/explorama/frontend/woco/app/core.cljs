@@ -49,5 +49,4 @@
                  500)
     (info "Frontend started")
     (catch :default e
-      (error e "Initalization failed - force app crash")
-      (js/electronAPI.forceAppCrash))))
+      (error e "Initalization failed - force app crash"))))

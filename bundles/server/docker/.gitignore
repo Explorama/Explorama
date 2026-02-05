@@ -1,0 +1,5 @@
+# Ignore any custom configuration overrides
+*-custom.*
+*-local.*
+*.backup
+*.old

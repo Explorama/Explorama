@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.table.operations.filter
-  (:require ["moment"]
-            [re-frame.core :as re-frame]
+  (:require [re-frame.core :as re-frame]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.table.path :as paths]))
 

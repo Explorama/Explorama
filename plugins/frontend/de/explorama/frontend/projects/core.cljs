@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.projects.core
-  (:require ["moment"]
-            [clojure.set :as cl-set]
+  (:require [clojure.set :as cl-set]
             [clojure.string :as st]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]

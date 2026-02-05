@@ -335,8 +335,8 @@
         (implements? IMapEntry element)
         (let [[key value] element]
           (str (name key) ": " (let [date (util/date<- value)]
-                                 (if (.isValid date)
-                                   (util/date-> date) ;(.format date "YYYY-MM-DD"))
+                                 (if (and date (not (js/isNaN (.getTime date))))
+                                   (util/date-> date)
                                    value))))
         :else element))
 

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.combined
-  (:require ["chart.js/auto$default" :as Chart]
+  (:require ["chart.js" :as ChartJS]
             ["chartjs-adapter-date-fns"]
             ["date-fns"]
             [de.explorama.frontend.common.frontend-interface :as fi]
@@ -109,7 +109,7 @@
                                                            :gridLines {:offsetGridLines true}})}
                                                (map-indexed vector y))}})]
     (when chart-data
-      (cutils/save-instance frame-id (Chart. context (clj->js chart-data)))
+      (cutils/save-instance frame-id (ChartJS context (clj->js chart-data)))
       (cutils/update-chart frame-id)
       (cutils/resize-chart frame-id height width))
     (when render-done

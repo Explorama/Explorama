@@ -1,0 +1,13 @@
+{:output-to "dist/js/out/main.js"
+ :output-dir "dist/js/out"
+ :asset-path "/js/out"
+ :main de.explorama.frontend.woco.app.core
+ :optimizations :simple
+ :target :bundle
+ :bundle-cmd {:none ["npx" "webpack" "--mode=production" "./dist/js/out/main.js" "-o" "./dist/js/bundle"]
+              :default ["npx" "webpack" "--mode=production" "./dist/js/out/main.js" "-o" "./dist/js/bundle"]}
+ :infer-externs true
+ :source-map false
+ :closure-defines {goog.DEBUG false
+                   cljs.core/*global* "window"}
+ :verbose false}

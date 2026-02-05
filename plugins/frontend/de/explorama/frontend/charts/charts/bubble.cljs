@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.bubble
-  (:require ["chart.js/auto"]
+  (:require ["chart.js"]
             ["chartjs-adapter-date-fns"]
             ["date-fns"]
             [de.explorama.frontend.charts.charts.combined :as comb]

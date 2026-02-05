@@ -1,6 +1,5 @@
 (ns de.explorama.frontend.woco.workspace.cubic-bezier
-  (:require ["bezier-easing" :as BezierEasing]))
-
+  (:require ["bezier-easing" :as BezierEasingModule]))
 
 (def nominator 24)
 
@@ -10,7 +9,7 @@
                     (recur (conj acc (/ n nominator)) (inc n))
                     acc)))
 
-(defonce easing-fn (.default ^js BezierEasing 0.32 0.57 0.27 1.02))
+(defonce easing-fn (BezierEasingModule 0.32 0.57 0.27 1.02))
 
 (def curve-points (map (fn [x] [x (easing-fn x)]) slices))
 
@@ -26,7 +25,6 @@
 (defn scale-points [curve-points factor]
   (map (fn [[x y]] [(* factor x) (* factor y)]) curve-points))
 
-
 (defn- calculate-points-impl [[displacement-x displacement-y]
                               [vec-to-c-x vec-to-c-y]
                               distance-to-corner
@@ -41,7 +39,6 @@
                             [(+ displacement-x time-vec-x prog-vec-x)
                              (+ displacement-y time-vec-y prog-vec-y)]))]
     (map calc-actual-pos scaled-points)))
-
 
 (defn calculate-points [[start-x start-y :as start] [end-x end-y]]
   (let [vec-from-orig [(- end-x start-x) (- end-y start-y)]

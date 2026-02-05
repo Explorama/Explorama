@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.pie
-  (:require ["chart.js/auto$default" :as Chart]
+  (:require ["chart.js" :as ChartJS]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-aget]]
@@ -39,7 +39,7 @@
                                         :labels {:fontSize 12
                                                  :boxWidth 10}}}})]
     (when chart-data
-      (cutils/save-instance frame-id (Chart. context (clj->js chart-data)))
+      (cutils/save-instance frame-id ((.-default ChartJS) context (clj->js chart-data)))
       (cutils/resize-chart frame-id height width))
     (when render-done
       (render-done frame-id))))

@@ -10,21 +10,21 @@
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 300; // light
-    src: url('/public/fonts/montserrat-v25-latin-300.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
+    src: url('/fonts/montserrat-v25-latin-300.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
 }
 
 @font-face {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400; // regular
-    src: url('/public/fonts/montserrat-v25-latin-regular.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
+    src: url('/fonts/montserrat-v25-latin-regular.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
 }
 
 @font-face {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 700; // bold
-    src: url('/public/fonts/montserrat-v25-latin-700.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
+    src: url('/fonts/montserrat-v25-latin-700.woff2') format('woff2'); // path specified in relation to the directory structure of the app, not of this repo
 }
 
 /* ========== CLASSES ========== */

@@ -23,7 +23,7 @@
    [taoensso.timbre :refer [debug info]] ;;require all app cores here
    [de.explorama.backend.woco.app.core])) ;;JUST for this build its required
 
-(logging/set-log-level frontend-config/DEFAULT_LOG_LEVEL
+(logging/set-log-level (if frontend-config/debug? "debug" frontend-config/DEFAULT_LOG_LEVEL)
                        {:force-str-output? (not frontend-config/dev-mode?)})
 
 (defn ^:export reload []

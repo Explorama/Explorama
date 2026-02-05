@@ -1,9 +1,8 @@
-(ns de.explorama.frontend.common.calculations.data-acs-client
-  (:require ["moment$default" :as moment]))
+(ns de.explorama.frontend.common.calculations.data-acs-client)
 
 (defn date<- [date-str]
   (if (string? date-str)
-    (moment date-str)
+    (js/Date. date-str)
     date-str))
 
 (defn post-process [data-acs]

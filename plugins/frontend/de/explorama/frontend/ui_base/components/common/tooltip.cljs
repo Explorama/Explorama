@@ -4,7 +4,7 @@
             [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
             [clojure.string :as clj-str]
             [reagent.core :as r]
-            ["react-tooltip-lite$default" :as react-tooltip-lite]))
+            ["react-tooltip-lite" :as react-tooltip-lite-module]))
 
 (def parameter-definition
   {:text {:type [:string :component :derefable]
@@ -65,7 +65,8 @@
                          :arrow-size 10
                          :use-hover? true})
 
-(def tooltip-comp (r/adapt-react-class  react-tooltip-lite))
+(def react-tooltip-lite (.-default react-tooltip-lite-module))
+(def tooltip-comp (r/adapt-react-class react-tooltip-lite))
 
 (defn- keyword->event-name [k]
   (case k

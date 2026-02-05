@@ -1,67 +1,71 @@
 (ns de.explorama.frontend.woco.frame.filter.util
-  (:require ["moment"]
+  (:require ["date-fns" :refer [parse format isBefore isAfter min max getYear]]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.data-format.date-filter :as df]))
 
 ;char for .. when pruning text
 (def prune-char \u2026) ;".." \u2025
 
-(def date-format "YYYY-MM-DD")
+(def date-format "yyyy-MM-dd")
 
 (defn date->moment [dobj]
   (when dobj
-    (js/moment dobj)))
+    (if (string? dobj)
+      (js/Date. dobj)
+      dobj)))
 
 (defn moment->date [^js mobj]
   (when mobj
-    (.toDate mobj)))
+    (if (instance? js/Date mobj)
+      mobj
+      (js/Date. mobj))))
 
 (defn date<-
-  "Parse date-str as a Moment object, using date format \"YYYY-MM-DD\".
+  "Parse date-str as a Date object, using date format \"yyyy-MM-dd\".
    Used for dates as needed by UI description."
   [date-str]
   (cond (string? date-str)
-        (js/moment date-str date-format)
+        (parse date-str date-format (js/Date.))
         (instance? js/Date date-str)
         (date->moment date-str)
         :else date-str))
 
 (defn date->
-  "Format date-obj as a Date string, using date format \"YYYY-MM-DD\".
+  "Format date-obj as a Date string, using date format \"yyyy-MM-dd\".
    Used for dates as needed by Filter description."
   [date-obj]
   (if (string? date-obj)
     date-obj
-    (.format date-obj date-format)))
+    (format date-obj date-format)))
 
 (defn is-before? [^js mobj1 mobj2]
   (try
-    (.isBefore mobj1 mobj2)
-    (catch :default e
+    (isBefore mobj1 mobj2)
+    (catch :default _e
       false)))
 
 (defn is-after? [^js mobj1 mobj2]
   (try
-    (.isAfter mobj1 mobj2)
-    (catch :default e
+    (isAfter mobj1 mobj2)
+    (catch :default _e
       false)))
 
 (defn date-min [& dates]
-  (.min js/moment (clj->js (mapv date<- dates))))
+  (min (clj->js (mapv date<- dates))))
 
 (defn date-max [& dates]
-  (.max js/moment (clj->js (mapv date<- dates))))
+  (max (clj->js (mapv date<- dates))))
 
 (defn year-min [& dates]
   (apply min (mapv #(if (number? %)
                       %
-                      (-> % date<- .year))
+                      (-> % date<- getYear))
                    dates)))
 
 (defn year-max [& dates]
   (apply max (mapv #(if (number? %)
                       %
-                      (-> % date<- .year))
+                      (-> % date<- getYear))
                    dates)))
 
 ;#######################
@@ -182,7 +186,6 @@
                             (desc-to-filter attribute (ui-selection-types attribute) value textsearch?)))
                         selected-ui-attributes)))))
 
-
 ;#######################
 ;    Filter description to UI description
 ;#######################
@@ -201,7 +204,6 @@
      {prop {:std (vec [from-val to-val])}}
      {prop {:std from-val}}))) ;;Handle :includes filter, little bit dirty here
 
-
 (defn- to-date
   ([prop start end]
    (case prop
@@ -212,7 +214,6 @@
    (case prop
      :de.explorama.shared.data-format.dates/month {"date" {:month [:value value :label value]}}
      {"date" {(keyword prop) [{:value value :label value}]}})))
-
 
 (defn- parse-date
   " Parse date filter condition to a map:
@@ -241,8 +242,7 @@
                                    (to-date prop value)))
                 filters))))
 
-
-(defn- parse
+(defn- parse-filter
   " Parse filter conditions to a map:
 
     [:and
@@ -275,7 +275,7 @@
   [filter]
   (if (df/filter-contains-date? filter)
     (parse-date filter)
-    (parse filter)))
+    (parse-filter filter)))
 
 (defn filter-desc->ui-desc
   "Transform the Filter description to UI App description.

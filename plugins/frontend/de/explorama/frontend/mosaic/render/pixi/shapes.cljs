@@ -153,8 +153,8 @@
              (reset! mouse-down-atom nil))))
     :else
     (.on ^js container on #(func (pc/modifier %)
-                             (pc/coords %)
-                             %))))
+                                 (pc/coords %)
+                                 %))))
 
 (defn- rgb->hex [rgb]
   (-> (Color. (if (vector? rgb)
@@ -165,14 +165,14 @@
 (defn rect [g x y w h c {:keys [a rounded? radius outline] :or {a 1}}]
   (when outline
     (.lineStyle ^js g (clj->js {:width (:width outline)
-                            :color (condp = (:color outline)
-                                     :auto-0
-                                     (rgb->hex (get (color/font-color c a) 0))
-                                     :auto-1
-                                     (rgb->hex (get (color/font-color c a) 1))
-                                     :auto-2
-                                     (rgb->hex (get (color/font-color c a) 2))
-                                     (rgb->hex (:color outline)))})))
+                                :color (condp = (:color outline)
+                                         :auto-0
+                                         (rgb->hex (get (color/font-color c a) 0))
+                                         :auto-1
+                                         (rgb->hex (get (color/font-color c a) 1))
+                                         :auto-2
+                                         (rgb->hex (get (color/font-color c a) 2))
+                                         (rgb->hex (:color outline)))})))
   (.beginFill ^js g (rgb->hex c) a)
   (if rounded?
     (.drawRoundedRect ^js g
@@ -214,7 +214,6 @@
                         :path path
                         :opts opts}
                        (.getChildAt ^js stage stage-num)))
-
 
 (defn img [stage id x y w h {interaction :interaction
                              color :color}]

@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.algorithms.components.charts
-  (:require ["chart.js/auto"]
+  (:require ["chart.js"]
             ["chartjs-adapter-date-fns"]
             ["date-fns"]
             [de.explorama.frontend.ui-base.utils.interop :refer [format safe-aget]]
@@ -87,7 +87,6 @@
                         data-points)]
     {:backgroundColor bg-colors
      :data data-points}))
-
 
 (defn line-chart-config [datasets yAxes xAxes language-function input-datasets backdated-datasets]
   (let [scatter-color [31 40 74]

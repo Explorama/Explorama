@@ -5,29 +5,28 @@
             [re-frame.core :as re-frame]
             [reagent.core :as reagent]
             [de.explorama.frontend.search.config :refer [geo-config]]
-            ["@deck.gl/core" :refer [Deck]]
-            ["@deck.gl/geo-layers" :refer [TileLayer]]
-            ["@deck.gl-community/editable-layers" :refer [EditableGeoJsonLayer DrawRectangleMode]]))
+            [de.explorama.frontend.woco.workarounds.map :as workarounds]
+            ["ol/layer/Tile" :as Tile]
+            ["ol/layer/Vector" :as Vector]
+            ["ol/source/Vector" :as SourceVector]
+            ["ol/source/XYZ" :as SourceXYZ]
+            ["ol/Map" :as Map]
+            ["ol/View" :as View]
+            ["ol-ext/interaction/DrawRegular" :as RegularInteraction]
+            ["ol/events/condition" :as condition]
+            ["ol/format/GeoJSON" :as GeoJSON]))
 
-#_#_#_#_#_#_#_#_#_#_(def ^:private Tile (aget js/ol "layer" "Tile"))
-                  (def ^:private Vector (aget js/ol "layer" "Vector"))
-                (def ^:private SourceVector (aget js/ol "source" "Vector"))
-              (def ^:private SourceXYZ (aget js/ol "source" "XYZ"))
-            (def ^:private Map (aget js/ol "Map"))
-          (def ^:private View (aget js/ol "View"))
-        (def ^:private RegularInteraction (aget js/ol "interaction" "DrawRegular"))
-      (def ^:private condnever (aget js/ol "events" "condition" "never"))
-    (def ^:private GeoJSON (aget js/ol "format" "GeoJSON"))
-  (def ^:private default-proj "EPSG:900913")
+(def ^:private default-proj "EPSG:900913")
 
-#_(defn- set-event-pixel-fn [workspace-scale-fn]
-    (when-not (aget js/ol "exploramaInitDone")
+(defn- set-event-pixel-fn [workspace-scale-fn]
+  ;; issue #60
+  #_(when-not @workarounds/initialized?
     ;Based on the given example from this issue
     ;https://github.com/openlayers/openlayers/issues/13283
-      (aset js/ol "PluggableMap" "prototype" "getEventPixel"
+      (aset (.-ol js/window) "PluggableMap" "prototype" "getEventPixel"
             (fn [event]
               (this-as ^js this
-                       (let [scale @workspace-scale-fn
+                       (let [scale @(workspace-scale-fn)
                              viewportPosition (.getBoundingClientRect (.getViewport this))
                              size (clj->js
                                    [(aget viewportPosition "width")
@@ -42,115 +41,94 @@
                                             (aget size "1"))
                                          (aget viewportPosition "height"))
                                       scale)])))))
-      (aset js/ol "exploramaInitDone" true)))
+      (reset! workarounds/initialized? true)))
+
 (defn- new-map-instance [target rect-state internal-state init-value woco-zoom]
-  #_(set-event-pixel-fn woco-zoom)
+  (set-event-pixel-fn woco-zoom)
   (let [init-value (filterv number? init-value)
         init-value (if (= 4 (count init-value))
                      init-value
                      [])
-        _ (js/console.log "init-value" init-value)
-        layer (EditableGeoJsonLayer. (clj->js {:data {}
-                                               :id (str "search-bounding-box" target)
-                                               :mode DrawRectangleMode
-                                               :onEdit (fn [updatedData]
-                                                         (js/console.log updatedData))}))
-        base-layer (TileLayer. (clj->js {:id (str "search-base-layer"  target)
-                                         :data {:url "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"}
-                                         :maxZoom 19
-                                         :minZoom 0}))
-        deck (Deck. (clj->js {:initialViewState {:zoom 0
-                                                 :pitch 0
-                                                 :bearing 0
-                                                 :longitude 0
-                                                 :latitude 0}
-                              :parent (js/document.getElementById target)
-                              :controller true
-                              :layers [base-layer]}))
-
-        _ (js/console.log "deck" (.-isInitialized deck))
-
-        #_#_layers #js[(Tile. (clj->js (merge {:source (SourceXYZ.
-                                                        (clj->js (merge {:projection default-proj
-                                                                         :crossOrigin ""}
-                                                                        (:source geo-config))))}
-                                              (dissoc geo-config :source))))]
-
-        #_#_view (View. #js{:zoom 0
-                            :center #js[0 0]})
-
-        #_#_map-obj (Map. #js{:target target
-                              :view view
-                              :layers layers})
-        #_#_vectorsource-obj (SourceVector.)
-        #_#_vector-obj (Vector. #js{:name "BoundingBox"
-                                    :source vectorsource-obj})
-        #_#_interaction (RegularInteraction. #js{:source (.getSource vector-obj)
-                                                 :sides 4
-                                                 :canRotate false
-                                                 :condition (fn [e]
-                                                              (and @rect-state
-                                                                   (= 0 (aget e "originalEvent" "button"))))
-                                                 :centerCondition condnever
-                                                 :squareCondition condnever})]
-    #_(when-not (empty? init-value)
-        (let [features (.readFeatures (GeoJSON.)
-                                      (clj->js {"type" "LineString",
-                                                "coordinates" [[(get init-value 3)
-                                                                (get init-value 0)]
-                                                               [(get init-value 1)
-                                                                (get init-value 0)]
-                                                               [(get init-value 1)
-                                                                (get init-value 2)]
-                                                               [(get init-value 3)
-                                                                (get init-value 2)]
-                                                               [(get init-value 3)
-                                                                (get init-value 0)]]})
-                                      #js{:dataProjection "EPSG:4326"
-                                          :featureProjection
-                                          (get-in geo-config [:source :projection] default-proj)})]
-          (.fit view
-                (.getExtent (.getGeometry (aget features 0)))
-                #js{:padding #js[5 15 5 15]})
-          (.addFeatures vectorsource-obj
-                        features)))
-
-    #_(.addLayer map-obj vector-obj)
-
-    #_(.addInteraction map-obj interaction)
-
-    #_(.on interaction "drawstart"
-           (fn [_]
-             (.clear vectorsource-obj)))
-
-    #_(.on interaction "drawend"
-           (fn [_]
-             (let [geo (->> (.getFeatures vectorsource-obj)
-                            first
-                            .getGeometry)
-                   geo-clone (.clone geo)
-                   coords (-> geo-clone
-                              (.transform (get-in geo-config [:source :projection] default-proj)
-                                          "EPSG:4326")
-                              (.getCoordinates geo)
-                              js->clj
-                              first)
-                   max-values (reduce (fn [[mlat mlng] [lng lat]]
-                                        [(max mlat lat)
-                                         (max mlng lng)])
-                                      [-90 -180]
-                                      coords)
-                   min-values (reduce (fn [[mlat mlng] [lng lat]]
-                                        [(min mlat lat)
-                                         (min mlng lng)])
-                                      [90 180]
-                                      coords)
-                   coords (into min-values
-                                max-values)]
-               (reset! internal-state coords)
-               (reset! rect-state false))))
-    {:map deck
-     :editable-layer layer}))
+        layers #js[(new (.-default Tile)
+                        (clj->js (merge {:source (new (.-default SourceXYZ)
+                                                      (clj->js (merge {:projection default-proj
+                                                                       :crossOrigin ""}
+                                                                      (:source geo-config))))}
+                                        (dissoc geo-config :source))))]
+        view (new (.-default View)
+                  #js{:zoom 0
+                      :center #js[0 0]})
+        map-obj (new (.-default Map)
+                     #js{:target target
+                         :view view
+                         :layers layers})
+        vectorsource-obj (new (.-default SourceVector))
+        vector-obj (new (.-default Vector)
+                        #js{:name "BoundingBox"
+                            :source vectorsource-obj})
+        interaction (new (.-default RegularInteraction)
+                         #js{:source (.getSource vector-obj)
+                             :sides 4
+                             :canRotate false
+                             :condition (fn [e]
+                                          (and @rect-state
+                                               (= 0 (aget e "originalEvent" "button"))))
+                             :centerCondition condition/never
+                             :squareCondition condition/never})]
+    (when-not (empty? init-value)
+      (let [features (.readFeatures (new (.-default GeoJSON))
+                                    (clj->js {"type" "LineString",
+                                              "coordinates" [[(get init-value 3)
+                                                              (get init-value 0)]
+                                                             [(get init-value 1)
+                                                              (get init-value 0)]
+                                                             [(get init-value 1)
+                                                              (get init-value 2)]
+                                                             [(get init-value 3)
+                                                              (get init-value 2)]
+                                                             [(get init-value 3)
+                                                              (get init-value 0)]]})
+                                    #js{:dataProjection "EPSG:4326"
+                                        :featureProjection
+                                        (get-in geo-config [:source :projection] default-proj)})]
+        (.fit view
+              (.getExtent (.getGeometry (aget features 0)))
+              #js{:padding #js[5 15 5 15]})
+        (.addFeatures vectorsource-obj
+                      features)))
+    (.addLayer map-obj vector-obj)
+    (.addInteraction map-obj interaction)
+    (.on interaction "drawstart"
+         (fn [_]
+           (.clear vectorsource-obj)))
+    (.on interaction "drawend"
+         (fn [_]
+           (let [geo (->> (.getFeatures vectorsource-obj)
+                          first
+                          .getGeometry)
+                 geo-clone (.clone geo)
+                 coords (-> geo-clone
+                            (.transform (get-in geo-config [:source :projection] default-proj)
+                                        "EPSG:4326")
+                            (.getCoordinates geo)
+                            js->clj
+                            first)
+                 max-values (reduce (fn [[mlat mlng] [lng lat]]
+                                      [(max mlat lat)
+                                       (max mlng lng)])
+                                    [-90 -180]
+                                    coords)
+                 min-values (reduce (fn [[mlat mlng] [lng lat]]
+                                      [(min mlat lat)
+                                       (min mlng lng)])
+                                    [90 180]
+                                    coords)
+                 coords (into min-values
+                              max-values)]
+             (reset! internal-state coords)
+             (reset! rect-state false))))
+    {:map map-obj
+     :vector-source vectorsource-obj}))
 
 (defn- location-react-comp [dom-id instance alter-state rect-state internal-state init-value woco-zoom]
   (reagent/create-class {:display-name dom-id
@@ -164,7 +142,6 @@
                                             :height 50})}])
                          :component-did-mount
                          (fn [_]
-                           (js/console.log "component-did-mount")
                            (reset! instance
                                    (new-map-instance dom-id rect-state internal-state init-value woco-zoom)))
                          :should-component-update
@@ -174,7 +151,7 @@
                          (fn [_ _])
                          :component-will-unmount
                          (fn [_]
-                           #_(.destroy @instance))}))
+                           (.setTarget (:map @instance) nil))}))
 
 (defn location-input [{:keys [path frame-id on-change extra-style child]}]
   (let [dom-id (str path frame-id "-loc")

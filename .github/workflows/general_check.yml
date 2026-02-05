@@ -8,96 +8,44 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: write
+  contents: read
+
 jobs:
-  ancient:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/explorama/images/build-image:latest
-    steps:
-    - uses: actions/checkout@v4
-    - run: apk add --no-cache tar
-    - name: Cache dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: "m2-browser-${{ hashFiles('bundles/browser/project.clj') }}"
-    - name: Run ancient browser
-      run: |
-       cd bundles/browser
-       lein ancient > browser_ancient.txt || true
-    - name: Run ancient electron
-      run: |
-       cd bundles/electron
-       lein ancient > electron_ancient.txt || true
-    - name: Run merge ancients as output
-      run: bb tools/ancient-report/ancient-report.clj
-    - name: Add Ancient PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
-      with:
-        recreate: true
-        path: ancient-report.md
-    - name: Write to Job Summary
-      run: cat ancient-report.md >> $GITHUB_STEP_SUMMARY
   clj-kondo:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/explorama/images/build-image:latest
     steps:
-    - uses: actions/checkout@v4
-    - run: apk add --no-cache tar
-    - name: Cache dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: "m2-browser-${{ hashFiles('bundles/browser/project.clj') }}"
-    - name: check browser bundle
-      continue-on-error: true
-      run: |
-        cd bundles/browser
-        clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./frontend-integrations) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../browser_check.edn
-    - name: check electron bundle
-      continue-on-error: true
-      run: |
-        cd bundles/electron
-        clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./frontend-integrations) --lint $(bash ../../tools/list-files ./test) --lint $(bash ../../tools/list-files ./main) --config '{:output {:format :edn}}' > ../../electron_check.edn
-    - name: check lib abac
-      continue-on-error: true
-      run: |
-        cd libs/abac
-        clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../abac_check.edn
-    - name: check lib cache
-      continue-on-error: true
-      run: |
-        cd libs/cache
-        clj-kondo --lint $(bash ../../tools/list-files ./src) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../cache_check.edn
-    - name: check lib data-format-lib
-      continue-on-error: true  
-      run: |
-        cd libs/data-format-lib
-        clj-kondo --lint $(bash ../../tools/list-files ./src) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../data-format-lib_check.edn
-    - name: check lib data-transformer
-      continue-on-error: true
-      run: |
-        cd libs/data-transformer
-        clj-kondo --lint $(bash ../../tools/list-files ./src) --config '{:output {:format :edn}}' > ../../data-transformer_check.edn
-    - name: check lib ui-base
-      continue-on-error: true
-      run: |
-        cd libs/ui-base
-        clj-kondo --lint $(bash ../../tools/list-files ./src) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../ui-base_check.edn
-    - name: check plugins
-      continue-on-error: true
-      run: |
-        cd plugins
-        clj-kondo --lint $(bash ../tools/list-files ./backend) --lint $(bash ../tools/list-files ./frontend) --lint $(bash ../tools/list-files ./shared) --lint $(bash ../tools/list-files ./backend_test) --lint $(bash ../tools/list-files ./frontend_test) --lint $(bash ../tools/list-files ./shared_test) --config '{:output {:format :edn}}' > ../plugins_check.edn
-    - name: generate clj-kondo report
-      run: bb tools/clj-kondo-report/clj-kondo-report.clj
-    - name: Add Clj-Kondo PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
-      with:
-        recreate: true
-        path: report.md
-    - name: Write to Job Summary
-      run: cat report.md >> $GITHUB_STEP_SUMMARY
+      - uses: actions/checkout@v6
+      - run: apk add --no-cache tar
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: "m2-browser-${{ hashFiles('bundles/browser/project.clj') }}"
+      - name: check browser bundle
+        continue-on-error: true
+        run: |
+          cd bundles/browser
+          clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../browser_check.edn
+      #- name: check electron bundle
+      #  continue-on-error: true
+      #  run: |
+      #    cd bundles/electron
+      #    clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./frontend-integrations) --lint $(bash ../../tools/list-files ./test) --lint $(bash ../../tools/list-files ./main) --config '{:output {:format :edn}}' > ../../electron_check.edn
+      #- name: check server bundle
+      #  continue-on-error: true
+      #  run: |
+      #    cd bundles/server
+      #    clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./frontend-integrations) --lint $(bash ../../tools/list-files ./test) --lint $(bash ../../tools/list-files ./main) --config '{:output {:format :edn}}' > ../../server_check.edn
+      - name: check plugins
+        continue-on-error: true
+        run: |
+          cd plugins
+          clj-kondo --lint $(bash ../tools/list-files ./backend) --lint $(bash ../tools/list-files ./frontend) --lint $(bash ../tools/list-files ./shared) --lint $(bash ../tools/list-files ./backend_test) --lint $(bash ../tools/list-files ./frontend_test) --lint $(bash ../tools/list-files ./shared_test) --config '{:output {:format :edn}}' > ../plugins_check.edn
+      - name: generate clj-kondo report
+        run: bb tools/clj-kondo-report/clj-kondo-report.clj
+      - name: Write to Job Summary
+        run: cat report.md >> $GITHUB_STEP_SUMMARY

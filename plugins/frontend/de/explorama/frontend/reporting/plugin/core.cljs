@@ -51,14 +51,12 @@
    (let [{:keys [user-info-db-get]
           service-register :service-register-event-vec} (fi/api-definitions)
          user-info (user-info-db-get db)]
-     {:fx [[:dispatch [::tubes/init-tube user-info]]
-           [:dispatch (service-register :update-user-info-event-vec
+     {:fx [[:dispatch (service-register :update-user-info-event-vec
                                         ::tubes/update-user-info)]
 
-           [:dispatch (service-register
-                       :clean-workspace
-                       ::clean-workspace
-                       [::clean-workspace])]
+           [:dispatch (service-register :clean-workspace
+                                        ::clean-workspace
+                                        [::clean-workspace])]
            [:dispatch (service-register :modules "reporting-sidebar" sidebar/content)]
            [:dispatch (service-register :provider config/default-namespace reporting-flags/provide-flags)]
            [:dispatch (service-register :logout-events :reporting-logout [::logout])]
@@ -73,7 +71,6 @@
    :close-event [::clean-up-services]
    :position :right
    :vertical "reporting"})
-
 
 (re-frame/reg-event-fx
  ::clean-up-services

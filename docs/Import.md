@@ -1,9 +1,14 @@
 # Import
 
-There is currently only one way to import data into Explorama via CSV files and the import dialog. However the options the UI provides are fairly limited. Thats you can also import data by providing a mapping file. You can create this mapping file by hand or download it after uploading the CSV file in the import dialog (or use the cli-transformation tool).
-
+There is currently only one way to import data into Explorama
+via CSV files and the import dialog.However the options the
+UI provides are fairly limited.
+Thats you can also import data by providing a mapping file.
+You can create this mapping file by hand or download it after
+uploading the CSV file in the import dialog (or use the cli-transformation tool).
 
 Here is an example:
+
 ```clojure
  {:meta-data
   {:file-format :csv, :csv {:separator ",", :quote "\"", :limit 500}},
@@ -38,7 +43,7 @@ Here is an example:
         {:name [:convert ["director" ", "]],
          :global-id [:id-generate ["director" :text] :name],
          :type [:value "director"]}
-        
+
         {:name [:field "type"],
          :global-id [:id-generate ["type" :text] :name],
          :type [:value "type"]}
@@ -51,6 +56,8 @@ Here is an example:
        :texts [[:field "description" ""]]}]}]}})
 ```
 
-Full schema can be found [here](../libs/data-transformer/src/de/explorama/shared/data_transformer/schema.cljc). A description what everything does will follow soon.
+Full schema can be found [here](../plugins/shared/src/de/explorama/shared/data_transformer/schema.cljc).
+A description what everything does will follow soon.
 
-The resulting data for the import is specified [here](../libs/data-transformer/src/de/explorama/shared/data_transformer/spec.cljc).
+The resulting data for the import is specified [here](../plugins/shared/src/de/explorama/shared/data_transformer/spec.cljc).
+

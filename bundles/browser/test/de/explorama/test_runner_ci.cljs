@@ -32,7 +32,7 @@
             [de.explorama.shared.data-format.standard-filter-test]
             [de.explorama.shared.cache.data-tiles.tiling-test]
             #_[de.explorama.shared.cache.data-tiles.cache-test]
-            #_[de.explorama.shared.cache.data-tiles.multi-layer-cache-test]
+            [de.explorama.shared.cache.data-tiles.multi-layer-cache-test]
             [de.explorama.backend.algorithms.data.future-data-test]
             [de.explorama.backend.algorithms.data.redo-test]
             [de.explorama.backend.algorithms.data.train-data-test]

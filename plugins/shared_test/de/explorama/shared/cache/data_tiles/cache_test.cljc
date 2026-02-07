@@ -7,9 +7,8 @@
             [de.explorama.shared.cache.data-tiles.tiling-test :as dt-test]
             [de.explorama.shared.cache.test-common :as tc]
             [de.explorama.shared.common.data.data-tiles :as tiles]
+            [de.explorama.shared.common.unification.misc :refer [cljc-uuid]]
             [taoensso.tufte :as tufte]))
-
-(defn uuid [] (java.util.UUID/randomUUID))
 
 (def profile-tests? false)
 
@@ -82,7 +81,7 @@
                1000)
              (repeatedly
               (fn []
-                {"id" (str (uuid))
+                {"id" (cljc-uuid)
                  "organisation" (gen-sample organisations organisations-count)
                  "country" (gen-sample countries countries-count)
                  "string-fact-1" (gen-sample string-fact-1 string-fact-1-count)
@@ -416,9 +415,9 @@
 
     (cache-api/lookup cache dt-test/data-tiles-2 {})
 
-    (.evict-by-query cache query-params)
+    (cache-api/evict-by-query cache query-params)
     (is (every? (fn [data-tile]
-                  (let [r (.has? cache data-tile)]
+                  (let [r (cache-api/has? cache data-tile)]
                     (or (and (should-cache-fn data-tile)
                              r)
                         (and (not (should-cache-fn data-tile))
@@ -428,7 +427,7 @@
     (cache-api/lookup cache dt-test/data-tiles-2 {})
 
     (is (every? (fn [data-tile]
-                  (.has? cache data-tile))
+                  (cache-api/has? cache data-tile))
                 dt-test/data-tiles-2))))
 
 (deftest transparent-delete-by-query-test

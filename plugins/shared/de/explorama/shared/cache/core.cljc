@@ -55,9 +55,9 @@
    {:size 150000}
 
    (atom {"mosaic" {:identifier "mosaic"
-                   :sub    ["ac"]
-                   :invalidate "http://mosaic:port/cache/invalidate"
-                   :delete-by-query "http://mosaic:port/cache/delete-by-query"}})
+                    :sub    ["ac"]
+                    :invalidate "http://mosaic:port/cache/invalidate"
+                    :delete-by-query "http://mosaic:port/cache/delete-by-query"}})
 
    (atom {"search" {:identifier "search"
                     :datatiles  "http://suche:port/data-tiles"}})
@@ -114,9 +114,9 @@
    {:size 150000}
 
    (atom {"mosaic" {:identifier "mosaic"
-                   :depends    "local"
-                   :invalidate "http://mosaic:port/cache/invalidate"
-                   :delete-by-query "http://mosaic:port/cache/delete-by-query"}})
+                    :depends    "local"
+                    :invalidate "http://mosaic:port/cache/invalidate"
+                    :delete-by-query "http://mosaic:port/cache/delete-by-query"}})
 
    (fn [tiles opts])
    (fn [url body])))
@@ -267,9 +267,9 @@
    {:size 150000}
 
    (atom {"mosaic" {:identifier "mosaic"
-                   :sub    ["ac"]
-                   :invalidate "http://mosaic:port/cache/invalidate"
-                   :delete-by-query "http://mosaic:port/cache/delete-by-query"}})
+                    :sub    ["ac"]
+                    :invalidate "http://mosaic:port/cache/invalidate"
+                    :delete-by-query "http://mosaic:port/cache/delete-by-query"}})
 
    (atom {"search" {:identifier "search"
                     :datatiles  "http://suche:port/data-tiles"}})

@@ -6,8 +6,8 @@
             [de.explorama.shared.common.test-data :as td]))
 
 (def test-data
-  (flatten (concat (vals td/country-a-datasource-a-data)
-                   (vals td/country-b-datasource-a-data))))
+  (vec (flatten (concat (vals td/country-a-datasource-a-data)
+                        (vals td/country-b-datasource-a-data)))))
 
 (t/deftest number-of-events-agg
   (let [number-of-events-dfl-op (get-in agg/descs [:number-of-events :dfl-op])

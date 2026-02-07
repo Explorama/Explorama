@@ -1,0 +1,3 @@
+{:tasks {zprint {:extra-deps {zprint/zprint {:mvn/version "1.3.0"}},
+                 :requires ([zprint.main]),
+                 :task (apply zprint.main/-main *command-line-args*)}}}

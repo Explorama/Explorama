@@ -35,7 +35,8 @@ jobs:
           mv figwheel-headless-ci.sh.template figwheel-headless.sh
       - name: Run tests
         run: |
-          npm run test-ci
+          clj -M:test-ci
+      #         npm run test-ci
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
         if: success() || failure()

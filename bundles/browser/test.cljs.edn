@@ -4,8 +4,7 @@
   :auto-bundle :webpack
   :reload-clj-files #{:cljc}
   :auto-testing true
-  :launch-js "./figwheel-headless.sh"
-  :repl-eval-timeout 300000}
+  :launch-js "./figwheel-headless.sh"}
 {:main de.explorama.test-runner
  :output-to "target/public/cljs-out/test/main.js"
  :output-dir "target/public/cljs-out/test"

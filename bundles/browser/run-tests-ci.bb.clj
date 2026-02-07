@@ -1,7 +1,7 @@
 (require '[babashka.process :refer [shell]]
          '[clojure.string :as str])
 
-(loop [lines (-> (shell {:out :string} "clj -M:test-ci --timeout 360000")
+(loop [lines (-> (shell {:out :string} "clj -M:test-ci")
                  :out
                  (str/split #"\n"))
        result ""

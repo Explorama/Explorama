@@ -11,7 +11,7 @@
             [de.explorama.frontend.mosaic.data-structure.data-format-test]
             [de.explorama.frontend.mosaic.data-structure.nested-test]
             [de.explorama.frontend.mosaic.operations.nested-filter-test]
-            #_[de.explorama.shared.mosaic.group-by-layout-test]
+            [de.explorama.shared.mosaic.group-by-layout-test]
             [de.explorama.frontend.projects.projects-test]
             [de.explorama.frontend.search.core-test]
             [de.explorama.shared.search.date-utils-test]
@@ -30,8 +30,8 @@
             [de.explorama.shared.data-format.operations-test]
             [de.explorama.shared.data-format.simplified-view-test]
             [de.explorama.shared.data-format.standard-filter-test]
-            #_[de.explorama.shared.cache.data-tiles.tiling-test] ; Works locally but not in the CI
-            #_[de.explorama.shared.cache.data-tiles.cache-test] ; Works locally but not in the CI
+            [de.explorama.shared.cache.data-tiles.tiling-test]
+            [de.explorama.shared.cache.data-tiles.cache-test]
             [de.explorama.shared.cache.data-tiles.multi-layer-cache-test]
             [de.explorama.backend.algorithms.data.future-data-test]
             [de.explorama.backend.algorithms.data.redo-test]

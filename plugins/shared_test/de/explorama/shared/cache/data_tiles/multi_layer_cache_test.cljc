@@ -1,6 +1,7 @@
 (ns de.explorama.shared.cache.data-tiles.multi-layer-cache-test
   (:require [clojure.test :refer [deftest is testing]]
             [de.explorama.shared.cache.api :as cache-api]
+            [de.explorama.shared.cache.interfaces.cache :as cache]
             [de.explorama.shared.cache.core :as core]
             [de.explorama.shared.cache.data-tile.transparent.retrieval :as retrieval]
             [de.explorama.shared.cache.data-tiles.cache-test :as ct]
@@ -169,8 +170,7 @@
                          #?(:clj .storage
                             :cljs .-storage)
                          deref
-                         #?(:clj .vals
-                            :cljs .-vals)
+                         cache/vals
                          ((partial apply concat))
                          set)
         evt-index-ids (-> c
@@ -181,7 +181,6 @@
                           deref
                           keys
                           set)]
-    (println "" evt-index-ids " " dt-index-ids)
     (= evt-index-ids dt-index-ids)))
 
 (defn check-delete-query [cache-fn {:keys [query] :as query-params} gen-data]

@@ -4,7 +4,7 @@
             [clojure.string :as string]
             [de.explorama.shared.data-format.date-filter :as f]
             [de.explorama.shared.data-format.dates :refer [safe-subs transform-week
-                                           transform-weekday]]
+                                                           transform-weekday]]
             [de.explorama.shared.data-format.filter-functions :as ff]
             [de.explorama.shared.data-format.vpl :as vpl]
             [de.explorama.shared.common.data.attributes :as attrs]
@@ -60,7 +60,6 @@
              (some nil? params))
     (error error-msg sets)
     (throw (ex-info error-msg {}))))
-
 
 (defonce ^:private time-attributes #{"week" "weekday" "year" "month" "day" "hour" "minute" "seconds"})
 
@@ -705,7 +704,6 @@
                                                cases)]
                              (assoc evt layout-key (layout-map (get colors idx) id))
                              (recur (rest attributes)))))))))))))
-
 
 (def ^:private empty-layout {"color" nil
                              "id" nil})

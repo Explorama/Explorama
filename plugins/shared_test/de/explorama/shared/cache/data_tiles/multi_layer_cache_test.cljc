@@ -1,6 +1,7 @@
 (ns de.explorama.shared.cache.data-tiles.multi-layer-cache-test
   (:require [clojure.test :refer [deftest is testing]]
             [de.explorama.shared.cache.api :as cache-api]
+            [de.explorama.shared.cache.interfaces.cache :as cache]
             [de.explorama.shared.cache.core :as core]
             [de.explorama.shared.cache.data-tile.transparent.retrieval :as retrieval]
             [de.explorama.shared.cache.data-tiles.cache-test :as ct]
@@ -164,15 +165,19 @@
 
 (defn compare-indices [c]
   (let [dt-index-ids (-> c
-                         .storage
-                         .storage
+                         #?(:clj .storage
+                            :cljs .-storage)
+                         #?(:clj .storage
+                            :cljs .-storage)
                          deref
-                         .vals
+                         cache/vals
                          ((partial apply concat))
                          set)
         evt-index-ids (-> c
-                          .storage
-                          .event-index
+                          #?(:clj .storage
+                             :cljs .-storage)
+                          #?(:clj .event-index
+                             :cljs .-event-index)
                           deref
                           keys
                           set)]
@@ -184,9 +189,9 @@
 
     (cache-api/lookup cache gen-data {})
 
-    (.evict-by-query cache query-params)
+    (cache-api/evict-by-query cache query-params)
     (is (every? (fn [data-tile]
-                  (let [r (.has? cache data-tile)]
+                  (let [r (cache-api/has? cache data-tile)]
                     (or (and (should-cache-fn data-tile)
                              r)
                         (and (not (should-cache-fn data-tile))
@@ -196,12 +201,12 @@
     (cache-api/lookup cache gen-data {})
 
     (is (every? (fn [data-tile]
-                  (.has? cache data-tile))
+                  (cache-api/has? cache data-tile))
                 gen-data))))
 
 (defn check-delete-query-2 [cache {:keys [query] :as query-params} gen-data]
   (cache-api/lookup cache gen-data {})
-  (.evict-by-query cache query-params)
+  (cache-api/evict-by-query cache query-params)
   (is (= true (compare-indices cache)))
   (cache-api/lookup cache gen-data {})
   (is (= true (compare-indices cache))))

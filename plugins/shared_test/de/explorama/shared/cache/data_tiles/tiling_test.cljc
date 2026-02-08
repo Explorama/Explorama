@@ -1,5 +1,5 @@
 (ns de.explorama.shared.cache.data-tiles.tiling-test
-  (:require [clojure.test :refer [deftest testing is run-tests]]
+  (:require [clojure.test :refer [deftest testing is]]
             [de.explorama.shared.common.data.data-tiles :as tiles]
             [de.explorama.shared.cache.data-tile.retrieval :as retrieval]))
 
@@ -77,8 +77,6 @@
          {:id id
           identifier-dim identifier})))
 
-
-
 (deftest testing-data-tile-tiling
   (testing "testing data-tile tiling on default configuration"
     (let [config
@@ -94,8 +92,8 @@
                      :small {:partition 4
                              :keys [identifier-dim]}}}
            :workaround-data-tile-classification
-           {:classification [{:match {identifier-dim "search"}
-                              :regex {datasource-dim "DS-C[0-9]+"}
+           {:classification [{:match {identifier-dim "search"
+                                      datasource-dim "DS-C"}
                               :=> :big}
                              {:match {identifier-dim "search"}
                               :regex {datasource-dim "DS-A[0-9]+"}

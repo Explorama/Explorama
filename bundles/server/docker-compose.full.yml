@@ -1,0 +1,36 @@
+# Override for the full containerized mode. Runs the Explorama app in
+# containers instead of bridging to host services via socat.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.full.yml up --build
+#
+# The socat bridges live in docker-compose.dev.yml and are not loaded here, so
+# nothing sits idle; Caddy's upstreams are repointed to the app containers below.
+services:
+  caddy:
+    environment:
+      FRONTEND_UPSTREAM: "app-frontend:80"
+      BACKEND_UPSTREAM: "app-backend:4001"
+    depends_on:
+      - app-backend
+      - app-frontend
+
+  app-backend:
+    build:
+      context: ../..
+      dockerfile: bundles/server/Dockerfile
+      target: backend
+    environment:
+      EXPLORAMA_BIND_ADDRESS: "0.0.0.0"
+      EXPLORAMA_PORT: "4001"
+    expose:
+      - "4001"
+    restart: unless-stopped
+
+  app-frontend:
+    build:
+      context: ../..
+      dockerfile: bundles/server/Dockerfile
+      target: app-frontend
+    expose:
+      - "80"
+    restart: unless-stopped

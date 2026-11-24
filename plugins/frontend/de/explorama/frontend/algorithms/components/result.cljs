@@ -185,7 +185,7 @@
     (let [name (str (translate-function algorithm) (when (not= country :ignore) (str " - " country)))]
       [section {:default-open? false
                 :label
-                [:div.flex.align-items-center
+                [:div.flex.items-center
                  name
                  [traffic-light {:color (:light header)
                                  :hint-text (translate-function (:hint header))}]]}

@@ -6,10 +6,13 @@
             [taoensso.timbre :refer [info]])
   (:gen-class))
 
-(defn- execute-check [[xml-file]]
-  (if-not (seq xml-file)
+(defn- execute-check [[file]]
+  (if-not (seq file)
     (exit 1 "No file given to check.")
-    (t-helper/check xml-file)))
+    (let [result (t-helper/check file)]
+      (if (true? result)
+        (exit 0 (str file " is valid."))
+        (exit 1 (str file " is invalid: " (pr-str result)))))))
 
 #_
 (defn- execute-demo [[mapping source] {:keys [lines extra-files] :as opts}]

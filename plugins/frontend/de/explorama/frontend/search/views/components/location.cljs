@@ -18,6 +18,81 @@
 
 (def ^:private default-proj "EPSG:900913")
 
+;; ---------------------------------------------------------------------------
+;; Tailwind class stacks — migrated from styles/src/scss/components/_search.scss
+;; "Map integration (geographical filtering)" family (.map-container/
+;; .map-actions/.map-hint/.map-input/.hint-text/.ol-zoom). This is the single
+;; owner of this rule family; nothing else in the app selects on these
+;; classes (verified by repo-wide grep before deleting the SCSS block).
+;;
+;; `.map-input` always carried the literal "unselected" class in every
+;; historical revision of this file (`git log -p` shows the two class names
+;; hardcoded together back to the ol-map's introduction) -- the class does
+;; not toggle at runtime. It marks the *branch* of `location-input` where the
+;; widget is in its passive/collapsed display (the `if-not @alter-state` arm,
+;; as opposed to the `.map-container` editing overlay), and that branch IS
+;; the condition. So the `.unselected`-driven declarations
+;; (`.hint-text` opacity, the `::before` overlay tint) are baked in as
+;; unconditional utilities on this element rather than re-implemented behind
+;; a synthetic always-true flag -- inventing a toggle nothing sets would not
+;; be "mirroring the current condition", it would be adding one. If a future
+;; change makes `unselected` genuinely conditional, `hint-text-classes` and
+;; the `before:bg-[...]`/`before:z-[1]` bit of `map-input-classes` are the
+;; two spots to gate.
+(def ^:private map-container-classes
+  "w-full h-full relative")
+
+(def ^:private map-actions-classes
+  "absolute bottom-0 left-0 right-0 m-2.5 flex flex-row justify-between")
+
+(def ^:private map-actions-group-classes
+  "flex gap-1")
+
+(def ^:private map-hint-classes
+  (str "absolute top-2.5 right-16 bottom-auto left-16 py-[0.5em] px-[0.75em] "
+       "rounded-sm text-white bg-[rgba(13.1,14.6,15.3,0.8)] text-xs text-center"))
+
+;; `map-input` marker kept as a bare literal alongside the utility stack
+;; (matches no CSS rule after this migration, harmless hook -- see brief
+;; calibration). `.map-input > div` (the OL map's mounted target div,
+;; rendered by the shared `location-react-comp` also used inside
+;; `.map-container`) is expressed as an `[&>div]:` arbitrary child variant
+;; here rather than threading a class prop through that shared component, so
+;; the `.map-container` usage is untouched. `.ol-zoom` (OpenLayers' own zoom
+;; control, rendered into the mounted map div by the ol library, not by our
+;; hiccup) is hidden the same way via an `[&_.ol-zoom]:` descendant variant.
+;; `ease-[ease]` on every transition below: the SCSS source's `transition:
+;; <props> 120ms;` never names a timing-function, so it defaults to the CSS
+;; initial `ease` -- Tailwind's bare `duration-[120ms]` instead defaults to
+;; `--default-transition-timing-function` (a different cubic-bezier curve),
+;; so `ease-[ease]` is required to match. This mirrors the established
+;; pattern for the same situation elsewhere in this codebase (e.g.
+;; woco/presentation/sidebar.cljs, ui_base/formular/collapsible_list.cljs,
+;; configuration/views/data_management/geographic_attributes.cljs all use
+;; `transition-[prop] duration-[Nms] ease-[ease]` for the same reason).
+(def ^:private map-input-classes
+  (str "map-input relative border border-gray-300 rounded-xs overflow-hidden shadow-xs "
+       "bg-white cursor-pointer transition-[border-color,box-shadow] duration-[120ms] ease-[ease] "
+       "group hover:border-gray-400 hover:shadow-sm "
+       "before:content-[''] before:absolute before:inset-0 "
+       "before:bg-[rgba(255,255,255,0.5)] before:z-[1] "
+       "before:transition-[background-color] before:duration-[120ms] before:ease-[ease] "
+       "[&>div]:m-auto [&>div]:p-0.5 [&>div]:rounded-lg [&>div]:overflow-hidden "
+       "[&_.ol-zoom]:hidden"))
+
+;; opacity-100 baked in (see note above); group-hover:text-gray-900 mirrors
+;; `.map-input:hover .hint-text { color: gray-900 }` -- a genuine
+;; parent-hover-affects-child rule, translated as group/group-hover per
+;; calibration, never a bare `hover:` on this element.
+;; `hint-text` marker kept as a bare literal alongside the utility stack, same
+;; as `map-input` above: `styles/src/scss/base/_themes.scss:316` still selects
+;; `.map-input .hint-text` under `@media (forced-colors: active)` to force
+;; Windows High-Contrast-Mode text color, so the literal token must stay in
+;; the DOM even though normal-mode styling is now fully expressed as utilities.
+(def ^:private hint-text-classes
+  (str "hint-text flex items-center justify-center absolute inset-0 z-[2] opacity-100 "
+       "text-gray-800 transition-[color,opacity] duration-[120ms] ease-[ease] group-hover:text-gray-900"))
+
 (defn- set-event-pixel-fn [workspace-scale-fn]
   ;; issue #60
   #_(when-not @workarounds/initialized?
@@ -165,10 +240,10 @@
       [:<>
        (if-not @alter-state
          (let [passive-label @(re-frame/subscribe [::i18n/translate :search-location-select])]
-           [:div {:class "map-input unselected"
+           [:div {:class map-input-classes
                   :on-click (fn []
                               (reset! alter-state true))}
-            [:span {:class "hint-text"} passive-label]
+            [:span {:class hint-text-classes} passive-label]
             [location-react-comp
              dom-id instance alter-state
              rect-state internal-state
@@ -187,15 +262,15 @@
                                      :search-select-location-tooltip
                                      :search-reset-location-selection-tooltip])]
            [:div.overlay {:style extra-style}
-            [:div.map-container
+            [:div {:class map-container-classes}
              [location-react-comp
               dom-id instance alter-state
               rect-state internal-state
               (or @internal-state
                   @ui-selection)
               woco-zoom]
-             [:div.map-actions
-              [:div
+             [:div {:class map-actions-classes}
+              [:div {:class map-actions-group-classes}
                [button {:title select-location-tooltip
                         :variant (if @rect-state
                                    :primary
@@ -212,7 +287,7 @@
                                      (reset! rect-state false)
                                      (reset! internal-state nil)
                                      (.clear (:vector-source @instance)))}]]
-              [:div
+              [:div {:class map-actions-group-classes}
                [button {:label apply
                         :disabled? (not @internal-state)
                         :variant :secondary
@@ -238,5 +313,5 @@
                           (reset! alter-state false)
                           (on-change))}]]]
              (when @rect-state
-               [:div.map-hint hint])]]))
+               [:div {:class map-hint-classes} hint])]]))
        child])))

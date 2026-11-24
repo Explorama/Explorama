@@ -1,0 +1,123 @@
+/*  Login chrome residual. Everything below is residual: */
+
+/*    - `body.login` is a `body` ELEMENT selector (not a component), carrying a */
+/*      hardcoded `#182f3d` background-color fallback behind the login bg image. */
+/*    - `body.login form label` / `.input .text-input` / `.checkbox input` are */
+/*      shared form-marker CONTEXT OVERRIDES: `.input` / `.text-input` / */
+/*      `.checkbox` are owned by forms_domain/ui_base, this sheet only */
+/*      restyles them underneath `body.login`. */
+/*    - `.explorama-overlay` (+ `.explorama-overlay-content` / `-close` / `h1` */
+/*      / `h2` / `h3` / `p` / `center` / `ul` / `ol` (`&>li` + `::marker` */
+/*      counter) / nested `ul`) is CROSS-CONTEXT content-DOM typography: the */
+/*      `.explorama-overlay` wrapper is rendered by woco/copyright.cljs's */
+/*      `sheet` fn (mounted unconditionally by woco/page.cljs's `main-panel`, */
+/*      reachable both pre- and post-login), and `.explorama-overlay-close` is */
+/*      also used as a button `:extra-class` by woco/tools.cljs's */
+/*      `action-item`. None of this is owner-exclusive + element-expressible, */
+/*      so it stays here verbatim (hardcoded rem sizes, `var(--color-purple-600)`, */
+/*      `counter()`, `::marker`). */
+
+body.login {
+	background: url(/img/woco-bg-login.jpg) center center / cover no-repeat, #182f3d;
+
+	form {
+		label {
+			color: var(--color-gray-100);
+		}
+
+		.input .text-input {
+			border-color: transparent;
+			box-shadow: 0 2px 10px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 6px -4px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+		}
+
+		.checkbox input {
+			border-color: var(--color-white);
+		}
+	}
+}
+
+/*  TODO: perhaps move the explorama-overlay code to somewhere else since this is not exclusive to the login page */
+.explorama-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 250000; /*  TODO: z-index */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background: var(--bg-page) center top no-repeat, linear-gradient(var(--bg-page-gradient-top) 80%, var(--bg-page-gradient-bottom) 80%);
+	transition: transform .2s;
+
+	.explorama-overlay-content {
+		max-width: 768px;
+  		margin: 100px 0;
+	}
+
+	.explorama-overlay-close {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+	}
+
+	h1 {
+		font-size: 2.25rem;
+		font-weight: 300;
+		color: var(--text);
+	}
+
+	h2 {
+		color: var(--color-purple-600);
+		margin: 1.5rem 0 0.5rem;
+		text-transform: uppercase;
+	}
+
+	h3 {
+		font-size: 1.125rem;
+		color: var(--text);
+		margin: 1rem 0 0.25rem;
+	}
+
+	p, center, ul, ol {
+		font-size: 1.125rem;
+		font-weight: 300;
+		color: var(--text);
+	}
+	
+	p {
+		margin: 0 0 1rem;
+		text-align: justify;
+	}
+
+	center {
+		margin: 0 0 1rem;
+	}
+
+	ul {
+		margin: 0;
+		text-align: justify;
+	}
+
+	ol {
+		margin: 0;
+		padding-inline-start: 25px;
+		text-align: justify;
+		counter-reset: item;
+
+		&>li {
+			counter-increment: item;
+			margin: 0 0 1rem;
+
+			&::marker {
+				content: "(" counter(item) ") ";
+			}
+		}
+
+		ul {
+			list-style-type: disc;
+			margin-block-start: 1rem;
+		}
+	}
+}

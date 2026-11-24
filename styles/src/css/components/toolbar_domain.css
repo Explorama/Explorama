@@ -1,0 +1,21 @@
+/*  Residual remnant of components/_toolbar.scss. Every owner-exclusive */
+/*  `.toolbar*` chrome rule is utility stacks in */
+/*    de.explorama.frontend.ui-base.components.misc.toolbar */
+/*  Only these two rules cannot become owner markup and are kept byte-for-byte: */
+
+/*  Pixi vendor DOM: the popout canvas is created by Pixi.js at runtime, not by */
+/*  toolbar.cljs, so its chrome cannot live on a hiccup element. */
+.toolbar-wrapper .toolbar-popout canvas {
+    background-color: var(--bg);
+    vertical-align: bottom;
+    touch-action: none;
+    cursor: inherit;
+}
+
+/*  Preserved verbatim for a zero-behaviour-change migration. In the real DOM the */
+/*  absolutely-positioned `.toolbar-options` is always the toolbar's last child, */
+/*  so no `.toolbar-section` is `:last-child` and this rule never matches; kept */
+/*  here so the compiled cascade is identical to the pre-migration sheet. */
+.toolbar:has(> .toolbar-options) .toolbar-section:last-child {
+    padding-right: 0.75rem;
+}

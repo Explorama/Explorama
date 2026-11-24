@@ -1,9 +1,9 @@
 (ns de.explorama.frontend.projects.mouse-position
-  (:require ["crypto-js"]
+  (:require ["crypto-js" :as CryptoJS]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.tubes :as tubes]
             [de.explorama.frontend.projects.path :as pp]
-            [de.explorama.frontend.projects.tracks :as track]
+            [de.explorama.frontend.common.tracks :as track]
             [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary]]
             [de.explorama.frontend.ui-base.components.misc.core :refer [icon]]
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
@@ -133,8 +133,8 @@
      portal-target-elem)))
 
 (defn username-to-color [username]
-  (let [md5-str (-> (js/CryptoJS.MD5 username)
-                    (.toString js/CryptoJS.enc.Hex))
+  (let [md5-str (-> (.MD5 CryptoJS username)
+                    (.toString (.-Hex (.-enc CryptoJS))))
         r (-> md5-str (subs 0 2) (js/parseInt 16))
         g (-> md5-str (subs 2 4) (js/parseInt 16))
         b (-> md5-str (subs 4 6) (js/parseInt 16))

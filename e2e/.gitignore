@@ -1,0 +1,5 @@
+node_modules/
+out-test/
+test-results/
+playwright-report/
+report.xml

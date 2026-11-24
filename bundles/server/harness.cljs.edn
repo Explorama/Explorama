@@ -1,0 +1,10 @@
+^{:auto-bundle :webpack}
+{:main de.explorama.frontend.ui-base-harness
+ :output-to "target/public/cljs-out/harness/main.js"
+ :output-dir "target/public/cljs-out/harness"
+ :asset-path "/cljs-out/harness"
+ ;; :simple produces one self-contained main_bundle.js (no async goog script
+ ;; loading), so a plain <script> tag boots the app synchronously and
+ ;; deterministically -- essential for reproducible screenshot capture.
+ :optimizations :simple
+ :pretty-print false}

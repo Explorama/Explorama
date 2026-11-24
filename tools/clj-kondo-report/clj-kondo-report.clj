@@ -3,7 +3,8 @@
          '[clojure.string :as str])
 
 (def browser-check (edn/read-string (slurp "browser_check.edn")))
-;;(def electron-check (edn/read-string (slurp "electron_check.edn")))
+(def electron-check (edn/read-string (slurp "electron_check.edn")))
+(def server-check (edn/read-string (slurp "server_check.edn")))
 (def plugins-check (edn/read-string (slurp "plugins_check.edn")))
 
 (def table-header "| file | type | level | row/end row | col/end col | message |
@@ -41,12 +42,9 @@
          "\n\n"
          "Summary \n files: " files " error(s): " error " warning(s): " warning " info(s): " info)))
 
-(let [browser-report (check-result->report "Browser" browser-check)
- ;;     electron-report (check-result->report "Electron" electron-check)
-      plugins-report (check-result->report "Plugins" plugins-check)]
-  (spit "report.md"
-        (str browser-report
-             "\n\n\n"
-  ;;           electron-report
-  ;;           "\n\n\n"
-             plugins-report)))
+(spit "report.md"
+      (str/join "\n\n\n"
+                [(check-result->report "Browser" browser-check)
+                 (check-result->report "Electron" electron-check)
+                 (check-result->report "Server" server-check)
+                 (check-result->report "Plugins" plugins-check)]))

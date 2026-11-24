@@ -1,7 +1,5 @@
 (ns de.explorama.frontend.projects.protocol.core
-  (:require [cljs-time.coerce :as date-coerce]
-            [cljs-time.format :as date-format]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.projects.config :as config]
@@ -19,13 +17,13 @@
             [de.explorama.frontend.ui-base.components.misc.core :refer [icon]]
             [de.explorama.frontend.ui-base.utils.data-exchange :as data-exchange]
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]
+            [de.explorama.shared.common.unification.time :as time]
             [de.explorama.shared.projects.ws-api :as ws-api]
             [goog.string :as goog-string]
             [re-frame.core :as re-frame]
             [re-frame.interop :as re-interop]
             [re-frame.utils :refer [dissoc-in]]
-            [reagent.core :as r]
-            [vimsical.re-frame.cofx.inject :as inject]))
+            [reagent.core :as r]))
 
 (def ^:private init-store-desc
   {:id nil
@@ -106,12 +104,46 @@
 
 ;;; UI part
 
-(def date-formatter (date-format/formatters :date-hour-minute-second-fraction))
+(def date-formatter (time/formatters :date-hour-minute-second-fraction))
 
 (defn timestamp->string [timestamp]
   (when timestamp
-    (date-format/unparse date-formatter
-                         (date-coerce/from-long timestamp))))
+    (time/unparse date-formatter
+                  (time/from-long timestamp))))
+
+;; Element-local chrome for the protocol/snapshot list <li> and its
+;; children. `group` on the <li> drives the group-hover reveal of
+;; .protocol__actions. box-shadow + background are split into mutually-exclusive
+;; default / current-prot-step state classes so exactly one wins. The
+;; protocol__snapshot / current-prot-step markers stay emitted so the residual
+;; selectors in snapshots_domain.css keep matching.
+(def ^:private protocol-li-base-class
+  "group relative flex flex-row content-stretch py-[12px] px-0 text-(--text-secondary) [transition:background-color_120ms]")
+
+(def ^:private protocol-li-default-state-class
+  "[box-shadow:0_-1px_0_var(--border)_inset] hover:bg-(--bg)")
+
+(def ^:private protocol-li-current-state-class
+  "current-prot-step [box-shadow:0_0_0_2px_var(--border-focus)_inset] bg-(--bg-hover)")
+
+(def ^:private protocol-step-class
+  "inline-block ps-[8px] pe-[4px] font-semibold")
+
+(def ^:private protocol-container-class
+  "inline-block grow px-[6px]")
+
+(def ^:private protocol-info-class
+  "flex flex-wrap m-0")
+
+(def ^:private protocol-info-dt-class "w-[20%]")
+(def ^:private protocol-info-dd-class "w-[60%] break-all")
+(def ^:private snapshot-info-dt-class "w-[20%] text-(--primary)")
+(def ^:private snapshot-info-dd-class "w-[60%] break-all text-(--primary)")
+
+(def ^:private protocol-star-class "absolute top-[12px] right-[12px]")
+
+(def ^:private protocol-actions-class
+  "absolute top-[2px] right-[2px] z-10 hidden group-hover:block py-[12px] pr-[12px] pl-[40px] bg-[linear-gradient(to_right,transparent,var(--bg)_25%)] [transition:background_120ms]")
 
 (defn protocol-action [icon-class click-event]
   [button {:variant :secondary
@@ -170,7 +202,7 @@
         dialog-discard-label @(re-frame/subscribe [::i18n/translate :loading-step-dialog-discard-button])
         continue-anyway @(re-frame/subscribe [::i18n/translate :continue-anyway])
         dialog-title (format dialog-title step-count)]
-    [:div.protocol__actions
+    [:div {:class ["protocol__actions" protocol-actions-class]}
      [step-action-button {:icon-class :eye
                           :size :small
                           :event [:de.explorama.frontend.projects.views.confirm-dialog/show-dialog true
@@ -245,11 +277,13 @@
   (let [title-label @(re-frame/subscribe [::i18n/translate :snapshot-title-label])
         description-label @(re-frame/subscribe [::i18n/translate :snapshot-title-description])]
     [:<>
-     [:dt title-label]
-     [:dd {:on-double-click #(re-frame/dispatch [::activate-edit snap-desc])}
+     [:dt {:class snapshot-info-dt-class} title-label]
+     [:dd {:class snapshot-info-dd-class
+           :on-double-click #(re-frame/dispatch [::activate-edit snap-desc])}
       snapshot-title]
-     [:dt description-label]
-     [:dd {:on-double-click #(re-frame/dispatch [::activate-edit snap-desc])}
+     [:dt {:class snapshot-info-dt-class} description-label]
+     [:dd {:class snapshot-info-dd-class
+           :on-double-click #(re-frame/dispatch [::activate-edit snap-desc])}
       snapshot-description]]))
 
 (defn- translate-settings [translate-fn settings]
@@ -284,21 +318,23 @@
                           @(re-frame/subscribe settings-sub)
                           (translate-settings (fn [k] @(re-frame/subscribe [::i18n/translate k]))
                                               settings))]
-    [:dl.protocol__info
+    [:dl {:class ["protocol__info" protocol-info-class]}
      [:<>
       (when snapshot-id
         [snapshot-info snap-desc])
-      [:dt window-string]
-      [:dd (if (string? window-title)
-             (goog-string/truncate window-title config/max-protocol-entry-length)
-             window-title)]
-      [:dt action-title]
-      [:dd action-string]
+      [:dt {:class protocol-info-dt-class} window-string]
+      [:dd {:class protocol-info-dd-class}
+       (if (string? window-title)
+         (goog-string/truncate window-title config/max-protocol-entry-length)
+         window-title)]
+      [:dt {:class protocol-info-dt-class} action-title]
+      [:dd {:class protocol-info-dd-class} action-string]
       (when settings-string
         [:<>
-         [:dt settings-title]
+         [:dt {:class protocol-info-dt-class} settings-title]
          [:dd
-          {:style {:white-space "pre-wrap"}
+          {:class protocol-info-dd-class
+           :style {:white-space "pre-wrap"}
            :title settings-string}
           (goog-string/truncate settings-string config/max-protocol-entry-length)]])]]))
 
@@ -361,21 +397,24 @@
     (when (or (and only-snapshots? snapshot-desc)
               (not only-snapshots?))
       [:li {:id (step-id step-count)
-            :class [(when snapshot-desc "protocol__snapshot")
-                    (when (and (not project-to-load)
-                               step-read-only?
-                               (or (= (:c head) (:c opened-step))
-                                   (and (nil? (:c opened-step)) (= nr-total-step step-count))))
-                      "current-prot-step")]}
-       [:div.protocol__step
+            :class [protocol-li-base-class
+                    (when snapshot-desc "protocol__snapshot")
+                    (if (and (not project-to-load)
+                             step-read-only?
+                             (or (= (:c head) (:c opened-step))
+                                 (and (nil? (:c opened-step)) (= nr-total-step step-count))))
+                      protocol-li-current-state-class
+                      protocol-li-default-state-class)]}
+       [:div {:class ["protocol__step" protocol-step-class
+                      (when snapshot-desc "text-(--primary)")]}
         (.toLocaleString step-count language)
-        [:span.protocol__date
+        [:span.protocol__date {:class "hidden"}
          (timestamp->string (:t head))]]
-       [:div.protocol__container
+       [:div {:class ["protocol__container" protocol-container-class]}
         [step-info project-id step-desc snapshot-desc project-to-load]
         [step-actions snapshot-desc step-count step-desc project-id writable-project? project-to-load]]
        (when snapshot-desc
-         [:div.protocol__star
+         [:div {:class ["protocol__star" protocol-star-class]}
           [icon {:icon :star}]])])))
 
 (defn protocol-list-id [frame-id]
@@ -446,7 +485,7 @@
                                                         (r/as-element [:div])))
                                   :row-renderer (fn [key idx style row]
                                                   (with-meta
-                                                    [:div {:style (assoc style :overflow "auto")}
+                                                    [:div {:style {:overflow "auto"}}
                                                      [protocol-step step-counts (- step-counts idx) row project-id writable-project? only-snapshots? project-to-load]]
                                                     {:key (str "protocol-" idx)}))}]])]]))
 
@@ -524,16 +563,15 @@
 
 (re-frame/reg-event-fx
  ::update-based-events
- [(re-frame/inject-cofx ::inject/sub (with-meta [:de.explorama.frontend.projects.core/loaded-project-id] {:ignore-dispose true}))]
- (fn [{project-id :de.explorama.frontend.projects.core/loaded-project-id
-       db :db} _]
+ (fn [{db :db} _]
    (when (get-in db path/protocol-window-open)
-     (let [user-info (fi/call-api :user-info-db-get db)
+     (let [project-id (loaded-project-id db)
+           user-info (fi/call-api :user-info-db-get db)
            workspace-id (fi/call-api :workspace-id-db-get db)]
        {:backend-tube [ws-api/based-events-route
-                         {:client-callback [ws-api/based-events-result]}
-                         {:project-id project-id
-                          :workspace-id workspace-id} user-info]}))))
+                       {:client-callback [ws-api/based-events-result]}
+                       {:project-id project-id
+                        :workspace-id workspace-id} user-info]}))))
 
 (re-frame/reg-event-fx
  ::request-based-events-for-step-dialog
@@ -670,10 +708,9 @@
 
 (re-frame/reg-event-fx
  ::delete-snapshot
- [(re-frame/inject-cofx ::inject/sub (with-meta [:de.explorama.frontend.projects.core/loaded-project-id] {:ignore-dispose true}))]
- (fn [{project-id :de.explorama.frontend.projects.core/loaded-project-id
-       db :db} [_ counter]]
-   (let [user-info (fi/call-api :user-info-db-get db)]
+ (fn [{db :db} [_ counter]]
+   (let [project-id (loaded-project-id db)
+         user-info (fi/call-api :user-info-db-get db)]
      {:backend-tube [ws-api/delete-snapshot-route
                        {}
                        {:project-id project-id
@@ -682,10 +719,9 @@
 
 (re-frame/reg-event-fx
  ::start-loading-step
- [(re-frame/inject-cofx ::inject/sub (with-meta [:de.explorama.frontend.projects.core/loaded-project-id] {:ignore-dispose true}))]
- (fn [{db :db
-       project-id :de.explorama.frontend.projects.core/loaded-project-id} [_ counter read-only?]]
-   (let [creator-user (when project-id
+ (fn [{db :db} [_ counter read-only?]]
+   (let [project-id (loaded-project-id db)
+         creator-user (when project-id
                         (get-in (p-utils/all-projects db) [project-id :creator]))
          workspace-id (fi/call-api :workspace-id-db-get db)]
      (when-not read-only? ;Make sure on not read-only? to reset protocol

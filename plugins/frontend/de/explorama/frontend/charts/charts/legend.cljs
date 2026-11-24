@@ -77,7 +77,7 @@
                      (re-frame/dispatch [::settings/y-range-request-dataset frame-id]))]
     [:div.input.input--w100
      [label {:label y-range-label}]
-     [:div {:class ["flex" "gap-8" "max-w-full"]}
+     [:div {:class ["flex" "gap-2" "max-w-full"]}
       [input-field {:prevent-dragging? true
                     :extra-class "input--w5"
                     :default-value min-val
@@ -166,10 +166,10 @@
        [y-range-settings frame-id chart-index change-range?])]))
 
 (defn- sum-by-val-render [chart-colors {:keys [label]}]
-  [:div.flex.align-items-center.gap-6
+  [:div.flex.items-center {:class "gap-1.5"}
    [:div {:style {:min-width "0.875rem"}}
     [icon {:icon :mosaic-circle :custom-color (get chart-colors label "#e7e8ea")}]]
-   [:div.truncate-text label]])
+   [:div.truncate label]])
 
 (defn- chart-input-impl [frame-id active-chart-id chart-index {:keys [attribute? size?]}]
   (let [x-options (re-frame/subscribe [::settings/x-options frame-id])
@@ -371,8 +371,8 @@
     {:value (get charts-desc path/chart-desc-id-key)
      :tooltip chart-label
      :label [:div {:class ["flex"
-                           "align-items-center"
-                           "gap-6"]}
+                           "items-center"
+                           "gap-1.5"]}
              [icon {:icon chart-icon}]
              chart-label]
      :disabled-hint disabled-hint-text
@@ -483,7 +483,7 @@
     (when (and show? (seq chart-colors))
       [:<>
        [:span.legend__label color-label]
-        ;; [:dd.truncate-text (join ", " (map #(attr->display-name % labels) attributes))]
+        ;; [:dd.truncate (join ", " (map #(attr->display-name % labels) attributes))]
        [color-code-list frame-id chart-index chart-colors]])))
 
 (defn- chart-desc [frame-id chart-index {:keys [on-maximize show-actions?]}]
@@ -556,7 +556,7 @@
                               :sum-by-label :sum-by-vals-label :chart-attr-label])]
     [:div.panel__subsection.draggable-content>div.subsection__content>div.subsection__element>div.draggable__content
      [:div.subsection__element__title
-      [:div.truncate-text
+      [:div.truncate
        (str chart-component-label " " (inc chart-index))]
       (when (val-or-deref show-actions?)
         [:div.flex {:style {:position :absolute

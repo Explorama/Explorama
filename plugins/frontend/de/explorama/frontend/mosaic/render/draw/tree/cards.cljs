@@ -22,7 +22,7 @@
   (case theme :light "#FFFFFF" :dark "#1B1C1E" "#FFFFFF"))
 
 ; currently unused
-(defn frame-text [instance stage header title overview-factor optional-desc]
+(defn frame-text [instance stage header title optional-desc]
   (let [{:keys [start-x start-y end-x]} optional-desc]
     (text-handler/draw-text-new instance
                                 stage
@@ -33,7 +33,7 @@
                                 nil
                                 nil
                                 title
-                                {:size (* overview-factor (* header font-size-factor))
+                                {:size (* header font-size-factor)
                                  :color white
                                  :adjust-width? true})))
 
@@ -53,7 +53,7 @@
 
 (def border 2)
 
-(defn- leaf-body [instance stage-parent overview-factor title-desc render-path optional-desc]
+(defn- leaf-body [instance stage-parent title-desc render-path optional-desc]
   (let [{:keys [start-x start-y end-x end-y color]} optional-desc
         {:keys [path theme]}
         (gre/state instance)
@@ -162,16 +162,16 @@
     (when optional-desc
       (gre/rect instance
                 stage
-                (* start-x overview-factor)
-                (* start-y overview-factor)
-                (* (- end-x start-x) overview-factor)
-                (* (- end-y start-y) overview-factor)
+                start-x
+                start-y
+                (- end-x start-x)
+                (- end-y start-y)
                 color
                 {:interactive? true
                  :outline {:width 50
                            :color (theme-color theme)}}))))
 
-(defn- group-body [instance stage-parent overview-factor optional-desc]
+(defn- group-body [instance stage-parent optional-desc]
   (let [{:keys [start-x start-y end-x end-y]} optional-desc
         {:keys [theme]} (gre/state instance)
         stage (Container.)]
@@ -181,10 +181,10 @@
     (when optional-desc
       (gre/rect instance
                 stage
-                (* start-x overview-factor)
-                (* start-y overview-factor)
-                (* (- end-x start-x) overview-factor)
-                (* (- end-y start-y) overview-factor)
+                start-x
+                start-y
+                (- end-x start-x)
+                (- end-y start-y)
                 [255 255 255]
                 {:interactive? true
                  :a 0
@@ -195,11 +195,11 @@
   (doseq [[ctx-path ctx] (get-in (gre/state instance) [:contexts stage-key])
           :when (= :leaf (:ctx-type ctx))
           :let [{:keys [title optional-desc]} ctx]]
-    (leaf-body instance stage 1 title ctx-path optional-desc))
+    (leaf-body instance stage title ctx-path optional-desc))
   (doseq [[ctx-path ctx] (get-in (gre/state instance) [:contexts stage-key])
           :when (and (= :group (:ctx-type ctx))
                      (= 1 (count ctx-path)))
           :let [{:keys [optional-desc]} ctx]]
-    (group-body instance stage 1 optional-desc))
+    (group-body instance stage optional-desc))
   [[]
    []])

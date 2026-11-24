@@ -48,9 +48,12 @@ else
 fi
   
 echo ""
-cd ../../styles
+# backend/ and frontend/ sit one level deeper than this script's original
+# location (bundles/electron/), so the repo root is three levels up.
+cd ../../../styles
 bash build.sh $mode
 cd ../assets
+mkdir -p "$RES_PATH/public"
 cp -r "css" $RES_PATH/public/
 cp -r "fonts" $RES_PATH/public/
 cp -r "img" $RES_PATH/public/

@@ -1,0 +1,347 @@
+
+/*  components/indicator: scoped under [id^=woco_frame-indicator-], a LIVE */
+/*  woco-constructed runtime frame id (woco/frame/core.cljs:348), not a plugin */
+/*  class -> attribute-prefix residual by rule. Inner families carry */
+/*  :is()/grid/nth-child/.react-select-container vendor/@include icon/ */
+/*  span[class^=icon-]/-webkit-line-clamp/&:empty/::after/shared-marker */
+/*  overrides, none owner-exclusive + element-expressible without the plugin */
+/*  first adopting an :optional-class marker (no emitter does). */
+/*  `.indicator__create` is pinned by _themes.scss:299/313/340 */
+/*  forced-colors overrides -- keep. */
+
+[id^=woco_frame-indicator-] {
+    .window__body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        overflow-y: auto;
+    }
+    
+
+    .input--w14 {
+        width: 14rem;
+    }
+
+    .indicator__wrapper {
+        flex: 1;
+        overflow-y: auto;
+
+        :is(.col-12, .col-6) {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            margin-bottom: 1rem;
+        }
+
+        .wrapper__main > .row {
+            display: flex;
+            flex-wrap: wrap;
+            width: auto;
+            margin: 1rem;
+            padding: .5rem 1rem 1rem;
+            background-color: var(--bg-section);
+            box-shadow: 0 2px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+            border-radius: var(--radius-md);
+        }
+    }
+
+    .settings__actions {
+        display: flex;
+        padding: 12px;
+        margin-top: 0;
+        border-top: .0625rem solid var(--border);
+        gap: 12px 6px;
+    
+        .flex {
+            flex: auto;
+            justify-content: flex-end;
+        }
+        
+        > .btn-secondary:nth-child(3) {
+            margin-left: auto;
+        }
+
+        > div:nth-child(4) {
+            order: 5;
+            margin-left: auto;
+        }
+
+
+        button {
+            vertical-align: top;
+        }
+
+        
+    }
+    .explorama__form__file-upload {
+        align-items: flex-start;
+        height: auto;
+        min-height: 100px;
+        margin: 0;
+        margin-top: 6px;
+        margin-bottom: 12px;
+        background-color: var(--bg);
+        cursor: default;
+        
+        > span {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    .drag-drop-area {
+        margin: .5rem 0;
+        cursor: default;
+    }
+
+    .dataset__container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: .75rem;
+        width: 100%;
+            
+        span.icon-database {
+            background-color: var(--icon);
+        }
+        
+        .dataset {
+            position: relative;
+            height: 76px;
+            padding: .375rem .75rem;
+            border: .0625rem solid var(--color-blue-600);
+            border-radius: var(--radius-md);
+            background: rgba(14.08, 79.2, 143.44, 0.8);
+            box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+            text-align: left;
+            color: white;
+            
+
+            span.close {
+                position: absolute;
+                top: 6px;
+                right: 6px;
+                display: block;
+                width: .75rem;
+                height: .75rem;
+                background-color: var(--color-white);
+                -webkit-mask-image: var(--icon-img-close);
+                -webkit-mask-size: contain;
+                -webkit-mask-origin: content-box;
+                -webkit-mask-position: center;
+                -webkit-mask-repeat: no-repeat;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .indicator__section__title {
+        flex-basis: 100%;
+        display: flex;
+        align-items: center;
+        gap: .25rem;
+        margin: 0 calc(-1 * 1rem) .5rem;
+        padding: .5rem 1.25rem .25rem;
+        border-bottom: .0625rem dotted var(--border);
+        color: var(--text-secondary);
+        font-size: var(--text-lg);
+        
+        span[class^="icon-"] {
+            background-color: var(--icon-secondary);
+        }
+    }
+
+
+
+    .indicator__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .indicator__card {
+        position: relative;
+        height: 120px;
+        padding: 12px 18px;
+        border-radius: 6px;
+        border: .0625rem solid var(--border);
+        color: var(--text);
+        background: var(--bg);
+        box-shadow: 0 1px 2px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.05));
+        transition: box-shadow 120ms;
+
+        &:hover {
+            box-shadow: 0 2px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+            
+            .indicator__actions {
+                opacity: 1;
+                scale: 1;
+            }
+        }
+    }
+
+    .indicator__create {
+        display: inline-block;
+        padding: 24px 10px;
+        vertical-align: bottom;
+        text-align: center;
+        cursor: pointer;
+        
+        h1 {
+            display: initial;
+            font-size: 20px;
+            color: var(--text);
+            transition: color 120ms;
+        }
+
+        span {
+            display: block;
+            width: 2rem;
+            height: 2rem;
+            margin: .75rem auto;
+            background-color: var(--icon);
+            transition: background-color 120ms;
+        }
+        
+        &:hover h1 {
+            color: var(--primary);
+        }
+        &:hover span {
+            background-color: var(--primary);
+        }
+    }
+
+    .indicator__info {
+        display: flex;
+        flex-direction: column;
+        padding-right: 1.25rem;
+        
+        h1 {
+            margin-bottom: .25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: var(--text-base);
+        }
+
+        .credits {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+    }
+
+    .indicator-description {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        margin-bottom: .25rem;
+        font-size: var(--text-xs);
+
+        &:empty {
+            display: none;
+        }
+    }
+    
+    .indicator__contextmenu {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        padding: .375rem;
+        cursor: pointer;
+        transition: transform 120ms;
+        
+        &:hover {            
+            span {
+                background-color: var(--primary);
+            }
+        }
+
+        &:active {
+            transform: scale(0.9);
+        }
+
+        span {
+            background-color: var(--icon);
+            transition: background-color 120ms;
+        }
+    }
+
+    .indicator__actions {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        display: flex;
+        align-items: flex-end;
+        flex-direction: row;
+        padding: 4px;
+        border-radius: 6px;
+        background: var(--bg);
+        list-style-type: none;
+        opacity: 0;
+        scale: 0.9 0.5;
+        transition: opacity 90ms ease, scale 90ms ease;
+        
+    }
+
+    :is(.indicator__basics, .indicator__definition) .react-select-container {
+        display: inline-block;
+        width: 14em;
+    }
+
+    .indicator__basics textarea,
+    .indicator__definition textarea {
+        width: 28em;
+    }
+
+    .indicator__definition .input {
+        max-width: 14rem;
+    }
+
+    .indicator__basics p {
+        margin: 0;
+        padding: 12px;
+        border: .0625rem solid var(--border);
+        background: var(--bg-hover);
+        border-radius: 6px;
+        color: var(--text);
+    }
+
+    .indicator__addon {
+        .label__header {
+            margin-left: .75rem;
+            margin-bottom: .25rem;
+            font-weight: bold;
+            font-size: var(--text-xs);
+
+            &:after {
+                content: ' ';
+                display: table;
+                clear: both;
+            }
+        }
+
+        .explorama__form__select {
+            display: flex;
+            margin-bottom: .5rem;
+            
+            button {
+                vertical-align: top;
+            }
+            
+            > * {
+                margin-left: .375rem;
+            }
+        }
+        
+        > button {
+            display: block;
+            margin-left: .375rem;
+            margin-bottom: .5rem;
+        }
+    }
+
+}

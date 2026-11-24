@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.table.config
-  (:require [de.explorama.frontend.common.frontend-interface :as fi]))
+  (:require [de.explorama.frontend.common.i18n :as i18n]))
 
 (def default-namespace :table)
 (def default-vertical-str (name default-namespace))
@@ -21,8 +21,7 @@
 (def available-page-sizes [1000 500 250 100])
 
 (defn ^String attribute->display [attribute]
-  (let [attr-labels @(fi/call-api [:i18n :get-labels-sub])]
-    (str (get attr-labels attribute attribute))))
+  (str (i18n/attribute-label-with-unit attribute)))
 
 ;<attribute> <num px>
 ;; (def default-column-sizes {"date" 100

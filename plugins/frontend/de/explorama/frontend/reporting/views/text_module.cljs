@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.reporting.views.text-module
-  (:require ["quill" :as quill]
+  (:require ["quill" :as quill-module]
             [re-frame.core :refer [dispatch reg-event-db reg-sub subscribe]]
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]
@@ -9,6 +9,8 @@
             [de.explorama.frontend.reporting.config :as config]
             [de.explorama.frontend.reporting.paths.dashboards-reports :as dr-path]
             [taoensso.timbre :refer [error]]))
+
+(def ^:private quill (.-default quill-module))
 
 ;workaround for handling maxlength, because there is no property in quill for it
 (defn handle-max-length [^js instance callback-fn delta _ source]

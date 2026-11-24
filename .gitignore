@@ -1,8 +1,18 @@
 .lsp
 .clj-kondo
+!/.clj-kondo/
+!/.clj-kondo/config.edn
+.clj-kondo/.cache/
+.clj-kondo/imports/
+!e2e/.clj-kondo/
+!e2e/.clj-kondo/config.edn
+e2e/.clj-kondo/.cache/
 .lein-repl-history
 .nrepl-port
 .calva/
+
+dist/electron/*
+dist/release/*
 
 assets/css
 assets/fonts 
@@ -23,6 +33,7 @@ bundles/**/figwheel-headless.sh
 bundles/**/*report.xml
 
 bundles/server/resources/roadmap.edn
+bundles/server/.env
 
 browser_check.edn
 electron_check.edn
@@ -32,7 +43,7 @@ cljs-test-runner-out
 
 bundles/electron/Explorama-dev
 bundles/electron/dist
-bundles/electron/prebuild
+bundles/electron/prebuild/
 
 bundles/server/resources/converted/
 
@@ -68,3 +79,21 @@ tools/cli-data-transformer/target/
 
 webpack-target/
 .cpcache/
+
+# Superpowers planning scratch
+docs/superpowers/
+
+# blend skill output (concept graph, specs)
+.blend/
+
+# electron per-half build output (post-split layout)
+bundles/electron/backend/target/
+bundles/electron/frontend/target/
+bundles/electron/backend/resources/main.js
+bundles/electron/backend/resources/public/css/
+bundles/electron/backend/resources/public/fonts/
+bundles/electron/backend/resources/public/img/
+bundles/electron/backend/resources/public/js/
+bundles/electron/frontend/resources/
+
+.superpowers/

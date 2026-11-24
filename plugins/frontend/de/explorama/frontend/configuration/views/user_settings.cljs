@@ -130,8 +130,8 @@
      [:h2
       [icon {:icon :window-plus}]
       window-init-placement-label]
-     [:div.mb-24
-      [:h4.mb-8 window-init-placement-question]
+     [:div.mb-6
+      [:h4.mb-2 window-init-placement-question]
       [radio {:label window-init-placement-manual-rest
               :strong-label window-init-placement-manual-first
               :name "init-drop-grid"
@@ -145,7 +145,7 @@
               :on-change (fn [e]
                            (re-frame/dispatch [::woco-config/temporary-value woco-config-shared/new-window-pref-key {:action :grid}]))}]]
      [:div
-      [:h4.mb-8 window-search-placement-question]
+      [:h4.mb-2 window-search-placement-question]
       [radio {:label window-search-placement-manual-rest
               :strong-label window-search-placement-manual-first
               :name "search-auto-manual"
@@ -160,7 +160,7 @@
                            (re-frame/dispatch [::woco-config/temporary-value woco-config-shared/published-window-pref-key {:action :left}])
                            (re-frame/dispatch [::woco-config/temporary-value woco-config-shared/published-windows-pref-key {:action :left}]))
               :checked? (#{:left :right} published-window)}]]
-     [:div.ml-24
+     [:div.ml-6
       [radio {:on-change (fn [e]
                            (re-frame/dispatch [::woco-config/temporary-value woco-config-shared/published-window-pref-key {:action :left}])
                            (re-frame/dispatch [::woco-config/temporary-value woco-config-shared/published-windows-pref-key {:action :left}]))
@@ -170,7 +170,7 @@
               :label [:<>
                       [:span window-search-placement-left]
                       [:img {:src "img/window-grow-left.gif" :alt window-search-placement-left}]]
-              :tooltip-class "icon-info-circle icon-gray"
+              :tooltip-class "icon-info-circle bg-gray"
               :checked? (#{:left} published-window)}]
       [radio {:on-change (fn [e]
                            (re-frame/dispatch [::woco-config/temporary-value woco-config-shared/published-window-pref-key {:action :right}])
@@ -181,7 +181,7 @@
               :label [:<>
                       [:span window-search-placement-right]
                       [:img {:src "img/window-grow-right.gif" :alt window-search-placement-right}]]
-              :tooltip-class "icon-info-circle icon-gray"
+              :tooltip-class "icon-info-circle bg-gray"
               :checked? (#{:right} published-window)}]]]))
 
 (defn mouse-layout []
@@ -199,7 +199,7 @@
      [:h2
       [icon {:icon :mouse}]
       mouse-label]
-     [:div.flex.justify-between.align-items-end.gap-8.mb-8
+     [:div.flex.justify-between.items-end.gap-2.mb-2
       [select
        {:options (mouse-layout/translate-options translations)
         :values button-1

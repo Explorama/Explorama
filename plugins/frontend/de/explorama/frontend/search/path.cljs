@@ -13,6 +13,7 @@
 (def search-formdata [root-key search-key])
 (def data-instances [root-key data-instance-key])
 (def attribute-types [root-key :attribute-types])
+(def attribute-units [root-key :attribute-units])
 (def event-callback [root-key event-callback-key])
 (def frame-open-event [root-key frame-open-event-key])
 (def replay-progress [root-key replay-progress-key])

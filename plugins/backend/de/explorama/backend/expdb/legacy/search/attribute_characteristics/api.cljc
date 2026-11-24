@@ -1,5 +1,6 @@
 (ns de.explorama.backend.expdb.legacy.search.attribute-characteristics.api
-  (:require [clojure.string :as string]
+  (:require [clojure.set :as set]
+            [clojure.string :as string]
             [de.explorama.backend.expdb.config :as config-expdb]
             [de.explorama.backend.expdb.buckets :as buckets]
             [de.explorama.backend.expdb.legacy.search.attribute-characteristics.core :as core]
@@ -248,3 +249,31 @@
              (map (fn [[key [min max]]]
                     [key {:min min
                           :max max}])))))
+
+(defn units
+  ([] (units {}))
+  ([{:keys [buckets attributes countries datasources years]}]
+   (reduce (fn [acc bucket]
+             (transduce (comp (keep :units)
+                              (map (fn [tile-units]
+                                     (if attributes
+                                       (select-keys tile-units attributes)
+                                       tile-units))))
+                        (completing (partial merge-with set/union))
+                        acc
+                        (vals (persistence/get-meta-data
+                               (buckets/new-instance bucket :indexed)
+                               (filterv (fn [{country attrs/country-attr
+                                              datasource attrs/datasource-attr
+                                              year attrs/year-attr}]
+                                          (and (or (not countries)
+                                                   (countries country))
+                                               (or (not datasources)
+                                                   (datasources datasource))
+                                               (or (not years)
+                                                   (years year))))
+                                        (ngraph/dts-full bucket))))))
+           {}
+           (if (seq buckets)
+             buckets
+             (keys config-expdb/explorama-bucket-config)))))

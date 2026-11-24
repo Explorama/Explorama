@@ -5,7 +5,8 @@
             [de.explorama.frontend.charts.charts.settings :as settings]
             [de.explorama.frontend.charts.path :as path]
             [de.explorama.frontend.charts.util.queue :as queue-util]
-            [re-frame.core :refer [dispatch subscribe]]))
+            [re-frame.core :refer [dispatch subscribe]]
+            [re-frame.db :as rf-db]))
 
 (defn- operation-disabled? [frame-id]
   (or
@@ -33,17 +34,18 @@
                         :visible? (fn [frame-id]
                                     (< 1 @(subscribe [::settings/num-of-charts frame-id])))
                         :on-click (fn [_ frame-id]
-                                    (let [chart-remove-idx-chart @(subscribe [::i18n/translate :chart-remove-idx-chart])]
+                                    (let [db @rf-db/app-db
+                                          chart-remove-idx-chart (i18n/translate db :chart-remove-idx-chart)]
                                       {:items (mapv (fn [idx]
                                                       (let [{chart-icon path/chart-desc-icon-key}
-                                                            @(subscribe [::settings/chart-type frame-id idx])]
+                                                            (settings/chart-desc->chart-type db frame-id idx)]
                                                         {:label (format chart-remove-idx-chart
                                                                         {:num (inc idx)})
                                                          :icon chart-icon
                                                          :left-icon-params {:color :gray
                                                                             :brightness 4}
                                                          :on-click #(dispatch [::settings/remove-chart frame-id idx])}))
-                                                    (range 0 @(subscribe [::settings/num-of-charts frame-id])))}))})
+                                                    (range 0 (settings/num-of-charts db frame-id)))}))})
 
 (def toolbar-impl
   {:on-duplicate-fn (fn [frame-id]

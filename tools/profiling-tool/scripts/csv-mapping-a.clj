@@ -34,7 +34,7 @@
          :global-id [:id-generate ["fact3" :text] [:field "fact3"]],
          :type [:value "fact3"]}],
        :dates
-       [{:value [:date-schema "YYYY-MM-dd" [:field "date"]],
+       [{:value [:date-schema "yyyy-MM-dd" [:field "date"]],
          :type [:value "occured-at"]}],
        :texts [[:field "text" ""]]}]}]}})
 

@@ -1,0 +1,1212 @@
+
+/*  Dashboard grid system -- residual (not Tailwind-scannable). */
+
+/*  These rules are the unrolled iterations of a former Sass `@for $i from */
+/*  1 through 12` loop -- 12 iterations x 6 rule families */
+/*  (`.dashboard__layout.c#{i}` / `.r#{i}` / `.dashboard__item.w#{i}` / */
+/*  `.h#{i}` / `.x#{i}` / `.y#{i}`), copied byte-exact (values `repeat(i, */
+/*  1fr)` / `span i` are the loop index itself, not hand-computed). They */
+/*  stay residual (not migrated to static Tailwind markup) for three */
+/*  distinct reasons per family: */
+
+/*  - Grid loop: the class names are dynamically constructed at runtime by */
+/*    `de.explorama.frontend.reporting.views.dashboards.template_schema.cljs` */
+/*    and `template_builder.cljs` via `(str "c" gw)` / `(str "r" gh)` / */
+/*    `(str "x" x)` / `(str "y" y)` / `(str "w" w)` / `(str "h" h)` -- */
+/*    Tailwind's static class scanner cannot discover these class literals */
+/*    in source, so the now-static grid-line rules stay residual rather */
+/*    than migrating to markup. */
+/*  - `.dashboard__layout.preview` (+ its nested `.dashboard__item`): a */
+/*    paired preview-scaling variant of the same grid, applied via the */
+/*    `preview` class also constructed by the template builder/schema */
+/*    alongside the grid markers above -- kept next to the grid it scales. */
+/*  - The `@media (max-width: 768px), (max-height: 640px)` block: a */
+/*    responsive breakpoint override of `.dashboard__layout:not(.preview)` */
+/*    and `.dashboard__container`, tied to the same dynamic grid markers. */
+
+.dashboard__layout.preview {
+  width: 60px;
+  height: 40px;
+  min-height: 0;
+  padding: 2px;
+  gap: 2px;
+  border: 2px solid var(--icon-secondary);
+  border-radius: 4px;
+  background: none;
+  place-items: stretch;
+  transition: border-color .1s;
+
+  .dashboard__item {
+    min-height: 0;
+    padding: 0;
+    border-radius: 2px;
+    transition: background-color .1s;
+    background-color: var(--icon-secondary);
+    box-shadow: none;
+  }
+}
+.dashboard__layout {
+  &.c1 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  &.r1 {
+    grid-template-rows: repeat(1, 1fr);
+  }
+  .dashboard__item {
+    &.w1 {
+      grid-column-end: span 1;
+    }
+    &.h1 {
+      grid-row-end: span 1;
+    }
+    &.x1 {
+      grid-column-start: 1;
+    }
+    &.y1 {
+      grid-row-start: 1;
+    }
+  }
+  &.c2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  &.r2 {
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .dashboard__item {
+    &.w2 {
+      grid-column-end: span 2;
+    }
+    &.h2 {
+      grid-row-end: span 2;
+    }
+    &.x2 {
+      grid-column-start: 2;
+    }
+    &.y2 {
+      grid-row-start: 2;
+    }
+  }
+  &.c3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  &.r3 {
+    grid-template-rows: repeat(3, 1fr);
+  }
+  .dashboard__item {
+    &.w3 {
+      grid-column-end: span 3;
+    }
+    &.h3 {
+      grid-row-end: span 3;
+    }
+    &.x3 {
+      grid-column-start: 3;
+    }
+    &.y3 {
+      grid-row-start: 3;
+    }
+  }
+  &.c4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  &.r4 {
+    grid-template-rows: repeat(4, 1fr);
+  }
+  .dashboard__item {
+    &.w4 {
+      grid-column-end: span 4;
+    }
+    &.h4 {
+      grid-row-end: span 4;
+    }
+    &.x4 {
+      grid-column-start: 4;
+    }
+    &.y4 {
+      grid-row-start: 4;
+    }
+  }
+  &.c5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  &.r5 {
+    grid-template-rows: repeat(5, 1fr);
+  }
+  .dashboard__item {
+    &.w5 {
+      grid-column-end: span 5;
+    }
+    &.h5 {
+      grid-row-end: span 5;
+    }
+    &.x5 {
+      grid-column-start: 5;
+    }
+    &.y5 {
+      grid-row-start: 5;
+    }
+  }
+  &.c6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  &.r6 {
+    grid-template-rows: repeat(6, 1fr);
+  }
+  .dashboard__item {
+    &.w6 {
+      grid-column-end: span 6;
+    }
+    &.h6 {
+      grid-row-end: span 6;
+    }
+    &.x6 {
+      grid-column-start: 6;
+    }
+    &.y6 {
+      grid-row-start: 6;
+    }
+  }
+  &.c7 {
+    grid-template-columns: repeat(7, 1fr);
+  }
+  &.r7 {
+    grid-template-rows: repeat(7, 1fr);
+  }
+  .dashboard__item {
+    &.w7 {
+      grid-column-end: span 7;
+    }
+    &.h7 {
+      grid-row-end: span 7;
+    }
+    &.x7 {
+      grid-column-start: 7;
+    }
+    &.y7 {
+      grid-row-start: 7;
+    }
+  }
+  &.c8 {
+    grid-template-columns: repeat(8, 1fr);
+  }
+  &.r8 {
+    grid-template-rows: repeat(8, 1fr);
+  }
+  .dashboard__item {
+    &.w8 {
+      grid-column-end: span 8;
+    }
+    &.h8 {
+      grid-row-end: span 8;
+    }
+    &.x8 {
+      grid-column-start: 8;
+    }
+    &.y8 {
+      grid-row-start: 8;
+    }
+  }
+  &.c9 {
+    grid-template-columns: repeat(9, 1fr);
+  }
+  &.r9 {
+    grid-template-rows: repeat(9, 1fr);
+  }
+  .dashboard__item {
+    &.w9 {
+      grid-column-end: span 9;
+    }
+    &.h9 {
+      grid-row-end: span 9;
+    }
+    &.x9 {
+      grid-column-start: 9;
+    }
+    &.y9 {
+      grid-row-start: 9;
+    }
+  }
+  &.c10 {
+    grid-template-columns: repeat(10, 1fr);
+  }
+  &.r10 {
+    grid-template-rows: repeat(10, 1fr);
+  }
+  .dashboard__item {
+    &.w10 {
+      grid-column-end: span 10;
+    }
+    &.h10 {
+      grid-row-end: span 10;
+    }
+    &.x10 {
+      grid-column-start: 10;
+    }
+    &.y10 {
+      grid-row-start: 10;
+    }
+  }
+  &.c11 {
+    grid-template-columns: repeat(11, 1fr);
+  }
+  &.r11 {
+    grid-template-rows: repeat(11, 1fr);
+  }
+  .dashboard__item {
+    &.w11 {
+      grid-column-end: span 11;
+    }
+    &.h11 {
+      grid-row-end: span 11;
+    }
+    &.x11 {
+      grid-column-start: 11;
+    }
+    &.y11 {
+      grid-row-start: 11;
+    }
+  }
+  &.c12 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  &.r12 {
+    grid-template-rows: repeat(12, 1fr);
+  }
+  .dashboard__item {
+    &.w12 {
+      grid-column-end: span 12;
+    }
+    &.h12 {
+      grid-row-end: span 12;
+    }
+    &.x12 {
+      grid-column-start: 12;
+    }
+    &.y12 {
+      grid-row-start: 12;
+    }
+  }
+}
+
+
+@media (max-width: 768px),
+(max-height: 640px) {
+
+  .dashboard__layout:not(.preview) {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    order: 99;
+
+    .dashboard__item {
+      flex: 1 0 auto;
+    }
+  }
+
+  .dashboard__container {
+    overflow: auto;
+
+    .dashboard__datasources {
+      align-self: flex-start;
+      padding: 0 8px 12px;
+    }
+  }
+}
+
+
+/*  ============================================================================ */
+/*  Dashboard chrome & containers -- deep-descendant / shared-marker RESIDUAL. */
+
+/*  These stay residual (not migrated to reporting-view markup) for one of */
+/*  two reasons: */
+/*    * Grid skeleton base (.dashboard__layout / .dashboard__item base): also */
+/*      consumed by the untouchable preview emitter (template_schema.cljs */
+/*      `.dashboard__layout.preview` above) and by the dynamic grid residual -- */
+/*      a class rendered by a reporting view AND a non-editable component, so */
+/*      it defaults to residual. */
+/*    * Rules reaching ui_base / legend / dropzone / forms / frames-util / */
+/*      loading-message component DOM by descendant cascade (button, .legend*, */
+/*      .drag-drop-area, .explorama__form__*, .dashboard__datasources span, */
+/*      .dashboard__actions > div/button) -- not element-local, not editable */
+/*      from the reporting views. */
+
+/*  The dashboard__layout/dashboard__item/title/options/content/legend-right/ */
+/*  legend-bottom/dashboard__container/dashboard__datasources/dashboard__actions */
+/*  markers stay EMITTED on their hiccup so these selectors keep matching. */
+/*  ============================================================================ */
+
+/*  -- Grid skeleton base (residual; consumed by preview + dynamic grid) -- */
+.dashboard__layout {
+  display: grid;
+  gap: 0.75rem;
+  flex-grow: 1;
+  min-height: 252px;
+  max-height: 100%;
+  color: var(--text);
+
+  .dashboard__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+    padding: 8px;
+    overflow: hidden;
+    background-color: var(--bg);
+    box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    border: 0.0625rem solid var(--border-secondary);
+    border-radius: var(--radius-md);
+  }
+}
+
+/*  -- .options / .options--hidden button descendants (ui_base button DOM) -- */
+.dashboard__layout .dashboard__item .title :is(.options, .options--hidden) button {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 19.5px;
+  height: 19.5px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  transition: border-color 120ms, transform 120ms, box-shadow 120ms, background-color 120ms, color 120ms;
+
+  &:hover {
+    border-color: none;
+    background-color: none;
+  }
+
+  span {
+    background-color: var(--icon-secondary);
+    margin: 0;
+
+    &.icon-burgermenu {
+      width: 0.75em;
+      height: 0.75em;
+    }
+  }
+
+  &.legend-toggle {
+    width: auto;
+    height: auto;
+
+    &:hover span {
+      background-color: var(--primary-highlight);
+    }
+
+    span {
+      width: 1em;
+      height: 1em;
+      background-color: var(--icon-secondary);
+      filter: none !important;
+    }
+
+    &.active span {
+      background-color: var(--primary);
+    }
+
+    &.active:hover span {
+      background-color: var(--primary-highlight);
+    }
+  }
+}
+
+/*  -- .content legend cascade (module-legend component DOM) -- */
+.dashboard__layout .dashboard__item>.content {
+  .legend__panel {
+    border: none;
+  }
+
+  &.legend-bottom {
+    flex-direction: column;
+
+    >.legend {
+      padding-top: 4px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+  }
+
+  &.legend-right {
+    flex-direction: row;
+
+    >.legend {
+      padding-left: 6px;
+      width: calc(50px + 5vw + 5vh);
+      overflow-y: auto;
+      height: 100%;
+    }
+  }
+
+  div.legend .legend__attribute {
+    font-size: calc(6px + 0.2vw + 0.2vh);
+    color: #868e96;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 4px;
+
+    span.tag {
+      font-size: calc(4px + 0.2vw + 0.2vh);
+      padding: 0px 3px;
+      background-color: #e9ecef;
+      border-radius: 2px;
+    }
+  }
+
+  div.legend ul.legend {
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
+    display: flex;
+    column-gap: calc(12px + 0.1vw + 0.1vh);
+    flex-wrap: wrap;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    li {
+      font-size: calc(4px + 0.2vw + 0.2vh);
+
+      span.legend__color {
+        width: calc(6px + 0.1vw + 0.1vh);
+        height: calc(6px + 0.1vw + 0.1vh);
+        margin-right: calc(1px + 0.1vw + 0.1vh);
+
+        &.circle {
+          width: calc(4px + 0.1vw + 0.1vh);
+          height: calc(4px + 0.1vw + 0.1vh);
+          margin: 1px 7px 0 1px;
+        }
+
+        &.line {
+          height: 2px;
+        }
+      }
+
+      .legend__value {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  div.legend>dl {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-size: calc(4px + 0.2vw + 0.2vh);
+    border-bottom: 1px solid #e9ecef;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+
+      dt {
+        color: #868e96;
+      }
+
+      dd {
+        margin: 0;
+        text-align: end;
+
+        .operator {
+          color: #009191;
+        }
+      }
+    }
+
+    p {
+      margin: 2px 0;
+      border-bottom: 1px solid #dee2e6;
+    }
+  }
+
+  div.legend .collapsible {
+    .content dl {
+      font-size: calc(4px + 0.2vw + 0.2vh);
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover .label {
+        color: var(--color-gray-700);
+      }
+    }
+
+
+    .collapsible__bar .label {
+      font-size: calc(4px + 0.2vw + 0.2vh);
+      color: var(--color-gray-500);
+      margin: 6px 0;
+
+      span {
+        padding: 0 6px;
+      }
+    }
+  }
+}
+
+/*  -- drag/drop overlay (dropzone shared marker) -- */
+.dashboard__layout .dashboard__item .drag-drop-area {
+  height: 100%;
+  cursor: default;
+
+  &.drop-target {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    background-color: var(--bg-highlight);
+  }
+}
+
+/*  -- .dashboard__container form-input children (forms shared markers) -- */
+.dashboard__container .explorama__form__input {
+  display: flex;
+
+  >input {
+    flex-grow: 1;
+  }
+}
+
+.dashboard__container .explorama__form__textarea {
+  width: 100%;
+  margin-left: -4px;
+
+  form {
+    height: 100%;
+  }
+
+  input[type='text'] {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding-left: 4px;
+    font-size: var(--text-xs);
+  }
+}
+
+/*  -- .dashboard__datasources chips (frames-util datasources-info-node spans) -- */
+.dashboard__datasources span {
+  margin-left: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: calc(6px + 0.2vw + 0.2vh);
+  background-color: var(--bg-section);
+}
+
+/*  -- .dashboard__actions children (loading-message flex div; button latent) -- */
+.dashboard__actions>div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard__actions button {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  color: var(--text-secondary);
+  background: none;
+  box-shadow: none;
+  border: 0.0625rem solid var(--border);
+  transition: box-shadow .1s, color .1s;
+
+  span {
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: invert(91%) sepia(8%) saturate(179%) hue-rotate(170deg) brightness(92%) contrast(91%);
+    ;
+    transition: filter .1s;
+    margin: 0 4px 0 0;
+  }
+
+  &:hover {
+    border-color: var(--border);
+    box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    color: var(--text);
+
+    span {
+      filter: invert(87%) sepia(12%) saturate(190%) hue-rotate(169deg) brightness(83%) contrast(84%);
+      ;
+    }
+  }
+
+  &.disabled {
+    color: var(--text-disabled);
+    border-color: var(--border);
+    pointer-events: none;
+
+    span {
+      filter: invert(87%) sepia(4%) saturate(226%) hue-rotate(169deg) brightness(104%) contrast(92%);
+      ;
+    }
+  }
+}
+
+/*  ============================================================================ */
+/*  Cross-plugin co-owned card / menu-overlay / button-group families -- */
+/*  RESIDUAL. None of these families migrate to markup: */
+/*    * `.dashboard__item .menu__overlay` scoped block (incl. */
+/*      `::-webkit-scrollbar*` vendor pseudo-elements) -- the `.menu__overlay` */
+/*      component is emitted by reporting's context_menu.cljs and consumed */
+/*      inside dashboard items via dashboards/template_builder.cljs; vendor */
+/*      scrollbar pseudo-elements have no Tailwind/utility equivalent. */
+/*    * `.section__cards` base + `.section__cards ul`/`:has(>div+div)` grid + */
+/*      `.section__cards ul li` + `.card__image`/`.card__text`/ */
+/*      `.card__actions`/`.unread-indicator` (the card system) -- emitted */
+/*      across 6 files / 3 plugins: reporting (dashboards/overview.cljs, */
+/*      reports/overview.cljs), woco (details_view.cljs), and configuration */
+/*      (layout_management/overview.cljs, data_management/datasources.cljs, */
+/*      data_management/topics.cljs). Cross-plugin co-owned, not */
+/*      owner-exclusive -> not migratable to any single view's markup. */
+/*    * `ul.select-layout` -- emitted by reporting's */
+/*      dashboards/template_builder.cljs, nests `.dashboard__layout`/ */
+/*      `.dashboard__item` (the dynamic-grid residual) by descendant cascade. */
+/*    * `div[class^='menu__overlay']` block (incl. `legend__options`/ */
+/*      `options__list`/`layout__selection`/`column__layout__icon`/ */
+/*      `.explorama__form__select`) -- attribute-prefix (`[class^=...]`, */
+/*      `[class$=...]`) selectors, not expressible as static Tailwind */
+/*      utilities; the underlying `.menu__overlay` markers are shared across */
+/*      map/legend.cljs, reporting/context_menu.cljs, and */
+/*      configuration/layout_management/picker.cljs (3 plugins). */
+/*    * `ul[class^='button__group']` -- same attribute-prefix constraint; */
+/*      emitted by reporting/context_menu.cljs. */
+/*    * `.color__scale__preview` -- configuration-only */
+/*      (layout_management/overview.cljs), but co-mingled with the */
+/*      cross-plugin card system via `.section__cards ul li:has(...)`, kept */
+/*      adjacent to its sibling families. */
+/*    * `.export-footer` -- reporting (screenshot/png.cljs) + woco */
+/*      (screenshot/png.cljs) screenshot-render-only DOM, not owned by any */
+/*      single reporting view. */
+/*  ============================================================================ */
+
+.dashboard__layout {
+  .dashboard__item .menu__overlay {
+    position: absolute;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px - 23.5px);
+    margin-top: 23.5px;
+    overflow-y: auto;
+    border-radius: 0;
+    background-color: var(--bg);
+    box-shadow: none;
+
+    >* {
+      border-bottom: 1px solid var(--border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    div.legend__options {
+      font-size: var(--text-xs);
+
+      .explorama__form__select {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    ul.options__list {
+      margin: 0;
+      padding: 0;
+      font-size: var(--text-xs);
+      list-style-type: none;
+
+      li {
+        border-bottom: 1px solid var(--border);
+        padding: 4px;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: var(--bg-hover);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.dashboard__layout .dashboard__item .menu__overlay::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dashboard__layout .dashboard__item .menu__overlay::-webkit-scrollbar-track {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.dashboard__layout .dashboard__item .menu__overlay::-webkit-scrollbar-thumb {
+  background-color: #dee2e6;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #ced4da;
+  }
+
+  &:active {
+    background-color: var(--color-gray-400);
+  }
+}
+
+.section__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &.full-width ul {
+    grid-template-columns: 1fr;
+  }
+
+  >div {
+    flex: 1 1 0;
+  }
+}
+
+.section__cards ul,
+.section__cards:has(>div+div) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+
+  h3 {
+    padding-block: 0.25rem;
+    font-size: var(--text-sm);
+  }
+}
+
+.section__cards ul li {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.375rem 0.375rem 0.375rem 0.75rem;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  background-color: var(--bg);
+  box-shadow: 0 1px 2px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.05));
+  border: 0.0625rem solid var(--border);
+  transition: box-shadow 120ms, transform 120ms;
+
+  &:has(.color__scale__preview) {
+    border-top-left-radius: var(--radius-xxs);
+    border-bottom-left-radius: var(--radius-xxs);
+  }
+
+  &:hover:not(.disabled) {
+    box-shadow: 0 2px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+  }
+
+  &:active:not(:has(.card__actions > div:active, .card__actions > button:active)) {
+    transform: scale(0.97);
+  }
+
+  &.disabled {
+    pointer-events: none;
+
+    .card__actions,
+    button,
+    .tooltip-wrapper {
+      pointer-events: auto;
+    }
+  }
+
+  .unread-indicator {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-orange);
+    border: 3px solid var(--bg);
+    box-sizing: content-box;
+  }
+
+  .card__image {
+    height: 100%;
+    margin-right: 8px;
+
+    >span {
+      background-color: var(--icon-secondary);
+    }
+  }
+
+  .card__text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    .title {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--text);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .subtitle {
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .card__actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: auto;
+
+    >div:not(:has(> button)) {
+      padding: 0.5rem;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 120ms;
+
+      &:hover {
+        span {
+          background-color: var(--primary);
+        }
+      }
+
+      &:active {
+        transform: scale(0.9);
+      }
+
+      span {
+        background-color: var(--icon);
+        transition: background-color 120ms;
+      }
+
+      &.active {
+        background-color: var(--bg-hover);
+      }
+    }
+  }
+}
+
+ul.select-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 4px;
+    border-radius: 6px;
+    transition: background-color .1s;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--bg-hover);
+
+      .dashboard__layout {
+        border-color: var(--border-focus);
+
+        .dashboard__item {
+          background-color: var(--border-focus);
+        }
+      }
+    }
+
+    &.selected .dashboard__layout {
+      border-color: var(--border-focus);
+
+      .dashboard__item {
+        background-color: var(--border-focus);
+      }
+    }
+  }
+}
+
+div[class^='menu__overlay'] {
+  background-color: var(--bg);
+  position: absolute;
+  overflow-y: auto;
+  width: 200px;
+  padding: 8px;
+  box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  z-index: 200001;
+
+  &[class$='--small'] {
+    width: auto;
+  }
+
+  h2 {
+    margin: 0;
+    margin-bottom: 4px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  h3 {
+    margin: 0;
+    padding: 6px 12px 4px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: normal;
+    text-decoration: underline;
+  }
+
+  div.legend__options {
+    font-size: var(--text-xs);
+
+    .explorama__form__select {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+  }
+
+  ul[class^='options__list'] {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--text-xs);
+
+    li {
+      border-top: 1px solid #e9ecef;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+
+      &:last-child {
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      &:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+
+        span {
+          background-color: #dee2e6;
+        }
+      }
+
+      &.disabled {
+        color: #ced4da;
+        pointer-events: none;
+
+        span {
+          border-color: white;
+        }
+      }
+
+      &.active span {
+        background-color: var(--color-gray-400);
+      }
+
+      &.selected {
+        background-color: #f5faff;
+      }
+
+      span {
+        flex-shrink: 0;
+        width: 12px;
+        height: 12px;
+        border: 1.5px solid var(--color-gray-400);
+        box-shadow: 0 0 0 1.5px white inset;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+    }
+
+    &[class$='--basic'] {
+      padding: 0;
+
+      li {
+        padding: 4px 8px;
+        border-top: none;
+        border-bottom: 1px solid #e9ecef;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  div.layout__selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    padding: 0;
+
+    div.column__layout__icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      padding: 8px;
+      font-size: var(--text-xs);
+      color: var(--icon);
+      cursor: pointer;
+      transition: color 120ms;
+
+      &:hover {
+        color: var(--icon-hover);
+
+        >div>span {
+          background-color: var(--icon-hover);
+        }
+      }
+    }
+
+    div.column__layout__icon>div {
+      display: flex;
+      flex-direction: row;
+      gap: 4px;
+      width: 40px;
+      height: 30px;
+
+      >span {
+        background-color: var(--icon);
+        width: 100%;
+        height: 100%;
+        border-radius: 2px;
+        transition: background-color 120ms;
+      }
+    }
+  }
+
+  .explorama__form__select {
+    font-size: var(--text-xs);
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+}
+
+ul[class^='button__group'] {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+
+  &[class$='--grow'] li {
+    flex: 1 1 0;
+    height: auto;
+  }
+
+  li {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: box-shadow .1s;
+
+    &:hover {
+      border-color: #dee2e6;
+      box-shadow: inset 0px 0px 0px 1px #dee2e6;
+
+      span[class^="icon-"] {
+        filter: invert(68%) sepia(2%) saturate(1881%) hue-rotate(170deg) brightness(84%) contrast(75%);
+        ;
+      }
+    }
+
+    &.disabled {
+      pointer-events: none;
+
+      span[class^="icon-"] {
+        filter: invert(98%) sepia(6%) saturate(682%) hue-rotate(176deg) brightness(99%) contrast(88%);
+        ;
+      }
+    }
+
+    span[class^="icon-"] {
+      display: block;
+      width: 24px;
+      height: 24px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: invert(87%) sepia(12%) saturate(190%) hue-rotate(169deg) brightness(83%) contrast(84%);
+      ;
+      transition: filter .1s;
+    }
+  }
+}
+
+
+.color__scale__preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 0.25rem;
+  height: 100%;
+
+  div {
+    flex-grow: 1;
+
+    &:first-child {
+      border-top-left-radius: 1px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 1px;
+    }
+  }
+}
+
+/*  Export footer */
+.export-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+  background-color: var(--bg);
+  color: var(--text);
+
+  th {
+    text-align: left;
+    padding-right: 1rem;
+  }
+}

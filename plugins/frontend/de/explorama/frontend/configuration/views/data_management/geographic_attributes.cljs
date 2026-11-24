@@ -46,6 +46,50 @@
  (fn [db _]
    (get-in db path/add-geo-attr-frame?)))
 
+;; ---------------------------------------------------------------------
+;; Tailwind migration of styles/src/scss/components/_card.scss's
+;; `.card__list__ordered`/`.card__element`/`.order__controls`/`.title__bar`
+;; family. No ui_base component renders this markup -- only this file and
+;; woco/presentation/sidebar.cljs do (verified via grep across plugins/,
+;; bundles/*/frontend) -- duplicated per Task 7's direct-builder precedent
+;; (2 sites, well under the ≤5 threshold), not hoisted into a new shared
+;; ns. Kept byte-identical to sidebar.cljs's copy; see that file / the task
+;; report for the per-rule derivation.
+(def ^:private card-list-ordered-class "flex flex-col gap-1.5")
+
+(def ^:private card-element-shared-class
+  (str "relative flex border border-(--border) rounded-xl overflow-hidden shadow-xs "
+       "text-(--text) bg-(--bg) "
+       "[transition:background-color_.12s_ease,box-shadow_.12s_ease,color_.12s_ease,transform_.12s_ease]"))
+(def ^:private card-element-class
+  (str card-element-shared-class " flex-row gap-0 p-0"))
+(def ^:private card-element-clickable-class "cursor-pointer hover:shadow-sm active:scale-97")
+
+(def ^:private card-button-class
+  (str card-element-shared-class
+       " flex-row justify-center items-center gap-1 h-[53px] p-2 cursor-pointer "
+       "hover:bg-(--bg-hover) hover:shadow-sm"))
+(def ^:private card-button-icon-class "m-0 bg-(--icon) [transition:background-color_.12s_ease]")
+
+(def ^:private card-content-class "flex flex-col justify-center grow gap-1 p-1.5 pl-3 overflow-hidden")
+;; Warning tint triggers on BUTTON hover (old: `.card__content
+;; button:enabled:hover span[icon]`), not icon hover -- `group`/`group-hover:`
+;; preserves the full-button trigger region (see sidebar.cljs's copy).
+(def ^:private card-content-button-class "group bg-transparent shadow-none")
+(def ^:private card-content-icon-class "bg-(--icon-secondary) group-hover:bg-(--icon-warning)")
+
+(def ^:private order-controls-class "flex flex-col bg-(--bg-hover)")
+(def ^:private order-controls-button-class
+  (str "group grow p-1.5 pl-2 bg-(--bg) border-t-0 border-r border-b border-l-0 "
+       "border-(--border-secondary) rounded-none last:border-b-0 "
+       "transition-[background-color] duration-[120ms] ease-[ease] "
+       "disabled:bg-(--bg-hover)"))
+(def ^:private order-controls-icon-class
+  (str "m-0 bg-(--icon) [transition:background-color_.12s_ease] "
+       "group-hover:bg-(--primary) group-disabled:bg-(--icon-disabled)"))
+
+(def ^:private title-bar-class "flex flex-row justify-between items-center gap-2")
+(def ^:private title-bar-heading-class "m-0! p-0! grow overflow-hidden text-ellipsis")
 
 (defn add-geographic-attribute-dialog []
   (let [selected-option @(subscribe [::geographic-attribute-value])
@@ -97,10 +141,11 @@
                  [v idx]
                  (into (subvec v 0 idx) (subvec v (inc idx))))
         labels @(fi/call-api [:i18n :get-labels-sub])]
-    [:div.card__element.clickable
-     [:div.order__controls
+    [:div.card__element.clickable {:class [card-element-class card-element-clickable-class]}
+     [:div.order__controls {:class order-controls-class}
       [button {:start-icon :arrow-up
-               :extra-class "order__up"
+               :extra-class (str "order__up " order-controls-button-class)
+               :icon-params {:extra-class order-controls-icon-class}
                :on-click #(let [reordered-geo-attributes (swap geo-attributes idx (dec idx))]
                             (dispatch [::set-current-geographic-attributes
                                        reordered-geo-attributes]))
@@ -108,15 +153,18 @@
                (or first-slide? read-only?)}
        [icon {:icon :arrow-up}]]
       [button {:start-icon :arrow-down
-               :extra-class "order__down"
+               :extra-class (str "order__down " order-controls-button-class)
+               :icon-params {:extra-class order-controls-icon-class}
                :on-click #(let [reordered-geo-attributes (swap geo-attributes idx (inc idx))]
                             (dispatch [::set-current-geographic-attributes
                                        reordered-geo-attributes]))
                :disabled? (or last-slide? read-only?)}]]
-     [:div.card__content
-      [:div.title__bar
-       [:h3 (attr->display-name attr labels)]
+     [:div.card__content {:class card-content-class}
+      [:div.title__bar {:class title-bar-class}
+       [:h3 {:class title-bar-heading-class} (attr->display-name attr labels)]
        [button {:start-icon :close
+                :extra-class card-content-button-class
+                :icon-params {:extra-class card-content-icon-class}
                 :on-click #(let [pruned-geo-attributes (remove geo-attributes idx)]
                              (dispatch [::set-current-geographic-attributes
                                         pruned-geo-attributes]))
@@ -162,15 +210,16 @@
         read-only? false]
     [:<>
      [:div.content
-      [:div.card__list__ordered
+      [:div.card__list__ordered {:class card-list-ordered-class}
        (for [idx (range (count current-geo-attributes))]
          ^{:key (str "geo-attributes-" (nth current-geo-attributes idx))}
          [geo-attribute-element
           idx
           current-geo-attributes
           read-only?])
-       [:div.card__button.card__element {:on-click #(dispatch [::add-geo-attr-frame true])}
-        [icon {:icon :plus}]
+       [:div.card__button.card__element {:on-click #(dispatch [::add-geo-attr-frame true])
+                                         :class card-button-class}
+        [icon {:icon :plus :extra-class card-button-icon-class}]
         add-attribute-label]]]
      (when @(subscribe [::add-geo-attr-frame?])
        [add-geographic-attribute-dialog])

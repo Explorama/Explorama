@@ -16,37 +16,19 @@
   [(mod index cpl)
    (Math/floor (/ index cpl))])
 
-(defn overview-op? [zoom overview-factor val op]
-  (if (zero? zoom)
-    (op val overview-factor)
-    val))
-
-(defn zoom-level [z zoom overview-factor render-type]
+(defn zoom-level [z render-type]
   (if (= :treemap render-type)
     0
-    (cond (or (and (<= 1 zoom)
-                   (< 0.5 z))
-              (and (= 0 zoom)
-                   (< 0.5 (* z overview-factor))))
-          3
-          (or (and (<= 1 zoom)
-                   (< 0.35 z))
-              (and (= 0 zoom)
-                   (< 0.35 (* z overview-factor))))
-          2
-          (or (and (<= 1 zoom)
-                   (< 0.20 z))
-              (and (= 0 zoom)
-                   (< 0.2 (* z overview-factor))))
-          1
+    (cond (< 0.5 z) 3
+          (< 0.35 z) 2
+          (< 0.20 z) 1
           :else 0)))
 
-(defn new-zoom [stage-key state args [nx ny nz] zoom]
+(defn new-zoom [stage-key state args [nx ny nz]]
   (let [{:keys [x y z]} (get state [:pos stage-key])
         {:keys [card-margin card-height card-width]} (get state :constraints)
         {:keys [width height]} args
-        {overview-factor :factor-overview
-         {:keys [scale-window-width scale-window-height scale-window-margin
+        {{:keys [scale-window-width scale-window-height scale-window-margin
                  inspector-margin-x inspector-margin-y inspector-header-y
                  inspector-width inspector-height]
           :or {scale-window-width 0
@@ -61,14 +43,10 @@
         (get-in state [:contexts stage-key []])
         width (or inspector-width width)
         height (or inspector-height height)
-        factor (if (zero? zoom) overview-factor 1)
-        min-x (overview-op? zoom overview-factor bb-min-x *)
-        min-y (overview-op? zoom overview-factor bb-min-y *)
-        max-x (overview-op? zoom overview-factor bb-max-x *)
-        max-y (overview-op? zoom overview-factor bb-max-y *)
-        card-margin (overview-op? zoom overview-factor card-margin *)
-        max-zoom (overview-op? zoom overview-factor max-zoom /)
-        min-zoom (overview-op? zoom overview-factor min-zoom /)
+        min-x bb-min-x
+        min-y bb-min-y
+        max-x bb-max-x
+        max-y bb-max-y
         cz (max max-zoom
                 (min min-zoom nz))
         min-x (- min-x (/ (+ inspector-margin-x scale-window-width scale-window-margin) cz))
@@ -79,7 +57,7 @@
 
         x-max-current-bb (* cz (- min-x))
         x-min-current-bb (- (* (- (+ max-x card-margin (if (= :scatter render-type)
-                                                         (* 0.5 (* card-width factor))
+                                                         (* 0.5 card-width)
                                                          0))
                                   (/ width cz))
                                cz))
@@ -87,14 +65,14 @@
         (if (and (= :scatter render-type)
                  (<= x-max-current-bb nx)
                  (< (- bb-max-x bb-min-x)
-                    (/ (/ (- width scale-window-width) factor) cz)))
+                    (/ (- width scale-window-width) cz)))
           x-max-current-bb
           (min x-max-current-bb
                (max nx x-min-current-bb)))
 
         y-max-current-bb (* cz (- min-y))
         y-min-current-bb (- (* (- (+ max-y card-margin (if (= :scatter render-type)
-                                                         (* 0.25 (* card-height factor))
+                                                         (* 0.25 card-height)
                                                          0))
                                   (/ height cz))
                                cz))
@@ -103,7 +81,7 @@
         (if (and (= :scatter render-type)
                  (<= y-max-current-bb ny)
                  (< (- bb-max-y bb-min-y)
-                    (/ (/ (- height scale-window-height) factor) cz)))
+                    (/ (- height scale-window-height) cz)))
           y-min-current-bb
           (min y-max-current-bb
                (max ny y-min-current-bb)))

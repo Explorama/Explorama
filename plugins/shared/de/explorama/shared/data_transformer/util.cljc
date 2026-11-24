@@ -1,11 +1,10 @@
 (ns de.explorama.shared.data-transformer.util
-  (:require #?(:clj [clj-time.format :as f]
-               :cljs [cljs-time.format :as f])))
+  (:require [de.explorama.shared.common.unification.time :as time]))
 
 (def string->char first)
 
-(def formatter f/formatter)
-(def unparse f/unparse)
-(def parse f/parse)
+(def formatter time/formatter)
+(def parse time/parse)
+(def unparse time/unparse)
 
-(def date-format "YYYY-MM-dd")
+(def date-format time/date-format)

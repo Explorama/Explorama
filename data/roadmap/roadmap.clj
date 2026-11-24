@@ -25,7 +25,7 @@
          :global-id [:id-generate ["plugin" :text] :name],
          :type [:value "plugin"]}],
        :dates
-       [{:value [:date-schema "YYYY-MM-dd" [:field "date"]],
+       [{:value [:date-schema "yyyy-MM-dd" [:field "date"]],
          :type [:value "occured-at"]}],
        :texts [[:field "desc" ""]]}]}]}})
 

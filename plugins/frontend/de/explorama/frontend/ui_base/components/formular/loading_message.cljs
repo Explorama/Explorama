@@ -20,7 +20,7 @@
                          :size :medium
                          :orientation :right})
 
-(def wrapper-classes ["flex" "align-items-center" "gap-8"])
+(def wrapper-classes ["flex" "items-center" "gap-2"])
 (def size-class-small "loader-sm")
 (def size-class-medium "loader-md")
 (def size-class-large "loader-lg")

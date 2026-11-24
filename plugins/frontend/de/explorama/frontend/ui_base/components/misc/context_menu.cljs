@@ -82,11 +82,52 @@
                          :close-on-select? true
                          :ensure-visibility? true})
 
-(def context-menu-class "context-menu")
-(def context-menu-group-class "context-menu-group")
 (def context-menu-entry-class "context-menu-entry")
 (def disabled-class "disabled")
 (def icon-expand-extra-class "expand")
+
+;; ---- migrated _context_menu.scss chrome as Tailwind utility stacks ----------
+;; Standard classes are fully-spelled static literals; theme colours use the
+;; `bg-(--var)` css-var shorthand. The :not(:has())/:has(>...)/:not(:last-child)
+;; structural selectors, the :hover:not(.disabled) state and the descendant
+;; `span[class^=icon-]` tint are arbitrary variants, all verified to compile
+;; byte-identically to the old declarations in dist/css/5_utilities.css. The
+;; fadeIn keyframe still ships from base/_animations.scss, so
+;; [animation:90ms_fadeIn] resolves. The `.context-menu`/`.context-menu-group`
+;; markers are dropped (styling-only, no forced-colors / logic / JS use); the
+;; `.context-menu-entry`, `.disabled` and `.expand` markers stay.
+
+(def ^:private menu-util-class
+  ;; `.context-menu` base (+ `:not(:has(.context-menu-entry))` padding for the
+  ;; all-custom-content case). border:1px solid = `border` (--tw-border-style
+  ;; defaults to solid) + `border-(--border)` colour.
+  (str "flex flex-col fixed border border-(--border) rounded-xl bg-(--bg) "
+       "shadow-md overflow-auto [animation:90ms_fadeIn] "
+       "not-has-[.context-menu-entry]:p-2"))
+
+(def ^:private group-util-class
+  ;; `.context-menu-group` (+ `:not(:last-child)` divider border-bottom).
+  (str "flex flex-col "
+       "[&:not(:last-child)]:border-b [&:not(:last-child)]:border-b-(--border)"))
+
+(def ^:private entry-util-class
+  ;; `.context-menu-entry` state-independent chrome. padding 8/16/8/34px; a
+  ;; leading (non-expand) icon narrows padding-left to 12px via
+  ;; `:has(> span[class^=icon-]:not(.expand))`.
+  (str "flex flex-row items-center gap-2 py-2 pr-4 pl-[34px] select-none "
+       "[transition:background-color_120ms] "
+       "has-[>span[class^=icon-]:not(.expand)]:pl-3 "
+       "[&:hover:not(.disabled)]:bg-(--bg-hover) "
+       "[&:hover:not(.disabled)]:cursor-pointer"))
+
+(def ^:private entry-resting-class
+  ;; `.context-menu-entry` resting colours (text + icon tint). Swapped out for
+  ;; the disabled set below so the two never tie on specificity.
+  "text-(--text) [&_span[class^=icon-]]:bg-(--icon)")
+
+(def ^:private entry-disabled-class
+  ;; `.context-menu-entry.disabled` colours (mutually exclusive with resting).
+  "text-(--text-disabled) [&_span[class^=icon-]]:bg-(--icon-disabled)")
 
 ;;; ======= Util Functions =======
 
@@ -148,7 +189,7 @@
     ;group
     (reduce
      #(conj %1 [entry %2 active-parents parent-rects level timeout-fn hide-fn])
-     [:div {:class context-menu-group-class}]
+     [:div {:class [group-util-class]}]
      sub-items)
      ;single
     (let [label (val-or-deref label)
@@ -157,7 +198,11 @@
           show-child? (and (not-empty (filter #(and % (not-empty %)) sub-items))
                            (not disabled?))]
       [:div {:class (cond-> [toolbar-ignore-class]
-                      (not is-custom-content?) (conj context-menu-entry-class)
+                      (not is-custom-content?) (conj context-menu-entry-class
+                                                     entry-util-class
+                                                     (if disabled?
+                                                       entry-disabled-class
+                                                       entry-resting-class))
                       disabled? (conj disabled-class))
              :id id
              :on-mouse-enter (fn [_]
@@ -187,7 +232,7 @@
        (when sub-items
          [icon {:icon :expand-list
                 :color :gray
-                :extra-class icon-expand-extra-class}])])))
+                :extra-class [icon-expand-extra-class "ml-auto"]}])])))
 
 (defn- entry-list [state _ level _ _]
   (let [{:keys [in-menu? menu-comps menu-rects active-parents parent-rects timeout]} state
@@ -216,7 +261,7 @@
                               (do
                                 (reset! old-items items)
                                 initial-pos))]
-          [:div (cond-> {:class [toolbar-ignore-class context-menu-class]
+          [:div (cond-> {:class [toolbar-ignore-class menu-util-class]
                          :style (merge {:z-index (+ menu-z-index level)
                                         :position :fixed
                                         :max-height menu-max-height}

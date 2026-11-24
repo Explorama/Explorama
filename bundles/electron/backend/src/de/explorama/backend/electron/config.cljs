@@ -5,7 +5,6 @@
                                                         create-folder delete-file]]
             [de.explorama.shared.common.logging :as logging] ;; maybe we should switch the config to something else
             [de.explorama.shared.woco.config :as backend-config]
-            [path]
             [taoensso.encore   :as enc]))
 
 (def debug? ^boolean goog.DEBUG)

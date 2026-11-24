@@ -32,7 +32,7 @@
         from (re-frame/subscribe [:de.explorama.frontend.search.views.formdata/from path])
         to (re-frame/subscribe [:de.explorama.frontend.search.views.formdata/to path])]
     [component-wrapper props
-     [:div.flex.gap-8
+     [:div.flex.gap-2
       (with-meta
         [elements/one-selection-dropdown
          {:placeholder select-placeholder
@@ -62,7 +62,7 @@
                     (re-frame/dispatch [:de.explorama.frontend.search.views.formdata/add-data-for-attr path save-key val])
                     (when on-change (on-change "simple-range-number")))]
     [component-wrapper props
-     [:div.flex.gap-8
+     [:div.flex.gap-2
       (with-meta
         [elements/number-input
          {:on-change (fn [new-val]

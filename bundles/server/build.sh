@@ -22,14 +22,12 @@ bb gather-assets.bb.clj prod
 # Build ClojureScript frontend
 echo ""
 echo "Building ClojureScript frontend..."
-clojure -M:prod -m cljs.main -co prod-opts.edn -c de.explorama.frontend.woco.app.core
+clojure -Sdeps "$(cat cljs.deps.edn)" -M:prod -m cljs.main -co prod-opts.edn -c de.explorama.frontend.woco.app.core
 
 # Build Clojure backend uberjar
 echo ""
 echo "Building backend uberjar..."
-clojure -A:prod -m uberdeps.uberjar \
-  --target target/explorama-standalone.jar \
-  --main-class de.explorama.backend.woco.app.server
+clojure -Sdeps "$(cat clj.deps.edn)" -M:uberjar
 
 echo ""
 echo "================================================"

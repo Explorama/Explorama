@@ -23,7 +23,7 @@ jobs:
         working-directory: ./bundles/server
     steps:
       - uses: actions/checkout@v6
-      - run: apk add --no-cache tar
+      - run: if command -v apk >/dev/null; then apk add --no-cache tar; fi
       - name: Cache dependencies
         uses: actions/cache@v5
         with:

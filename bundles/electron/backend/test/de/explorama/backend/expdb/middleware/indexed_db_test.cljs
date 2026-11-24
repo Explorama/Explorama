@@ -1,6 +1,5 @@
 (ns de.explorama.backend.expdb.middleware.indexed-db-test
-  (:require [fs :as fs]
-            [de.explorama.backend.common.middleware.cache :as idb-cache]
+  (:require [de.explorama.backend.common.middleware.cache :as idb-cache]
             [de.explorama.backend.expdb.legacy.search.attribute-characteristics.cache :as cache]
             [de.explorama.backend.expdb.legacy.search.attribute-characteristics.core :as legacy-ac-core]
             [de.explorama.backend.expdb.legacy.search.data-tile-ref :as dt-api]
@@ -8,6 +7,8 @@
             [de.explorama.backend.expdb.persistence.indexed :as sut]
             [de.explorama.backend.expdb.persistence.shared :as imp]
             [de.explorama.backend.expdb.query.index :as index]))
+
+(def ^:private node-fs (js/require "fs"))
 
 (def ^:private config {:backend "browser"
                        :indexed? true
@@ -47,4 +48,4 @@
         (imp/transform->import data {} "default"))
       (legacy-ac-core/all-attributes)
       (test-fn)
-      (fs/rmSync db-key))))
+      (.rmSync node-fs db-key))))

@@ -1,0 +1,45 @@
+/* base/icons.css -- unrolled byte-copy of the icon size-class utilities
+   (former `_icons.scss` `@each $name, $size in $icon-sizes` loop output)
+   plus the trailing `.icon-font-size` rule. The `icon()`/`icon-color()`
+   mixins and the `$icon-sizes` map itself have zero remaining consumers
+   (all `@include` call sites were inlined) and are dropped. */
+
+.icon-xs {
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.icon-sm {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.icon-md {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.icon-lg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.icon-xl {
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon-xxl {
+  width: 3rem;
+  height: 3rem;
+}
+
+.icon-3xl {
+  width: 4rem;
+  height: 4rem;
+}
+
+.icon-font-size {
+  width: 1em;
+  height: 1em;
+}

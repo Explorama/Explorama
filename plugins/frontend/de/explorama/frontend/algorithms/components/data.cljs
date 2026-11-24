@@ -14,7 +14,7 @@
               :disabled? (or (nil? @state)
                              (empty? @state)
                              @loading?)
-              :label [:div.flex.gap-8
+              :label [:div.flex.gap-2
                       (translate-function :input-data-section)
                       (when (every? (fn [[_ {e :train-error w :train-warning}]]
                                       (not (or e w)))

@@ -1,0 +1,8 @@
+{:main de.explorama.main.core
+ :target :nodejs
+ :optimizations :none
+ :output-to "resources/main.js"
+ :output-dir "resources/public/js/main-dev"
+ :closure-defines {goog.DEBUG true
+                   de.explorama.main.config/DEFAULT_LOG_LEVEL "debug"
+                   de.explorama.main.config/RUNTIME_MODE "dev"}}

@@ -1,0 +1,72 @@
+/*  Snapshots / protocol -- vendor / state-descendant / shared-marker RESIDUAL. */
+
+/*  The protocol/snapshot list chrome (.protocol li base + .protocol__step / */
+/*  .protocol__container / .protocol__info / .protocol__star / .protocol__actions */
+/*  and the current-prot-step / protocol__snapshot conditional states) is */
+/*  Tailwind utility stacks on projects/protocol/core.cljs. */
+
+/*  Each block below stays residual because its target is NOT an element the */
+/*  migrated markup styles directly: */
+/*    * `.protocol` -- the wrapper marker + negative margin sit directly on */
+/*      the ui_base virtualized-list's scroll container (virtualized-list */
+/*      :extra-class "protocol"), NOT the <li>. The marker MUST stay emitted */
+/*      so every residual `.protocol li ...` descendant selector below keeps */
+/*      matching. */
+/*    * `.protocol .virtualized-list__sizer :first-child li` -- the ui_base */
+/*      virtualized-list's inner sizer element, not markup the <li> owns. */
+/*    * `.protocol li.current-prot-step .protocol__actions` -- a state-descendant */
+/*      gradient override kept verbatim (byte-exact) so it keeps winning over the */
+/*      migrated base gradient utility (specificity 0,3,1 > 0,1,0) when the <li> */
+/*      carries the current-prot-step marker. Composes with the group-hover:block */
+/*      reveal (orthogonal: display vs background-image). */
+/*    * `.protocol li.protocol__snapshot label / .explorama__form__input / */
+/*      .explorama__form__textarea` -- override the shared _forms_domain markers */
+/*      (ui_base input-field/textarea DOM) scoped to a snapshot <li>. */
+/*    * `.protocol li .snapshot__editor` -- scoped to a `.protocol li` ancestor, */
+/*      but the editor renders inside a dialog (outside the list) in current */
+/*      markup, so the rule matches nothing; kept verbatim to preserve that scope */
+/*      (an unconditional utility on the div would newly activate it). */
+/*    * `.protocol li .protocol__star span` -- colours the ui_base icon's internal */
+/*      span (component-owned DOM). */
+
+/*  Loaded at _snapshots' old style.scss slot (before _legend) so its cascade */
+/*  position is unchanged. */
+
+.protocol {
+    margin: -0.5rem;
+}
+
+.protocol .virtualized-list__sizer :first-child li {
+    border: none;
+}
+
+.protocol li.current-prot-step .protocol__actions {
+    background-image: linear-gradient(to right, transparent, var(--bg-hover) 25%);
+}
+
+.protocol li.protocol__snapshot label {
+    display: block;
+    float: none;
+}
+
+.protocol li.protocol__snapshot .explorama__form__input {
+    display: block;
+    height: auto;
+    margin-bottom: 6px;
+}
+
+.protocol li.protocol__snapshot .explorama__form__textarea {
+    width: 100%;
+    margin-bottom: 6px;
+    padding-right: 12px;
+}
+
+.protocol li .snapshot__editor {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.protocol li .protocol__star span {
+    background-color: var(--primary);
+}

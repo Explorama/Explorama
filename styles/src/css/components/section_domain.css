@@ -1,0 +1,135 @@
+/*  components/section residual: `.section`/`.subsection` is a cross-plugin */
+/*  shared marker (~10 plugins render collapsible section/subsection panels */
+/*  via this shared class pair, not owned by any single plugin's markup), */
+/*  including `:has()` state cascades (light indicators, footer-button */
+/*  spacing), an attribute-prefix icon chevron (`span[class^="icon-"]`), and */
+/*  nested `.section .section` child-combinator overrides for stacked panels. */
+.section, .subsection {
+
+    > h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0.5rem 0.75rem;
+        background-color: var(--bg);
+        font-size: 0.875rem;
+        transition: background-color 120ms;
+
+        .tooltip-wrapper {
+            display: flex;
+            margin-right: auto;
+        }
+
+        > span[class^="icon-"] {
+            background-color: var(--icon);
+            transform: rotate(-90deg);
+            transition: transform 100ms ease-out;
+        }
+    }
+
+    &.disabled {
+        > h2 {
+            color: var(--text-disabled);
+
+            span[class^="icon-"] {
+                background-color: var(--icon-disabled);
+            } 
+        }
+    }
+
+    &:not(.disabled) > h2:hover {
+        background-color: var(--bg-highlight);
+        cursor: pointer;
+    }
+
+    > .content, > .footer {
+        overflow: hidden;
+        height: 0;
+        padding: 0 0.75rem;
+        transition: all 150ms ease-out;
+        transition-property: height, padding;
+    }
+
+    > .footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border-top: 0.0625rem solid var(--border-secondary);
+
+        button:has(+button) {
+            margin-right: 0.5rem;
+        }
+    }
+
+    &.open {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+
+        > h2 {
+            border-bottom: 0.0625rem solid var(--border-secondary);
+
+            > span[class^="icon-"] {
+                transform: rotate(0deg);
+            }
+        }
+
+        > .content, > .footer {
+            height: auto;
+            padding: 0.75rem;
+            background-color: var(--bg);
+        }
+
+        > .content {
+            flex: 1 1 auto;
+        }
+
+        > .footer {
+            height: auto;
+            padding: 0.75rem;
+        }
+    }
+
+    & > h2:has(.lights--red) {
+        background-color: var(--bg-warning);
+    }
+
+    & > h2:has(.lights--yellow) {
+        background-color: var(--bg-hint);
+    }
+
+    & > h2:has(.lights--green) {
+        background-color: var(--bg-success);
+    }
+}
+
+.section {
+    border-bottom: 0.0625rem solid var(--border);
+}
+
+.section .section {
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg);
+
+    &.open {
+        > h2 {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+
+    > h2 {
+        border-radius: var(--radius-sm);
+    }
+
+    > .content:not(:has(+.footer)), .footer {
+        border-bottom-left-radius: var(--radius-sm);
+        border-bottom-right-radius: var(--radius-sm);
+    }
+}

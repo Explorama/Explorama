@@ -1,14 +1,15 @@
 (ns de.explorama.backend.abac.jwt
   (:require [buddy.core.hash :as hash]
             [buddy.sign.jwt :as jwt]
-            [clj-time.coerce :as c]
-            [clj-time.core :as t]
             [de.explorama.shared.abac.config :as config]
             [de.explorama.shared.abac.util :as util :refer [user-info-role-fix]]
-            [taoensso.timbre :refer [error]]))
+            [taoensso.timbre :refer [error]])
+  (:import [java.time Duration Instant]))
 
 (def secret (hash/sha256 config/explorama-shared-secret-key))
 (def encryption {:alg :dir :enc :a128cbc-hs256})
+
+(defn now ^Instant [] (Instant/now))
 
 (defn token-payload
   "Decrypt the token to get the data."
@@ -31,15 +32,12 @@
                 user-role (:role claim)
                 exp  (-> (:exp claim)
                          (long)
-                         (c/from-long))
-                current-time (t/now)
+                         (Instant/ofEpochMilli))
+                current-time (now)
                 payload-valid? (and username
                                     user-role
                                     exp)
-                time-exp-valid? (or (t/equal? exp
-                                              current-time)
-                                    (t/before? current-time
-                                               exp))]
+                time-exp-valid? (not (.isAfter current-time exp))]
             {:valid? (and payload-valid?
                           time-exp-valid?)
              :reason (cond-> []
@@ -85,11 +83,9 @@
 
 (defn admin-token [user-info]
   (when (seq user-info)
-    (let [exp
-          #_{:clj-kondo/ignore [:type-mismatch]}
-          (-> (t/now)
-              (t/plus (t/hours config/explorama-admin-token-experation-hours))
-              (c/to-long))]
+    (let [exp (-> (now)
+                  (.plus (Duration/ofHours config/explorama-admin-token-experation-hours))
+                  (.toEpochMilli))]
       (when (is-admin-role? (:role user-info))
         (jwt/encrypt (assoc user-info
                             :exp exp
@@ -100,11 +96,9 @@
 (defn user-token
   "Encrpyt the user-info with a experation-time."
   [user-info]
-  (let [exp-time
-        #_{:clj-kondo/ignore [:type-mismatch]}
-        (-> (t/now)
-            (t/plus (t/hours config/explorama-token-experation-hours))
-            (c/to-long))]
+  (let [exp-time (-> (now)
+                     (.plus (Duration/ofHours config/explorama-token-experation-hours))
+                     (.toEpochMilli))]
     (jwt/encrypt (assoc user-info :exp exp-time)
                  secret
                  encryption)))

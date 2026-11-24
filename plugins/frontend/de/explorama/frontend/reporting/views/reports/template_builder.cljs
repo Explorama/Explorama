@@ -7,6 +7,7 @@
             [de.explorama.frontend.reporting.views.dropzone :as dropzone]
             [de.explorama.frontend.reporting.views.context-menu :as menu]
             [de.explorama.frontend.reporting.views.text-module :as text]
+            [de.explorama.frontend.reporting.views.reports.view :as view]
             [de.explorama.frontend.reporting.paths.dashboards-reports :as dr-path]
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]))
@@ -24,14 +25,14 @@
    (assoc-in db (dr-path/creation-module-desc tile-idx) {:tool "text"})))
 
 (defn- tile-header [tile-idx title edit-title? context-menu show-dropzone-state disabled?]
-  [:div.title
+  [:div.title {:class view/report-title-base-classes}
    (when edit-title?
      [:div.explorama__form__textarea
       [input-field {:value title
                     :disabled? disabled?
                     :extra-class "mosaic__box__title__input"
                     :on-change #(dispatch [:de.explorama.frontend.reporting.views.builder/tile-title-change tile-idx %])}]])
-   [:div.options
+   [:div.options {:class view/report-options-classes}
     (when context-menu
       [button {:start-icon :burgermenu
                :disabled? disabled?
@@ -176,7 +177,9 @@
               @(subscribe [::i18n/translate-multi :reporting-placeholder-short-label :report-placeholder-1-label :report-placeholder-2-label :report-placeholder-3-label])
               show-dropzone? @is-dropzone-active-sub]
           [:div {:id tile-dom-id
-                 :class [report-item-class (when show-dropzone? "active") (when-not tool "empty")]
+                 :class (cond-> (into [report-item-class] view/report-element-base-classes)
+                          show-dropzone? (conj "active")
+                          (not tool) (into ["empty" "justify-center" "items-center" "cursor-pointer"]))
                  :on-drop #(when-not disabled?
                              (reset! show-dropzone-state false))
                  :on-drag-enter #(reset! show-dropzone-state true)
@@ -198,12 +201,16 @@
              (if show-dropzone?
                [:div {:class ["drag-drop-area" "drag-drop-area--empty" "drop-target"]}
                 [:span drag-hint]]
-               [:div.placeholder {:on-drag-enter #(reset! show-dropzone-state true)
+               [:div.placeholder {:class ["flex" "flex-col" "justify-center" "items-center"
+                                          "text-center" "my-3" "mx-0" "text-xs"
+                                          "text-[var(--text-secondary)]"]
+                                  :on-drag-enter #(reset! show-dropzone-state true)
                                   :on-click #(dispatch [::set-text-module tile-idx])
                                   :style {:height "100%"
                                           :width "100%"}} ;TODO r1/css create a class - or use one
                 report-placeholder-1-label
-                [:span.divider {:on-drag-enter #(reset! show-dropzone-state true)}
+                [:span.divider {:class ["flex" "flex-row"]
+                                :on-drag-enter #(reset! show-dropzone-state true)}
                  report-placeholder-2-label]
                 report-placeholder-3-label])
 
@@ -232,9 +239,10 @@
                                  (map-indexed (fn [idx itm] (assoc itm :id idx)) tiles))]
          (for [row-num (range gh)]
            ^{:key (str "reporting-report-row-" row-num)}
-           [:div.report__row {:class (when (= row-num id-focus) "focused")}
+           [:div.report__row {:class (cond-> view/report-row-base-classes
+                                       (= row-num id-focus) (conj "focused"))}
             (when rows-removeable?
-              [:div.report__row__reorder
+              [:div.report__row__reorder {:class ["flex" "flex-col"]}
                [button
                 {:start-icon :arrow-up
                  :extra-class "order__up"
@@ -252,7 +260,8 @@
                    (assoc tile :row-num-items row-num-items)
                    tile-content-props])))
             (when rows-removeable?
-              [:div.report__row__remove {:on-mouse-enter #(reset! id-focus-state row-num)
+              [:div.report__row__remove {:class ["flex"]
+                                         :on-mouse-enter #(reset! id-focus-state row-num)
                                          :on-mouse-leave #(reset! id-focus-state nil)}
                [button {:start-icon :trash
                         :on-click #(dispatch [::remove-template-row row-num (:sidebar-props tile-content-props)])}]])]))])))
@@ -266,7 +275,7 @@
         title-exists? @(subscribe [:de.explorama.frontend.reporting.views.builder/name-exists?])
         caption (when title-exists?
                   @(subscribe [::i18n/translate :report-name-exists]))]
-    [:div.report__container.in-app
+    [:div.report__container.in-app {:class view/report-container-base-classes}
      [input-field {:label title-label
                    :disabled? save-pending?
                    :caption caption
@@ -281,7 +290,14 @@
       selected-template
       {:tile-content-props {:sidebar-props sidebar-props
                             :disabled? save-pending?}}]
-     [:div.report__add-row {:on-click (fn [e]
+     [:div.report__add-row {:class ["flex" "flex-row" "justify-center" "items-center"
+                                    "gap-[0.375em]" "w-full" "p-3" "rounded-xs" "font-bold"
+                                    "leading-none" "[border:1px_solid_var(--border)]" "shadow-sm"
+                                    "bg-[var(--bg)]"
+                                    "[transition:border-color_120ms,background-color_120ms]"
+                                    "text-[var(--text)]"
+                                    "hover:bg-[var(--bg-hover)]" "hover:cursor-pointer"]
+                            :on-click (fn [e]
                                         (dropzone/clear-dropzone-state)
                                         (dispatch [::menu/set-row-menu
                                                    (calc-menu-position e)

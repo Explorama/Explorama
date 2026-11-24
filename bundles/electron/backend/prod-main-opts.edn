@@ -1,0 +1,10 @@
+{:main de.explorama.main.core
+ :target :nodejs
+ :optimizations :simple
+ :output-to "../../../dist/electron/prepared/main.js"
+ :output-dir "../../../dist/electron/prepared/public/js/main"
+ :closure-defines {goog.DEBUG false
+                   de.explorama.main.config/DEFAULT_LOG_LEVEL "info"
+                   de.explorama.main.config/RUNTIME_MODE "prod"}
+ :language-in :ecmascript-next
+ :pretty-print false}

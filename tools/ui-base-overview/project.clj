@@ -11,10 +11,7 @@
                  [cljsjs/blueprintjs-core "3.34.0-0"]
                  [cljsjs/blueprintjs-datetime "3.19.3-0"]
                  [cljsjs/rc-slider "9.7.1-1"]
-                 [cljsjs/resumable.js "1.1.0-0"]
                  [cljsjs/date-fns "2.20.2-1"]
-                 [cljsjs/react-tooltip-lite "1.11.2-0" :exclusions [cljsjs/react-dom]]
-                 [cljsjs/react-virtualized "9.21.1-0"]
                  [cljsjs/react-number-format "4.4.4-0"]
 
                  [com.taoensso/timbre "5.1.2"]
@@ -59,14 +56,9 @@
                               :server-port 13600}
                    :source-paths ["src/cljs/lib" "src/cljs/overview"]
                    :prep-tasks ["clean"
-                                ["shell" "bash" "replace-v.sh"]
-                                ["shell" "bash" "dl_style_assets.sh"]
-                                ["shell" "cp" "-rf" "css" "resources/public/"]
-                                ["shell" "cp" "-rf" "fonts" "resources/public/"]
-                                ["shell" "cp" "-rf" "img" "resources/public/"]]
+                                ["shell" "bash" "gather-assets.sh"]]
                    :plugins [[lein-figwheel "0.5.20"]]}
-             :test {:source-paths ["src/clj/" "test/clj/"]
-                    :prep-tasks [["shell" "bash" "replace-v.sh"]]}
+             :test {:source-paths ["src/clj/" "test/clj/"]}
              :overview-build {:dependencies [[cljsjs/highlight "11.5.1-0"]
                                              [markdown-clj "1.11.3"]
                                              [fipp "0.6.26"]
@@ -74,8 +66,7 @@
                                              [cljsjs/react "17.0.2-0-prod"]
                                              [cljsjs/react-dom "17.0.2-0-prod"]
                                              [cljsjs/react-dom-server "17.0.2-0-prod"]]
-                              :prep-tasks ["clean"
-                                           ["shell" "bash" "replace-v.sh"]]
+                              :prep-tasks ["clean"]
                               :source-paths ["src/cljs/lib" "src/cljs/overview"]}}
 
   :aliases {"dev" ["do"

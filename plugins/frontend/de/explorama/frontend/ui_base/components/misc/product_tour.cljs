@@ -116,7 +116,7 @@
 
 (def main-class ["dialog" "dialog-compact" "dialog-auto-size" "product-tour" "absolute"])
 (def header-class "dialog-header")
-(def title-class ["flex" "justify-between" "align-items-center"])
+(def title-class ["flex" "justify-between" "items-center"])
 (def body-class "dialog-body")
 (def footer-class "dialog-footer")
 (def steps-class ["text-xs" "text-secondary"])

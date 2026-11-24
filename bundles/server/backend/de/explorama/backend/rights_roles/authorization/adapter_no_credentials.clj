@@ -11,13 +11,13 @@
 (defn- login-page [login-target
                    login-class
                    {:keys [remember-me]}]
-  [:div.absolute.center.flex.flex-col.align-items-center.w-320
+  [:div.absolute.center.flex.flex-col.items-center.w-80
    {:class login-class}
    [:img.login-logo
     {:alt (str config/system-name " logo")
      :src (interface/login-header-image)}]
    [:div.animation-fade-in.w-full
-    [:form.flex.flex-column.gap-8
+    [:form.flex.flex-column.gap-2
      {:action "/login"
       :method "post"}
      [:div.checkbox

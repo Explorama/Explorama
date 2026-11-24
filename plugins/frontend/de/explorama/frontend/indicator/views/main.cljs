@@ -17,6 +17,7 @@
             [de.explorama.frontend.indicator.views.management :as management]
             [de.explorama.frontend.indicator.views.result-preview :as result-preview]
             [re-frame.core :as re-frame]
+            [re-frame.db :as rf-db]
             [reagent.core :as reagent]))
 
 (defn- i18n-translate [label]
@@ -153,7 +154,7 @@
                  (= label ::dfdates/month) "month"
                  :else label)]
      [:div {:class parent-class}
-      [:dt (i18n/attribute-label label)]
+      [:dt (i18n/attribute-label-with-unit label)]
       [:dd (cond-> {}
              tooltip
              (assoc :title tooltip))
@@ -161,7 +162,7 @@
   ([label attribute tooltip]
    [info-block label attribute tooltip nil])
   ([label attribute]
-   [info-block label attribute (i18n/attribute-label attribute)]))
+   [info-block label attribute (i18n/attribute-label-with-unit attribute)]))
 
 (defn- more-data-row [{:de.explorama.shared.data-format.filter/keys [prop value]
                        op ::dflsv/op}]
@@ -198,6 +199,17 @@
      (str (or o "")
           text)]))
 
+;; Tailwind migration of styles/src/scss/components/_card.scss's `%card`/
+;; `.card` base rule -- this file builds `.card` markup directly (not via
+;; ui_base's `card` component), so the class stack is duplicated here per
+;; Task 7's direct-builder precedent (also duplicated in
+;; woco/frame/interaction/dnd.cljs and projects/views/project_card.cljs,
+;; the non-ui_base direct builders of `.card`). `card` itself stays a literal
+;; DOM class: base/_frames.scss and components/_projects.scss key off it
+;; via plain descendant selectors and are not migrated yet.
+(def ^:private card-class
+  "rounded-xl shadow-md bg-(--bg-over-bg) no-underline text-(--text) border border-(--border-secondary) p-3")
+
 (defn- dataset-description [{:keys [title di indicator-id]
                              {[years] :years
                               [countries] :countries
@@ -205,15 +217,16 @@
   (let [{incomplete-desc? :incomplete?
          di-filter-primitives :di-filter-primitives} (dflsv/simplified-filter di nil)
         legend-icomplete-filter-explanation @(re-frame/subscribe [::i18n/translate :legend-icomplete-filter-explanation])]
-    [:div.card {:title (str datasources "," years "," countries)}
+    [:div.card {:title (str datasources "," years "," countries)
+                :class card-class}
      [:div {:class ["flex"
-                    "align-items-center"
-                    "gap-4"
-                    "-mt-4"
-                    "-mr-4"
-                    "mb-4"]}
+                    "items-center"
+                    "gap-1"
+                    "-mt-1"
+                    "-mr-1"
+                    "mb-1"]}
       [icon {:icon :database}]
-      [:span {:class "text-bold"} title]
+      [:span {:class "font-bold"} title]
       [button {:start-icon :close
                :variant :tertiary
                :size :small
@@ -418,7 +431,7 @@
                 :variant :back
                 :label (re-frame/subscribe [::i18n/translate :back-to-overview-label])
                 :on-click (fn [_]
-                            (let [is-changed? @(re-frame/subscribe [::management/changed? current-indicator-id false])]
+                            (let [is-changed? (management/changed? @rf-db/app-db current-indicator-id false)]
                               (cond
                                 is-changed? (re-frame/dispatch [::dialog/set-show "back-confirm" new-indicator-id true])
                                 :else (re-frame/dispatch [::management/change-active-indicator nil]))))}]

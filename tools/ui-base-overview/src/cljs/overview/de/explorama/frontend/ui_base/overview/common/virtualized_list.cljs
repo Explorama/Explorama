@@ -6,7 +6,7 @@
 
 (defcomponent
   {:name "Virtualized List"
-   :desc "List component for high performance. Uses https://github.com/bvaughn/react-virtualized"
+   :desc "List component for high performance. Uses https://github.com/TanStack/virtual"
    :require-statement "[de.explorama.frontend.ui-base.components.common.core :refer [virtualized-list]]"
    :default-parameters default-parameters
    :parameters parameter-definition})

@@ -110,7 +110,7 @@
   (let [empty-label @(re-frame/subscribe [::i18n/translate :any-empty-values-label])
         any-label @(re-frame/subscribe [::i18n/translate :any-non-empty-values-label])]
     (conj [:<> (apply conj
-                      [:div.multiple__inputs]
+                      [:div.multiple__inputs.flex.flex-row.flex-wrap.gap-2]
                       childs)]
           (with-meta
             [checkbox {:label any-label
@@ -178,7 +178,7 @@
            :disabled? disabled?}]
          {:key (str path "-" :value)}))
      (when (and range-condi? can-define-values?)
-       [:div.flex.gap-8
+       [:div.flex.gap-2
         (with-meta
           [elements/one-selection-dropdown
            {:placeholder select-placeholder
@@ -231,7 +231,7 @@
          {:key (str path "-" :value)}))
 
      (when (and can-define-values? range-condi?)
-       [:div.flex.gap-8.min-w-0
+       [:div.flex.gap-2.min-w-0
         (with-meta
           [elements/number-input
            {:on-change (fn [new-val]
@@ -492,7 +492,7 @@
            :disabled? disabled?}]
          {:key (str path "-" :value)}))
      (when (and range-condi? can-define-values? (not is-current?) (not is-last-x?))
-       [:div.flex.gap-8
+       [:div.flex.gap-2
         (with-meta
           [elements/one-selection-dropdown
            {:placeholder select-placeholder

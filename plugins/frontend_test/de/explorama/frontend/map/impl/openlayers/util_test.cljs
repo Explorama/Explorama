@@ -61,6 +61,14 @@
 (defn attribute-label-fn [attr]
   attr)
 
+(defn unit-attribute-label-fn [attr]
+  (if (= attr "attr-1")
+    "attr-1 (kg)"
+    attr))
+
+(def popup-result-marker-with-unit
+  (str "<div class=\"popup-content\" style=\"width: 350px;\"> <dl class=\"colored-bg\" style=\"background-color: #000000; color: #FFFFFF;\"><dt>test</dt><dd>test-title</dd></dl> <dl><dt>attr-1 (kg)</dt><dd>0</dd><dt>attr-2</dt><dd>fooo</dd><dt>attr-3</dt><dd>bar</dd></dl> </div>"))
+
 (deftest gen-popup-content
   (testing "Simple event-marker"
     (let [{:keys [color event 
@@ -113,6 +121,17 @@
       (is (= popup-result-no-title-all-attrs-flag
              (util/gen-popup-content localize-num-fn
                                      attribute-label-fn
+                                     color
+                                     event
+                                     title-attributes
+                                     display-attributes))))))
+
+(deftest gen-popup-content-with-units
+  (testing "the label function supplies the unit-decorated attribute label"
+    (let [{:keys [color event title-attributes display-attributes]} default-marker]
+      (is (= popup-result-marker-with-unit
+             (util/gen-popup-content localize-num-fn
+                                     unit-attribute-label-fn
                                      color
                                      event
                                      title-attributes

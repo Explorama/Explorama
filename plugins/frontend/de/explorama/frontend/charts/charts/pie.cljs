@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.pie
-  (:require ["chart.js" :as ChartJS]
+  (:require ["chart.js/auto" :refer [Chart]]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.utils.interop :refer [safe-aget]]
@@ -26,20 +26,17 @@
                                :animation {:duration 0}
                                :maintainAspectRatio false
                                :elements {:arc {:borderWidth 0}}
-                               :tooltips {:callbacks
-                                          {:title (fn [_])
-                                           :label (fn [item data]
-                                                    (let [dataset-index (safe-aget item "datasetIndex")
-                                                          data-index (safe-aget item "index")
-                                                          dataset (safe-aget data "datasets" dataset-index)
-                                                          y-value (safe-aget dataset "data" data-index)
-                                                          dataset-label (safe-aget dataset "label")]
-                                                      (str dataset-label ": " (i18n/localized-number y-value @cur-lang))))}}
-                               :legend {:position :top
-                                        :labels {:fontSize 12
-                                                 :boxWidth 10}}}})]
+                               :plugins {:tooltip {:callbacks
+                                                   {:title (fn [_])
+                                                    :label (fn [context]
+                                                             (let [y-value (safe-aget context "raw")
+                                                                   label (safe-aget context "label")]
+                                                               (str label ": " (i18n/localized-number y-value @cur-lang))))}}
+                                         :legend {:position :top
+                                                  :labels {:font {:size 12}
+                                                           :boxWidth 10}}}}})]
     (when chart-data
-      (cutils/save-instance frame-id ((.-default ChartJS) context (clj->js chart-data)))
+      (cutils/save-instance frame-id (Chart. context (clj->js chart-data)))
       (cutils/resize-chart frame-id height width))
     (when render-done
       (render-done frame-id))))

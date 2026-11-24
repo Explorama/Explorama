@@ -1,0 +1,136 @@
+/*  The .welcome__page / .welcome__panel / .welcome__section / .app-footer */
+/*  families are cross-plugin co-owned chrome (co-emitted by woco/welcome.cljs, */
+/*  projects/views/overview.cljs and expdb/temp_import/core.cljs). */
+/*  `.welcome__page` is also a forced-colors marker (base/_themes.scss) -- */
+/*  keep the literal. */
+
+/*  `.welcome__close` (a tertiary button's :extra-class, only ever emitted */
+/*  inside .welcome__page by woco/welcome.cljs) has no `!important` markers: */
+/*  it must out-specify button.cljs's btn-tertiary utility stack + */
+/*  tailwind.css's `.btn-tertiary span[class^="icon-"]` icon-tint remnant */
+/*  (both compile into 5_utilities.css, which links last) via SPECIFICITY */
+/*  instead. The two REST overrides are expressed one level deeper */
+/*  (`.welcome__page .welcome__close`) so they out-specify the utilities */
+/*  regardless of load order; the two `:hover` overrides are DROPPED */
+/*  entirely because button.cljs's own `hover:enabled:text-(--text)` ((0,3,0)) */
+/*  and `.btn-tertiary:hover:enabled span[class^="icon-"]` ((0,4,1)) already */
+/*  out-specify the rest residuals on hover AND resolve to the identical */
+/*  `var(--text)` / `var(--icon)` values the old hover markers produced. */
+
+.welcome__page {
+	width: 100vw;
+	height: 100vh;
+	overflow: auto;
+	scrollbar-gutter: stable;
+	background-color: var(--bg);
+
+	&:has(.projects-grid):not(:has(.welcome__header)) {
+		background-color: var(--bg-section);
+		backdrop-filter: blur(8px);
+	}
+
+	.app-footer {
+		position: fixed;
+		bottom: 8px;
+		color: var(--text-secondary);
+		font-size: 12px;
+
+		a {
+			color: var(--text-secondary);
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+	}
+
+	&~.toolbar-wrapper {
+		display: none;
+	}
+}
+
+/*  De-nested (not `&--center`/`&--right`/`&--left` inside `.app-footer`): */
+/*  lightningcss's CSS Nesting flattener mishandles `&` directly concatenated */
+/*  with more identifier characters (no combinator/delimiter between them) -- */
+/*  it emits a broken `--center:is(.welcome__page .app-footer)` compound (an */
+/*  unmatchable literal `--center` type-selector) instead of the correct */
+/*  `.welcome__page .app-footer--center`. Written flat here (top-level, NOT */
+/*  re-nested inside `.welcome__page` -- that would double-prefix it via the */
+/*  implicit `&` every un-prefixed nested selector gets) to produce the */
+/*  correct selector. */
+.welcome__page .app-footer--center {
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.welcome__page .app-footer--right {
+	right: 8px;
+	margin-right: 8px;
+}
+
+.welcome__page .app-footer--left {
+	left: 8px;
+}
+
+/*  welcome__close: no `!important` markers; rest overrides */
+/*  are expressed one level deeper so they win by SPECIFICITY (not load order), */
+/*  hover overrides dropped (button.cljs's own hover utilities out-specify these */
+/*  rest rules on hover with identical values). See header note above. */
+.welcome__page .welcome__close {                        /*  (0,2,0) > (0,1,0) .text-(--primary) */
+	color: var(--text-secondary);
+}
+
+.welcome__page .welcome__close span[class^="icon-"] {   /*  (0,3,1) > (0,2,1) .btn-tertiary icon-tint remnant */
+	order: 2;
+	background-color: var(--icon-secondary);
+}
+
+.welcome__panel {
+	position: relative;
+	min-width: 960px;
+	max-width: 1280px;
+	margin: 16px auto;
+	padding: 0.5rem 1rem;
+	height: calc(100% - 16px - 16px);
+	cursor: default;
+
+	&:has(.projects-grid):not(:has(.welcome__header)) {
+		padding-inline: 2rem;
+		border-radius: var(--radius-lg);
+		background-color: var(--bg);
+		box-shadow: 0 4px 25px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 10px -6px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+	}
+
+	.welcome__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.welcome__text {
+			font-size: 2em;
+			font-weight: bold;
+		}
+	}
+
+	.welcome__section {
+		margin: 0.5rem 0 1rem;
+
+		>h2,
+		>.flex>h2 {
+			margin: 0.5rem 0;
+		}
+
+		.actions {
+			display: flex;
+			gap: 0.25rem;
+		}
+
+		.help__section {
+			.btn-card.vertical {
+				width: 100%;
+			}
+		}
+	}
+}

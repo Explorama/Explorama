@@ -109,8 +109,8 @@
               :color       text-color
               :autoSkip    true
               :maxRotation 75}
-     :grid {:color       border-color
-            :borderColor border-color}
+     :grid   {:color border-color}
+     :border {:color border-color}
      :time   x-axis-time
      :labels (when-not x-axis-time labels)}))
 
@@ -274,7 +274,7 @@
                    (aset scales y-scale-id "title" "color" text-color)
                    (aset scales y-scale-id "ticks" "color" text-color)
                    (aset scales y-scale-id "grid" "color" border-color)
-                   (aset scales y-scale-id "grid" "borderColor" border-color)
+                   (aset scales y-scale-id "border" "color" border-color)
                    (catch :default e
                      (warn e "Cannot set y-axis attributes" {:scales        scales
                                                              :should-become y}))))))))

@@ -6,6 +6,7 @@
             [de.explorama.shared.common.config :as config-shared]
             [de.explorama.shared.common.ws-api :as ws-api]
             [re-frame.core :as re-frame]
+            [re-frame.db :as rf-db]
             [taoensso.timbre :refer [error warn]]))
 
 (re-frame/reg-event-fx ::init-tube backend-api/init-tube)
@@ -24,7 +25,7 @@
    {:dispatch (notify-vec notification-desc)}))
 
 (defn on-disconnect []
-  (let [server-ws-connection-lost-message @(re-frame/subscribe [::i18n/translate :server-ws-connection-lost-message])]
+  (let [server-ws-connection-lost-message (i18n/translate @rf-db/app-db :server-ws-connection-lost-message)]
     (re-frame/dispatch (notify-vec
                         {:type :warn
                          :category {:network :ws}

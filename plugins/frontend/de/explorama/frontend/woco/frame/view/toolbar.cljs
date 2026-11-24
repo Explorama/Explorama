@@ -15,7 +15,10 @@
             [de.explorama.frontend.woco.frame.filter.core :as filter-core]
             [de.explorama.frontend.woco.frame.plugin-api :as papi]
             [de.explorama.frontend.woco.frame.util :refer [handle-param]]
+            [de.explorama.frontend.woco.frame.view.legend :as legend-view]
             [de.explorama.frontend.woco.frame.view.overlay.filter :as filter-view]
+            [de.explorama.frontend.woco.util.api :refer [read-derefable]]
+            [re-frame.db :as rf-db]
             [de.explorama.frontend.woco.path :as path]
             [de.explorama.frontend.woco.api.product-tour :as product-tour]))
 
@@ -129,7 +132,7 @@
      :on-click (fn [e frame-id]
                  (dispatch [:de.explorama.frontend.woco.frame.view.legend/toggle-legend frame-id])
                  (when (fn? on-toggle-fn)
-                   (on-toggle-fn frame-id (not @(subscribe [:de.explorama.frontend.woco.frame.view.legend/legend-open? frame-id])))))}))
+                   (on-toggle-fn frame-id (not (legend-view/legend-open? @rf-db/app-db frame-id)))))}))
 
 (defn- window-tools [frame-id frame-desc toolbar-desc]
   (let [{:keys [is-minimized? is-maximized?]} frame-desc
@@ -146,12 +149,11 @@
       :disabled? is-minimized?
       :visible? (not product-tour-active?)
       :on-click (fn [e frame-id]
-                  (let [vertical-count-number @(subscribe [:de.explorama.frontend.woco.frame.api/vertical-count frame-id])
-                        custom-title (or @(subscribe [:de.explorama.frontend.woco.frame.view.header/custom-title frame-id])
-                                         (when frame-title-sub
-                                           @(frame-title-sub frame-id)))
-                        title-prefix (when frame-title-prefix-sub
-                                       @(frame-title-prefix-sub frame-id vertical-count-number))
+                  (let [db @rf-db/app-db
+                        vertical-count-number (get-in db (path/frame-vertical-number frame-id))
+                        custom-title (or (get-in db (path/frame-custom-title frame-id))
+                                         (read-derefable frame-title-sub frame-id))
+                        title-prefix (read-derefable frame-title-prefix-sub frame-id vertical-count-number)
                         short-title (cond-> title-prefix
                                       custom-title
                                       (str (subs custom-title 0 (min (count custom-title) 50))))]

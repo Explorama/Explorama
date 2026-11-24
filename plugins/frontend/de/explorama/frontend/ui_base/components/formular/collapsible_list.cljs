@@ -32,12 +32,41 @@
                          :open-all? false})
 
 (def ^:private disabled-class "disabled")
-(def ^:private open-class "open")
 
-(defn- entry-icon [open?]
+;; tailwind: migrated from styles/src/scss/components/_collapsible_list.scss.
+;; `list-item`/`disabled` stay literal DOM classes: base/_themes.scss's
+;; forced-colors block (`@media (forced-colors: active)`) still selects
+;; `.list-item:not(.disabled)` directly and hasn't been migrated yet (cross-
+;; sheet marker, same situation as tooltip.cljs's `tooltip-wrapper`). `open`/
+;; `child` had zero external referrers (grepped styles/src/scss/,
+;; plugins/**, bundles/*/frontend), so -- like hint.cljs's `.hint-error`/
+;; `.hint-warning` -- they're folded into full literal utility-class picks
+;; below instead of staying as DOM marker classes.
+;; `flex!` (not `flex`): Tailwind ships its own `list-item` utility
+;; (`display: list-item`, one of the CSS `display` keywords) which the
+;; kept-literal `list-item` marker class above makes Tailwind's scanner
+;; treat as a genuine utility candidate. Both `.flex`/`.list-item` land in
+;; the same unlayered utilities sheet at equal specificity (0,1,0); `.list-item`
+;; is generated after `.flex` (verified: dist/css/5_utilities.css line 322 vs
+;; 337), so on source order alone it silently wins and the row collapses out
+;; of flex layout. `!important` makes the real intent unconditional.
+(def ^:private list-item-class
+  "flex! items-center gap-1 relative p-2.5 border-b border-b-(--border-secondary) bg-(--bg) text-sm transition-[background-color] duration-[120ms] ease-[ease] hover:not-[.disabled]:bg-(--bg-hover) hover:not-[.disabled]:cursor-pointer active:not-[.disabled]:scale-97")
+(def ^:private list-item-disabled-class "text-(--text-disabled)")
+(def ^:private list-item-open-class "shadow-sm z-1")
+(def ^:private list-item-child-class "border-l-4 border-l-(--border)")
+(def ^:private item-label-class "truncate")
+(def ^:private item-icon-class "ml-auto")
+(def ^:private item-icon-span-class "bg-(--icon)")
+(def ^:private item-icon-span-disabled-class "bg-(--icon-disabled)")
+
+(defn- entry-icon [open? disabled?]
   [icon {:icon (if open?
                  :collapse-open
-                 :collapse-closed)}])
+                 :collapse-closed)
+         :extra-class (if disabled?
+                        item-icon-span-disabled-class
+                        item-icon-span-class)}])
 
 (defn- parent-entry [style
                      {:keys [open? idx id label collapsible?]
@@ -48,20 +77,20 @@
   (let [disabled? (val-or-deref (or disable-item? disabled?))]
     [:div.list-item (cond-> {:style style
                              :role "row"
-                             :class []}
+                             :class [list-item-class]}
                       (and collapsible? (not disabled?))
                       (assoc :on-click #(on-open idx id))
                       (and (not collapsible?)
                            (not disabled?)
                            (fn? on-click))
                       (assoc :on-click #(on-click (dissoc item :open? idx)))
-                      open? (update :class conj open-class)
-                      disabled? (update :class conj disabled-class))
-     [:div.item-label {:title label :role "gridcell"}
+                      open? (update :class conj list-item-open-class)
+                      disabled? (update :class conj disabled-class list-item-disabled-class))
+     [:div {:class item-label-class :title label :role "gridcell"}
       label]
      (when collapsible?
-       [:div.item-icon {:role "gridcell"}
-        [entry-icon open?]])]))
+       [:div {:class item-icon-class :role "gridcell"}
+        [entry-icon open? disabled?]])]))
 
 (defn- entry [style
               {:keys [label]
@@ -69,13 +98,14 @@
                :as item}
               {:keys [disabled? on-click]}]
   (let [disabled? (val-or-deref (or disable-item? disabled?))]
-    [:div.list-item.child (cond-> {:style style}
-                            (and (not disabled?)
-                                 (fn? on-click))
-                            (assoc :on-click #(on-click (dissoc item :idx)))
-                            disabled?
-                            (assoc :class disabled-class))
-     [:div.item-label.truncate-text {:title label}
+    [:div.list-item (cond-> {:style style
+                             :class [list-item-class list-item-child-class]}
+                      (and (not disabled?)
+                           (fn? on-click))
+                      (assoc :on-click #(on-click (dissoc item :idx)))
+                      disabled?
+                      (update :class conj disabled-class list-item-disabled-class))
+     [:div {:class item-label-class :title label}
       label]]))
 
 (defn- calc-rows [open-item childs items multiple-open? open-all?]

@@ -12,7 +12,7 @@
             [reagent.core :as r]
             [de.explorama.frontend.search.data.di :as data-di]
             [de.explorama.frontend.search.path :as spath]
-            [vimsical.re-frame.fx.track :as track]))
+            [de.explorama.frontend.common.tracks :as track]))
 
 (defn loading-states [frame-id]
   (let [di-creation-failed? (false? @(subscribe [::data-di/di-creation-success? frame-id]))]

@@ -19,7 +19,7 @@ jobs:
       image: ghcr.io/explorama/images/build-image:latest
     steps:
       - uses: actions/checkout@v6
-      - run: apk add --no-cache tar
+      - run: if command -v apk >/dev/null; then apk add --no-cache tar; fi
       - name: Cache dependencies
         uses: actions/cache@v5
         with:
@@ -30,16 +30,16 @@ jobs:
         run: |
           cd bundles/browser
           clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./test) --config '{:output {:format :edn}}' > ../../browser_check.edn
-      #- name: check electron bundle
-      #  continue-on-error: true
-      #  run: |
-      #    cd bundles/electron
-      #    clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./frontend-integrations) --lint $(bash ../../tools/list-files ./test) --lint $(bash ../../tools/list-files ./main) --config '{:output {:format :edn}}' > ../../electron_check.edn
-      #- name: check server bundle
-      #  continue-on-error: true
-      #  run: |
-      #    cd bundles/server
-      #    clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./frontend-integrations) --lint $(bash ../../tools/list-files ./test) --lint $(bash ../../tools/list-files ./main) --config '{:output {:format :edn}}' > ../../server_check.edn
+      - name: check electron bundle
+        continue-on-error: true
+        run: |
+          cd bundles/electron
+          clj-kondo --lint $(bash ../../tools/list-files ./backend/main) --lint $(bash ../../tools/list-files ./backend/src) --lint $(bash ../../tools/list-files ./backend/test) --lint $(bash ../../tools/list-files ./frontend/src) --lint $(bash ../../tools/list-files ./frontend/test) --lint $(bash ../../tools/list-files ./shared) --config '{:output {:format :edn}}' > ../../electron_check.edn
+      - name: check server bundle
+        continue-on-error: true
+        run: |
+          cd bundles/server
+          clj-kondo --lint $(bash ../../tools/list-files ./backend) --lint $(bash ../../tools/list-files ./frontend) --lint $(bash ../../tools/list-files ./shared) --lint $(bash ../../tools/list-files ./test) --lint $(bash ../../tools/list-files ./dev) --lint $(bash ../../tools/list-files ./harness) --config '{:output {:format :edn}}' > ../../server_check.edn
       - name: check plugins
         continue-on-error: true
         run: |
@@ -49,3 +49,7 @@ jobs:
         run: bb tools/clj-kondo-report/clj-kondo-report.clj
       - name: Write to Job Summary
         run: cat report.md >> $GITHUB_STEP_SUMMARY
+      # The lint steps above are continue-on-error so the report is always
+      # produced; this is what actually gates the build.
+      - name: Fail on clj-kondo errors
+        run: bb tools/clj-kondo-report/check-errors.clj

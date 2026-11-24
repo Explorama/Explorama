@@ -62,6 +62,22 @@
 (def dialog-full-width-class "dialog-full-width")
 (def dialog-full-height-class "dialog-full-height")
 
+;; ---- migrated _dialog.scss `.overlay` base as a Tailwind utility stack -------
+;; Only the `.overlay` BASE rule was owner-exclusive (dialog.cljs is its sole
+;; class applier) + element-expressible, so it migrates here; the `overlay`
+;; marker class is kept (below, as the hook the residual `.explorama__window
+;; .overlay` / `.sidebar .overlay .dialog` / _sidebar / _temp context overrides
+;; still match -- all of those are higher-specificity so they keep winning).
+;; The rest of the dialog chrome (`.dialog*` families, header colour variants,
+;; `:where()` compact, `.share-section`, `@keyframes scaleIn`) stays in
+;; styles/src/scss/components/_dialog_domain.scss because it is co-owned by
+;; ui_base/components/misc/product_tour.cljs, cross-context, cross-plugin, or a
+;; keyframe. Standard classes are static literals; the black/.5 backdrop is the
+;; exact rgba arbitrary value (color('black', .5) -> rgba(0, 0, 0, 0.5), NOT
+;; bg-black/50, whose oklab mix differs). Verified against dist/css/5_utilities.css.
+(def ^:private overlay-util-class
+  "absolute inset-0 z-[25000] flex flex-row justify-center items-center p-6 bg-[rgba(0,0,0,0.5)]")
+
 (defn- dialog-comp [params]
   (let [{:keys [show? hide-fn title full-size?
                 type message details compact?
@@ -74,7 +90,7 @@
         id (val-or-deref id)]
     (if-not show?
       [:<>]
-      [:div {:class overlay-class}
+      [:div {:class [overlay-class overlay-util-class]}
        [:div {:id id
               :class (cond-> [dialog-base-class]
                        title

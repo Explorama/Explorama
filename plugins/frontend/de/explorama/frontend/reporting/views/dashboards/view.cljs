@@ -14,6 +14,21 @@
             [re-frame.core :refer [dispatch reg-event-db reg-event-fx reg-sub
                                    subscribe]]))
 
+;; Shared dashboard chrome utility stacks. The `dashboard__layout`/
+;; `dashboard__item` grid markers stay on their hiccup and their *base* rules
+;; stay in dashboards_domain.css (residual) -- those bases are also consumed
+;; by the untouchable preview emitter (template_schema) and the dynamic
+;; grid/preview residual, so only the chrome layered on top lives here.
+;; Reused by dashboards.template-builder (chip.cljs pattern).
+(def dashboard-title-base-classes
+  ["font-bold" "px-1" "pb-1" "text-[var(--text-secondary)]" "flex" "gap-1"])
+
+(def dashboard-options-classes ["flex" "gap-2" "ml-auto"])
+
+(def dashboard-container-base-classes
+  ["flex" "flex-col" "basis-[0%]" "p-2"
+   "[&>div:not(:last-child)]:mb-2" "[&>div:last-child]:mb-0"])
+
 (defn visible-dashboard [db dashboard-id]
   (get-in db (dr-path/visible-dr dashboard-id)))
 
@@ -29,7 +44,9 @@
 
 (defn- dashboard-description [dashboard-id]
   (let [subtitle @(subscribe [::dashboard-subtitle dashboard-id])]
-    [:div.dashboard__description subtitle]))
+    [:div.dashboard__description
+     {:class ["px-2" "text-[calc(9px_+_0.5vw_+_0.5vh)]" "text-[var(--text-secondary)]"]}
+     subtitle]))
 
 (reg-sub
  ::module-sizes
@@ -69,15 +86,18 @@
      (when (and module vertical state)
        [:<>
         [module-loading-screen frame-id size-params]
-        [:div.title {:title title}
+        [:div.title {:class (into ["text-[calc(6px_+_0.5vw_+_0.5vh)]"] dashboard-title-base-classes)
+                     :title title}
          [:span.title__content
+          {:class ["overflow-hidden" "text-ellipsis" "whitespace-nowrap"]}
           title]
-         [:div.options {:class export-ignore-class}
+         [:div.options {:class (conj dashboard-options-classes export-ignore-class)}
           [legend-toggle frame-id legend-active?]]]
-        [:div.content {:class (case legend-position
-                                :right "legend-right"
-                                :bottom "legend-bottom"
-                                "")}
+        [:div.content {:class (into ["flex" "grow" "h-[calc(100%_-_28px_-_0.7vw_-_0.7vh)]"]
+                                    (case legend-position
+                                      :right ["legend-right"]
+                                      :bottom ["legend-bottom"]
+                                      []))}
          [module
           frame-id
           (assoc state
@@ -94,7 +114,8 @@
 
 (defn dashboard-view [{dashboard-id :id}]
   (let [{:keys [left top]} @(fi/call-api [:tabs :tab-content-size-sub])]
-    [:div.dashboard__container {:id (config/export-dom-id :dashboard dashboard-id)
+    [:div.dashboard__container {:class (into ["h-screen"] dashboard-container-base-classes)
+                                :id (config/export-dom-id :dashboard dashboard-id)
                                 :style {:margin-top top
                                         :margin-left left}}
      [modules-grid dashboard-id]

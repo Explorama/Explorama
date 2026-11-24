@@ -46,10 +46,9 @@
     (gre/update-zoom instance stage-key)))
 
 (defn- calculate-zoom [path stage-key state args x-offset y-offset wheel-delta]
-  (let [{:keys [x y z zoom]} (get state path)
+  (let [{:keys [x y z]} (get state path)
         old-coords [x y z]
-        {overview-factor :factor-overview
-         render-type :render-type}
+        {render-type :render-type}
         (get-in state [:contexts stage-key []])
         wheel-delta (cond
                       (> wheel-delta max-wheel-delta) max-wheel-delta
@@ -68,15 +67,8 @@
                 new-z)
              (- my (* my delta)))
         [x y z :as new-coord]
-        (pc/new-zoom stage-key state args [x y new-z] zoom)
-        new-zoom-level (pc/zoom-level z zoom overview-factor render-type)
-        z (cond (and (= 0 zoom)
-                     (< 0 new-zoom-level))
-                (* z overview-factor)
-                (and (< 0 zoom)
-                     (= 0 new-zoom-level))
-                (/ z overview-factor)
-                :else z)]
+        (pc/new-zoom stage-key state args [x y new-z])
+        new-zoom-level (pc/zoom-level z render-type)]
     (when (and (not= old-coords new-coord)
                (safe-number? x)
                (safe-number? y)
@@ -125,7 +117,7 @@
          opmy :pmy
          :as state}
         (gre/state this)
-        {:keys [zoom x y z]}
+        {:keys [x y z]}
         (get state [:pos stage-key])
         old-coords [x y z]
         update-instances (conj (if-let [with (:with coupled)]
@@ -149,7 +141,7 @@
                 new-y (+ y (- pmy my))]
             [mx my pmx pmy new-x new-y]))
         [x y z :as new-coord]
-        (pc/new-zoom stage-key state args [new-x new-y z] zoom)]
+        (pc/new-zoom stage-key state args [new-x new-y z])]
     (when (and (or (not= old-coords new-coord)
                    (not= pmx opmx)
                    (not= pmy opmy))

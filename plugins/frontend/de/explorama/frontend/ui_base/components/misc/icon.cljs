@@ -13,92 +13,92 @@
             :3xl    "icon-3xl"
             :adapt-to-font "icon-font-size"})
 
-(def colors {:white "icon-white"
-             :black "icon-black"
-             :gray {:default "icon-gray"
-                    :0 "icon-black"
-                    :1 "icon-gray-900"
-                    :2 "icon-gray-800"
-                    :3 "icon-gray-700"
-                    :4 "icon-gray-600"
-                    :5 "icon-gray-500"
-                    :6 "icon-gray-400"
-                    :7 "icon-gray-300"
-                    :8 "icon-gray-200"
-                    :9 "icon-gray-100"
-                    :10 "icon-white"}
-             :orange {:default "icon-orange"
-                      :0 "icon-black"
-                      :1 "icon-orange-900"
-                      :2 "icon-orange-800"
-                      :3 "icon-orange-700"
-                      :4 "icon-orange-600"
-                      :5 "icon-orange-500"
-                      :6 "icon-orange-400"
-                      :7 "icon-orange-300"
-                      :8 "icon-orange-200"
-                      :9 "icon-orange-100"
-                      :10 "icon-white"}
-             :teal {:default "icon-teal"
-                    :0 "icon-black"
-                    :1 "icon-teal-900"
-                    :2 "icon-teal-800"
-                    :3 "icon-teal-700"
-                    :4 "icon-teal-600"
-                    :5 "icon-teal-500"
-                    :6 "icon-teal-400"
-                    :7 "icon-teal-300"
-                    :8 "icon-teal-200"
-                    :9 "icon-teal-100"
-                    :10 "icon-white"}
-             :yellow {:default "icon-yellow"
-                      :0 "icon-black"
-                      :1 "icon-yellow-900"
-                      :2 "icon-yellow-800"
-                      :3 "icon-yellow-700"
-                      :4 "icon-yellow-600"
-                      :5 "icon-yellow-500"
-                      :6 "icon-yellow-400"
-                      :7 "icon-yellow-300"
-                      :8 "icon-yellow-200"
-                      :9 "icon-yellow-100"
-                      :10 "icon-white"}
-             :green {:default "icon-green"
-                     :0 "icon-black"
-                     :1 "icon-green-900"
-                     :2 "icon-green-800"
-                     :3 "icon-green-700"
-                     :4 "icon-green-600"
-                     :5 "icon-green-500"
-                     :6 "icon-green-400"
-                     :7 "icon-green-300"
-                     :8 "icon-green-200"
-                     :9 "icon-green-100"
-                     :10 "icon-white"}
-             :blue {:default "icon-blue"
-                    :0 "icon-black"
-                    :1 "icon-blue-900"
-                    :2 "icon-blue-800"
-                    :3 "icon-blue-700"
-                    :4 "icon-blue-600"
-                    :5 "icon-blue-500"
-                    :6 "icon-blue-400"
-                    :7 "icon-blue-300"
-                    :8 "icon-blue-200"
-                    :9 "icon-blue-100"
-                    :10 "icon-white"}
-             :red {:default "icon-red"
-                   :0 "icon-black"
-                   :1 "icon-red-900"
-                   :2 "icon-red-800"
-                   :3 "icon-red-700"
-                   :4 "icon-red-600"
-                   :5 "icon-red-500"
-                   :6 "icon-red-400"
-                   :7 "icon-red-300"
-                   :8 "icon-red-200"
-                   :9 "icon-red-100"
-                   :10 "icon-white"}
+(def colors {:white "bg-white"
+             :black "bg-black"
+             :gray {:default "bg-gray"
+                    :0 "bg-black"
+                    :1 "bg-gray-900"
+                    :2 "bg-gray-800"
+                    :3 "bg-gray-700"
+                    :4 "bg-gray-600"
+                    :5 "bg-gray-500"
+                    :6 "bg-gray-400"
+                    :7 "bg-gray-300"
+                    :8 "bg-gray-200"
+                    :9 "bg-gray-100"
+                    :10 "bg-white"}
+             :orange {:default "bg-orange"
+                      :0 "bg-black"
+                      :1 "bg-orange-900"
+                      :2 "bg-orange-800"
+                      :3 "bg-orange-700"
+                      :4 "bg-orange-600"
+                      :5 "bg-orange-500"
+                      :6 "bg-orange-400"
+                      :7 "bg-orange-300"
+                      :8 "bg-orange-200"
+                      :9 "bg-orange-100"
+                      :10 "bg-white"}
+             :teal {:default "bg-teal"
+                    :0 "bg-black"
+                    :1 "bg-teal-900"
+                    :2 "bg-teal-800"
+                    :3 "bg-teal-700"
+                    :4 "bg-teal-600"
+                    :5 "bg-teal-500"
+                    :6 "bg-teal-400"
+                    :7 "bg-teal-300"
+                    :8 "bg-teal-200"
+                    :9 "bg-teal-100"
+                    :10 "bg-white"}
+             :yellow {:default "bg-yellow"
+                      :0 "bg-black"
+                      :1 "bg-yellow-900"
+                      :2 "bg-yellow-800"
+                      :3 "bg-yellow-700"
+                      :4 "bg-yellow-600"
+                      :5 "bg-yellow-500"
+                      :6 "bg-yellow-400"
+                      :7 "bg-yellow-300"
+                      :8 "bg-yellow-200"
+                      :9 "bg-yellow-100"
+                      :10 "bg-white"}
+             :green {:default "bg-green"
+                     :0 "bg-black"
+                     :1 "bg-green-900"
+                     :2 "bg-green-800"
+                     :3 "bg-green-700"
+                     :4 "bg-green-600"
+                     :5 "bg-green-500"
+                     :6 "bg-green-400"
+                     :7 "bg-green-300"
+                     :8 "bg-green-200"
+                     :9 "bg-green-100"
+                     :10 "bg-white"}
+             :blue {:default "bg-blue"
+                    :0 "bg-black"
+                    :1 "bg-blue-900"
+                    :2 "bg-blue-800"
+                    :3 "bg-blue-700"
+                    :4 "bg-blue-600"
+                    :5 "bg-blue-500"
+                    :6 "bg-blue-400"
+                    :7 "bg-blue-300"
+                    :8 "bg-blue-200"
+                    :9 "bg-blue-100"
+                    :10 "bg-white"}
+             :red {:default "bg-red"
+                   :0 "bg-black"
+                   :1 "bg-red-900"
+                   :2 "bg-red-800"
+                   :3 "bg-red-700"
+                   :4 "bg-red-600"
+                   :5 "bg-red-500"
+                   :6 "bg-red-400"
+                   :7 "bg-red-300"
+                   :8 "bg-red-200"
+                   :9 "bg-red-100"
+                   :10 "bg-white"}
              :explorama__window__group-1 "explorama__window__group-1"
              :explorama__window__group-2 "explorama__window__group-2"
              :explorama__window__group-3 "explorama__window__group-3"
@@ -280,7 +280,7 @@
                        :drag-indicator {:group "Arrows" :class "icon-drag-indicator"}
 
                        :note-color {:group "Notes" :class "icon-note-color"}
-                       :color-circle {:group "Notes" :class "color-circle"}
+                       :color-circle {:group "Notes" :class "color-circle block w-5 h-5 rounded-full border-2 border-[rgba(0,0,0,0.1)]"}
                        :text-color {:group "Notes" :class "icon-text-color" :sub-icon :color-bar}
                        :custom-font-size {:group "Notes" :class "icon-text-color"} ;;TODO r1/icons do we need a custom icon for this
                        :font-size {:group "Notes" :class "icon-font-size"}
@@ -440,7 +440,7 @@
        [:span {:class (cond-> [icon-class]
                         (and color-important?
                              (not sub-icon-class))
-                        (conj (str color "-important"))
+                        (conj (str color "!"))
                         (and (not color-important?)
                              (not sub-icon-class))
                         (conj color)
@@ -460,8 +460,8 @@
                         (assoc :background-color custom-color))}]
 
        (when sub-icon-class
-         [:span {:class (cond-> [sub-icon-class "absolute" "top-8"]
-                          color-important? (conj (str color "-important"))
+         [:span {:class (cond-> [sub-icon-class "absolute" "top-2"]
+                          color-important? (conj (str color "!"))
                           (not color-important?) (conj color))}])])))
 
 (defn- with-tooltip [tooltip-params params]

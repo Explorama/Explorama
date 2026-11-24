@@ -2,6 +2,7 @@
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.pprint :as pp]
+            [clojure.string :as str]
             [de.explorama.cli.data-transformer.parser.instances :as parsers]
             [de.explorama.cli.data-transformer.sandbox :as sandbox]
             [de.explorama.shared.data-transformer.generator :as generator]
@@ -37,14 +38,16 @@
         normal-result)))
 
 (defn check [fname]
-  (let [^java.io.File file (io/file fname)
-        content (slurp file :encoding "UTF-8")
-        content (if (= "edn" (.extension file))
-                  (edn/read-string content)
-                  (schema/decode content))]
-    (if (schema/validate content) ;TODO r1/data super dirty
-      true
-      (schema/explain content))))
+  (let [^java.io.File file (io/file fname)]
+    (if (str/ends-with? (.getName file) ".clj")
+      (let [desc (sandbox/eval-mapping file [])]
+        (if (schema/validate desc)
+          true
+          (schema/explain desc)))
+      (let [content (edn/read-string (slurp file :encoding "UTF-8"))]
+        (if (data-spec/validate content)
+          true
+          (me/humanize (data-spec/explain content)))))))
 
 #_(defn demo [source mapping limit extra-files]
     (let [^java.io.File mapping-f (io/file mapping)
@@ -162,9 +165,14 @@
             data (mapping/mapping instance
                                   desc
                                   content)
+            errors (:errors @(generator/state instance))
             result (generator/finalize instance
                                        data
                                        :edn)]
+        (when (seq errors)
+          (error (format "%s feature(s) dropped, first failure: %s"
+                         (count errors)
+                         (pr-str (first errors)))))
         (spit target
               result
               :encoding "UTF-8")

@@ -362,12 +362,14 @@
  ::update-field
  (fn [db [_ updates]]
    (reduce (fn [db [header-name field value]]
-             (assoc-in db
-                       (into (conj path/current-mapping
-                                   :mapped
-                                   header-name)
-                             field)
-                       value))
+             (let [path (into (conj path/current-mapping
+                                     :mapped
+                                     header-name)
+                               field)]
+               (if (and (nil? value)
+                        (map? (get-in db (butlast path))))
+                 (update-in db (butlast path) dissoc (last path))
+                 (assoc-in db path value))))
            db
            updates)))
 
@@ -428,7 +430,7 @@
                      (= col-type :dates)
                      {:node :dates
                       :include? true
-                      :desc {:value [:date-schema "YYYY-MM-dd" header-name]
+                      :desc {:value [:date-schema "yyyy-MM-dd" header-name]
                              :type [:value "occured-at"]}}
                      (= col-type :texts)
                      {:node :texts
@@ -757,6 +759,31 @@
           (cons :head header))))
 
 
+(defn- unit-view-field [header-name]
+  (let [{mapped :mapped} @(re-frame/subscribe [::current-mapping])
+        {:keys [desc node]} (get mapped header-name)]
+    [:th (if (= node :facts)
+           [input-field {:value (get-in desc [:unit 1] "")
+                         :aria-label (str "Unit for " header-name)
+                         :extra-class "input--w10"
+                         :on-change (fn [value]
+                                      (re-frame/dispatch [::update-field
+                                                          [[header-name
+                                                            [:desc :unit]
+                                                            (when (seq value)
+                                                              [:value value])]]]))}]
+           "")]))
+
+(defn- unit-view []
+  (let [header @(re-frame/subscribe [::current-header])
+        unit-label @(re-frame/subscribe [::i18n/translate :expdb-import-table-unit])]
+    (into [:tr]
+          (map (fn [header-name]
+                 (if (= :head header-name)
+                   [:th unit-label]
+                   [unit-view-field header-name])))
+          (cons :head header))))
+
 (defn- table-view []
   (let [header @(re-frame/subscribe [::current-header])
         data @(re-frame/subscribe [::current-data])]
@@ -767,6 +794,7 @@
        [include-view]
        [label-view]
        [type-view]
+       [unit-view]
        [name-view]]
       [:tbody
        (into [:<>]
@@ -838,11 +866,11 @@
                        [:br])
                  (seq (:mapping-errors import-summary))
                  (conj [hint {:variant :info
-                              :content [:div.flex.flex-row.align-items-center
+                              :content [:div.flex.flex-row.items-center
                                         {:style {:color "#000000"}}
                                         (str expdb-import-summary-mapping-report-ignored ": " (count (:mapping-errors import-summary)))
                                         [button {:title expdb-import-summary-mapping-report-ignored-download
-                                                 :extra-class "ml-6"
+                                                 :extra-class "ml-1.5"
                                                  :start-icon :download
                                                  :size :small
                                                  :variant :tertiary
@@ -881,7 +909,7 @@
                                   :expdb-import-misc-datasource
                                   :expdb-import-misc-import])]
         [:<>
-         [:div.flex.flex-row.flex-nowrap.justify-evenly.align-items-start
+         [:div.flex.flex-row.flex-nowrap.justify-evenly.items-start
           [input-field {:label expdb-import-misc-datasource
                         :value @data-source
                         :on-change (fn [e]
@@ -918,7 +946,7 @@
                               :expdb-import-misc-import
                               :expdb-import-misc-cancel
                               :expdb-import-uploaded-hint])]
-    [:div.flex.flex-column.flex-nowrap.justify-evenly.align-items-center
+    [:div.flex.flex-column.flex-nowrap.justify-evenly.items-center
      [:h3 expdb-import-uploaded-hint]
      [:div.flex.flex-row
       {:style {:padding 5
@@ -954,7 +982,7 @@
     [:div.flex.justify-between
      [:h2
       expdb-import-misc-import]
-     [:div.actions.flex.align-items-baseline
+     [:div.actions.flex.items-baseline
       (when can-cancel?
         [:<>
          [button {:label expdb-import-misc-download-mapping

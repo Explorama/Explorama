@@ -1,6 +1,7 @@
 (ns de.explorama.frontend.mosaic.render.tracks
-  (:require [re-frame.core :as re-frame]
-            [de.explorama.frontend.common.frontend-interface :as fi]
+  (:require [de.explorama.frontend.common.frontend-interface :as fi]
+            [de.explorama.frontend.common.tracks :as tracks]
+            [re-frame.core :as re-frame]
             [taoensso.timbre :refer [debug]]))
 
 (re-frame/reg-sub
@@ -12,7 +13,7 @@
  ::reg-track
  (fn [_ [_ path]]
    (debug "reg-track - " path)
-   {:de.explorama.frontend.mosaic.tracks/register
+   {::tracks/register
     {:id [::canvas path]
      :subscription [::canvas path]
      :event-fn (fn [_]
@@ -22,14 +23,14 @@
  ::dispose-track
  (fn [_ [_ path]]
    (debug "dispose-track - " path)
-   {:de.explorama.frontend.mosaic.tracks/dispose
+   {::tracks/dispose
     {:id [::canvas path]}}))
 
 (re-frame/reg-event-fx
  ::reg-data-acs-track
  (fn [_ [_ path]]
    (debug "reg-data-acs-track - " path)
-   {:de.explorama.frontend.mosaic.tracks/register
+   {::tracks/register
     {:id [::data-acs path]
      :subscription [:de.explorama.frontend.mosaic.data.di-acs/data-acs path]
      :event-fn (fn [_]
@@ -39,7 +40,7 @@
  ::dispose-data-acs-track
  (fn [_ [_ path]]
    (debug "dispose-data-acs-track - " path)
-   {:de.explorama.frontend.mosaic.tracks/dispose
+   {::tracks/dispose
     {:id [::data-acs path]}}))
 
 (re-frame/reg-sub
@@ -51,7 +52,7 @@
  ::reg-theme-track
  (fn [_ [_ path]]
    (debug "reg-theme-track - " path)
-   {:de.explorama.frontend.mosaic.tracks/register
+   {::tracks/register
     {:id [::theme path]
      :subscription [::theme]
      :event-fn (fn [_]
@@ -61,5 +62,5 @@
  ::dispose-theme-track
  (fn [_ [_ path]]
    (debug "dispose-theme-track - " path)
-   {:de.explorama.frontend.mosaic.tracks/dispose
+   {::tracks/dispose
     {:id [::theme path]}}))

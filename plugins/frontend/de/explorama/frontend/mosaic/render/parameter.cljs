@@ -34,8 +34,7 @@
                     optional-desc
                     params
                     title
-                    offset-absolute
-                    factor-overview])
+                    offset-absolute])
 
 (defn offset [{:keys [margin-grp]}
               {:keys [header width height]}
@@ -138,17 +137,6 @@
      bb-min-x
      bb-min-y)))
 
-(defn calc-overview [width-window grp-params plain-cpl cpl {:keys [subgroup-count subgrouped?]}]
-  (cond (and (< 0 (:header-ctn grp-params))
-             (not subgrouped?))
-        (/ 24 (:header-ctn grp-params))
-        (and (< 0 (:header-ctn grp-params))
-             subgrouped?)
-        (/ (Math/ceil (* 24 (Math/sqrt subgroup-count))) (:header-ctn grp-params))
-        :else
-        (/ (* 4 width-window)
-           (* (:width grp-params) (/ plain-cpl cpl)))))
-
 (defn group-modify [lookup-table grp-name grp-attribute labels lang]
   (cond (= grp-attribute "layout")
         (let [layout-id (aget grp-name "id")
@@ -226,12 +214,8 @@
   (* (Math/ceil (/ event-count cpl))
      (+ height margin margin)))
 
-(defn calc-cpl [path-length adjust? {:keys [contexts] :as state} group-count width-window height-window card-width card-height card-margin]
-  (let [{:keys [zoom z]} (get state [:pos pc/main-stage-index])
-        z
-        (if (zero? zoom)
-          (* z (get-in contexts [pc/main-stage-index [] :factor-overview]))
-          z)]
+(defn calc-cpl [path-length adjust? state group-count width-window height-window card-width card-height card-margin]
+  (let [{:keys [z]} (get state [:pos pc/main-stage-index])]
     [(grc/calculate-cards-per-line group-count
                                    {:width width-window
                                     :height height-window}
@@ -525,7 +509,6 @@
                            tiles)
         min-zoom (grc/min-zoom card-width card-height card-margin width-window height-window)
         max-zoom (min (/ 1 (* factor magic-factor)))
-        factor-overview 1
         root-element (let [{:keys [event-count event-count-max group-count group-count-max]} (get leaf->root [])
                            width (* magic-factor factor width-window)
                            height (* magic-factor factor height-window)
@@ -563,8 +546,7 @@
                                   :event-count-max event-count-max}
                                  grp-params
                                  {}
-                                 [0 0]
-                                 factor-overview))]
+                                 [0 0]))]
     (if (empty? (dissoc real-sizes nil))
       {[] root-element}
       (reduce (fn [acc [path real-size]]
@@ -640,8 +622,7 @@
                                                               lang))
                                                      nil)
                                                    lang)
-                                            absolute-offset
-                                            factor-overview))))
+                                            absolute-offset))))
               {[] root-element}
               real-sizes))))
 
@@ -651,7 +632,7 @@
                        operations-desc
                        leaf->root?
                        sizes-per-level
-                       {width-window :width :as args}
+                       args
                        {constraints :constraints :as state}
                        render-type
                        optional-desc
@@ -664,17 +645,7 @@
         leaf->root
         (if (vector? leaf->root?)
           (first leaf->root?)
-          leaf->root?)
-        group-sizes (reduce-kv (fn [{subgrouped? :subgrouped? :as acc} k v]
-                                 (cond-> acc
-                                   (and (not subgrouped?)
-                                        (= 2 (count k)))
-                                   (assoc :subgrouped? true)
-                                   (= 1 (count k))
-                                   (update :subgroup-count max (:group-count-max v))))
-                               {:subgrouped? false
-                                :group-count-max 0}
-                               leaf->root)]
+          leaf->root?)]
     (loop [result {}
            paths (vec (sort (fn [a b]
                               (compare (count (first b))
@@ -691,21 +662,15 @@
               (get real-sizes path)
               pair (gdal/get-in data (pc/data-path path))
               grp-key (gdal/first pair)
-              {parent-absolute-offset :offset-absolute
-               factor-overview :factor-overview}
+              {parent-absolute-offset :offset-absolute}
               (if (= path [])
-                {:offset-absolute [0 0]
-                 :factor-overview 1}
+                {:offset-absolute [0 0]}
                 (get offsets (pop path)))
-              {:keys [header plain-cpl cpl] :as sizes} (get sizes-per-level (count path))
+              {:keys [header] :as sizes} (get sizes-per-level (count path))
               sizes-parent (get sizes-per-level (dec (count path)))
               sizes-child (get sizes-per-level (inc (count path)))
               absolute-offset (offset constraints sizes sizes-parent parent-absolute-offset (peek path))
-              grp-params (params sizes sizes-child args state path render-type optional-desc)
-              factor-overview
-              (if (= path [])
-                (calc-overview width-window grp-params plain-cpl cpl group-sizes)
-                factor-overview)]
+              grp-params (params sizes sizes-child args state path render-type optional-desc)]
           (if (= element-type :leaf)
             (recur (assoc result path (Context. (= path [])
                                                 :leaf
@@ -719,8 +684,7 @@
                                                        attribute-labels
                                                        nil
                                                        lang)
-                                                absolute-offset
-                                                factor-overview))
+                                                absolute-offset))
                    (pop paths)
                    offsets)
             (recur (assoc result path (Context. (= path [])
@@ -735,13 +699,11 @@
                                                        attribute-labels
                                                        nil
                                                        lang)
-                                                absolute-offset
-                                                factor-overview))
+                                                absolute-offset))
                    (pop paths)
                    (assoc offsets path {:offset-absolute (if (< 0 (count path))
                                                            (update absolute-offset 1 + header)
-                                                           absolute-offset)
-                                        :factor-overview factor-overview}))))))))
+                                                           absolute-offset)}))))))))
 
 (defn calc-sizes-per-level [{{:keys [card-width card-height card-margin margin-grp]} :constraints :as state}
                             {width-window :width height-window :height}

@@ -5,7 +5,7 @@
   (finalize
     [this data format])
   (fact
-    [this name type value])
+    [this name type value unit])
   (context
     [this global-id type name])
   (context-ref [this global-id rel-type rel-name])

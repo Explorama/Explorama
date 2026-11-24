@@ -1,13 +1,12 @@
-{:output-to "dist/js/out/main.js"
- :output-dir "dist/js/out"
- :asset-path "/js/out"
- :main de.explorama.frontend.woco.app.core
+{:main de.explorama.backend.woco.app.core
+ :target :nodejs
  :optimizations :simple
- :target :bundle
- :bundle-cmd {:none ["npx" "webpack" "--mode=production" "./dist/js/out/main.js" "-o" "./dist/js/bundle"]
-              :default ["npx" "webpack" "--mode=production" "./dist/js/out/main.js" "-o" "./dist/js/bundle"]}
+ :output-to "../../../dist/electron/prepared/public/js/backend.js"
+ :output-dir "../../../dist/electron/prepared/public/js/backend"
  :infer-externs true
- :source-map false
  :closure-defines {goog.DEBUG false
-                   cljs.core/*global* "window"}
- :verbose false}
+                   de.explorama.shared.woco.config/DEFAULT_LOG_LEVEL "info"
+                   de.explorama.shared.woco.config/RUNTIME_MODE "prod"
+                   de.explorama.shared.common.configs.provider-impl/CONFIG "{:explorama-bucket-config {\"default\" {:backend \"browser\" :indexed? true :schema \"default\" :data-tile-keys {\"year\" {:field [\"Date\" \"date\" \"value\"] :date-part :year :type :string} \"country\" {:field [\"Context\" \"country\" \"name\"] :type :string} \"datasource\" {:field [\"Datasource\" \"datasource\" \"name\"]} \"bucket\" {:field :bucket :type :string} \"identifier\" {:value \"search\"}}}}}"}
+ :language-in :ecmascript-next
+ :pretty-print false}

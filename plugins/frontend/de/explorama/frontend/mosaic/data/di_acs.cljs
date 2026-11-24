@@ -30,16 +30,19 @@
            (conj (gp/filter-desc path)
                  :data-acs))))
 
+(defn attributes [db path blacklist]
+  (let [blacklist (set (map name blacklist))]
+    (->> (-> (get-in db (conj (gp/filter-desc path)
+                              :data-acs))
+             (assoc "year" nil))
+         keys
+         (filter #(not (blacklist %)))
+         set)))
+
 (re-frame/reg-sub
  ::attributes
  (fn [db [_ path blacklist]]
-   (let [blacklist (set (map name blacklist))]
-     (->> (-> (get-in db (conj (gp/filter-desc path)
-                               :data-acs))
-              (assoc "year" nil))
-          keys
-          (filter #(not (blacklist %)))
-          set))))
+   (attributes db path blacklist)))
 
 (defn- resolve-date-vals [[from-date-obj to-date-obj]]
   (try
@@ -49,19 +52,22 @@
       (error e "Failed to resolve date-vals" from-date-obj to-date-obj)
       nil)))
 
+(defn attribute-vals [db path attr]
+  (let [access-path (if (= attr "year")
+                      [:data-acs "date" :year :vals]
+                      [:data-acs attr :std :vals])
+        attr-vals (get-in db
+                          (apply conj
+                                 (gp/filter-desc path)
+                                 access-path))]
+    (cond-> attr-vals
+      (= attr "date")
+      (resolve-date-vals))))
+
 (re-frame/reg-sub
  ::attribute-vals
  (fn [db [_ path attr]]
-   (let [access-path (if (= attr "year")
-                       [:data-acs "date" :year :vals]
-                       [:data-acs attr :std :vals])
-         attr-vals (get-in db
-                           (apply conj
-                                  (gp/filter-desc path)
-                                  access-path))]
-     (cond-> attr-vals
-       (= attr "date")
-       (resolve-date-vals)))))
+   (attribute-vals db path attr)))
 
 (re-frame/reg-event-fx
  ws-api/data-acs-async

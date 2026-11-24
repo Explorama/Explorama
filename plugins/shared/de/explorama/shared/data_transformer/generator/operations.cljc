@@ -13,7 +13,7 @@
       :edn data
       :json #?(:clj (json/write-value-as-string data)
                :cljs (js/JSON.stringify (clj->js data)))))
-  (gen/fact [_ name type _]
+  (gen/fact [_ name type _ _]
     [name type])
   (gen/context [_ global-id type _]
     [global-id type])

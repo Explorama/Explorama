@@ -13,7 +13,7 @@
   (defconfig ;TODO r1/config make this proxy url?
     {:name :explorama-origin
      :type :string
-     :default "localhost:4001"
+     :default ""
      :scope :client
      :overwritable? true
      :doc "Defines the explorama server url"}))

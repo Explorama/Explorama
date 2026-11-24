@@ -34,12 +34,12 @@
         max-num (dec (count options))]
     (fn [_]
       (when @show?
-        [:div.flex.align-items-end
+        [:div.flex.items-end
          (let [[img-url label alt-label] (get options @state)]
            [:div.window-handling-tour
             [card {:type :childs}
              [button {:start-icon :close
-                      :extra-class "absolute right-12"
+                      :extra-class "absolute right-3"
                       :aria-label :close
                       :variant :tertiary
                       :on-click (fn []
@@ -50,13 +50,13 @@
                     :width 360 :height 240}]
              [:span.image-hint (str (inc @state) "/" (inc max-num))]
              [:h3 @(re-frame/subscribe [::i18n/translate label])]
-             [:div.flex.w-full.justify-between.align-items-center
+             [:div.flex.w-full.justify-between.items-center
               [checkbox
                {:checked? @checked?,
                 :label @(re-frame/subscribe [::i18n/translate :hint-text-checkbox])
                 :on-change (fn [new-state]
                              (reset! checked? new-state))}]
-              [:div.flex.gap-8.align-items-center
+              [:div.flex.gap-2.items-center
                (when (< 0 @state)
                  [button {:start-icon :chevron-left,
                           :aria-label :aria-carousel-previous

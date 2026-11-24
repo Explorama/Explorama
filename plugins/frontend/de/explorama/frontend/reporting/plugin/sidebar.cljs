@@ -189,7 +189,7 @@
 
 (defn- dashboard-column [sidebar-props]
   (let [dashboards-label @(subscribe [::i18n/translate :dashboards-label])]
-    [:div.h-6-12.overflow-auto
+    [:div.overflow-auto {:class "h-6/12"}
      [:h2 dashboards-label]
      [button {:on-click (fn []
                           (dispatch [::builder/init-new :dashboard sidebar-props])
@@ -201,7 +201,7 @@
 
 (defn- report-column [sidebar-props]
   (let [reports-label @(subscribe [::i18n/translate :reports-label])]
-    [:div.h-6-12.overflow-auto
+    [:div.overflow-auto {:class "h-6/12"}
      [:h2 reports-label]
      [button {:on-click (fn []
                           (dispatch [::builder/init-new :report sidebar-props])
@@ -226,7 +226,7 @@
       receive-sync-events?
       [:div.no-data-placeholder
        [:span
-        [:div.loader-sm.pr-8
+        [:div.loader-sm.pr-2
          [:span]]
         [:div no-sync-hint]]]
       pending-creation? [builder/builder sidebar-props]

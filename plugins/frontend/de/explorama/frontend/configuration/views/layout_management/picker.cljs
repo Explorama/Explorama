@@ -75,19 +75,19 @@
 
 (defn- gen-add-label [{:keys [name]} attr-labels colors]
   [:div.flex.flex-col
-   [:div.flex.flex-row.justify-between.align-items-center
-    [:div.text-truncate.text-xs.text-bold
+   [:div.flex.flex-row.justify-between.items-center
+    [:div.truncate.text-xs.font-bold
      name]
     (reduce
      #(conj %1 [chip {:label %2
                       :size :extra-small}])
-     [:div.flex.gap-2]
+     [:div.flex {:class "gap-0.5"}]
      attr-labels)]
    (reduce
     (fn [res [_ color]]
       (conj res [:span.h-full.flex-1
                  {:style {:background-color color}}]))
-    [:div.flex.flex-row.h-4.mt-4.rounded-full.overflow-hidden]
+    [:div.flex.flex-row.h-1.mt-1.rounded-full.overflow-hidden]
     (sort-by first colors))])
 
 (defn- gen-add-tooltip [attributes label]
@@ -220,12 +220,12 @@
       [:div.subsection__element__title
        (if (and single? show-actions?)
          [layout-selection props layout-desc]
-         [:div.truncate-text (if temporary? temporary-name name)])
+         [:div.truncate (if temporary? temporary-name name)])
        (when show-actions?
          [layout-actions props layout-desc])]
 
       [:dl>div
-       [:dd.truncate-text (join ", " (map #(attr->display-name % labels) attributes))]]
+       [:dd.truncate (join ", " (map #(attr->display-name % labels) attributes))]]
       [color-code-list props layout-desc]]]))
 
 (defn- calc-value-range [value-assigned]

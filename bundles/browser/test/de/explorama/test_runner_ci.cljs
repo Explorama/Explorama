@@ -3,6 +3,8 @@
             [de.explorama.frontend.algorithms.components.helper-test]
             [de.explorama.frontend.algorithms.operations.redo-test]
             [de.explorama.frontend.data-atlas.db-utils-test]
+            [de.explorama.frontend.charts.charts.chartjs-test]
+            [de.explorama.frontend.common.i18n-test]
             [de.explorama.shared.indicator.transform-test]
             [de.explorama.frontend.indicator.management-test]
             [de.explorama.frontend.map.operations.redo-test]
@@ -15,6 +17,8 @@
             [de.explorama.frontend.projects.projects-test]
             [de.explorama.frontend.search.core-test]
             [de.explorama.shared.search.date-utils-test]
+            [de.explorama.frontend.ui-base.utils.virtual-test]
+            [de.explorama.frontend.ui-base.utils.floating-test]
             [de.explorama.frontend.woco.details-view-test]
             [de.explorama.frontend.woco.notifications-test]
             [de.explorama.frontend.woco.filter-test]
@@ -24,6 +28,7 @@
             [de.explorama.shared.data-format.data-test]
             #_[de.explorama.shared.data-format.aggregations-test]; break the ci - work locally
             [de.explorama.shared.data-format.date-filter-test]
+            [de.explorama.shared.common.unification.time-test]
             #_[de.explorama.shared.data-format.filter-test]; break the ci - work locally
             [de.explorama.shared.data-format.operations-indicator-test]
             [de.explorama.shared.data-format.operations-mosaic-test]
@@ -54,6 +59,7 @@
             [de.explorama.backend.expdb.mapping-test]
             [de.explorama.backend.expdb.suggestions-test]
             [de.explorama.backend.expdb.simple-db-test]
+            [de.explorama.backend.expdb.db-api-test]
             [de.explorama.backend.indicator.calculate-test]
             [de.explorama.backend.indicator.persistence-test]
             [de.explorama.backend.indicator.sample-test]
@@ -72,7 +78,9 @@
             [de.explorama.backend.expdb.middleware.indexed-db-test]
             [cljs.test :refer [report]]
             [clojure.string :as str]
-            [figwheel.main.testing :refer [run-tests-async]]))
+            [figwheel.main.async-result :as async-result]
+            [figwheel.main.testing :refer [run-tests-async]]
+            [goog.object :as gobj]))
 
 (defonce test-results (atom {:test-cases [] :current-ns nil :current-test nil}))
 (defonce test-case-counter (atom {}))
@@ -167,6 +175,59 @@
 (defmethod report [:cljs.test/default :begin-test-var] [m]
   (swap! test-results assoc :current-test (:var m)))
 
+(defn- unloaded-namespaces
+  "Explorama namespaces the Closure debug loader wrote a script tag for but that
+   never ended up defined in the page. Non-empty means the REPL started driving
+   the page before its dependency graph finished loading, and the run would
+   otherwise die on an opaque \"Cannot read properties of undefined\" deep
+   inside an unrelated fixture. Closure's own namespaces are excluded: the
+   goog.module ones never attach to the global object."
+  []
+  (let [loader (gobj/get js/goog "debugLoader_")
+        deps (some-> loader (gobj/get "dependencies_"))
+        written (some-> loader (gobj/get "written_"))]
+    (if (and deps written)
+      (into []
+            (comp (keep #(gobj/get deps %))
+                  (mapcat #(array-seq (gobj/get % "provides" #js [])))
+                  (filter #(str/starts-with? % "de.explorama."))
+                  ;; goog.getObjectByName reports absence as nil, never undefined
+                  (filter #(nil? (js/goog.getObjectByName %))))
+            (array-seq (js/Object.keys written)))
+      [])))
+
+(def ^:private graph-timeout-ms 60000)
+(def ^:private graph-poll-ms 250)
+
+;; The REPL can start driving the page before the debug loader has finished
+;; defining every namespace it wrote a script tag for, and which namespaces are
+;; still pending varies between runs of the same commit. Waiting for the graph
+;; to drain turns that race into a delay; only a graph that never completes is
+;; a genuine failure.
+(defn- await-dependency-graph [waited-ms on-ready]
+  (let [missing (unloaded-namespaces)]
+    (cond
+      (empty? missing)
+      (on-ready)
+
+      (< waited-ms graph-timeout-ms)
+      (js/setTimeout #(await-dependency-graph (+ waited-ms graph-poll-ms) on-ready)
+                     graph-poll-ms)
+
+      :else
+      (let [msg (str "Aborting test run: " (count missing)
+                     " namespace(s) were never loaded into the page after "
+                     graph-timeout-ms "ms: "
+                     (pr-str (vec (take 20 missing))))]
+        (println msg)
+        (async-result/send
+         (async-result/throw-ex
+          (ex-info msg {:missing-count (count missing)
+                        :missing (vec (take 20 missing))})))))))
+
+;; run-tests-async arranges the async-result send itself, so deferring it is
+;; safe as long as -main returns the wait marker up front.
 (defn -main [& _args]
-  (run-tests-async 10000))
+  (await-dependency-graph 0 #(run-tests-async 10000))
+  [:figwheel.main.async-result/wait (+ graph-timeout-ms 120000)])
 

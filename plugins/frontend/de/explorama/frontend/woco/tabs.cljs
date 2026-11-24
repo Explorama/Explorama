@@ -9,6 +9,28 @@
 (defonce ^:private tabs-state (r/atom {}))
 (defonce ^:private current-tab-id (r/atom nil))
 
+;; `tabs__navigation`/`tab`/`active` MUST stay literal DOM classes (kept via
+;; hiccup keyword shorthand / the "active" string below) — base/themes.css's
+;; Windows-high-contrast block (`@media screen and (forced-colors: active)`)
+;; selects `.tabs__navigation`, `.tab` and `.tab.active` directly.
+;; `app-tabs`/`full-width`/`scrollable`/`scroll-button`/`disabled` have no such
+;; dependency and are fully folded into utility stacks.
+(def ^:private tabs-navigation-class
+  "flex flex-row z-1 bg-(--bg) shadow-md")
+(def ^:private tabs-navigation-app-tabs-class
+  "max-w-[calc((100%/2)-68px-44px)] overflow-hidden")
+(def ^:private tabs-navigation-app-tabs-full-class
+  (str tabs-navigation-class " " tabs-navigation-app-tabs-class))
+(def ^:private tab-base-class
+  "group flex items-center justify-center gap-1 py-2 px-4 text-center font-bold [transition:background-color_.1s_ease,color_.1s_ease,box-shadow_.25s_ease]")
+(def ^:private tab-default-class
+  "text-(--text-secondary) cursor-pointer hover:bg-(--bg-hover) hover:text-(--link)")
+(def ^:private tab-active-class
+  "active text-(--text) bg-(--bg) cursor-default shadow-[inset_0_-2px_0_0_var(--text)]")
+
+(defn- tab-class [active?]
+  (str tab-base-class " " (if active? tab-active-class tab-default-class)))
+
 (defn get-current-tab-id []
   @current-tab-id)
 
@@ -69,8 +91,7 @@
     (get-in @tabs-state [curr-tab :export-fn])))
 
 (defn- tab [{:keys [context-id label visible? active? on-click on-close]}]
-  [:div.tab {:class (when active?
-                      "active")
+  [:div.tab {:class (tab-class active?)
              :style (when-not visible?
                       {:display :none})
              :on-click on-click}
@@ -111,7 +132,7 @@
             collapse? @collapse-state
             multiple-tabs? (< 1 (count tabs))
             tab-id (get-current-tab-id)]
-        [:div.tabs__navigation.app-tabs
+        [:div.tabs__navigation {:class tabs-navigation-app-tabs-full-class}
          (when multiple-tabs?
            [collapse-button collapse-state])
          (reduce (fn [acc [context-id tab-desc]]

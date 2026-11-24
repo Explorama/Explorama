@@ -1,10 +1,6 @@
 (ns de.explorama.shared.data-format.dates
-  (:require #?(:clj [clj-time.core :as t]
-               :cljs [cljs-time.core :as t])
-            [clojure.string :as s]
-            [de.explorama.shared.data-format.filter-functions :as ff]
-            #?(:clj [clj-time.format :as f]
-               :cljs [cljs-time.format :as f])))
+  (:require [de.explorama.shared.common.unification.time :as time]
+            [de.explorama.shared.data-format.filter-functions :as ff]))
 
 (def date-keys [::type ::full-date
                 ::week
@@ -33,11 +29,15 @@
       (subs s start end)
       (subs s start))))
 
+(defn- date-time-defaulted [[y m d h mi sec]]
+  (time/date-time (to-int y) (or (to-int m) 1) (or (to-int d) 1)
+                   (or (to-int h) 0) (or (to-int mi) 0) (or (to-int sec) 0)))
+
 (defn- year-month-day->date [year month day]
   (let [int-year (to-int year)
         int-month (to-int month)
         int-day (to-int day)]
-    (t/date-time int-year int-month int-day)))
+    (time/date-time int-year (or int-month 1) (or int-day 1))))
 
 (defn transform-week
   ([^String date]
@@ -48,7 +48,7 @@
   ([year month day]
    (when (and year month day)
      (-> (year-month-day->date year month day)
-         t/week-number-of-year
+         time/week-number-of-year
          str))))
 
 (defn transform-weekday
@@ -60,14 +60,14 @@
   ([year month day]
    (when (and year month day)
      (-> (year-month-day->date year month day)
-         t/day-of-week
+         time/day-of-week
          str))))
 
 (defn parse
-  "Parses a string of the format YYYY-MM-DDThh:mm:ss with each of the element being optional"
+  "Parses a string of the format yyyy-MM-ddThh:mm:ss with each of the element being optional"
   [s]
   (let [dt (if (= s "today")
-             (t/today-at-midnight)
+             (time/today-at-midnight)
              (let [year (safe-subs s 0 4)
                    month (safe-subs s 5 7)
                    day (safe-subs s 8 10)
@@ -75,107 +75,107 @@
                    minute (safe-subs s 14 16)
                    sec (safe-subs s 17)
                    ordinals (take-while some? [year month day hour minute sec])]
-               (apply t/date-time (map to-int ordinals))))]
+               (date-time-defaulted ordinals)))]
     {::type ::date
      ::full-date {::val dt}
-     ::year (t/year dt)
-     ::month (t/month dt)
-     ::week (t/week-number-of-year dt)
-     ::weekday (t/day-of-week dt)
-     ::day (t/day dt)
-     ::hours (t/hour dt)
-     ::minutes (t/minute dt)
-     ::seconds (t/second dt)}))
+     ::year (time/get-year dt)
+     ::month (time/get-month dt)
+     ::week (time/week-number-of-year dt)
+     ::weekday (time/day-of-week dt)
+     ::day (time/get-day dt)
+     ::hours (time/get-hour dt)
+     ::minutes (time/get-minute dt)
+     ::seconds (time/get-second dt)}))
 
 (defn unparse
   "unparses a date object into :date-hour-minute-second format"
   [d]
-  (f/unparse (f/formatters :date-hour-minute-second) (::full-date d)))
+  (time/unparse (time/formatters :date-hour-minute-second) (::full-date d)))
 
 ;; These are only used for full-date comparison
 (defn equal? [instance d1 d2 & _]
-  (t/equal? (ff/get instance d1 ::val)
-            (-> d2
-                ::full-date
-                ::val)))
+  (time/equal? (ff/get instance d1 ::val)
+               (-> d2
+                   ::full-date
+                   ::val)))
 
 (defn before? [instance d1 d2 & _]
-  (t/before? (ff/get instance d1 ::val)
-             (-> d2
-                 ::full-date
-                 ::val)))
+  (time/before? (ff/get instance d1 ::val)
+                (-> d2
+                    ::full-date
+                    ::val)))
 
 (defn after? [instance d1 d2 & _]
-  (t/after? (ff/get instance d1 ::val)
-            (-> d2
-                ::full-date
-                ::val)))
+  (time/after? (ff/get instance d1 ::val)
+               (-> d2
+                   ::full-date
+                   ::val)))
 
 (defn year-equal? [instance d1 d2 & _]
-  (= (t/year (ff/get instance d1 ::val))
-     (t/year (-> d2
-                 ::full-date
-                 ::val))))
-
-(defn month-equal? [instance d1 d2 & _]
-  (and (year-equal? instance d1 d2)
-       (= (t/month (ff/get instance d1 ::val))
-          (t/month (-> d2
-                       ::full-date
-                       ::val)))))
-
-(defn week-equal? [instance d1 d2 & _]
-  (= (t/week-number-of-year (ff/get instance d1 ::val))
-     (t/week-number-of-year (-> d2
-                                ::full-date
-                                ::val))))
-
-(defn weekday-equal? [instance d1 d2 & _]
-  (= (t/day-of-week (ff/get instance d1 ::val))
-     (t/day-of-week (-> d2
+  (= (time/get-year (ff/get instance d1 ::val))
+     (time/get-year (-> d2
                         ::full-date
                         ::val))))
 
+(defn month-equal? [instance d1 d2 & _]
+  (and (year-equal? instance d1 d2)
+       (= (time/get-month (ff/get instance d1 ::val))
+          (time/get-month (-> d2
+                              ::full-date
+                              ::val)))))
+
+(defn week-equal? [instance d1 d2 & _]
+  (= (time/week-number-of-year (ff/get instance d1 ::val))
+     (time/week-number-of-year (-> d2
+                                   ::full-date
+                                   ::val))))
+
+(defn weekday-equal? [instance d1 d2 & _]
+  (= (time/day-of-week (ff/get instance d1 ::val))
+     (time/day-of-week (-> d2
+                           ::full-date
+                           ::val))))
+
 (defn day-equal? [instance d1 d2 & _]
   (and (month-equal? instance d1 d2)
-       (= (t/day (ff/get instance d1 ::val))
-          (t/day (-> d2
-                     ::full-date
-                     ::val)))))
+       (= (time/get-day (ff/get instance d1 ::val))
+          (time/get-day (-> d2
+                            ::full-date
+                            ::val)))))
 
 (defn last-x-days [instance d1 d2 extra]
   (let [end (-> d2
                 ::full-date
                 ::val)
-        start (t/minus end (t/days extra))
+        start (time/minus-days end extra)
         data-val (ff/get instance d1 ::val)]
-    (t/within? start end data-val)))
+    (time/within? start end data-val)))
 
 (defn last-x-weeks [instance d1 d2 extra]
   (let [end (-> d2
                 ::full-date
                 ::val)
-        start (t/minus end (t/days extra))
+        start (time/minus-days end extra)
         data-val (ff/get instance d1 ::val)]
-    (t/within? start end data-val)))
+    (time/within? start end data-val)))
 
 (defn last-x-months [instance d1 d2 extra]
   (let [end (-> d2
                 ::full-date
                 ::val
-                t/last-day-of-the-month)
+                time/last-day-of-the-month)
         start (-> end
-                  (t/minus (t/months extra))
-                  t/first-day-of-the-month)
+                  (time/minus-months extra)
+                  time/first-day-of-the-month)
         data-val (ff/get instance d1 ::val)]
-    (t/within? start end data-val)))
+    (time/within? start end data-val)))
 
 (defn last-x-years [instance d1 d2 extra]
   (let [end (-> d2
                 ::full-date
                 ::val)
-        start (t/minus end (t/years extra))
-        data-val (t/year (ff/get instance d1 ::val))
-        end-y (t/year end)
-        start-y (t/year start)]
+        start (time/minus-years end extra)
+        data-val (time/get-year (ff/get instance d1 ::val))
+        end-y (time/get-year end)
+        start-y (time/get-year start)]
     (<= start-y data-val end-y)))

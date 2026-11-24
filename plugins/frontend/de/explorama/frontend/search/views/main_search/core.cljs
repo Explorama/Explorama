@@ -42,9 +42,9 @@
                                       @(subscribe [:de.explorama.frontend.search.views.formdata/topic-selection? path]))
                                @(subscribe [::i18n/translate :topic-category])
                                (get labels attr attr)))]
-    [:div {:class (str "search__block"
+    [:div {:class (str "search__block flex basis-0 flex-row gap-1 mb-2 p-3 rounded-xl bg-(--bg-section)"
                        (error-classes validation))}
-     [:div.search__block__label
+     [:div {:class "search__block__label flex flex-col flex-[0_0_30%] min-w-[120px]"}
       [:label {:for   "input-select"
                :class "explorama__form__label"}
        (attr->display-name attr-desc)]
@@ -52,13 +52,13 @@
                                 :attr-desc attr-desc
                                 :path path
                                 :disabled? read-only?}]]
-     [:div.search__block__input
+     [:div.search__block__input.grow.min-w-0.flex.flex-col.gap-1
       [search-selection-component {:frame-id frame-id
                                    :path path
                                    :attr-desc attr-desc
                                    :read-only? read-only?
                                    :is-last? is-last?}]]
-     [:div.search__block__actions
+     [:div.search__block__actions.w-6
       [button {:variant :tertiary
                :aria-label :delete-label
                :disabled? read-only?
@@ -105,15 +105,17 @@
                 [:div {:class "search__section"}]
                 (map-indexed vector attributes))
         [:div {:class "search__section"}
-         [:div.explorama__form__row
+         [:div.explorama__form__row.w-full.pl-6
           [:div.col-2]
           [:div.col-8 [:span attribute-select-hint]]]])]
-     [traffic-light
-      frame-id
-      (when attributes-submitable? current-light)
-      {:parent-class "search__resultinfo"}]
+     [:div {:id (str "search-traffic-light-" frame-id)}
+      [traffic-light
+       frame-id
+       (when attributes-submitable? current-light)
+       {:parent-class "search__resultinfo"}]]
      [:div.search__actions
-      [button {:loading? (or di-creation-pending?
+      [button {:id (str "search-run-" frame-id)
+               :loading? (or di-creation-pending?
                              (and is-requesting?
                                   is-clicked?)
                              (= status :pending))
@@ -141,14 +143,15 @@
                         searchbutton-label)}]
       (when (and di-created?
                  (not search-changed?))
-        [:div.search__ready
+        [:div {:id (str "search-ready-" frame-id)
+               :class "search__ready flex flex-row items-center py-0.5 pr-0 pl-1.5 gap-1"}
          [icon {:icon :check
                 :color :green}]
          [tooltip {:text searchbutton-tooltip}
           [icon {:icon :info-circle
                  :color :gray
                  :brightness 6}]]])
-      [:div.search__modules
+      [:div {:class "search__modules flex flex-row grow justify-between items-center gap-1.5 [&:not(:only-child)]:justify-end"}
        [direct-visualization frame-id (and di-created? search-changed?)]]]]))
 
 (defn- header [frame-id]
@@ -157,7 +160,7 @@
 (defn free-view [frame-id]
   (let [search-bar-result? @(subscribe [:de.explorama.frontend.search.views.search-bar/results-open? frame-id])]
     [:<>
-     [:div.search__direct__wrapper
+     [:div {:class "search__direct__wrapper flex flex-col w-full"}
       [sdialog/frame-dialog frame-id]
       [header frame-id]
       [:div.window__body {:style {:overflow-y "auto"

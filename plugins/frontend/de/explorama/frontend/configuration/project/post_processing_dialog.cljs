@@ -10,7 +10,6 @@
             [de.explorama.frontend.configuration.configs.persistence :as persistence]
             [de.explorama.frontend.ui-base.components.formular.core :refer [button input-field]]
             [de.explorama.frontend.ui-base.components.frames.core :as frameui]
-            [de.explorama.frontend.ui-base.components.common.core :refer [virtualized-list]]
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
             [de.explorama.frontend.ui-base.utils.interop :refer [format]]
             [de.explorama.frontend.common.frontend-interface :as fi]))

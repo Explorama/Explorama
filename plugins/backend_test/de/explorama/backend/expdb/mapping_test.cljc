@@ -1,8 +1,11 @@
 (ns de.explorama.backend.expdb.mapping-test
   (:require [clojure.test :refer [deftest is testing]]
             [de.explorama.backend.expdb.suggestions-test :refer [test-mapping test-data]]
+            [de.explorama.backend.expdb.spec :as expdb-spec]
             [de.explorama.shared.data-transformer.mapping :as sut]
-            [de.explorama.shared.data-transformer.generator.edn-json :as gen]))
+            [de.explorama.shared.data-transformer.generator.edn-json :as gen]
+            [de.explorama.shared.data-transformer.schema :as schema]
+            [de.explorama.shared.data-transformer.spec :as dt-spec]))
 
 (def test-result
   {:contexts [{:global-id "context2-TFRhbfDGdjiAsheKW",
@@ -89,3 +92,69 @@
   (testing "end-to-end"
     (is (= (sut/mapping (gen/new-instance) test-mapping test-data)
            test-result))))
+
+(def ^:private mapping-with-unit
+  {:meta-data {:file-format :csv
+               :csv {:separator "," :quote "\""}}
+   :mapping {:datasource {:name [:value "Placeholder"]
+                          :global-id [:value "source-placeholder"]}
+             :items [{:global-id [:field "id"]
+                      :features [{:facts [{:name [:value "fact1"]
+                                           :type [:value "integer"]
+                                           :unit [:value "kg"]
+                                           :value [:field "fact1"]}]
+                                  :locations []
+                                  :contexts [{:name [:field "country"]
+                                              :global-id [:id-generate ["country" :text] :name]
+                                              :type [:value "country"]}]
+                                  :dates [{:value [:date-schema "yyyy-MM-dd" [:field "date"]]
+                                           :type [:value "occured-at"]}]
+                                  :texts []}]}]}})
+
+(def ^:private import-data-with-unit
+  {:contexts [{:name "country1" :global-id "c1" :type "country"}]
+   :datasource {:name "dsn-1" :global-id "ds1"}
+   :items [{:global-id "i1"
+            :features [{:facts [{:name "fact1" :type "integer" :value 1 :unit "kg"}]
+                        :context-refs [{:global-id "c1"}]
+                        :dates [{:type "occured-at" :value "1997-01-02"}]}]}]})
+
+(deftest unit-schema-test
+  (testing "a mapping template may declare a unit"
+    (is (schema/validate mapping-with-unit)))
+  (testing "import data may carry a string unit"
+    (is (dt-spec/validate import-data-with-unit))
+    (is (expdb-spec/validate import-data-with-unit)))
+  (testing "a non-string unit is rejected"
+    (let [bad (assoc-in import-data-with-unit
+                        [:items 0 :features 0 :facts 0 :unit]
+                        5)]
+      (is (not (dt-spec/validate bad)))
+      (is (not (expdb-spec/validate bad))))))
+
+(def ^:private unit-mapping
+  {:mapping {:datasource {:name [:value "Placeholder"]
+                          :global-id [:value "source-placeholder"]}
+             :items [{:global-id [:field "id"]
+                      :features [{:facts [{:name [:value "fact1"]
+                                           :type [:value "integer"]
+                                           :unit [:value "kg"]
+                                           :value [:field "fact1"]}
+                                          {:name [:value "fact3"]
+                                           :type [:value "string"]
+                                           :value [:field "fact3"]}]
+                                  :locations []
+                                  :contexts [{:name [:field "country"]
+                                              :global-id [:id-generate ["country" :text] :name]
+                                              :type [:value "country"]}]
+                                  :dates [{:value [:date-schema "yyyy-MM-dd" [:field "date"]]
+                                           :type [:value "occured-at"]}]
+                                  :texts []}]}]}})
+
+(deftest unit-generation-test
+  (let [facts (get-in (sut/mapping (gen/new-instance) unit-mapping test-data)
+                      [:items 0 :features 0 :facts])]
+    (testing "a declared unit reaches the import format"
+      (is (= "kg" (:unit (first facts)))))
+    (testing "a fact without a unit has no :unit key"
+      (is (not (contains? (second facts) :unit))))))

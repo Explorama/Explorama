@@ -1523,6 +1523,8 @@
                                  :en-GB "Position"}
    :expdb-import-table-type {:de-DE "Typ"
                              :en-GB "Type"}
+   :expdb-import-table-unit {:de-DE "Einheit"
+                             :en-GB "Unit"}
    :expdb-import-misc-download-mapping {:de-DE "Download generiertes Mapping"
                                         :en-GB "Download generated mapping"}
    :expdb-import-misc-upload-mapping {:de-DE "Mapping Hochladen"

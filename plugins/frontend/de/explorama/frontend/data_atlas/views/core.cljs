@@ -221,9 +221,9 @@
      (when attr-range
        [:div {:class ["flex"
                       "flex-wrap"
-                      "align-items-center"
-                      "gap-x-4"
-                      "py-4"
+                      "items-center"
+                      "gap-x-1"
+                      "py-1"
                       "text-xs"]}
         [:span min-label ": " (i18n/localized-number min)
          (gstring/unescapeEntities " &#8211; ")]

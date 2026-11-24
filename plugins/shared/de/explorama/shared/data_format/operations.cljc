@@ -1357,7 +1357,7 @@
                               :group group
                               :element element})))))
    :sort-by-frequencies {:internal true}
-   (fn [instance _ {:keys [direction]} [di-data]]
+   (fn [_instance _ {:keys [direction]} [di-data]]
      (let [{:keys [structure group element]} (meta di-data)]
        (cond (and (= :group structure)
                   (= :list group)

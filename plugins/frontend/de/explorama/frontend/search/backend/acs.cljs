@@ -3,7 +3,7 @@
             [de.explorama.frontend.search.backend.di :as di-backend]
             [de.explorama.frontend.search.path :as path]
             [taoensso.timbre :refer-macros [debug]]
-            [re-frame.core :refer [reg-event-fx reg-event-db]]))
+            [re-frame.core :refer [reg-event-fx reg-event-db reg-sub]]))
 
 (defonce ^:private current-requests? (atom 0))
 (defonce ^:private requests-done? (atom 0))
@@ -40,6 +40,19 @@
            (swap! current-requests? inc)
            {:dispatch-later {:ms 300
                              :dispatch [::set-attr-types attr-types true]}}))))
+
+(reg-event-db
+ ::set-attr-units
+ (fn [db [_ attr-units]]
+   (assoc-in db path/attribute-units attr-units)))
+
+(defn get-attribute-units [db]
+  (get-in db path/attribute-units {}))
+
+(reg-sub
+ ::attribute-units
+ (fn [db]
+   (get-attribute-units db)))
 
 (reg-event-fx
  ::trigger-data-instance-creation

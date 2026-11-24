@@ -1,5 +1,6 @@
 (ns de.explorama.shared.common.configs.provider-impl
-  (:require [taoensso.timbre :as timbre]
+  (:require [clojure.string :as str]
+            [taoensso.timbre :as timbre]
             [taoensso.timbre.tools.logging :as timbre-tools]))
 
 (def ^:private config {:explorama-bucket-config
@@ -15,8 +16,18 @@
                                                               :type :string}
                                                     "identifier" {:value "search"}}}}})
 
+(defn- env-var-name
+  "Config key to environment variable name, e.g. :explorama-bind-address ->
+   EXPLORAMA_BIND_ADDRESS. Values are strings; type coercion happens in
+   defconfig's eval-type."
+  [key]
+  (-> (name key)
+      (str/upper-case)
+      (str/replace "-" "_")))
+
 (defn lookup [key default]
-  (get config key default))
+  (or (System/getenv (env-var-name key))
+      (get config key default)))
 
 (def config-dir "")
 

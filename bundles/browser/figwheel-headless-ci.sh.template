@@ -1,2 +1,15 @@
 #!/bin/sh
-chromium --headless --disable-dev-shm --disable-gpu --no-sandbox --remote-debugging-port=9222 --repl "$@"
+set -eu
+
+here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+profile="$here/target/figwheel-chrome-profile"
+
+# exec so figwheel's teardown signals chromium itself rather than this wrapper,
+# and an explicit --user-data-dir so a second run in the same container does not
+# abort on the default profile's SingletonLock.
+pkill -f -- "--user-data-dir=$profile" 2>/dev/null || true
+rm -rf -- "$profile"
+mkdir -p -- "$profile"
+
+exec chromium --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 --repl \
+  --user-data-dir="$profile" "$@"

@@ -1,0 +1,424 @@
+
+/*  The `.tool-#{$tool}` / `.tooltip-wrapper:has(> .tool-#{$tool})` / */
+/*  `.btn-group .tool-#{$tool}, .btn-group .tooltip-wrapper:has(> .tool-#{$tool})` */
+/*  rules below are the unrolled iterations of a former Sass `@each $tool in */
+/*  $tools-order` loop (7 tools x 3 rule families = 21 static rules), with */
+/*  `order: 1`..`order: 7` being the loop index itself, copied byte-exact; */
+/*  the `radius('full') !important` order-preserving override is likewise */
+/*  kept as-is. The `.row`/`.col-*` legacy grid's computed percentages below */
+/*  are copied byte-exact from the original compiled output (no hand-computed */
+/*  math). */
+
+
+/*  Residual remnant of components/_temp.scss after the dead-audit: 7 dead */
+/*  families were deleted (0 source emitters), 2 owner-exclusive families */
+/*  (`.grid-cols-1-4`, `.color-circle`) were migrated onto their emitting */
+/*  cljs markup, and the following 12 families are relocated here VERBATIM */
+/*  because none is a clean owner-exclusive utility candidate, for one of */
+/*  the reasons below. */
+
+/*  - `.window__header span[class^=icon-]`: icon DOM rendered by the shared */
+/*    icon component, not by any single owning markup call site. */
+/*  - `.tool-#{$tool}` / `.tooltip-wrapper:has(> .tool-*)` / `.btn-group */
+/*    .tool-*`: dynamically constructed class names (`@each $tool in */
+/*    $tools-order`) with an `!important` order-preserving override -- */
+/*    Tailwind's static scanner cannot discover interpolated class literals. */
+/*  - `.explorama__window .window__body__wrapper .overlay`: deep descendant */
+/*    override across ancestor boundaries the owner markup does not directly */
+/*    control. */
+/*  - `div[id^=woco_frame-visualization-charts] .legend__panel */
+/*    .subsection__control` (+ nested `.input`/`.input__mode`): cross-plugin */
+/*    descendant selector reaching into the charts legend from outside its */
+/*    owning component. */
+/*  - `.settings__section` block: shared across Reporting and Projects sharing */
+/*    dialogs; multiple descendant/sibling selectors (`:where(h1,h2,h3,h4)`, */
+/*    `& + .settings__section`, nested `.col-*`) with no single owner markup. */
+/*  - `:where(.sidebar,.legend__panel) .input--w6:has(+ .input--w100) */
+/*    .select-input` (both variants): cross-plugin `:has()` sibling selector */
+/*    spanning sidebar and legend-panel contexts. */
+/*  - `.input__mode` (+ `:hover`): forced-colors a11y marker (see */
+/*    base/_themes.scss) -- kept live, not migrated. */
+/*  - `h3 { margin: 0; }`: bare element selector, global reset scope. */
+/*  - `.viewport__controls__framelist` block: deeply nested BEM tree */
+/*    (`.framelist__buttons`/`.framelist__entries`/`div.framelist__entry`/...) */
+/*    not owned by a single render call site. */
+/*  - `.row` / `.col-*` legacy grid (+ media query): dynamically computed */
+/*    column widths, unrolled to their compiled percentage literals, with */
+/*    no Tailwind grid equivalent at this granularity. */
+/*  - `.export-footer` (+ `th`): shared footer chrome across export dialogs. */
+/*  - `.explorama__workspace:has(.sidebar.show) #viewport-toolbar`: `:has()` */
+/*    sibling-state selector spanning the workspace root and the toolbar. */
+
+.window__header span[class^="icon-"] {
+    background-color: white;
+}
+
+/* Direct visualization icon order */
+
+.tool-mosaic {
+    order: 1;
+}
+
+.tooltip-wrapper:has(> .tool-mosaic) { /*  tooltip wrapper divs */
+    order: 1;
+}
+
+.btn-group .tool-mosaic, .btn-group .tooltip-wrapper:has(> .tool-mosaic) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+.tool-map {
+    order: 2;
+}
+
+.tooltip-wrapper:has(> .tool-map) { /*  tooltip wrapper divs */
+    order: 2;
+}
+
+.btn-group .tool-map, .btn-group .tooltip-wrapper:has(> .tool-map) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+.tool-charts {
+    order: 3;
+}
+
+.tooltip-wrapper:has(> .tool-charts) { /*  tooltip wrapper divs */
+    order: 3;
+}
+
+.btn-group .tool-charts, .btn-group .tooltip-wrapper:has(> .tool-charts) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+.tool-table {
+    order: 4;
+}
+
+.tooltip-wrapper:has(> .tool-table) { /*  tooltip wrapper divs */
+    order: 4;
+}
+
+.btn-group .tool-table, .btn-group .tooltip-wrapper:has(> .tool-table) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+.tool-ki {
+    order: 5;
+}
+
+.tooltip-wrapper:has(> .tool-ki) { /*  tooltip wrapper divs */
+    order: 5;
+}
+
+.btn-group .tool-ki, .btn-group .tooltip-wrapper:has(> .tool-ki) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+.tool-anca {
+    order: 6;
+}
+
+.tooltip-wrapper:has(> .tool-anca) { /*  tooltip wrapper divs */
+    order: 6;
+}
+
+.btn-group .tool-anca, .btn-group .tooltip-wrapper:has(> .tool-anca) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+.tool-note {
+    order: 7;
+}
+
+.tooltip-wrapper:has(> .tool-note) { /*  tooltip wrapper divs */
+    order: 7;
+}
+
+.btn-group .tool-note, .btn-group .tooltip-wrapper:has(> .tool-note) {
+    border-radius: var(--radius-full) !important; /*  do not remove border-radius when order of elements is changed via css */
+}
+
+/* Overlay position in search window */
+
+.explorama__window .window__body__wrapper .overlay {
+    top: 0;
+}
+
+/* Charts legend */
+
+div[id^="woco_frame-visualization-charts"] .legend__panel .subsection__control {
+
+    .input:not(:last-child) {
+        margin-bottom: .5rem;
+    }
+    .input:has(+.input__mode) {
+        margin-bottom: 0;
+    }
+
+    .input__mode {
+        display: block;
+        margin-bottom: .5rem;
+        padding: 0 0 0 .25rem;
+        line-height: inherit;
+    }
+}
+
+/* Reporting and Projects: Sharing dialog */
+
+.settings__section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 270px;
+
+    & :where(h1,h2,h3,h4) {
+        margin: 0;
+    }
+    & > :where(h1,h2,h3,h4) {
+        margin-top: .5rem;
+    }
+    & + .settings__section {
+        margin-top: .5rem;
+    }
+    .title, .share__selection {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: .375rem;
+
+        & > .input {
+            flex-grow: 1;
+        }
+
+        & > .switch {
+            align-items: center;
+        }
+    }
+    .email__actions {
+        display: flex;
+        justify-content: space-between;
+    }
+    .explorama__form__subheader {
+        margin-bottom: .375rem;
+    }
+    .explorama__search__block {
+        padding: 0 0 0 .25rem;
+        background: none;
+    }
+    .explorama__form__row {
+        padding-left: .25rem;
+    }
+    .col-3, .col-6, .col-8, .col-10 {
+        width: auto;
+        margin: 0;
+    }
+    .col-6 {
+        flex: 1;
+    }
+    .input--w14 {
+        width: 100%;
+        min-width: 18em;
+    }
+    .explorama__form__select.row.explorama__form--flex {
+        margin: 0;
+        min-height: 0;
+        align-items: center;
+
+        & > .col-6 {
+            margin-right: .375rem;
+        }
+    }
+}
+
+/* Layout field icon and attribute selection */  /*  TODO: Replace with input group and button instead of select for icon (dev) */
+
+:where(.sidebar, .legend__panel) .input--w6:has(+ .input--w100) .select-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+:where(.sidebar, .legend__panel) .input--w6 + .input--w100 .select-input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Legacy woco.css styles: */
+
+/* line 97, src/scss/ui-components/_explorama-search-block.scss */
+.input__mode {
+    color: #868e96;
+    line-height: 1.5rem;
+    width: fit-content;
+}
+
+/* line 103, src/scss/ui-components/_explorama-search-block.scss */
+.input__mode:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+h3 {
+    margin: 0;
+}
+
+/*  Frame list // TODO: should be replaced by the collapsible list in the software */
+
+.viewport__controls__framelist {
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+
+    .framelist__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: .125rem;
+        border-bottom: .0625rem solid var(--border);
+    }
+
+    .framelist__entries {
+        overflow: auto;
+        max-height: calc(100vh - 298px);
+        border-bottom: .0625rem solid var(--border);
+
+        div.framelist__entry {
+            cursor: pointer;
+            overflow: hidden;
+            border-top: .0625rem solid var(--border);
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+
+            &:first-child {
+                border: none;
+            }
+
+            &:hover {
+                background-color: var(--bg-hover);
+            }
+
+            div.entry__content {
+                display: flex;
+                align-items: flex-start;
+                padding: 4px 0 4px;
+
+                div.frame__icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 2px;
+                    padding: 4px;
+                    margin-right: 4px;
+
+                    span {
+                        width: 12px;
+                        height: 12px;
+                        background-color: var(--color-white);
+                    }
+                }
+
+                div.frame__title {
+                    align-self: center;
+                }
+
+                div.button__download {
+                    margin-left: auto;
+                    margin-right: 4px;
+
+                    button {
+                        background: none;
+                        box-shadow: none;
+                        padding: 4px;
+
+                        span {
+                            width: 12px;
+                            height: 12px;
+                            background-color: var(--icon-secondary);
+                            margin: 0;
+                        }
+
+                        &:hover {
+                            background-color: var(--bg-hover);
+
+                            span {
+                                background-color: var(--icon-hover);
+                            }
+                        }
+                    }
+                }
+            }
+
+            div.preview__image {
+                margin-bottom: 4px;
+
+                img {
+                    width: 50%;
+                    margin: auto;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+/*  Old row/col css */
+
+.row {
+  position: relative;
+  width: 100%;
+}
+
+.row [class^="col"] {
+  float: left;
+  margin: 0.5rem 1%;
+  min-height: 0.125rem;
+}
+
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.col-1,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9,.col-10,.col-11,.col-12 {
+  width: 98%;
+}
+
+@media only screen and (min-width: 720px) {
+  .col-1 { width: 6.3333333333%; margin-right: 1.8333333333%; }
+  .col-2 { width: 14.6666666667%; }
+  .col-3 { width: 23%; }
+  .col-4 { width: 31.3333333333%; margin-right: 3%; }
+  .col-5 { width: 39.6666666667%; }
+  .col-6 { width: 48%; }
+  .col-7 { width: 56.3333333333%; }
+  .col-8 { width: 64.6666666667%; margin-right: 0.6666666667%; }
+  .col-9 { width: 73%; }
+  .col-10 { width: 81.3333333333%; }
+  .col-11 { width: 89.6666666667%; }
+  .col-12 { width: 98%; }
+}
+
+/*  Export footer */
+.export-footer {
+    padding: .5rem;
+    background-color: var(--color-white);
+    border-top: 1px solid var(--color-gray-300);
+    box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+
+    th {
+        text-align: left;
+        padding-right: 1rem;
+    }
+}
+
+/*  Viewport toolbar position */
+
+.explorama__workspace:has(.sidebar.show) #viewport-toolbar {
+    margin-right: 6px;
+}

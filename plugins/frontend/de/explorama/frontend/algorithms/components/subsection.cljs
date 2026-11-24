@@ -20,6 +20,7 @@
 
 (defn- section-comp [{:keys [size] :as params}]
   [:div {:class [section-base-class
+                 "ml-6" "mb-6" "last:[border-bottom:none]"
                  (case size
                    50 section-50
                    100 section-100

@@ -23,6 +23,9 @@
             [de.explorama.frontend.woco.config :as config]
             [de.explorama.frontend.woco.configs.core]
             [de.explorama.frontend.woco.db :as db]
+            ;; No Clojure caller references this namespace; it is required
+            ;; solely so its ^:export survives dead-code elimination.
+            [de.explorama.frontend.woco.debug-api]
             [de.explorama.frontend.woco.details-view :as details-view]
             [de.explorama.frontend.woco.event-logging :as event-log]
             [de.explorama.frontend.woco.frame.api]
@@ -53,7 +56,9 @@
             [de.explorama.shared.woco.ws-api :as ws-api]
             [mount.core :as mount]
             [re-frame.core :as re-frame]
-            [reagent.dom :as dom]
+            [re-frame.db :as rf-db]
+            [reagent.dom.client :as rdc]
+            [reagent.ratom :as ratom]
             [taoensso.timbre :refer [info]]))
 
 (re-frame/reg-event-fx
@@ -186,14 +191,15 @@
     (spec/check-asserts true)
     (info "dev mode")))
 
+(defonce ^:private app-root
+  (delay (rdc/create-root (.getElementById js/document "app"))))
+
 (defn rerender []
-  (dom/render [:f> page/main-panel]
-              (.getElementById js/document "app")))
+  (rdc/render @app-root [:f> page/main-panel]))
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
-  (dom/render [:f> page/main-panel]
-              (.getElementById js/document "app"))
+  (rdc/render @app-root [:f> page/main-panel])
   (re-frame/dispatch [::registry/register-ui-service :login-success-events :woco-check-rights [::login/check-rights]])
   (re-frame/dispatch [::registry/register-ui-service :logout-events :woco-logout [::login/logout]])
   (re-frame/dispatch [::registry/register-ui-service :event-replay "woco" {:event-replay ::event-log/replay-events
@@ -209,7 +215,10 @@
   (dev-setup)
   (mount/start)
   (re-frame/dispatch-sync [::db/initialize])
-  (ui-base-util/set-translation-fn #(re-frame/subscribe [::i18n/translate %]))
+  (ui-base-util/set-translation-fn
+   #(if (ratom/reactive?)
+      (re-frame/subscribe [::i18n/translate %])
+      (delay (i18n/translate @rf-db/app-db %))))
   (mount-root)
   (aset (aget js/document "body")
         "onresize" #(do

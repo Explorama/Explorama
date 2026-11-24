@@ -3,6 +3,8 @@
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.ui-base.components.frames.core :refer [header]]
             [re-frame.core :refer [dispatch reg-event-db reg-sub subscribe reg-event-fx]]
+            [re-frame.db :as rf-db]
+            [de.explorama.frontend.woco.api.couple :as couple-api]
             [de.explorama.frontend.woco.api.interaction-mode :refer [ro-interceptor]]
             [de.explorama.frontend.woco.frame.color :as frame-color]
             [de.explorama.frontend.woco.frame.events :as evts]
@@ -62,7 +64,7 @@
                                  frame-id
                                  (fn []
                                    (dispatch [:de.explorama.frontend.woco.frame.api/close frame-id])
-                                   (when @(subscribe [:de.explorama.frontend.woco.api.couple/couple-with frame-id])
+                                   (when (couple-api/couple-with @rf-db/app-db frame-id)
                                      (dispatch [:de.explorama.frontend.woco.api.couple/decouple frame-id]))))
                      :extra-props (assoc drag-props
                                          :class header-classes)}

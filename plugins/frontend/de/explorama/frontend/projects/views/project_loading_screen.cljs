@@ -6,10 +6,13 @@
             [de.explorama.frontend.projects.config :as config]
             [reagent.core :as reagent]))
 
+(defn is-active? [db]
+  (get db ::is-active? false))
+
 (re-frame/reg-sub
  ::is-active?
  (fn [db _]
-   (get db ::is-active? false)))
+   (is-active? db)))
 
 (re-frame/reg-event-fx
  ::show-dialog

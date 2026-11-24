@@ -1,0 +1,405 @@
+
+/*  The `rgba(13.1, 14.6, 15.3, 0.1)` background-color below (on the */
+/*  `.drag-drop-area--empty`/`.explorama__form__file-upload` `::after` icon */
+/*  mask) is not a typo -- it's the resolved value of a themed */
+/*  gray-900-at-10%-opacity color, kept as a literal since there is no */
+/*  matching `var(--color-*)` token for that exact tint. The plain */
+/*  `rgba(255, 255, 255, 0.01)` literal a few lines below it is unrelated */
+/*  (a pre-existing CSS literal, not a themed color). */
+
+
+/*  --------------------------------------------------------------------------- */
+/*  Shared-marker residual sheet: _forms.scss did not decompose across the */
+/*  ui_base formular owners. Family-by-family reasoning for staying residual: */
+/*  - `.input--w2`..`.input--w100` width-utility ANCHOR: 115 markup sites. */
+/*  - the grouped `:is(.explorama__form__input, __select, __checkbox-container, */
+/*    __radio-container)` selector: `explorama__form__input` emitted at */
+/*    8 sites (configuration/indicator/map/projects/ui_base), `__select` at 6 */
+/*    (algorithms/charts/indicator/mosaic/projects/reporting) -- both anchor */
+/*    the group and its `--flex`/`--error`/`--info` states, `@keyframes fadeIn` */
+/*    (exercised only via compiled-CSS reading in tests, since the test */
+/*    harness force-disables animation-name), and the */
+/*    `> .explorama__input__container` child rule. */
+/*  - `.form__message` / `.error__message`: `.form__message` is SHARED */
+/*    (projects/views/project_card.cljs + search/views/components/ */
+/*    row_message.cljs + the unused-but-declared */
+/*    `ui_base/utils/css_classes.cljs` `form-message-class` constant) -- no */
+/*    single owner. `.error__message` and the two `:is()`-group tokens */
+/*    `__checkbox-container` / `__radio-container` are the sheet's only dead */
+/*    tokens, but each is byte-welded into a still-live grouped selector */
+/*    (`:is(...)` resp. `.form__message, .error__message`) -- removing a dead */
+/*    token would rewrite the shipped bytes of a live rule. */
+/*  - `.explorama__form__flex` (ui_base/components/formular/slider.cljs:268, */
+/*    coupled to the `.explorama__form__input` anchor on the same element). */
+/*  - `.drag-drop-area` / `.explorama__form__file-upload` (+ `--empty` / */
+/*    `.drop-target` states): 13 markup sites (indicator, reporting */
+/*    dashboards+reports template builders) AND a forced-colors dependency -- */
+/*    `.drag-drop-area--empty` / `.explorama__form__file-upload` are matched */
+/*    by `@media (forced-colors: active)` rules in base/_themes.scss:294,314,387. */
+/*  - `.explorama__form__row div[class^='col-']` residual (legacy */
+/*    _temp.scss-owned col-* grid): still matched at */
+/*    search/views/main_search/core.cljs:108-110 and */
+/*    woco/frame/view/overlay/filter.cljs:484-486. */
+/*  - `ul.edc__layouts` + `.explorama__ecd__radio*`: configuration/views/ */
+/*    layout_management/editing.cljs (single owner, EDC layout picker). */
+/*  - `.explorama__form__static`: algorithms/components/custom.cljs. */
+/*  `form` global (h3 nested rule): matched by every `[:form ...]` hiccup */
+/*  emitter, e.g. projects/views/project_card.cljs:170. */
+/*  --------------------------------------------------------------------------- */
+
+form {
+    font-size: 14px;
+    color: #868e96;
+    
+    h3 {
+        margin-top: 0;
+        padding-left: 6px;
+        padding-top: 12px;
+        border-bottom: 1px solid #dee2e6;
+        color: #495057;
+        font-size: 14px;
+    }
+}
+
+:is(.explorama__form__input, .explorama__form__select, .explorama__form__checkbox-container, .explorama__form__radio-container) {
+    vertical-align: top;
+    min-height: 25px;
+    margin-bottom: 12px;
+    clear: both;
+    
+    > .explorama__input__container {
+        margin-bottom: 0;
+    }
+
+    &.explorama__form--flex {
+        display: flex;
+        flex-direction: row;
+        height: auto;
+        min-height: 25px;
+
+        label {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    }
+
+    input {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+    }
+
+    &:after {
+        content: " ";
+        clear: both;
+    }
+
+    &.explorama__form--error {
+        min-height: 25px;
+        height: auto;
+
+        label {
+            color: #92140c;
+        }
+
+        &:is(.explorama__form--info, .explorama__form--error) {
+            color: #92140c;
+        }
+    }
+    
+    &:is(.explorama__form--info, .explorama__form--error) {
+        height: auto;
+        margin-bottom: 2px;
+
+        :is(.form__message, .error__message) {
+            display: inline-block;
+            animation: fadeIn ease 1s;
+            margin-top: 2px;
+            margin-bottom: 0;
+            font-size: 10px;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.form__message,
+.error__message {
+    margin-top: 3px;
+    margin-bottom: -8px;
+    padding-bottom: 0;
+    font-size: 10px;
+}
+
+.explorama__form__flex {
+    display: flex;
+    flex-direction: row;
+    
+    .explorama__form__flex input {
+        flex-grow: 2;
+    }
+}
+
+.drag-drop-area, .explorama__form__file-upload {
+    padding: 8px;
+    border: .0625rem dashed var(--border);
+    border-radius: var(--radius-sm);
+}
+
+.drag-drop-area--empty, .explorama__form__file-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    text-align: center;
+    position: relative;
+    height: 100px;
+    transition: background-color 120ms, border-color 120ms;
+    cursor: pointer;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 4rem;
+        height: 4rem;
+        background-color: rgba(13.1, 14.6, 15.3, 0.1);
+        -webkit-mask-image: var(--icon-img-drop);
+        -webkit-mask-size: contain;
+        -webkit-mask-origin: content-box;
+        -webkit-mask-position: center;
+        -webkit-mask-repeat: no-repeat;
+        position: absolute;
+        transition: background-color 120ms;
+    }
+
+    span {
+        z-index: 1;
+    }
+    
+    div.importer__progress {
+        width: 400px;
+        height: 20px;
+        margin: 0 auto;
+        background: #f8f9fa;
+        border: 1px solid var(--border);
+        
+        .bar {
+            height: 20px;
+            background: var(--primary);
+        }
+    
+    }
+
+    &.active, &.drop-target {
+        border-color: var(--border-focus);
+        background-color: var(--primary-muted);
+        background-blend-mode: multiply;
+
+        &::after {
+            background-color: var(--primary);
+            opacity: 0.3;
+        }
+    }
+
+    &:hover:has(input[type="file"]) {
+        border-color: var(--border-focus);
+        background-color: var(--primary-muted);
+
+        &::after {
+            background-color: var(--primary);
+            opacity: 0.3;
+        }
+    }
+}
+
+/*  `.explorama__form__row` base rule is inlined as `w-full` (+ `pl-6` on the */
+/*  search view only) onto its two live emitters -- see the disposition note */
+/*  below the `div[class^='col-']` residual for the full reasoning. */
+/*  `.explorama__form__row` itself is KEPT as a */
+/*  marker literal on both emitters' markup so the `div[class^='col-']` */
+/*  residual (below) and the already-documented INERT ancestor selectors in */
+/*  components/_temp.scss (`.settings__section .explorama__form__row`) and */
+/*  components/_search_domain.scss (`.explorama__search__block */
+/*  .explorama__form__row > div:nth-child(N)`) keep matching unchanged. */
+
+.input--w2 {
+display: inline-block;
+width: 2em;
+}
+.input--w3 {
+display: inline-block;
+width: 4em;
+}
+.input--w4 {
+display: inline-block;
+width: 5em;
+}
+.input--w5 {
+display: inline-block;
+width: 6em;
+}
+.input--w6 {
+display: inline-block;
+width: 7em;
+}
+.input--w8 {
+display: inline-block;
+width: 9em;
+}
+.input--w9 {
+display: inline-block;
+width: 10em;
+}
+.input--w10 {
+display: inline-block;
+width: 11em;
+}
+.input--w12 {
+display: inline-block;
+width: 13em;
+}
+.input--w14 {
+display: inline-block;
+width: 14em;
+}
+.input--w16 {
+display: inline-block;
+width: 16em;
+}
+.input--w17 {
+display: inline-block;
+width: 17em;
+}
+.input--w18 {
+display: inline-block;
+width: 18em;
+}
+.input--w20 {
+display: inline-block;
+width: 20em;
+}
+.input--w22 {
+display: inline-block;
+width: 22em;
+}
+.input--w23 {
+display: inline-block;
+width: 23em;
+}
+.input--w24 {
+display: inline-block;
+width: 24em;
+}
+.input--w50 {
+display: inline-block;
+width: 50%;
+}
+.input--w100 {
+display: inline-block;
+width: 100%;
+}  
+
+/*  Neither live emitter (search/views/main_search/core.cljs:108, */
+/*  woco/frame/view/overlay/filter.cljs:484) ever nests a `label` or `p` */
+/*  under `.explorama__form__row` -- its only children are the `.col-2`/ */
+/*  `.col-8` hint-placeholder divs (siblings of the row in filter.cljs, */
+/*  children of it in core.cljs). The `div[class^='col-']` pair below is LEFT */
+/*  AS-IS (not migrated): col-* is the legacy 12-column grid system owned by */
+/*  components/_temp_domain.scss, consumed well beyond search */
+/*  (_prediction_domain.scss, _indicator_domain.scss, _temp_domain.scss's own */
+/*  `.settings__section` block), even though it currently only matches (a */
+/*  no-op, since nothing else sets padding-left on bare col-* outside a */
+/*  `.row` ancestor) in core.cljs's copy. */
+.explorama__form__row div[class^='col-'] {
+    padding-left: 0;
+}
+
+.explorama__form__row div[class^='col-'] label {
+    padding-left: 0;
+}
+
+ul.edc__layouts {
+    display: flex;
+    gap: .375rem;
+    padding: .25rem 0;
+    margin: 0;
+    list-style: none;
+        
+    .explorama__ecd__radio-container {
+        position: relative;
+        margin-bottom: 4px;
+    }
+    
+    input.explorama__ecd__radio {
+        display: none;
+        
+        + label {
+            display: block;
+            width: 78px;
+            height: 78px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xxs);
+            box-shadow: none;
+            cursor: pointer;
+            background-size: cover;
+            transition: border-color 120ms, box-shadow 120ms, outline 120ms;
+        }
+        
+        &:checked+label {
+            border-color: var(--border-focus);
+            outline: .0625rem solid var(--border-focus);
+        }
+        
+        &:hover:not(:checked):not(:disabled)+label {
+            box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+            border-color: var(--border-focus);
+        }
+
+        &:disabled+label {
+            color: var(--text-disabled);
+            cursor: auto;
+            opacity: 0.6;
+        }
+        
+        &:disabled+label:before {
+            box-shadow: none;
+            background: var(--text-disabled);
+        }
+    }    
+}
+
+.explorama__form__static {
+    display: flex;
+    flex-direction: row;
+    clear: both;
+    align-items: center;
+    gap: .25rem;
+    margin-bottom: 12px;
+    
+    label {
+        float: none;
+    }
+    
+    div {
+        display: inline-block;
+        background: var(--bg);
+        padding: .25rem .5rem;
+        
+        p {
+            margin: 0;
+            padding-bottom: .75rem;
+        }
+    }
+    
+    &:after, &:before {
+        content: " ";
+        clear: both;
+    }
+}

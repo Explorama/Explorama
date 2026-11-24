@@ -1,0 +1,163 @@
+/*  _dialog_domain.scss -- residual remnant of the dialog chrome. */
+
+/*  Only the `.overlay` BASE rule was owner-exclusive + element-expressible and */
+/*  migrated onto ui_base/components/frames/dialog.cljs (`overlay-util-class`); */
+/*  the `overlay` class name is KEPT on that markup as the hook these context */
+/*  overrides still match. Everything below stays as global class selectors */
+/*  because it is CO-OWNED, cross-context, cross-plugin, a descendant-context */
+/*  variant, or a keyframe -- none of it owner-exclusive to dialog.cljs: */
+
+/*    * `.dialog` base (+ `.dialog-full-width` / `-full-height` / `-auto-size`), */
+/*      `.dialog-header`, `.dialog-body` (+ `:only-child`), `.dialog-footer`, */
+/*      `.dialog-compact :where(...)`: CO-OWNED -- rendered by BOTH */
+/*      ui_base/components/frames/dialog.cljs AND */
+/*      ui_base/components/misc/product_tour.cljs (its `main-class` */
+/*      ["dialog" "dialog-compact" "dialog-auto-size" ...] + header/body/footer */
+/*      classes), whose tour popup depends on these base declarations and on */
+/*      `.dialog.product-tour .dialog-body` in components/_product_tour.scss. */
+/*      Migrating onto dialog.cljs + deleting would strip the tour popup's chrome */
+/*      (a regression invisible to the dialog screenshot). Kept global so BOTH */
+/*      consumers keep working (the components/_search_domain.scss precedent). */
+/*    * `.explorama__window .overlay` + `.sidebar .overlay .dialog`: */
+/*      cross-context frame/sidebar overrides (frame/sidebar markup, not dialog). */
+/*    * `.dialog-message` / `.dialog-prompt` / `.dialog-warning .dialog-header`: */
+/*      header colour variants (descendant context; the variant class sits on the */
+/*      `.dialog`, the rule reaches its `.dialog-header` child). */
+/*    * `.dialog .share-section` family: cross-plugin -- `.share-section` is */
+/*      rendered by projects/views/share_project.cljs + reporting/views/share_dr.cljs */
+/*      inside the dialog, not by dialog.cljs. */
+/*    * `.dialog { animation: scaleIn }` + `@keyframes scaleIn`: a keyframe must */
+/*      live in a sheet; kept together with the rule that references it. */
+
+/*  Loaded from style.scss at the original `@use 'components/dialog';` slot to */
+/*  keep the cascade position of the old _dialog.scss. */
+
+.explorama__window .overlay {
+    top: 32px;
+    border-bottom-left-radius: var(--radius-xs);
+    border-bottom-right-radius: var(--radius-xs);
+}
+.sidebar .overlay .dialog {
+    width: 100%;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    min-width: min(300px, 100%);
+    max-width: min(600px, 100%);
+    max-height: min(600px, 100%);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 25px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 10px -6px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    overflow: hidden;
+
+    &.dialog-full-width {
+        width: 100%;
+        max-width: 100%;
+    }
+    &.dialog-full-height {
+        height: 100%;
+        max-height: 100%;
+    }
+
+    &.dialog-auto-size {
+        max-width: none;
+        max-height: none;
+    }
+}
+
+.dialog-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 0.0625rem solid var(--border);
+    background-color: var(--bg);
+    color: var(--text);
+    font-weight: bold;
+    font-size: var(--text-base);
+}
+.dialog-message .dialog-header {
+    border-bottom: none;
+    background-color: var(--color-purple-700);
+    color: var(--color-white);
+}
+.dialog-prompt .dialog-header {
+    border-bottom: none;
+    background-color: var(--color-orange-500);
+    color: var(--color-white);
+}
+.dialog-warning .dialog-header {
+    border-bottom: none;
+    background-color: var(--color-red-700);
+    color: var(--color-white);
+}
+
+.dialog-body {
+    flex: 1 1 auto;
+    padding: 1rem;
+    background-color: var(--bg);
+    overflow: auto;
+
+    &:only-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 3rem 4rem;
+    }
+}
+
+.dialog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 0.0625rem solid var(--border);
+    background-color: var(--bg);
+}
+
+.dialog-compact :where(.dialog-header, .dialog-body, .dialog-footer) {
+    padding: 0.75rem;
+    font-size: var(--text-sm);
+}
+
+/*  Share dialog styles */
+
+.dialog .share-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 0.0625rem solid var(--border);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-section);
+    box-shadow: 0 2px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+
+    &.disabled {
+        opacity: .5;
+        color: var(--text-disabled);
+    }
+
+    .input label {
+        padding: 0;
+        white-space: nowrap;
+    }
+
+    button {
+        align-self: flex-start;
+    }
+}
+
+/*  /* Animation Test * / */
+
+.dialog {
+    animation: scaleIn 150ms cubic-bezier(0.5, 0, 0.5, 1.5) both;
+}
+
+@keyframes scaleIn {
+    0% {
+        scale: 0.97;
+    }
+    100% {
+        scale: 1;
+    }
+}

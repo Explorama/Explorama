@@ -162,7 +162,6 @@
                     text-container
                     y-axis-type y-label y-mapping
                     _width height
-                    factor
                     size-base-x size-base-y
                     _size-x size-y
                     font-size text-pos-factor
@@ -195,31 +194,28 @@
                 max-row
                 y-mapping)
         show-y-axis-cond? (fn [row-idx]
-                            (< (* (+ y
+                            (< (+ y
                                      (* 2 line-height))
-                                  factor)
-                               (* (+ (- line-thickness)
+                               (+ (- line-thickness)
                                      (* row-idx cpl-height)
-                                     (+ (* 0.5 cpl-height)))
-                                  factor)
-                               (* (+ y
+                                     (* 0.5 cpl-height))
+                               (+ y
                                      (- size-y
                                         size-base-x
-                                        (* 2 line-height)))
-                                  factor)))]
+                                        (* 2 line-height)))))]
     (gre/rect this
               background-container
-              (* x factor)
-              (* y factor)
-              (* (+ size-base-y axis-margin-top) factor)
-              (* (- size-y size-base-x) factor)
+              x
+              y
+              (+ size-base-y axis-margin-top)
+              (- size-y size-base-x)
               background-color)
     (gre/rect this
               background-container
-              (* (+ x size-base-y (- line-thickness)) factor)
-              (* y factor)
-              (* line-thickness factor)
-              (* (- size-y size-base-x) factor)
+              (+ x size-base-y (- line-thickness))
+              y
+              line-thickness
+              (- size-y size-base-x)
               line-color
               {:a line-alpha})
     (when (#{:grid :number :date} y-axis-type)
@@ -227,17 +223,15 @@
         (when (show-y-axis-cond? row-idx)
           (gre/rect this
                     background-container
-                    (* (+ x
+                    (+ x
                           size-base-y
                           (- line-height)
                           (- line-thickness))
-                       factor)
-                    (* (+ (- line-thickness)
+                    (+ (- line-thickness)
                           (* row-idx cpl-height)
-                          (+ (* 0.5 cpl-height)))
-                       factor)
-                    (* line-height factor)
-                    (* line-thickness factor)
+                          (* 0.5 cpl-height))
+                    line-height
+                    line-thickness
                     line-color
                     {:a line-alpha})
           (gre/text this
@@ -248,7 +242,7 @@
                           text-pos-factor))
                     (* (+ (- line-thickness)
                           (* row-idx cpl-height)
-                          (+ (* 0.5 cpl-height))
+                          (* 0.5 cpl-height)
                           pos-y)
                        text-pos-factor)
                     (- scale-window-width margin-left line-thickness-fixed)
@@ -281,18 +275,16 @@
             (when (show-y-axis-cond? row-idx)
               (gre/rect this
                         background-container
-                        (* (+ x
+                        (+ x
                               size-base-y
                               (- line-height)
                               (- line-thickness))
-                           factor)
-                        (* (+ (- line-thickness)
+                        (+ (- line-thickness)
                               (* row-idx
                                  cpl-height)
                               (* 0.5 cpl-height))
-                           factor)
-                        (* line-height factor)
-                        (* line-thickness factor)
+                        line-height
+                        line-thickness
                         line-color
                         {:a line-alpha})
               (gre/text this
@@ -304,7 +296,7 @@
                         (* (+ (- line-thickness)
                               (* row-idx
                                  cpl-height)
-                              (+ (* 0.5 cpl-height))
+                              (* 0.5 cpl-height)
                               pos-y)
                            text-pos-factor)
                         (- scale-window-width margin-left line-thickness-fixed)
@@ -314,88 +306,77 @@
     (gre/polygon this
                  background-container
                  [(gre/point this
-                             (* (+ x
+                             (+ x
                                    size-base-y
                                    (- (* 0.5 line-thickness)))
-                                factor)
-                             (* y factor))
+                             y)
                   (gre/point this
-                             (* (+ x
+                             (+ x
                                    size-base-y
                                    (- (* 0.5 line-thickness))
                                    (- (* line-height 0.6)))
-                                factor)
-                             (* (+ y line-height) factor))
+                             (+ y line-height))
                   (gre/point this
-                             (* (+ x
+                             (+ x
                                    size-base-y
                                    (- (* 0.5 line-thickness))
                                    (* line-height 0.6))
-                                factor)
-                             (* (+ y line-height) factor))]
+                             (+ y line-height))]
                  line-color
                  {:a line-alpha})
-    (when-not (= max-zoom (* z factor))
+    (when-not (= max-zoom z)
           ;TOP
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-base-y
                       (- (* 0.5 line-thickness))
                       (- (* line-height 0.5)))
-                   factor)
-                (* (+ y
+                (+ y
                       (* 1.3 line-height))
-                   factor)
-                (* line-height factor)
-                (* line-thickness factor)
+                line-height
+                line-thickness
                 line-color
                 {:a line-alpha})
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-base-y
                       (- (* 0.5 line-thickness))
                       (- (* line-height 0.5)))
-                   factor)
-                (* (+ y
+                (+ y
                       (* 1.6 line-height))
-                   factor)
-                (* line-height factor)
-                (* line-thickness factor)
+                line-height
+                line-thickness
                 line-color
                 {:a line-alpha})
           ;BOT
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-base-y
                       (- (* 0.5 line-thickness))
                       (- (* line-height 0.5)))
-                   factor)
-                (* (+ y
+                (+ y
                       size-y
                       (- size-base-x)
                       (- (* 1 line-height)))
-                   factor)
-                (* line-height factor)
-                (* line-thickness factor)
+                line-height
+                line-thickness
                 line-color
                 {:a line-alpha})
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-base-y
                       (- (* 0.5 line-thickness))
                       (- (* line-height 0.5)))
-                   factor)
-                (* (+ y
+                (+ y
                       size-y
                       (- size-base-x)
                       (- (* 1.3 line-height)))
-                   factor)
-                (* line-height factor)
-                (* line-thickness factor)
+                line-height
+                line-thickness
                 line-color
                 {:a line-alpha}))
 
@@ -419,7 +400,6 @@
                     text-container
                     x-axis-type x-label x-mapping
                     width _height
-                    factor
                     size-base-x size-base-y
                     size-x size-y
                     font-size text-pos-factor
@@ -442,18 +422,15 @@
                             :align :center
                             :vertical-align :top}
         show-x-axis-cond? (fn [col-idx]
-                            (< (* (+ x
+                            (< (+ x
                                      size-base-y
                                      (* 2 line-height))
-                                  factor)
-                               (* (+ (- line-thickness)
+                               (+ (- line-thickness)
                                      (* col-idx
                                         cpl-width)
                                      (* 0.5 cpl-width))
-                                  factor)
-                               (* (- (+ x size-x)
-                                     (* 2 line-height))
-                                  factor)))
+                               (- (+ x size-x)
+                                     (* 2 line-height))))
         x-axis ((case x-axis-type
                   :grid debug-grid-axis
                   :number number-axis
@@ -465,23 +442,21 @@
                 x-mapping)]
     (gre/rect this
               background-container
-              (* x factor)
-              (* (+ y
+              x
+              (+ y
                     (- size-y
                        size-base-x
                        axis-margin-top))
-                 factor)
-              (* size-x factor)
-              (* (+ size-base-x
+              size-x
+              (+ size-base-x
                     axis-margin-top)
-                 factor)
               background-color)
     (gre/rect this
               background-container
-              (* (+ x size-base-y (- line-thickness)) factor)
-              (* (+ y (- size-y size-base-x)) factor)
-              (* (+ line-thickness (- size-x size-base-x)) factor)
-              (* line-thickness factor)
+              (+ x size-base-y (- line-thickness))
+              (+ y (- size-y size-base-x))
+              (+ line-thickness (- size-x size-base-x))
+              line-thickness
               line-color
               {:a line-alpha})
     (when (#{:grid :number :date} x-axis-type)
@@ -497,13 +472,12 @@
         (doseq [[col-idx col-value] values]
           (gre/rect this
                     background-container
-                    (* (+ (- line-thickness)
+                    (+ (- line-thickness)
                           (* col-idx cpl-width)
-                          (+ (* 0.5 cpl-width)))
-                       factor)
-                    (* (+ y (- size-y size-base-x) line-thickness) factor)
-                    (* line-thickness factor)
-                    (* line-height factor)
+                          (* 0.5 cpl-width))
+                    (+ y (- size-y size-base-x) line-thickness)
+                    line-thickness
+                    line-height
                     line-color
                     {:a line-alpha})
           (gre/text this
@@ -511,7 +485,7 @@
                     (str col-value)
                     (* (+ (- line-thickness)
                           (* col-idx cpl-width)
-                          (+ (* 0.5 cpl-width))
+                          (* 0.5 cpl-width)
                           pos-x)
                        text-pos-factor)
                     (* (+ y
@@ -568,14 +542,13 @@
                             min-idx)]
               (gre/rect this
                         background-container
-                        (* (+ (- line-thickness)
+                        (+ (- line-thickness)
                               (* col-idx
                                  cpl-width)
                               (* 0.5 cpl-width))
-                           factor)
-                        (* (+ y (- size-y size-base-x) line-thickness) factor)
-                        (* line-thickness factor)
-                        (* line-height factor)
+                        (+ y (- size-y size-base-x) line-thickness)
+                        line-thickness
+                        line-height
                         line-color
                         {:a line-alpha})
               (gre/text this
@@ -598,93 +571,80 @@
     (gre/polygon this
                  background-container
                  [(gre/point this
-                             (* (+ x size-x) factor)
-                             (* (+ y
+                             (+ x size-x)
+                             (+ y
                                    (- size-y size-base-x)
-                                   (* 0.5 line-thickness))
-                                factor))
+                                   (* 0.5 line-thickness)))
                   (gre/point this
-                             (* (- (+ x size-x)
+                             (- (+ x size-x)
                                    line-height)
-                                factor)
-                             (* (+ y
+                             (+ y
                                    (- size-y size-base-x)
                                    (* 0.5 line-thickness)
-                                   (* line-height 0.6))
-                                factor))
+                                   (* line-height 0.6)))
                   (gre/point this
-                             (* (- (+ x size-x)
+                             (- (+ x size-x)
                                    line-height)
-                                factor)
-                             (* (+ y
+                             (+ y
                                    (- size-y size-base-x)
                                    (* 0.5 line-thickness)
-                                   (- (* line-height 0.6)))
-                                factor))]
+                                   (- (* line-height 0.6))))]
                  line-color
                  {:a line-alpha})
 
-    (when-not (= max-zoom (* z factor))
+    (when-not (= max-zoom z)
           ; RIGHT
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-x
                       (- (* 1.4 line-height)))
-                   factor)
-                (* (+ y
+                (+ y
                       size-y
                       (- size-base-x)
                       (- (* 0.5 line-height)))
-                   factor)
-                (* line-thickness factor)
-                (* line-height factor)
+                line-thickness
+                line-height
                 line-color
                 {:a line-alpha})
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-x
                       (- (* 1.7 line-height)))
-                   factor)
-                (* (+ y
+                (+ y
                       size-y
                       (- size-base-x)
                       (- (* 0.5 line-height)))
-                   factor)
-                (* line-thickness factor)
-                (* line-height factor)
+                line-thickness
+                line-height
                 line-color
                 {:a line-alpha})
           ; LEFT
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-base-y
-                      (+ (* 1 line-height)))
-                   factor)
-                (* (+ y
+                      (* 1 line-height))
+                (+ y
                       size-y
                       (- size-base-x)
                       (- (* 0.5 line-height)))
-                   factor)
-                (* line-thickness factor)
-                (* line-height factor)
+                line-thickness
+                line-height
                 line-color
                 {:a line-alpha})
       (gre/rect this
                 background-container
-                (* (+ x
+                (+ x
                       size-base-y
-                      (+ (* 1.3 line-height)))
-                   factor)
-                (* (+ y
+                      (* 1.3 line-height))
+                (+ y
                       size-y
                       (- size-base-x)
                       (- (* 0.5 line-height)))
-                   factor)
-                (* line-thickness factor)
-                (* line-height factor)
+                line-thickness
+                line-height
                 line-color
                 {:a line-alpha}))
 
@@ -702,13 +662,12 @@
               :one-line
               x-text-style-label)))
 
-(defn draw-axes [this background-container text-container ctx ctx-params zoom container-key [min-col max-col min-row max-row _x _y _content-size-x _content-size-y]]
+(defn draw-axes [this background-container text-container ctx ctx-params _zoom container-key [min-col max-col min-row max-row _x _y _content-size-x _content-size-y]]
   (let [state (gre/state this)
         {pos-x :x pos-y :y :keys [z]} (get state [:pos container-key])
         {:keys [width height]} (gre/args this)
         {{:keys [width-ctn height-ctn margin-ctn max-zoom]} :params
-         {:keys [x-label y-label x-axis-type y-axis-type x-mapping y-mapping scale-window-width scale-window-height]} :optional-desc
-         :keys [factor-overview]}
+         {:keys [x-label y-label x-axis-type y-axis-type x-mapping y-mapping scale-window-width scale-window-height]} :optional-desc}
         ctx
         {:keys [x y]
          size-x :size-x
@@ -720,9 +679,8 @@
         y-axis-type (if (#{:integer :decimal} y-axis-type)
                       :number
                       y-axis-type)
-        factor (if (zero? zoom) factor-overview 1)
-        size-base-x (/ scale-window-height (* z factor))
-        size-base-y (/ scale-window-width (* z factor))
+        size-base-x (/ scale-window-height z)
+        size-base-y (/ scale-window-width z)
         font-size 18
         line-thickness (* size-base-y 0.01)
         line-height (* size-base-y 0.075)
@@ -738,16 +696,15 @@
         max-row (if (<= (count y-mapping) max-row)
                   (dec (count y-mapping))
                   max-row)
-        text-pos-factor (* z factor)
-        pos-x (/ pos-x (* z factor))
-        pos-y (/ pos-y (* z factor))]
+        text-pos-factor z
+        pos-x (/ pos-x z)
+        pos-y (/ pos-y z)]
     (when (and x-axis-type y-axis-type)
       (draw-x-axis this
                    background-container
                    text-container
                    x-axis-type x-label x-mapping
                    width height
-                   factor
                    size-base-x size-base-y
                    size-x size-y
                    font-size text-pos-factor pos-x pos-y
@@ -763,7 +720,6 @@
                    text-container
                    y-axis-type y-label y-mapping
                    width height
-                   factor
                    size-base-x size-base-y
                    size-x size-y
                    font-size text-pos-factor pos-x pos-y

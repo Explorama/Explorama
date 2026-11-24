@@ -25,6 +25,7 @@
                                                       [:map
                                                        [:name :string]
                                                        [:type [:enum "decimal" "integer" "string"]]
+                                                       [:unit {:optional true} :string]
                                                        [:value :any]]]]
                                                     [:locations {:optional true}
                                                      [:vector

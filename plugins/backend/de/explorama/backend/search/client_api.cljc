@@ -52,6 +52,7 @@
     (debug "datasources" datasources)
     (client-callback {:search-parameter-config config-search/explorama-search-parameter-config
                       :attr-types (ac-api/attribute-types)
+                      :attr-units (ac-api/attribute-units)
                       :enabled-datasources datasources
                       :bucket-datasources bucket-datasources})))
 

@@ -16,8 +16,16 @@
 
 (def input-val (r/atom ""))
 
+(defn- share-origin
+  "Absolute origin for links that leave the page (copied share links,
+   e-mail bodies); explorama-origin defaults to same-origin (\"\")."
+  []
+  (if (seq config-shared-platform/explorama-origin)
+    config-shared-platform/explorama-origin
+    (.. js/window -location -origin)))
+
 (defn project-link [project]
-  (str config-shared-platform/explorama-origin "/?project-id=" (:project-id project)))
+  (str (share-origin) "/?project-id=" (:project-id project)))
 
 (re-frame/reg-sub
  ::is-active?
@@ -428,7 +436,7 @@
         checkbox-id (str "share-project" index)
         read-only-label @(re-frame/subscribe [:de.explorama.frontend.common.i18n/translate :share-entry-read-only-label])]
     [:div.input
-     [:div.flex.gap-8.w-full.align-items-center
+     [:div.flex.gap-2.w-full.items-center
       [select-user-or-group index user-or-group read-only? is-role?]
       [checkbox {:id checkbox-id
                  :label read-only-label
@@ -481,7 +489,7 @@
        "download the pdf for Project:"
        project-title
        " under "
-       config-shared-platform/explorama-origin
+       (share-origin)
        "/screenshot/"
        download-url
        "%0DKind Regards,%0D"
@@ -573,7 +581,13 @@
         public-read-only? @(re-frame/subscribe [::public-read-only])]
     [:div.share-section
      [:h4 publish-label]
-     [:div.switch.input
+     ;; `.switch` is a non-ui_base direct usage of _checkbox.scss's `%control`
+     ;; layout (Tailwind migration, task 9): this wrapper div itself (not the
+     ;; `checkbox` component below, which migrates its own `.switch`) needs
+     ;; the flex/gap utility class too, since it's a genuine flex container
+     ;; with one child in the old CSS (its width would otherwise change from
+     ;; shrink-to-fit to block-fill once `_checkbox.scss` is deleted).
+     [:div.switch.input {:class "flex flex-row items-baseline gap-1.5"}
       [checkbox {:id "share-publ-toggle"
                  :as-toggle? true
                  :checked? public-read-only?
@@ -591,7 +605,7 @@
         share-project? @(re-frame/subscribe [::share-project?])]
     [dialog {:title (str share-project-dialog-title ": " project-title)
              :message
-             (cond-> [:div.flex.flex-col.gap-8]
+             (cond-> [:div.flex.flex-col.gap-2]
                share-project?
                (conj [public-section project share-project?]
                      [share-section]

@@ -42,10 +42,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;; SUBS -- Operation Desc
 
+(defn operations [db frame-id-or-path]
+  (get-in db (gp/operation-desc frame-id-or-path)))
+
 (re-frame/reg-sub
  ::operations
  (fn [db [_ frame-id-or-path]]
-   (get-in db (gp/operation-desc frame-id-or-path))))
+   (operations db frame-id-or-path)))
 
 ;;;;;;;;;;;;;;;;;;;;; UTIL -- Operation Desc
 

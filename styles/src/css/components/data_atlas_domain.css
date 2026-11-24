@@ -1,0 +1,236 @@
+/*  components/data_atlas residual: `.explorama__datenatlas .window__body` is */
+/*  a cross-plugin descendant scope (`.window__body` shared with woco's frame */
+/*  chrome) styling data-atlas's search/list/details panes, incl. `::before`/ */
+/*  `::after` icon injection (`@include icon`) and dynamic `.active`/`.matched` */
+/*  state classes plus generic-element `:is(h1, h2, h3, p)` descendant */
+/*  selectors -- none of it expressible as component-owned utility stacks. */
+/*  The marginal `.explorama__datenatlas { align-items: stretch }` decl is */
+/*  kept in this same whole-sheet residual rather than split out, since it's */
+/*  entangled with the `.window__body` descendant scope below it. */
+
+.explorama__datenatlas {
+    align-items: stretch;
+
+    .window__body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+
+        .data__search__container {
+            padding: 12px;
+            border-bottom: .0625rem solid var(--border);
+            display: flex;
+            gap: 6px;
+
+            button {
+                font-size: var(--text-xs);
+            }
+            
+            .data__reset {
+                display: flex;
+                gap: 6px;
+                margin-left: auto;
+            }
+        }
+        
+        .data__lists__container {
+            position: relative;
+            display: flex;
+            height: 230px;
+            
+            .data__list {
+                position: relative;
+                flex-grow: 1;
+                width: 33.3%;
+                padding-top: 30px;
+                border-right: .0625rem solid var(--border);
+                
+                &:last-child {
+                    border-right: none;
+                }
+                
+                h1 {
+                    position: absolute;
+                    top: 0;
+                    left: 2px;
+                    display: block;
+                    width: 99%;
+                    margin: 0;
+                    padding-left: 22px;
+                    padding-top: 4px;
+                    padding-bottom: 6px;
+                    background: var(--bg-section);
+                    border-bottom: .0625rem solid var(--border);
+                    font-weight: 400;
+                    font-size: var(--text-sm);
+
+                    .note {
+                        font-size: var(--text-xxs);
+                        color: var(--text-secondary);
+                    }
+
+                }
+                a {
+                    display: block;
+                    width: 90%;
+                    padding-block: .125rem;
+                    padding-left: 1.5rem;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: var(--text);
+                    text-decoration: none;
+                    line-height: 1.5;
+
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        position: absolute;
+                        top: 0px;
+                        right: 0px;
+                        bottom: 0px;
+                        width: 10%;
+                    }
+
+                    &::after {
+                        content: '';
+                        display: inline-block;
+                        position: absolute;
+                        top: .375rem;
+                        right: .5rem;
+                    }
+
+                    &:hover {
+                        background-color: var(--bg-highlight);
+
+                        &::before {
+                            background-color: var(--bg-highlight);
+                        }
+
+                        &::after {
+                            display: block;
+                            width: .875rem;
+                            height: .875rem;
+                            background-color: var(--icon-secondary);
+                            -webkit-mask-image: var(--icon-img-pin);
+                            -webkit-mask-size: contain;
+                            -webkit-mask-origin: content-box;
+                            -webkit-mask-position: center;
+                            -webkit-mask-repeat: no-repeat;
+                        }
+                    }
+                }
+
+                div.active {
+                    font-weight: 700;
+
+                    a {
+                        &:after {
+                            display: block;
+                            width: .875rem;
+                            height: .875rem;
+                            background-color: var(--icon);
+                            -webkit-mask-image: var(--icon-img-pin);
+                            -webkit-mask-size: contain;
+                            -webkit-mask-origin: content-box;
+                            -webkit-mask-position: center;
+                            -webkit-mask-repeat: no-repeat;
+                        }
+
+                        &:hover {
+                            text-decoration: line-through;
+
+                            &::after {
+                                display: block;
+                                width: .875rem;
+                                height: .875rem;
+                                background-color: var(--icon);
+                                -webkit-mask-image: var(--icon-img-unpin);
+                                -webkit-mask-size: contain;
+                                -webkit-mask-origin: content-box;
+                                -webkit-mask-position: center;
+                                -webkit-mask-repeat: no-repeat;
+                            }
+                        }
+                    }
+
+                    &.matched a {
+                        &:before {
+                            background-color: var(--bg-hover);
+                        }
+
+                        &:after {
+                            filter: invert(87%) sepia(12%) saturate(190%) hue-rotate(169deg) brightness(83%) contrast(84%);
+                        }
+    
+                        &:hover {
+                            background-color: #d0e9e9;
+                            color: var(--text-secondary);
+                            
+                            &::before {
+                                background-color: #d0e9e9;
+                            }
+        
+                            &::after {
+                                filter: invert(35%) sepia(13%) saturate(3088%) hue-rotate(316deg) brightness(100%) contrast(72%);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .data__element.matched {
+                background: #e2f1f1;
+                border-bottom: 1px solid #fff;
+            }
+        }
+
+        .data__details__container {
+            flex-grow: 1;
+            min-height: 25%;
+            padding-block: .75rem 1.5rem;
+            overflow-y: auto;
+            border-top: .0625rem solid var(--border);
+            
+            > * {
+                margin-left: 12px;
+                margin-right: 48px;
+                padding: 7px 12px;
+            }
+            
+            :is(h1, h2, h3) {
+                margin-top: 0;
+                margin-bottom: 0;
+                font-size: var(--text-base);
+            }
+
+            :is(h1, h2, h3, p) span {
+                display: block;
+                width: auto;
+                font-size: var(--text-sm);
+                font-weight: 400;
+                color: var(--text-secondary);
+            }
+            
+            h2 div span { /*  recolor min & max values */
+                color: inherit;
+            }
+            
+            p {
+                margin-top: 0;
+                margin-bottom: 12px;
+                white-space: pre-line;
+                
+                &:first-child::before {
+                    content: "Info";
+                }
+            }
+            
+            h1:not(:first-of-type) {
+                margin-top: .75rem;
+                padding-top: 1rem;
+                border-top: .0625rem solid var(--color-gray-300);
+            }
+        }
+    }
+}

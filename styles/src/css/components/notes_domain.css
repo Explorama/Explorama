@@ -1,0 +1,296 @@
+/*  components/notes residual: `.note-card` is owned by woco/notes (core.cljs/ */
+/*  view.cljs/toolbar.cljs) but stays a residual sheet because it's entangled */
+/*  with Quill (`.ql-*`), a vendor rich-text editor (states.cljs) rendering */
+/*  its toolbar/picker/editor DOM outside our control, incl. the */
+/*  `:has(.ql-editor:focus)` state cascade. The unused `show-toolbar`/ */
+/*  `toolbar-bottom` modifiers are kept byte-identical since they're embedded */
+/*  in the Quill block. */
+
+/*  VALUE TRAP: the `large`/`huge` Quill sizes below are literal `1.5rem`/ */
+/*  `2rem`, not `var(--text-xxl)`/`var(--text-3xl)` -- `--text-xxl` is */
+/*  tree-shaken out of compiled 5_utilities.css (no utility consumes it, so */
+/*  it would resolve to `inherit`), and `--text-3xl` is Tailwind's untouched */
+/*  default `1.875rem`, not this project's `2rem`. Do not "simplify" these to */
+/*  var() lookups. */
+
+.note-card {
+    position: absolute;
+    padding: 0.75rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-md);
+    color: var(--color-gray-900);
+    background-color: white;
+    box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    text-decoration: none;
+    z-index: 400;
+    transition: box-shadow 120ms, border-color 120ms;
+    
+    &.active, &:has(.ql-editor:focus) {
+        box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25)), inset 0 0 0 1px var(--primary);
+        border-color: var(--primary);
+
+        .ql-toolbar {
+            display: flex;
+        }
+    }
+
+    &:not(:has(.ql-editor:focus)) {
+        cursor: grab;
+
+        .ql-editor p {
+            cursor: grab;
+        }
+    }
+
+    .note-remove {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: none;
+        background-color: rgba(255, 255, 255, 0.25);
+        z-index: 1;
+    }
+    &:hover .note-remove, &:has(.ql-editor:focus) .note-remove {
+        display: block;
+    }
+    &:has(.note-remove:hover) {
+        box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25)), inset 0 0 0 1px var(--border-warning);
+        border-color: var(--border-warning);
+    }
+
+    .ql-toolbar.ql-snow {
+        display: none;
+        align-items: center;
+        gap: 0.125rem;
+        width: max-content;
+        position: absolute;
+        top: -4rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.5rem;
+        border: none;
+        border-radius: var(--radius-md);
+        background-color: var(--color-white);
+        box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+        z-index: 2;
+
+        :is(.ql-formats, .custom-ql-toolbar) button, .ql-picker-label {
+            width: auto;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-xs);
+            color: var(--color-gray-900);
+            background-color: var(--color-white);
+            transition: background-color 120ms, color 120ms, transform 120ms;
+
+            &:active {
+                transform: scale(0.95);
+            }
+
+            &:focus-visible {
+                outline: 0.125rem solid var(--border-focus);
+            }
+
+            svg {
+                width: 1.25rem;
+                height: 1.25rem;
+
+                .ql-stroke {
+                    stroke: var(--color-gray-900);
+                    transition: stroke 120ms, fill 120ms;
+                }
+                .ql-fill {
+                    fill: var(--color-gray-900);
+                    transition: stroke 120ms, fill 120ms;
+                }
+            }
+
+            &:hover {
+                color: var(--primary);
+
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary);
+                    }
+                    .ql-fill {
+                        fill: var(--primary);
+                    }
+                }
+            }
+            &.ql-active {
+                color: var(--primary);
+                background-color: var(--primary);
+
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary);
+                    }
+                    .ql-fill {
+                        fill: var(--primary);
+                    }
+                }
+            }
+            &.ql-active:hover {
+                color: var(--primary-highlight);
+
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary-highlight);
+                    }
+                    .ql-fill {
+                        fill: var(--primary-highlight);
+                    }
+                }
+            }
+        }
+
+        .ql-picker {
+            width: auto;
+            height: auto;
+
+            &.ql-expanded .ql-picker-label {
+                color: var(--primary);
+                background-color: var(--primary-muted);
+    
+                svg {
+    
+                    .ql-stroke {
+                        stroke: var(--primary);
+                    }
+                    .ql-fill {
+                        fill: var(--primary);
+                    }
+                }
+
+                &:hover {
+                    color: var(--primary-highlight);
+
+                    svg {
+        
+                        .ql-stroke {
+                            stroke: var(--primary-highlight);
+                        }
+                        .ql-fill {
+                            fill: var(--primary-highlight);
+                        }
+                    }
+                }
+            }
+
+            .ql-picker-options {
+                border: none;
+                border-radius: var(--radius-md);
+                box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+                font-size: var(--text-base);
+
+                .ql-picker-item {
+                    color: var(--color-gray-900);
+
+                    &:hover, &.ql-selected {
+                        color: var(--primary);
+
+                        .ql-stroke {
+                            stroke: var(--primary);
+                        }
+                        .ql-fill {
+                            fill: var(--primary);
+                        }
+                    }
+
+                    &[data-value="small"]::before {
+                        font-size: var(--text-xs);
+                    }
+                    &[data-value="large"]::before {
+                        /* VALUE TRAP: compiled --text-xxl is never emitted
+                           (no utility in 5_utilities.css consumes it, so
+                           Tailwind tree-shakes the @theme declaration) --
+                           must stay a literal. */
+                        font-size: 1.5rem;
+                    }
+                    &[data-value="huge"]::before {
+                        /* VALUE TRAP: compiled --text-3xl is Tailwind's default
+                           1.875rem, not this project's 2rem (never overridden
+                           in @theme) -- must stay a literal. */
+                        font-size: 2rem;
+                    }
+                }
+            }
+
+            &:not(.ql-color-picker):not(.ql-icon-picker) svg {
+                position: static;
+                width: auto;
+                margin: -1px -4px 0 0;
+            }
+        }
+
+        .ql-formats {
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+            margin: 0;
+        }
+
+        .custom-ql-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+
+            button {
+
+                span[class^="icon-"] {
+                    width: 1rem;
+                    height: 1rem;
+                    background-color: var(--color-gray-900);
+                    transition: background-color 120ms;
+                }
+    
+                &:hover {
+        
+                    span[class^="icon-"] {
+                        background-color: var(--primary);
+                    }
+                }
+            }
+        }
+    }
+    &.show-toolbar .ql-toolbar {
+        display: flex;
+    }
+    &.toolbar-bottom .ql-toolbar {
+        top: auto;
+        bottom: -4rem;
+    }
+
+    .ql-container {
+        border: none;
+        font-size: var(--text-base);
+        font-family: inherit;
+
+        .ql-editor {
+            padding: 0;
+
+            .ql-size-small {
+                font-size: var(--text-xs);
+            }
+            .ql-size-large {
+                /* VALUE TRAP: see the ql-picker-options large-item note
+                   above -- compiled --text-xxl is never emitted (tree-
+                   shaken, no consuming utility). Must stay a literal. */
+                font-size: 1.5rem;
+            }
+            .ql-size-huge {
+                /* VALUE TRAP: see the ql-picker-options huge-item note above --
+                   compiled --text-3xl is Tailwind's default 1.875rem, not this
+                   project's 2rem. Must stay a literal. */
+                font-size: 2rem;
+            }
+        }
+    }
+}

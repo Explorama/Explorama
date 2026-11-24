@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.config
-  (:require [de.explorama.frontend.common.frontend-interface :as fi]))
+  (:require [de.explorama.frontend.common.i18n :as i18n]))
 
 (def default-namespace :charts)
 (def default-vertical-str (name default-namespace))
@@ -22,5 +22,4 @@
 (def dark-mode-text-color "rgb(195, 199, 203)")
 
 (defn ^String attribute->display [attribute]
-  (let [attr-labels @(fi/call-api [:i18n :get-labels-sub])]
-    (str (get attr-labels attribute attribute))))
+  (str (i18n/attribute-label-with-unit attribute)))

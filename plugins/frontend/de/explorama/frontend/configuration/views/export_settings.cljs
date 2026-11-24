@@ -101,7 +101,7 @@
                       (count v)
                       0)
         config-export-intro @(subscribe [::i18n/translate :config-export-intro])]
-    [:div.flex.flex-column.gap-8
+    [:div.flex.flex-column.gap-2
      config-export-intro
      [input-field
       {:value (r/cursor temporary-state [export-configs/custom-description :en-GB])

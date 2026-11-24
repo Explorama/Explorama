@@ -26,6 +26,14 @@
             [name type value])
           feat-facts)))
 
+(defn- units-> [feat-facts]
+  (reduce (fn [acc {:keys [name unit]}]
+            (if unit
+              (update acc name (fnil conj #{}) unit)
+              acc))
+          {}
+          feat-facts))
+
 (defn- contexts-> [contexts-nodes context-refs]
   (mapv (fn [{:keys [global-id rel-type rel-name]}]
           (if-let [context (get contexts-nodes global-id)]
@@ -75,9 +83,28 @@
 
 (def date-acs-memo (memoize date-acs))
 
+(defn- validate-units! [data]
+  (reduce (fn [acc {features :features}]
+            (reduce (fn [acc {facts :facts}]
+                      (reduce (fn [acc {:keys [name unit]}]
+                                (let [known (get acc name #{})
+                                      units (if unit (conj known unit) known)]
+                                  (when (< 1 (count units))
+                                    (throw (ex-info "Conflicting units for fact"
+                                                    {:attribute name
+                                                     :units units})))
+                                  (assoc acc name units)))
+                              acc
+                              facts))
+                    acc
+                    features))
+          {}
+          (:items data)))
+
 (defn transform->table [data bucket]
   ;TODO r1/db use a context graph and not insert contexts hard
-  (let [contexts-nodes (into {}
+  (let [_ (validate-units! data)
+        contexts-nodes (into {}
                              (map (fn [{:keys [type global-id name]}]
                                     [global-id [type name]]))
                              (:contexts data))
@@ -92,6 +119,7 @@
                          (let [ds (datasource-> datasource)
                                contexts (contexts-> contexts-nodes context-refs)
                                locations (locations-> locations)
+                               units (units-> facts)
                                facts (facts-> facts)
                                notes (notes-> texts)
                                dates (dates-> dates)
@@ -183,6 +211,10 @@
                                                                                        (update 1 max (second new))))
                                                                                  old-ranges
                                                                                  ranges)))
+                                                   (update :units (fn [old-units]
+                                                                    (if old-units
+                                                                      (merge-with set/union old-units units)
+                                                                      units)))
                                                    (assoc :key data-tile-key)
                                                    (assoc :hash (expdb-hash data-tile-key))))))
                                    acc

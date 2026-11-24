@@ -4,6 +4,14 @@
             [de.explorama.frontend.mosaic.operations.tasks :as tasks]
             [re-frame.core :as re-frame]))
 
+;; This view draws its own canvas tooltip and does not go through ui_base's
+;; tooltip component, so its class stack is defined here rather than shared.
+;; `!` (important) is kept on the background because this component also sets
+;; its own inline :style with a :background-color, and CSS !important beats a
+;; non-important inline style.
+(def ^:private canvas-tooltip-class
+  "z-[30000]! text-xs text-center py-[0.5em]! px-[1em]! rounded-xs bg-gray-900! text-white shadow-sm min-w-[100px] max-w-[50em]!")
+
 (defn- position [[left top] width height]
   (cond-> {}
     (< (* 0.70 width) left)
@@ -26,10 +34,10 @@
         (tasks/sort-desc-from-operations-desc @(re-frame/subscribe [::tasks/operations frame-id])
                                               grp-attr)
         labels @(fi/call-api [:i18n :get-labels-sub])]
-    (cond-> [:div.react-tooltip-lite
-             {:style (merge {:background-color "white"
-                             :position :absolute}
-                            pos)}
+    (cond-> [:div {:class canvas-tooltip-class
+                   :style (merge {:background-color "white"
+                                  :position :absolute}
+                                 pos)}
              (str name " (" i18n-cards-count " Events)")]
       (= :aggregate by)
       (into
@@ -57,10 +65,10 @@
         width @(re-frame/subscribe [:de.explorama.frontend.mosaic.views.canvas/width frame-id])
         height @(re-frame/subscribe [:de.explorama.frontend.mosaic.views.canvas/height frame-id])
         pos (position pos width height)]
-    (cond-> [:div.react-tooltip-lite
-             {:style (merge {:background-color "white"
-                             :position :absolute}
-                            pos)}
+    (cond-> [:div {:class canvas-tooltip-class
+                   :style (merge {:background-color "white"
+                                  :position :absolute}
+                                 pos)}
              (str name " (" i18n-cards-count " Events)")]
       parent-title
       (conj

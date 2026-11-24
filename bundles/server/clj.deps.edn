@@ -14,6 +14,8 @@
             :extra-deps {org.clojure/tools.namespace {:mvn/version "1.5.0"}
                          ring/ring-mock {:mvn/version "0.4.0"}}
             :main-opts ["-m" "de.explorama.backend.test-runner-ci"]}
+  :bench {:extra-paths ["bench" "../../benchmarks/src"]
+          :main-opts ["-m" "de.explorama.benchmarks.expdb.runner"]}
   :dev {:extra-paths ["dev/backend"
                       "test/backend"
                       "../../plugins/backend_test"
@@ -36,7 +38,16 @@
                     "-XX:ShenandoahGCHeuristics=compact"
                     "--add-opens" "java.base/jdk.internal.misc=ALL-UNNAMED"
                     "-Dio.netty.tryReflectionSetAccessible=true"]
-         :main-opts ["-m" "de.explorama.backend.woco.app.core"]}}
+         :main-opts ["-m" "de.explorama.backend.woco.app.core"]}
+  ;; Packages the backend as an uberjar. Main-Class is clojure.main (no AOT;
+  ;; loading the backend namespaces has side effects, so compiling them at
+  ;; build time is undesirable); run with:
+  ;;   java -jar explorama-standalone.jar -m de.explorama.backend.woco.app.server
+  :uberjar {:replace-deps {uberdeps/uberdeps {:mvn/version "1.4.0"}}
+            :main-opts ["-m" "uberdeps.uberjar"
+                        "--deps-file" "clj.deps.edn"
+                        "--target" "target/explorama-standalone.jar"
+                        "--main-class" "clojure.main"]}}
 
  :paths ["backend"
          "shared"
@@ -48,7 +59,6 @@
         com.taoensso/timbre {:mvn/version "5.1.2"}
         com.taoensso/tufte {:mvn/version "2.2.0"}
         metosin/malli {:mvn/version "0.12.0"}
-        clj-time/clj-time {:mvn/version "0.15.2"}
         org.clojure/math.combinatorics {:mvn/version "0.2.0"}
         org.clojars.pntblnk/clj-ldap {:mvn/version "0.0.17"}
         clj-fuzzy/clj-fuzzy {:mvn/version "0.4.1"}

@@ -10,8 +10,7 @@
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.woco.path :as path]
             [de.explorama.frontend.woco.scale :as scale]
-            [de.explorama.frontend.woco.copyright :as cr]
-            [de.explorama.frontend.woco.util.api :refer [sub-error-boundary]]))
+            [de.explorama.frontend.woco.copyright :as cr]))
 
 (defn activate-page [db active?]
   (assoc-in db path/welcome-active? active?))
@@ -115,7 +114,7 @@
         (translate :start-new-workspace "Start with a new workspace.")]
     [:div.welcome__section
      [:h2 start-new-workspace-text]
-     [:div.grid.grid-cols-3.gap-16
+     [:div.grid.grid-cols-3.gap-4
       [card {:type :button
              :icon :search
              :icon-params {:size :3xl}
@@ -142,7 +141,7 @@
     [:div.welcome__section
      [:h2 welcome-page-help-title]
      [:div.help__section
-      [:div.grid.grid-cols-8.gap-16.w-full
+      [:div.grid.grid-cols-8.gap-4.w-full
        [:div.col-span-1
         [card {:type :button
                :icon "icon-tour"

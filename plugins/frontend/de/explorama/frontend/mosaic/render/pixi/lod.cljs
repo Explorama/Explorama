@@ -40,22 +40,17 @@
         container (.removeChildAt ^js stage (index-access zoom))]
     (.destroy ^js container (clj->js {:children true}))))
 
-(defn- calculate-proj [factor-overview zoom value]
-  (if (= 0 zoom)
-    (/ value factor-overview)
-    value))
-
 (defn- ctx-cal [{:keys [width height]}
-                {:keys [x y z zoom]}
+                {:keys [x y z]}
                 {{:keys [width-ctn height-ctn header-ctn margin-ctn cpl-ctn count-ctn header]} :params
                  [offset-absolute-x offset-absolute-y] :offset-absolute
-                 :keys [factor-overview ctx-type]}]
+                 :keys [ctx-type]}]
   (let [grouped? (= :group ctx-type)
-        size-x (calculate-proj factor-overview zoom (/ width z))
-        size-y (calculate-proj factor-overview zoom (/ height z))
-        ox (calculate-proj factor-overview zoom (/ (- x) z))
+        size-x (/ width z)
+        size-y (/ height z)
+        ox (/ (- x) z)
         x (- ox offset-absolute-x)
-        oy (calculate-proj factor-overview zoom (/ (- y) z))
+        oy (/ (- y) z)
         y (- oy offset-absolute-y)
         min-idx-x (max 0 (Math/floor (/ x
                                         (+ width-ctn
@@ -94,14 +89,13 @@
      :max-idx-y max-idx-y}))
 
 (defn- ctx-cal-tree [{:keys [width height]}
-                     {:keys [x y z zoom]}
+                     {:keys [x y z]}
                      contexts
                      length]
-  (let [{:keys [factor-overview]} (get contexts [])
-        size-x (calculate-proj factor-overview zoom (/ width z))
-        size-y (calculate-proj factor-overview zoom (/ height z))
-        ox (calculate-proj factor-overview zoom (/ (- x) z))
-        oy (calculate-proj factor-overview zoom (/ (- y) z))
+  (let [size-x (/ width z)
+        size-y (/ height z)
+        ox (/ (- x) z)
+        oy (/ (- y) z)
         visible-context-paths (into []
                                     (comp (filter (fn [[path {{:keys [start-x start-y end-x end-y]} :optional-desc}]]
                                                     (and (< start-x (+ ox size-x))

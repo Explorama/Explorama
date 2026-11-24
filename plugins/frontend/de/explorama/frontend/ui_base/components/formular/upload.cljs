@@ -2,7 +2,6 @@
   (:require
    [clojure.string :as clj-str]
    [reagent.core :as reagent]
-   ["resumablejs"]
    [cljs.reader :as reader]
    [de.explorama.frontend.ui-base.components.formular.button :refer [button]]
    [de.explorama.frontend.ui-base.components.common.core :refer [error-boundary]]
@@ -14,38 +13,13 @@
   {:variant {:type :keyword
              :characteristics [:area :button]
              :desc "Upload variant. Area provides an drop-area"}
-   :target {:type [:keyword :string]
-            :desc "The target of upload. Can be :local to upload it directly in client or an URL for upload to server. For :local all parameters with :local and for url all parameters with :remote are relevant. Other parameters take into account on both"}
-   :remote-test-target {:type [:string :function]
-                        :desc "The target URL for the request to the server for each chunk to see if it already exists. This can be a string or a function that allows you to construct and return a value, based on supplied params"}
    :multi-files? {:type :boolean
                   :desc "If true, user can select and upload more than one file"}
    :local-read-as {:type :keyword
                    :characters [:clj :string :data-url :bin :bin-str]
                    :desc [:<> "Defines how to read the files. :clj will call (read-string <result>) on file-string-content. For further explanations about the other types see: " [:a {:href "https://developer.mozilla.org/en-US/docs/Web/API/FileReader/result" :target "_blank"} "FileReader API"]]}
    :charset {:type :string
-             :desc "The charset for reading text on local upload"}
-   :remote-upload-method {:type :string
-                          :characteristics ["POST" "PUT" "PATCH"]
-                          :desc "HTTP method to use when sending chunks to the server"}
-
-   :remote-max-chunk-retries {:type :number
-                              :desc "The maximum number of retries for a chunk before the upload is failed. Valid values are any positive integer and undefined for no limit."}
-   :remote-chunk-retry-timeout {:type :number
-                                :desc "The number of milliseconds to wait before retrying a chunk on a non-permanent error. Valid values are any positive integer and undefined for immediate retry."}
-   :remote-chunksize {:type :number
-                      :desc "The size in bytes of each uploaded chunk of data. The last uploaded chunk will be at least this size and up to two the size"}
-   :remote-test-chunks? {:type :boolean
-                         :desc "Make a request (method :remote-test-chunks-method) to the server for each chunks to see if it already exists. If implemented on the server-side, this will allow for upload resumes even after a browser crash or even a computer restart"}
-   :remote-test-chunks-method {:type :string
-                               :characteristics ["GET" "POST"]
-                               :desc "Method for chunk test request"}
-   :remote-query {:type [:map :function]
-                  :desc "Extra parameters to include in the multipart request with data. This can be an map or a function. If a function, it will be passed a ResumableFile and a ResumableChunk object"}
-   :remote-headers {:type [:map :function]
-                    :desc "Extra headers to include in the upload with data. This can be an object or a function that allows you to construct and return a value, based on supplied file"}
-   :remote-simultaneous-uploads {:type :number
-                                 :desc "Number of simultaneous uploads"}
+             :desc "The charset for reading text"}
    :min-file-size {:type [:map :number]
                    :desc "The minimum allowed file size. You can define a look-up map (E.g. {\"json\" 10 \"csv\" 100}) or a number which represents the size in bytes"}
    :max-file-size {:type [:map :number]
@@ -58,16 +32,16 @@
    :on-file-loaded {:type :function
                     :required true
                     :default-fn-str "(fn [result file-infos])"
-                    :desc "Triggered for every file when it's upload is complete. Required when :target is :local."}
+                    :desc "Triggered for every file when it's read completely"}
    :on-complete {:type :function
                  :default-fn-str "(fn [infos])"
-                 :desc "Triggered when upload is completed (all files and chunks uploaded). infos is a map with additional infos like the total-size and filenames"}
+                 :desc "Triggered when upload is completed (all files read). infos is a map with additional infos like the total-size and filenames"}
    :on-file-progress {:type :function
                       :default-fn-str "(fn [progress-infos])"
                       :desc "Returns a map with :progress key which is a float between 0 and 1 indicating the current upload progress of the given file. Information about the file is also part of these map"}
    :on-progress {:type :function
                  :default-fn-str "(fn [progress-infos])"
-                 :desc "Returns a map with :progress key which is a float between 0 and 1 indicating the current upload progress of the whole upload-process. :relative? is added when :target is an url. If relative? is true, the value is returned relative to all files in the Resumable.js instance"}
+                 :desc "Returns a map with :progress key which is a float between 0 and 1 indicating the current upload progress of the whole upload-process"}
    :on-error {:type :function
               :default-fn-str "(fn [error-infos])"
               :desc "Triggered when an error occurs"}
@@ -83,12 +57,6 @@
                           :desc "Properties for Button. See at button component for API"}})
 (def specification (parameters->malli parameter-definition nil))
 (def default-parameters {:variant :area
-                         :target :local
-                         :remote-test-chunks? false
-                         :remote-chunksize (* 1024 1024)
-                         :remote-simultaneous-uploads 3
-                         :remote-upload-method "POST"
-                         :remote-test-chunks-method "GET"
                          :local-read-as :clj
                          :multi-files? false
                          :upload-area-hint "Click and select or drag some file/s here"
@@ -121,94 +89,6 @@
       (and min-check? max-check?))
 
     true))
-
-(defn- remote-upload [{:keys [target remote-test-target remote-query multi-files? file-type
-                              remote-test-chunks? remote-chunksize remote-simultaneous-uploads
-                              remote-upload-method remote-max-chunk-retries remote-chunk-retry-timeout
-                              remote-test-chunks-method remote-headers
-                              on-file-added on-file-loaded on-complete
-                              on-progress on-file-progress on-error]
-                       :as params}
-                      & upload-refs]
-  (let [resumable (js/Resumable. (clj->js (cond-> {:target target
-                                                   :testChunks remote-test-chunks?
-                                                   :generateUniqueIdentifier true}
-                                            remote-max-chunk-retries (assoc :maxChunkRetries remote-max-chunk-retries)
-                                            remote-chunk-retry-timeout (assoc :chunkRetryInterval remote-chunk-retry-timeout)
-                                            remote-upload-method (assoc :uploadMethod remote-upload-method)
-                                            remote-test-chunks-method (assoc :testMethod remote-test-chunks-method)
-                                            remote-chunksize (assoc :chunkSize remote-chunksize)
-                                            remote-simultaneous-uploads (assoc :simultaneousUploads remote-simultaneous-uploads)
-                                            file-type (assoc :fileType (mapv #(clj-str/replace % #"\." "") file-type))
-                                            remote-headers (assoc :headers remote-headers)
-                                            remote-test-target (assoc :testTarget remote-test-target)
-                                            remote-query (assoc :query remote-query)
-                                            (not multi-files?) (assoc :maxFiles 1))))]
-    (.on resumable "fileAdded" (fn [file]
-                                 (let [fn-res (when on-file-added (on-file-added  {:name (aget file "fileName")
-                                                                                   :mime-type (aget file "file" "type")
-                                                                                   :extention (file-extention (aget file "fileName"))
-                                                                                   :last-modified (js/Date. (aget file "file" "lastModified"))
-                                                                                   :unique-identifier (aget file "uniqueIdentifier")
-                                                                                   :size (aget file "size")
-                                                                                   :chunks (aget file "chunks" "length")
-                                                                                   :file file}))]
-
-                                   (if (and (file-size-valid? (aget file "fileName")
-                                                              (aget file "size")
-                                                              params)
-                                            (not (false? fn-res)))
-                                     (.upload resumable)
-                                     (do
-                                       (.abort file)
-                                       (.cancel resumable))))))
-    (.on resumable "fileSuccess" (fn [file message]
-                                   (when on-file-loaded
-                                     (on-file-loaded {:name (aget file "fileName")
-                                                      :mime-type (aget file "file" "type")
-                                                      :extention (file-extention (aget file "fileName"))
-                                                      :last-modified (js/Date. (aget file "file" "lastModified"))
-                                                      :unique-identifier (aget file "uniqueIdentifier")
-                                                      :size (aget file "size")
-                                                      :chunks (aget file "chunks" "length")
-                                                      :file file
-                                                      :message message}))))
-    (.on resumable "fileProgress" (fn [file message]
-                                    (when on-file-progress
-                                      (on-file-progress {:name (aget file "fileName")
-                                                         :progress (.progress resumable)
-                                                         :mime-type (aget file "file" "type")
-                                                         :extention (file-extention (aget file "fileName"))
-                                                         :last-modified (js/Date. (aget file "file" "lastModified"))
-                                                         :unique-identifier (aget file "uniqueIdentifier")
-                                                         :size (aget file "size")
-                                                         :chunks (aget file "chunks" "length")
-                                                         :file file
-                                                         :message message}))))
-    (.on resumable "progress" (fn [relative]
-                                (when on-progress
-                                  (on-progress {:progress (.progress resumable)
-                                                :relative? relative}))))
-    (.on resumable "complete" (fn []
-                                (when on-complete
-                                  (let [files (aget resumable "files")]
-                                    (on-complete {:total-size (apply + (map #(aget % "size") files))
-                                                  :files (mapv #(aget % "fileName") files)})))))
-    (.on resumable "error" (fn [message file]
-                             (when on-error
-                               (on-error  {:name (aget file "fileName")
-                                           :mime-type (aget file "file" "type")
-                                           :extention (file-extention (aget file "fileName"))
-                                           :last-modified (js/Date. (aget file "file" "lastModified"))
-                                           :unique-identifier (aget file "uniqueIdentifier")
-                                           :size (aget file "size")
-                                           :message message}))
-                             (.abort file)
-                             (.cancel resumable)))
-    (doseq [ref upload-refs]
-      (when-let [node (val-or-deref ref)]
-        (.assignBrowse resumable node)
-        (.assignDrop resumable node)))))
 
 (defn- local-read-file [file num-files total-size loaded-sizes
                         {:keys [on-file-loaded charset local-read-as
@@ -310,54 +190,34 @@
             multi-files? (assoc :multiple true)
             (vector? file-type) (assoc :accept (clj-str/join "," file-type)))])
 
-(defn- upload-area [{:keys [target] :as params}]
-  (let [area-ref (reagent/atom nil)
-        upload-ref (reagent/atom nil)]
-    (reagent/create-class
-     {:reagent-render
-      (fn [{:keys [target multi-files? upload-area-hint] :as params}]
-        (let [local-target? (= target :local)
-              upload-area-hint (val-or-deref upload-area-hint)]
-          [:div.explorama__form__file-upload {:ref #(reset! area-ref %)
-                                              :on-drag-enter #(.preventDefault %)
-                                              :on-drag-over #(.preventDefault %)
-                                              :on-drop (fn [e]
-                                                         (.preventDefault e)
-                                                         (local-upload-result-fn (if multi-files?
-                                                                                   (array-seq (aget e "dataTransfer" "files"))
-                                                                                   [(aget e "dataTransfer" "files" 0)])
-                                                                                 params))
-                                              :on-click #(when (and local-target? @upload-ref)
-                                                           (.click @upload-ref))}
-           [:span  upload-area-hint]
-           (when local-target?
-             [local-upload upload-ref params])]))
-      :component-did-mount
-      (fn [_]
-        (when (string? target)
-          (remote-upload params area-ref)))})))
+(defn- upload-area [_]
+  (let [upload-ref (reagent/atom nil)]
+    (fn [{:keys [multi-files? upload-area-hint] :as params}]
+      (let [upload-area-hint (val-or-deref upload-area-hint)]
+        [:div.explorama__form__file-upload {:on-drag-enter #(.preventDefault %)
+                                            :on-drag-over #(.preventDefault %)
+                                            :on-drop (fn [e]
+                                                       (.preventDefault e)
+                                                       (local-upload-result-fn (if multi-files?
+                                                                                 (array-seq (aget e "dataTransfer" "files"))
+                                                                                 [(aget e "dataTransfer" "files" 0)])
+                                                                               params))
+                                            :on-click #(when @upload-ref
+                                                         (.click @upload-ref))}
+         [:span  upload-area-hint]
+         [local-upload upload-ref params]]))))
 
-(defn- upload-button [{:keys [target upload-button-params] :as params}]
-  (let [local-target? (= target :local)
-        button-id (str ::up-but (random-uuid))
-        upload-ref (reagent/atom nil)]
-    (reagent/create-class
-     {:reagent-render
-      (fn [_]
-        [:div.explorama__form__input
-         [button (merge (or upload-button-params {})
-                        {:id button-id
-                         :on-click #(do
-                                      (when (and local-target? @upload-ref)
-                                        (.click @upload-ref))
-                                      (when (and upload-button-params (get upload-button-params :on-click))
-                                        ((get upload-button-params :on-click) %)))})]
-         (when local-target?
-           [local-upload upload-ref params])])
-      :component-did-mount
-      (fn [_]
-        (when (string? target)
-          (remote-upload params (js/document.getElementById button-id))))})))
+(defn- upload-button [{:keys [upload-button-params] :as params}]
+  (let [upload-ref (reagent/atom nil)]
+    (fn [_]
+      [:div.explorama__form__input
+       [button (merge (or upload-button-params {})
+                      {:on-click #(do
+                                    (when @upload-ref
+                                      (.click @upload-ref))
+                                    (when (and upload-button-params (get upload-button-params :on-click))
+                                      ((get upload-button-params :on-click) %)))})]
+       [local-upload upload-ref params]])))
 
 (defn ^:export upload [params]
   (let [params (merge default-parameters params)]

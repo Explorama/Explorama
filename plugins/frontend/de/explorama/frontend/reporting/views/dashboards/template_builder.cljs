@@ -8,6 +8,7 @@
             [de.explorama.frontend.reporting.views.context-menu :as menu]
             [de.explorama.frontend.reporting.paths.dashboards-reports :as dr-path]
             [de.explorama.frontend.reporting.data.templates :as templates]
+            [de.explorama.frontend.reporting.views.dashboards.view :as dashboards-view]
             [reagent.core :as r]
             [de.explorama.frontend.common.i18n :as i18n]))
 
@@ -47,13 +48,13 @@
                               (when is-dropzone-active?
                                 [:div {:class ["drag-drop-area" "drag-drop-area--empty" "drop-target"]}
                                  [:span reporting-placeholder-short-label]])
-                              [:div.title
+                              [:div.title {:class (into ["text-xs"] dashboards-view/dashboard-title-base-classes)}
                                [:div.explorama__form__textarea
                                 [input-field {:value title
                                               :disabled? disabled?
                                               :extra-class "mosaic__box__title__input"
                                               :on-change #(dispatch [:de.explorama.frontend.reporting.views.builder/tile-title-change tile-idx %])}]]
-                               [:div.options
+                               [:div.options {:class dashboards-view/dashboard-options-classes}
                                 (when context-menu
                                   [button {:start-icon :burgermenu
                                            :disabled? disabled?
@@ -147,6 +148,7 @@
       [:<>
        [:h3 fill-label]
        [:div.dashboard__container.in-app
+        {:class (into ["h-[400px]" "rounded-[4px]"] dashboards-view/dashboard-container-base-classes)}
         [input-field {:label title-label
                       :caption caption
                       :invalid? (boolean caption)

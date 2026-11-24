@@ -29,9 +29,9 @@
                          :message-state :load})
 
 (def tip-class ["text-center" "text-secondary" "m-0"])
-(def tip-title-class ["text-bold"])
-(def error-class ["text-red" "mb-32"])
-(def button-row-class ["flex" "gap-8"])
+(def tip-title-class ["font-bold"])
+(def error-class ["text-red" "mb-8"])
+(def button-row-class ["flex" "gap-2"])
 
 (defn- loading-screen-buttons [{:keys [buttons]}]
   (reduce

@@ -1,8 +1,9 @@
-{:optimizations :advanced
- :output-dir "resources/public/js/compiled"
- :output-to "resources/public/js/compiled/explorama.js"
- :source-map "resources/public/js/compiled/explorama.js.map"
+{:optimizations :simple
+ :target :bundle
+ :bundle-cmd {:default ["npx" "webpack" "--config" "webpack.prod.config.js"]}
+ :output-dir "resources/public/js/out"
+ :output-to "resources/public/js/out/main.js"
+ :source-map "resources/public/js/out/main.js.map"
  :pretty-print false
- :infer-externs true
  :warnings {:undeclared-ns true
             :undeclared-var true}}

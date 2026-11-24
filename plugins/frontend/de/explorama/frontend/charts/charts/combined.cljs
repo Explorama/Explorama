@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.charts.charts.combined
-  (:require ["chart.js" :as ChartJS]
+  (:require ["chart.js/auto" :refer [Chart]]
             ["chartjs-adapter-date-fns"]
             ["date-fns"]
             [de.explorama.frontend.common.frontend-interface :as fi]
@@ -72,10 +72,10 @@
                      :options {:responsive true
                                :animation {:duration 0}
                                :maintainAspectRatio false
-                               :legend {:position :top
-                                        :labels {:fontSize 12
-                                                 :boxWidth 10}}
-                               :plugins {:legend {:labels {:usePointStyle true
+                               :plugins {:legend {:position :top
+                                                  :labels {:usePointStyle true
+                                                           :font {:size 12}
+                                                           :boxWidth 10
                                                            :generateLabels (partial generate-labels use-dataset-label-only? y)}}
                                          :tooltip {:callbacks
                                                    {:title (cutils/tooltip-title-fn)
@@ -94,8 +94,8 @@
                                                                    :beginAtZero true
                                                                    :ticks {:callback (cutils/y-axis-label-fn cur-lang)
                                                                            :color text-color}
-                                                                   :grid {:color border-color
-                                                                          :borderColor border-color}
+                                                                   :grid {:color border-color}
+                                                                   :border {:color border-color}
                                                                    :position (if (= (mod chart-index 2) 0)
                                                                                "left"
                                                                                "right")}
@@ -105,11 +105,10 @@
                                                           {:barPercentage 0.9
                                                            :maxBarThickness 8
                                                            :stacked false
-                                                           :minBarLength 2
-                                                           :gridLines {:offsetGridLines true}})}
+                                                           :minBarLength 2})}
                                                (map-indexed vector y))}})]
     (when chart-data
-      (cutils/save-instance frame-id (ChartJS context (clj->js chart-data)))
+      (cutils/save-instance frame-id (Chart. context (clj->js chart-data)))
       (cutils/update-chart frame-id)
       (cutils/resize-chart frame-id height width))
     (when render-done

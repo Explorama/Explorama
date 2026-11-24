@@ -1,0 +1,81 @@
+{
+  "organizations": [
+    {
+      "owner": "admin",
+      "name": "explorama",
+      "displayName": "Explorama",
+      "websiteUrl": "http://localhost",
+      "passwordType": "bcrypt",
+      "passwordOptions": ["AtLeast6"],
+      "countryCodes": ["US", "DE"],
+      "languages": ["en", "de"],
+      "defaultApplication": "explorama-dev",
+      "initScore": 2000,
+      "enableSoftDeletion": false,
+      "isProfilePublic": true,
+      "accountItems": [
+        {"name": "Organization", "visible": true, "viewRule": "Public", "modifyRule": "Admin"},
+        {"name": "ID", "visible": true, "viewRule": "Public", "modifyRule": "Immutable"},
+        {"name": "Name", "visible": true, "viewRule": "Public", "modifyRule": "Admin"},
+        {"name": "Display name", "visible": true, "viewRule": "Public", "modifyRule": "Self"},
+        {"name": "Avatar", "visible": true, "viewRule": "Public", "modifyRule": "Self"},
+        {"name": "User type", "visible": true, "viewRule": "Public", "modifyRule": "Admin"},
+        {"name": "Password", "visible": true, "viewRule": "Self", "modifyRule": "Self"},
+        {"name": "Email", "visible": true, "viewRule": "Public", "modifyRule": "Self"},
+        {"name": "Phone", "visible": true, "viewRule": "Public", "modifyRule": "Self"},
+        {"name": "Country/Region", "visible": true, "viewRule": "Public", "modifyRule": "Self"},
+        {"name": "Is admin", "visible": true, "viewRule": "Admin", "modifyRule": "Admin"},
+        {"name": "Is forbidden", "visible": true, "viewRule": "Admin", "modifyRule": "Admin"},
+        {"name": "Is deleted", "visible": true, "viewRule": "Admin", "modifyRule": "Admin"}
+      ]
+    }
+  ],
+  "applications": [
+    {
+      "owner": "admin",
+      "name": "explorama-dev",
+      "displayName": "Explorama Dev",
+      "organization": "explorama",
+      "cert": "cert-built-in",
+      "enablePassword": true,
+      "enableSignUp": false,
+      "clientId": "explorama-dev-client-id",
+      "clientSecret": "explorama-dev-client-secret",
+      "redirectUris": [
+        "http://localhost/oauth2/callback",
+        "https://localhost/oauth2/callback"
+      ],
+      "tokenFormat": "JWT",
+      "expireInHours": 168,
+      "grantTypes": ["authorization_code"],
+      "signinMethods": [
+        {"name": "Password", "displayName": "Password", "rule": "All"}
+      ],
+      "signupItems": [
+        {"name": "ID", "visible": false, "required": true, "prompted": false, "rule": "Random"},
+        {"name": "Username", "visible": true, "required": true, "prompted": false, "rule": "None"},
+        {"name": "Display name", "visible": true, "required": true, "prompted": false, "rule": "None"},
+        {"name": "Password", "visible": true, "required": true, "prompted": false, "rule": "None"},
+        {"name": "Confirm password", "visible": true, "required": true, "prompted": false, "rule": "None"},
+        {"name": "Email", "visible": true, "required": true, "prompted": false, "rule": "None"}
+      ]
+    }
+  ],
+  "users": [
+    {
+      "owner": "explorama",
+      "name": "dev",
+      "type": "normal-user",
+      "password": "dev123",
+      "displayName": "Dev User",
+      "email": "dev@explorama.local",
+      "emailVerified": true,
+      "phone": "",
+      "isAdmin": false,
+      "isForbidden": false,
+      "isDeleted": false,
+      "signupApplication": "explorama-dev",
+      "score": 2000
+    }
+  ]
+}

@@ -2,8 +2,8 @@
   (:require [de.explorama.frontend.common.frontend-interface :as fi]
             [re-frame.core :as re-frame]
             [taoensso.timbre :refer-macros [debug]]
-            [vimsical.re-frame.cofx.inject :as inject]
             [de.explorama.frontend.woco.api.interaction-mode :as inter-mode]
+            [de.explorama.frontend.woco.api.registry :as registry]
             [de.explorama.frontend.woco.cleanup :as cleanup]
             [de.explorama.frontend.woco.config :as config]
             [de.explorama.frontend.woco.event-logging :as event-log]
@@ -600,35 +600,31 @@
 
 (re-frame/reg-event-fx
  ::clean-workspace
- [(re-frame/inject-cofx ::inject/sub
-                        (with-meta
-                          [:de.explorama.frontend.woco.api.registry/lookup-category :clean-workspace]
-                          {:ignore-dispose true}))]
- (fn [{db :db
-       services :de.explorama.frontend.woco.api.registry/lookup-category} [_ follow-event reason]]
-   (reset! wws/multiselect-current-selection #{})
-   (reset! wws/multiselect-bb-before-move nil)
-   (reset! wws/multiselect-bb nil)
-   (reset! wws/temporary-frames {})
-   (reset! wws/temporary-selection #{})
-   (reset! wws/window-creation-mouse nil)
-   {:db (-> (assoc db
-                   ::cleanup/clean-workspace services
-                   ::cleanup/clean-finished follow-event)
-            (assoc-in (path/workspace-id) (str (random-uuid)))
-            (path/dissoc-in path/id-counter-root)
-            (assoc-in (conj path/current-workspace-grid :num) [])
-            (update-in path/root
-                       dissoc
-                       path/curr-max-zindex-key
-                       path/current-group-key
-                       path/replay-progress-key
-                       path/overlayer-active-key
-                       path/product-tour-key)
-            (dissoc :woco.frame/all-frames-title)
-            (path/dissoc-in path/interaction-mode))
-    :dispatch-n (mapv #(conj % [::cleanup/clean-finished] reason)
-                      (vals services))}))
+ (fn [{db :db} [_ follow-event reason]]
+   (let [services (registry/lookup-category db :clean-workspace)]
+     (reset! wws/multiselect-current-selection #{})
+     (reset! wws/multiselect-bb-before-move nil)
+     (reset! wws/multiselect-bb nil)
+     (reset! wws/temporary-frames {})
+     (reset! wws/temporary-selection #{})
+     (reset! wws/window-creation-mouse nil)
+     {:db (-> (assoc db
+                     ::cleanup/clean-workspace services
+                     ::cleanup/clean-finished follow-event)
+              (assoc-in (path/workspace-id) (str (random-uuid)))
+              (path/dissoc-in path/id-counter-root)
+              (assoc-in (conj path/current-workspace-grid :num) [])
+              (update-in path/root
+                         dissoc
+                         path/curr-max-zindex-key
+                         path/current-group-key
+                         path/replay-progress-key
+                         path/overlayer-active-key
+                         path/product-tour-key)
+              (dissoc :woco.frame/all-frames-title)
+              (path/dissoc-in path/interaction-mode))
+      :dispatch-n (mapv #(conj % [::cleanup/clean-finished] reason)
+                        (vals services))})))
 
 (re-frame/reg-event-fx
  ::render-done

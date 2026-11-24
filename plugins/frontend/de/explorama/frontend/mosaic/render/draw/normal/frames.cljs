@@ -18,30 +18,28 @@
 
 (def font-size-margin (* (- 1 font-size-factor) 0.5))
 
-(defn frame-text [mode instance stage x y width header border title overview-factor]
-  (let [overview-factor
-        (if (= mode 0) overview-factor 1)]
-    (text-handler/draw-text-new instance
-                                stage
-                                (* overview-factor (+ x (* header 0.2) border))
-                                (* overview-factor (+ y border (* font-size-margin header)))
-                                (* overview-factor (* width 0.97))
-                                :one-line
-                                nil
-                                nil
-                                title
-                                {:size (* overview-factor (* header font-size-factor))
-                                 :color white
-                                 :adjust-width? true})))
+(defn frame-text [instance stage x y width header border title]
+  (text-handler/draw-text-new instance
+                              stage
+                              (+ x (* header 0.2) border)
+                              (+ y border (* font-size-margin header))
+                              (* width 0.97)
+                              :one-line
+                              nil
+                              nil
+                              title
+                              {:size (* header font-size-factor)
+                               :color white
+                               :adjust-width? true}))
 
-(defn render-text [mode
+(defn render-text [_mode
                    instance
                    _stage-key
                    stage
                    {:keys [border-grp]}
                    {{:keys [header width]} :params
                     {:keys [short-title]} :title
-                    :keys [factor-overview is-root?]
+                    :keys [is-root?]
                     [x y] :offset-absolute}
                    _path
                    render-path]
@@ -49,15 +47,11 @@
              (not is-root?)
              short-title)
     ;draws informationroom title on canvas (was ignored by old pixi version)
-    (frame-text mode instance stage x y width header border-grp short-title factor-overview)))
+    (frame-text instance stage x y width header border-grp short-title)))
 
-(defn frame-body [mode instance stage x y width height header border overview-factor factor-absolute title-desc render-path]
+(defn frame-body [instance stage x y width height header border title-desc render-path]
   (let [frame-id (gre/frame-id instance)
-        path (gp/top-level frame-id)
-        [overview-factor factor-absolute]
-        (if (= mode 0)
-          [overview-factor factor-absolute]
-          [1 1])]
+        path (gp/top-level frame-id)]
     (when (data-interaction? frame-id)
       (gre/interaction-primitive instance
                                  stage
@@ -111,60 +105,60 @@
                                {:track-move? true})
     (gre/rect instance
               stage
-              (* x overview-factor)
-              (* y overview-factor)
-              (* width factor-absolute)
-              (* overview-factor border)
+              x
+              y
+              width
+              border
               black
               {:a 0.2})
     (gre/rect instance
               stage
-              (* x overview-factor)
-              (* (+ border y) overview-factor)
-              (* overview-factor border)
-              (* overview-factor (- (+ height
-                                       header)
-                                    border
-                                    border))
+              x
+              (+ border y)
+              border
+              (- (+ height
+                    header)
+                 border
+                 border)
               black
               {:a 0.2})
     (gre/rect instance
               stage
-              (* (- (+ width x) border) overview-factor)
-              (* (+ border y) overview-factor)
-              (* overview-factor border)
-              (* overview-factor (- (+ height
-                                       header)
-                                    border
-                                    border))
+              (- (+ width x) border)
+              (+ border y)
+              border
+              (- (+ height
+                    header)
+                 border
+                 border)
               black
               {:a 0.2})
     (gre/rect instance
               stage
-              (* x overview-factor)
-              (* (+ y (- (+ header height) border)) overview-factor)
-              (* overview-factor width)
-              (* overview-factor border)
+              x
+              (+ y (- (+ header height) border))
+              width
+              border
               black
               {:a 0.2})
     (gre/rect instance
               stage
-              (* overview-factor (+ border x))
-              (* overview-factor (+ border y))
-              (* factor-absolute (- width border border))
-              (* factor-absolute header)
+              (+ border x)
+              (+ border y)
+              (- width border border)
+              header
               blue
               {:interactive? true})))
 
-(defn render-container [mode
+(defn render-container [_mode
                         instance
                         _stage-key
                         stage
                         {:keys [border-grp]}
                         {{:keys [header height width]} :params
-                         :keys [factor-overview title]
+                         :keys [title]
                          [x y] :offset-absolute}
                         _parent-grouped?
                         render-path]
   (when (not= render-path [])
-    (frame-body mode instance stage x y width height header border-grp factor-overview factor-overview title render-path)))
+    (frame-body instance stage x y width height header border-grp title render-path)))

@@ -1,14 +1,13 @@
 (ns de.explorama.backend.expdb.legacy.search.attribute-characteristics.date-utils
   (:require [de.explorama.shared.common.unification.time :as t]
-            [clojure.string :as st]
             [de.explorama.backend.expdb.legacy.search.attribute-characteristics.options-utils :as opts-utils]
             [taoensso.timbre :refer [error]]))
 
-(def date-format "YYYY-MM-dd") ;Different formats for date-fns and clj-time
-(def year-month-format "YYYY-MM")
-(def year-format "YYYY")
+(def date-format t/date-format)
+(def year-month-format t/year-month-format)
+(def year-format t/year-format)
 
-(def date-format-placeholder (st/lower-case date-format))
+(def date-format-placeholder t/date-format-placeholder)
 
 (defn create-obj [y m d]
   (t/date-time y m d))
@@ -54,24 +53,6 @@
          (t/parse formatter date-string))
        (catch #?(:clj Throwable :cljs :default) e
          (error "Date-str is not valid" date-string precision e))))))
-
-(defn filter-date-ranges [start-date end-date possible-dates equal?]
-  (let [start-date (date-str->obj :day start-date)
-        end-date (date-str->obj :day end-date)
-        check-fn (fn [d]
-                   (= equal? (t/within? start-date end-date (date-str->obj d))))]
-    (filter (fn [d]
-              (= equal? (check-fn d)))
-            possible-dates)))
-
-(defn filter-months [month year-months]
-  (reduce (fn [res ym-str]
-            (if (= month (-> (date-str->obj :month ym-str)
-                             (t/month)))
-              (conj res ym-str)
-              res))
-          #{}
-          year-months))
 
 (defn is-same-day? [date1 date2]
   (try

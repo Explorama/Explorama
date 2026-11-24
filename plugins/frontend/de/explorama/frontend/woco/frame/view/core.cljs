@@ -7,6 +7,7 @@
             [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref]]
             [re-frame.core :refer [dispatch dispatch-sync reg-event-fx
                                    subscribe]]
+            [re-frame.db :as rf-db]
             [reagent.core :as r]
             [de.explorama.frontend.woco.api.couple :as couple-api]
             [de.explorama.frontend.woco.api.interaction-mode :as im-api]
@@ -437,7 +438,7 @@
                                                    (move/start-resizing)
                                                    (let [event-x (aget ev "pageX")
                                                          event-y (aget ev "pageY")
-                                                         [page-x page-y] @(subscribe [::navigation-control/page->workspace [event-x event-y]])
+                                                         [page-x page-y] (navigation-control/page->workspace @rf-db/app-db [event-x event-y])
                                                          [frame-x frame-y] @(frame-position-sub frame-id)
                                                          offset-x (- frame-x page-x)
                                                          offset-y (- frame-y page-y)
@@ -461,7 +462,7 @@
                                                  [old-delta-x old-delta-y] old-delta
                                                  event-x (aget ev "pageX")
                                                  event-y (aget ev "pageY")
-                                                 [page-x page-y] @(subscribe [::navigation-control/page->workspace [event-x event-y]])
+                                                 [page-x page-y] (navigation-control/page->workspace @rf-db/app-db [event-x event-y])
                                                  new-x (min (+ page-x offset-x)
                                                             max-x)
                                                  new-y (min (+ page-y offset-y)
@@ -587,7 +588,7 @@
                                                    (move/start-resizing)
                                                    (let [event-x (aget ev "pageX")
                                                          event-y (aget ev "pageY")
-                                                         [page-x page-y] @(subscribe [::navigation-control/page->workspace [event-x event-y]])
+                                                         [page-x page-y] (navigation-control/page->workspace @rf-db/app-db [event-x event-y])
                                                          [frame-x frame-y] @(frame-position-sub frame-id)
                                                          offset-x (- frame-x page-x)
                                                          offset-y (- frame-y page-y)
@@ -611,7 +612,7 @@
                                                  [old-delta-x old-delta-y] old-delta
                                                  event-x (aget ev "pageX")
                                                  event-y (aget ev "pageY")
-                                                 [page-x page-y] @(subscribe [::navigation-control/page->workspace [event-x event-y]])
+                                                 [page-x page-y] (navigation-control/page->workspace @rf-db/app-db [event-x event-y])
                                                  new-x (min (+ page-x offset-x)
                                                             max-x)
                                                  new-y (min (+ page-y offset-y)

@@ -1,29 +1,9 @@
 (ns de.explorama.frontend.mosaic.operations.core
   (:require [de.explorama.frontend.common.frontend-interface :as fi]
+            [de.explorama.frontend.common.tracks :as tracks]
             [de.explorama.frontend.mosaic.path :as gp]
             [re-frame.core :as re-frame]
-            [taoensso.timbre :refer [debug info]]
-            [vimsical.re-frame.fx.track :as track]))
-
-
-(defn register-fx
-  [track-or-tracks]
-  (try
-    (track/register-fx track-or-tracks)
-    (catch js/Error e
-      (info e track-or-tracks)
-      {})))
-
-(defn dispose-fx
-  [track-or-tracks]
-  (try
-    (track/dispose-fx track-or-tracks)
-    (catch js/Error e
-      (info e track-or-tracks)
-      {})))
-
-(re-frame/reg-fx ::register register-fx)
-(re-frame/reg-fx ::dispose dispose-fx)
+            [taoensso.timbre :refer [debug]]))
 
 ;! TODO move this to better namespace
 (re-frame/reg-sub
@@ -34,7 +14,7 @@
 (re-frame/reg-event-fx
  ::track-register-canvas-rendering
  (fn [_ [_ path]]
-   {::register
+   {::tracks/register
     {:id [::canvas (gp/frame-id path)]
      :subscription [::canvas path]
      :event-fn (fn [_]
@@ -43,7 +23,7 @@
 (re-frame/reg-event-fx
  ::track-dispose-canvas-rendering
  (fn [_ [_ path]]
-   {::dispose
+   {::tracks/dispose
     {:id [::canvas (gp/frame-id path)]}}))
 
 (re-frame/reg-event-db

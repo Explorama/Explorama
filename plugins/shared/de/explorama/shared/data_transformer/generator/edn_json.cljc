@@ -12,10 +12,12 @@
       :edn data
       :json #?(:clj (json/write-value-as-string data)
                :cljs (js/JSON.stringify (clj->js data)))))
-  (gen/fact [_ name type value]
-    {:name name
-     :type type
-     :value value})
+  (gen/fact [_ name type value unit]
+    (cond-> {:name name
+             :type type
+             :value value}
+      unit
+      (assoc :unit unit)))
   (gen/context [_ global-id type name]
     {:global-id global-id
      :type type

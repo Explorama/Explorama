@@ -79,6 +79,118 @@
 
 (def btn-loader-class "loader")
 
+;; ---------------------------------------------------------------------
+;; Only the BOX-level styling (%btn + .btn-primary/.btn-secondary/.btn-tertiary
+;; /.btn-back variants, warning bg/text, sizes) is expressed as utility stacks
+;; here. The literal `.btn-*` marker classes above stay emitted -- sibling
+;; sheets and remnant blocks (indicator_domain.css, the input/select remnants
+;; in tailwind.css, navbar_domain.css, temp_domain.css), base/themes.css
+;; forced-colors and direct-builders (woco/tools.cljs, server rights_roles
+;; pages) key off them. The icon-tinting `span[class^="icon-"]` descendant
+;; rules, the whole `.btn-group` family, `.btn-loading` and `.btn-link` stay
+;; as vendor/caller-DOM remnants in styles/src/tailwind.css (see that file's
+;; comment): they are descendant/contextual/direct-builder-consumed and
+;; cannot become markup utilities without breaking specificity.
+;;
+;; `gap`/`padding` use arbitrary `em` values so they scale with the button's
+;; font-size.
+(def ^:private btn-base-util-class
+  ;; %btn box shared by primary/secondary/tertiary (NOT back, which diverges).
+  ;; Border-COLOR is per-variant so no two color utilities compete.
+  (str "inline-flex justify-center items-center gap-[0.375em] border "
+       "font-bold leading-none no-underline "
+       "hover:enabled:cursor-pointer "
+       "active:enabled:[transform:scale(0.97)] active:enabled:shadow-none "
+       "focus-visible:outline-2 focus-visible:outline-purple-700 "
+       "focus-visible:outline-offset-2 focus-visible:isolate "
+       "disabled:opacity-50 disabled:shadow-none disabled:cursor-default"))
+
+(def ^:private btn-back-util-class
+  ;; .btn-back overrides %btn: justify-start, rounded-none, font-normal,
+  ;; border-bottom only, active transform:none. Standalone stack (no base).
+  ;; `[justify-content:start]` (not `justify-start`) so getComputedStyle reads
+  ;; `start`, matching the old `justify-content: start` exactly (`justify-start`
+  ;; emits `flex-start`). btn-back carries no box-shadow (none in every state),
+  ;; so no `shadow-none` is emitted -- avoids the shadow-composition transparent
+  ;; layers and keeps computed `box-shadow: none` like the old sheet.
+  (str "inline-flex [justify-content:start] items-center gap-[0.375em] "
+       "border border-transparent border-b-(--border) rounded-none "
+       "font-normal leading-none no-underline bg-(--bg) text-(--text) "
+       "[transition:background-color_120ms] "
+       "hover:enabled:cursor-pointer hover:enabled:bg-(--bg-hover) "
+       "active:enabled:[transform:none] "
+       "focus-visible:outline-2 focus-visible:outline-purple-700 "
+       "focus-visible:outline-offset-2 focus-visible:isolate "
+       "disabled:opacity-50 disabled:cursor-default"))
+
+(def ^:private btn-primary-util-class
+  (str "bg-(--primary) text-gray-50 border-transparent shadow-sm "
+       "[transition:background-color_240ms,transform_120ms] "
+       "hover:enabled:bg-(--primary-highlight)"))
+(def ^:private btn-primary-warning-util-class
+  ;; .btn-warning.btn-primary: red-700 bg, hover red-800.
+  (str "bg-red-700 text-gray-50 border-transparent shadow-sm "
+       "[transition:background-color_240ms,transform_120ms] "
+       "hover:enabled:bg-red-800"))
+
+(def ^:private btn-secondary-util-class
+  (str "bg-(--bg) text-(--text) border-(--border) shadow-sm "
+       "[transition:border-color_120ms,transform_120ms,box-shadow_120ms,background-color_120ms,color_120ms] "
+       "hover:enabled:bg-(--bg-hover) "
+       "disabled:bg-gray-100 disabled:text-gray-600 disabled:border-gray-300"))
+(def ^:private btn-secondary-warning-util-class
+  ;; .btn-warning.btn-secondary: text red-700 (hover red-800); the disabled
+  ;; text stays gray-600 because `disabled:` out-specifies the resting
+  ;; `text-red-700` (matches the old (0,2,0)-tie resolving to :disabled).
+  (str "bg-(--bg) text-red-700 border-(--border) shadow-sm "
+       "[transition:border-color_120ms,transform_120ms,box-shadow_120ms,background-color_120ms,color_120ms] "
+       "hover:enabled:bg-(--bg-hover) hover:enabled:text-red-800 "
+       "disabled:bg-gray-100 disabled:text-gray-600 disabled:border-gray-300"))
+
+(def ^:private btn-tertiary-util-class
+  (str "bg-transparent text-(--primary) border-transparent "
+       "[transition:background-color_120ms,color_120ms,transform_120ms] "
+       "hover:enabled:bg-(--bg-hover) hover:enabled:text-(--text) "
+       "disabled:bg-[rgba(242.6,244.1,244.8,0.5)] disabled:text-purple-700"))
+(def ^:private btn-tertiary-warning-util-class
+  ;; text red-700 (hover red-800); disabled text purple-700 wins by `disabled:`
+  ;; specificity over the resting red-700 (old (0,2,0) tie -> :disabled later).
+  (str "bg-transparent text-red-700 border-transparent "
+       "[transition:background-color_120ms,color_120ms,transform_120ms] "
+       "hover:enabled:bg-(--bg-hover) hover:enabled:text-red-800 "
+       "disabled:bg-[rgba(242.6,244.1,244.8,0.5)] disabled:text-purple-700"))
+
+(defn- btn-variant-util-class [variant warning?]
+  (case variant
+    :secondary (if warning? btn-secondary-warning-util-class btn-secondary-util-class)
+    :tertiary  (if warning? btn-tertiary-warning-util-class btn-tertiary-util-class)
+    :back      btn-back-util-class
+    (if warning? btn-primary-warning-util-class btn-primary-util-class)))
+
+(defn- btn-radius-util-class [variant icon-only?]
+  ;; .btn-tertiary.btn-icon -> rounded-md; everything else -> rounded-full.
+  ;; (:back carries its own rounded-none in btn-back-util-class.)
+  (if (and (= variant :tertiary) icon-only?)
+    "rounded-md"
+    "rounded-full"))
+
+(defn- btn-padding-util-class [size icon-only?]
+  ;; padding axes: .btn-large (size 12 all + w-full) > .btn-icon (size 8, or
+  ;; size 4 when also .btn-small) > .btn-small (4/8) > %btn default (8/12).
+  (cond
+    (= size :big)      "w-full p-[0.75em]"
+    icon-only?         (if (= size :small) "p-[0.25em]" "p-[0.5em]")
+    (= size :small)    "py-[0.25em] px-[0.5em]"
+    :else              "py-[0.5em] px-[0.75em]"))
+
+(defn- button-util-class [variant type size icon-only?]
+  (let [warning? (= type :warning)
+        back? (= variant :back)]
+    (str (when-not back? (str btn-base-util-class " "))
+         (btn-variant-util-class variant warning?)
+         (when-not back? (str " " (btn-radius-util-class variant icon-only?)))
+         " " (btn-padding-util-class size icon-only?))))
+
 (defn- parent [as-link btn-params & childs]
   (apply conj
          (if as-link
@@ -116,7 +228,12 @@
                        loading? (conj btn-loading-class)
                        (and start-icon (not label)) (conj btn-icon-class)
                        size (conj (case size :big btn-big-class :small btn-small-class ""))
-                       extra-class (conj extra-class))
+                       extra-class (conj extra-class)
+                       ;; box-level utility stack (see defs above); the
+                       ;; .btn-* markers above stay for sibling sheets/forced-
+                       ;; colors/direct-builders + the tailwind.css remnants.
+                       true (conj (button-util-class variant type size
+                                                      (boolean (and start-icon (not label))))))
               :aria-label (or aria-label
                               (str label (when (and label title) " ") title))
               :style extra-style

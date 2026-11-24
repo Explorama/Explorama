@@ -77,7 +77,46 @@
                          :max-length 220
                          :on-change (fn [new-value])})
 
-(def textarea-borderless-class "borderless")
+;; ---------------------------------------------------------------------
+;; Tailwind migration of the `textarea` element rule in
+;; styles/src/scss/components/_input.scss. `<textarea>` is rendered ONLY by
+;; this component (it is the sole `[:textarea` builder in the frontend; no
+;; backend emits raw <textarea> HTML), so the old GLOBAL `textarea {}` element
+;; selector is effectively component-private and moves here as utility stacks.
+;; Sibling sheets that also style textareas (_notes/_indicator/_importer) do so
+;; through higher-specificity contextual selectors (`.class textarea`, (0,1,1))
+;; that keep winning over these (0,1,0) utilities -> no cross-sheet flip; and
+;; normalize's `textarea {}` sets only font/margin/overflow which these do not
+;; touch, so those persist unchanged.
+;;
+;; `box-shadow: none` from the old `&:disabled` and `&.borderless` blocks is
+;; intentionally OMITTED: a resting disabled/borderless textarea already
+;; computes `box-shadow: none` (nothing sets one at rest) and a disabled
+;; textarea is never focused, so the only shadow those `none`s overrode (the
+;; `:focus` shadow) is unreachable -- omitting keeps the shadow-composition
+;; gate floor untouched instead of emitting `shadow-none`'s transparent layers.
+;; The old `.borderless` marker class is dropped (grepped: no sibling sheet or
+;; base/_themes.scss forced-colors block selects it) and replaced by the
+;; padding/radius branch below.
+(def ^:private textarea-base-class
+  ;; `[outline:none] [border:none]` (raw shorthands) rather than
+  ;; `outline-none`/`border-none`: the Tailwind utilities only set
+  ;; `*-style:none` (leaving the browser-default border-color and flipping the
+  ;; registered `--tw-{border,outline}-style` vars solid->none), whereas the old
+  ;; `outline:none; border:none` shorthands also reset border-color to
+  ;; currentColor -- the arbitrary properties reproduce the shorthands exactly.
+  (str "flex flex-row items-center [outline:none] [border:none] "
+       "text-(--text) bg-(--bg-section) w-full resize-none cursor-auto "
+       "leading-[1.375] [transition:border-color_120ms,box-shadow_120ms] "
+       "hover:enabled:border-(--border) "
+       "focus:border-(--border-focus) focus:caret-(--border-focus) "
+       "focus:shadow-[var(--shadow-xs),inset_0_0_0_1px_var(--border-focus)] "
+       "disabled:bg-(--bg-hover) disabled:text-(--text-secondary) disabled:cursor-default "
+       "placeholder:text-(--text-secondary)"))
+;; One value per property (no competing same-specificity utilities): the box
+;; padding+radius is `p-0 rounded-none` when borderless, else the padded pill.
+(def ^:private textarea-bordered-class "py-[0.375em] pr-[0.375em] pl-[0.75em] rounded-xl")
+(def ^:private textarea-borderless-box-class "p-0 rounded-none")
 
 (def uuid-prefix "ui-base.formular.ta-")
 (defn- make-uuid []
@@ -98,7 +137,10 @@
         placeholder (val-or-deref placeholder)
         aria-label (translate-label aria-label)
         disabled? (val-or-deref disabled?)]
-    [:textarea (cond->  {:class []}
+    [:textarea (cond->  {:class [textarea-base-class
+                                 (if borderless?
+                                   textarea-borderless-box-class
+                                   textarea-bordered-class)]}
                  :always
                  (assoc :aria-label
                         (cond
@@ -118,7 +160,6 @@
                  required? (assoc :required true)
                  read-only? (assoc :read-only true)
                  disabled? (assoc :disabled true)
-                 borderless? (update :class conj textarea-borderless-class)
                  placeholder (assoc :placeholder placeholder)
                  wrap (assoc :wrap wrap)
                  on-change (assoc :on-change (fn [e]

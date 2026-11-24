@@ -1,8 +1,7 @@
 (ns de.explorama.frontend.ui-base.overview.common.tooltip
   (:require [de.explorama.frontend.ui-base.components.common.tooltip :refer [tooltip default-parameters parameter-definition]]
-            [de.explorama.frontend.ui-base.components.formular.core :refer [button input-field]]
+            [de.explorama.frontend.ui-base.components.formular.core :refer [button]]
             [de.explorama.frontend.ui-base.components.misc.core :refer [icon]]
-            [reagent.core :as reagent]
             [de.explorama.frontend.ui-base.overview.page :refer-macros [defcomponent defexample]]))
 
 (defcomponent
@@ -21,39 +20,17 @@
 (defexample
   [:div {:style {:width :fit-content}}
    [tooltip {:text "my tooltip"
-             :direction :down
-             :alignment :end}
+             :direction :down}
     [icon {:icon :intersect}]]]
-  {:title "Direction and alignment"})
+  {:title "Direction"})
 
 (defexample
   [:div {:style {:width :fit-content}}
    [tooltip {:text "my tooltip"
-             :event-toggle :click
-             :use-hover? false}
-    [button {:label "Click me"}]]]
-  {:title "Toggle"})
-
-(defexample
-  [:div {:style {:width :fit-content}}
-   (let [counter (reagent/atom 0)]
-     [tooltip {:text counter
-               :on-toggle (fn [toggle?]
-                            (when toggle?
-                              (swap! counter inc)))}
-      [button {:label "Hover me"}]])]
-  {:title "React on toggle"})
-
-(defexample
-  [:div {:style {:width :fit-content}}
-   (let [tooltip-text (reagent/atom "")]
-     [tooltip {:text tooltip-text
-               :event-on :change
-               :event-off :blur
-               :use-hover? false}
-      [input-field {:on-change #(reset! tooltip-text %)
-                    :aria-label "show on change example"}]])]
-  {:title "Show on change"})
+             :direction :right
+             :distance 20}
+    [button {:label "Hover me"}]]]
+  {:title "Distance"})
 
 (defexample
   [:div {:style {:width :fit-content}}

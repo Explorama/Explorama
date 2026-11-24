@@ -161,6 +161,3 @@
     (let [instance (Backend. config (atom {}))]
       (swap! store assoc (:bucket config) instance)
       instance)))
-
-(defn instances []
-  @store)

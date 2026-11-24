@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.common.views.legend
-  (:require ["react-beautiful-dnd" :refer [DragDropContext Droppable Draggable]]
+  (:require ["@hello-pangea/dnd" :refer [DragDropContext Droppable Draggable]]
             [clojure.string :refer [lower-case]]
             [de.explorama.shared.data-format.aggregations :as dfl-agg]
             [de.explorama.frontend.common.frontend-interface :as fi]
@@ -76,15 +76,15 @@
      :on-change #(on-change-layout :name %)}]])
 
 (defn- gen-layout-title [name colors]
-  [:div.flex.justify-between.align-items-center
+  [:div.flex.justify-between.items-center
    {:title name}
-   [:label.input-w-64.text-truncate name]
+   [:label.input-w-64.truncate name]
    (reduce
     (fn [res [_ color]]
       (conj res
             [:div.select__colorswatch
              {:style {:background-color color}}]))
-    [:div.flex.align-items-center.gap-2]
+    [:div.flex.items-center {:class "gap-0.5"}]
     colors)])
 
 (defn- vec-remove [coll i]
@@ -175,7 +175,7 @@
         star-in-use? (some (fn [vals] (some (fn [val] (= "*" val)) vals))
                            value-assigned)]
     [:div.color__assignments__row {:style {:display "block"}}
-     [:div.align-items-center.flex.gap-8
+     [:div.items-center.flex.gap-2
       [:div.drag-handle
        [icon {:icon :drag-indicator}]]
       [input-field {:type :color
@@ -231,7 +231,7 @@
         {:keys [legend-negative-infinity legend-infinity color-picker close range-start range-end]}
         @(translate-multi :legend-negative-infinity :legend-infinity :color-picker :close :range-start :range-end)]
     [:div.color__assignments__row {:style {:display "block"}}
-     [:div.align-items-center.flex.gap-8
+     [:div.items-center.flex.gap-2
       [:div.drag-handle
        [icon {:icon :drag-indicator}]]
       [input-field {:type :color
@@ -493,10 +493,11 @@
            :extra-class bg-class}]))
 
 (defn attr->display-name [attr labels]
-  (or (get labels attr)
-      (when-let [agg-label (get-in dfl-agg/descs [attr :label])]
-        @(re-frame/subscribe [::i18n/translate agg-label]))
-      attr))
+  (str (or (get labels attr)
+           (when-let [agg-label (get-in dfl-agg/descs [attr :label])]
+             @(re-frame/subscribe [::i18n/translate agg-label]))
+           attr)
+       (i18n/unit-suffix (i18n/attribute-units) attr)))
 
 (defn gen-attr-options [global-ac-attribute-types frame-ac-attribute-types add-condition-fn translate-multi extra-attribtues]
   (let [{:keys [legend-current-data legend-all-data legend-general-attributes]}
@@ -607,18 +608,19 @@
                        (:global ac-vals))
         min (first min-max-vals)
         max (peek min-max-vals)
+        unit (i18n/unit-suffix (i18n/attribute-units) (first attributes))
         {min-label :min
          max-label :max} @(re-frame/subscribe [::i18n/translate-multi :min :max])]
     (when (and (= attribute-type "number") min max)
       [:div {:class ["flex"
                      "flex-wrap"
-                     "align-items-center"
-                     "gap-x-4"
-                     "py-4"
+                     "items-center"
+                     "gap-x-1"
+                     "py-1"
                      "text-xs"]}
-       [:span min-label ": " (i18n/localized-number min)
+       [:span min-label ": " (i18n/localized-number min) unit
         (gstr/unescapeEntities " &#8211; ")]
-       [:span max-label ": " (i18n/localized-number max)]])))
+       [:span max-label ": " (i18n/localized-number max) unit]])))
 
 (defn coloring [{:keys [layout color-scales on-change-layout show-attribute-select?]
                  :or {show-attribute-select? true}

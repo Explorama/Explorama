@@ -270,6 +270,7 @@
                          "day" "Date"
                          "location" "Context"},
             :ranges {"fact1" [2 1230812312], "fact2" #?(:cljs [1 2] :clj [1.0 2.0])},
+            :units {},
             :count 2}))
     (is (= (sut/delete @db "dsn-1")
            {:success true
@@ -318,3 +319,35 @@
     (is (= (sut/dump @db)
            {"foo" "bar"
             "bar" "foo"}))))
+
+(def ^:private conflicting-units-data
+  {:contexts [{:name "country1" :global-id "c1" :type "country"}]
+   :datasource {:name "dsn-conflict" :global-id "dsc"}
+   :items [{:global-id "i1"
+            :features [{:facts [{:name "temperature" :type "decimal" :value 1.0 :unit "°C"}]
+                        :context-refs [{:global-id "c1"}]
+                        :dates [{:type "occured-at" :value "1997-01-02"}]}]}
+           {:global-id "i2"
+            :features [{:facts [{:name "temperature" :type "decimal" :value 2.0 :unit "°F"}]
+                        :context-refs [{:global-id "c1"}]
+                        :dates [{:type "occured-at" :value "1998-01-05"}]}]}]})
+
+(def ^:private consistent-units-data
+  (assoc-in conflicting-units-data
+            [:items 1 :features 0 :facts 0 :unit]
+            "°C"))
+
+(def ^:private partial-units-data
+  (update-in conflicting-units-data
+             [:items 1 :features 0 :facts 0]
+             dissoc :unit))
+
+(deftest conflicting-units-test
+  (testing "one fact name with two units in one import is rejected"
+    (let [{:keys [success message]} (imp/transform->import conflicting-units-data {} "default")]
+      (is (false? success))
+      (is (= "Conflicting units for fact" message))))
+  (testing "the same unit repeated is accepted"
+    (is (:success (imp/transform->import consistent-units-data {} "default"))))
+  (testing "a unit on some rows and absent on others is accepted"
+    (is (:success (imp/transform->import partial-units-data {} "default")))))

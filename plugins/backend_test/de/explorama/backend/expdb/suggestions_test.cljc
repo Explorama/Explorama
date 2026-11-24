@@ -41,7 +41,7 @@
                                               :global-id [:id-generate ["context1" :text] :name],
                                               :type [:value "context1"]}],
                                   :dates [{:value [:date-schema
-                                                   "YYYY-MM-dd"
+                                                   "yyyy-MM-dd"
                                                    [:field "date"]],
                                            :type [:value "occured-at"]}],
                                   :texts [[:field "text" ""]]}]}]}})
@@ -81,34 +81,34 @@
   (testing "Dates happy path"
     (is (= (@#'sut/check-dates nil "2018-09-24")
            {:type :date
-            :date-schema "YYYY-MM-dd"}))
+            :date-schema "yyyy-MM-dd"}))
     (is (= (@#'sut/check-dates nil "2018/09/24")
            {:type :date
-            :date-schema "YYYY/MM/dd"}))
+            :date-schema "yyyy/MM/dd"}))
     (is (= (@#'sut/check-dates nil "2018.09.24")
            {:type :date
-            :date-schema "YYYY.MM.dd"}))
+            :date-schema "yyyy.MM.dd"}))
     (is (= (@#'sut/check-dates nil "24-09-2018")
            {:type :date
-            :date-schema "dd-MM-YYYY"}))
+            :date-schema "dd-MM-yyyy"}))
     (is (= (@#'sut/check-dates nil "24/09/2018")
            {:type :date
-            :date-schema "dd/MM/YYYY"}))
+            :date-schema "dd/MM/yyyy"}))
     (is (= (@#'sut/check-dates nil "24.09.2018")
            {:type :date
-            :date-schema "dd.MM.YYYY"}))
+            :date-schema "dd.MM.yyyy"}))
     (is (= (@#'sut/check-dates nil "24 SEP. 2018")
            {:type :date
-            :date-schema "dd MMM. YYYY"}))
+            :date-schema "dd MMM. yyyy"}))
     (is (= (@#'sut/check-dates nil "SEP. 24, 2018")
            {:type :date
-            :date-schema "MMM. dd, YYYY"}))
+            :date-schema "MMM. dd, yyyy"}))
     (is (= (@#'sut/check-dates nil "2018")
            {:type :date
-            :date-schema "YYYY"}))
+            :date-schema "yyyy"}))
     (is (= (@#'sut/check-dates nil "09.2018")
            {:type :date
-            :date-schema "MM.YYYY"}))
+            :date-schema "MM.yyyy"}))
     (is (= (@#'sut/check-dates nil "2018-09")
            {:type :date
-            :date-schema "YYYY-MM"}))))
+            :date-schema "yyyy-MM"}))))

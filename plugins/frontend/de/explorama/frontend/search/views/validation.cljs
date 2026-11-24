@@ -27,13 +27,13 @@
           :req-attrs-infotext (if (= 1 (count required-attributes))
                                 (st/replace @(subscribe [::i18n/translate :required-attributes-infotext-one])
                                             "<p>"
-                                            (i18n/attribute-label (first required-attributes)))
+                                            (i18n/attribute-label-with-unit (first required-attributes)))
                                 (st/replace @(subscribe [::i18n/translate (if all-required
                                                                             :required-attributes-infotext-multi
                                                                             :required-attributes-infotext-one-needed)])
                                             "<p>"
                                             (st/join ", "
-                                                     (map #(i18n/attribute-label %)
+                                                     (map #(i18n/attribute-label-with-unit %)
                                                           required-attributes))))
           :req-attrs-num-valid? check-req-attrs-num
           :req-attrs-num-infotext (if (= 1 required-attributes-num)

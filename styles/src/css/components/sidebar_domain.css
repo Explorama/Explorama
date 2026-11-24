@@ -1,0 +1,183 @@
+/*  Sidebar -- cross-plugin / deep-child / details-view RESIDUAL. */
+
+/*  The woco sidebar SHELL (`.sidebar` base, `.header`, `.header h2`, */
+/*  `.header .actions`) is Tailwind utility stacks on woco/sidebar.cljs. */
+/*  woco/sidebar.cljs renders ONLY the resizable root + `[:div.header]` / */
+/*  `[:h2]` / `[:div.actions]`; every block below styles DOM it does NOT render */
+/*  (`.sidebar X` is a DESCENDANT selector reaching plugin-injected sidebar */
+/*  content), so it stays residual: */
+/*    * `.header .actions span` -- the icon <span> is rendered by the ui_base */
+/*      `button` component (formular/button), not by sidebar.cljs; the `.header` */
+/*      + `.actions` markers stay emitted by sidebar.cljs so this keeps matching. */
+/*    * `> .section:has(.details-view)` (+ `> .content`) -- cross-plugin `.section` */
+/*      marker (ui_base section) + `:has()`. */
+/*    * `> .overlay` -- the dialog `.overlay` (ui_base frames/dialog); also */
+/*      co-selected by _dialog_domain `.sidebar .overlay .dialog`. */
+/*    * `> .tabs__navigation` -- the tabs component (woco/tabs.cljs). */
+/*    * `.content` whole block -- `.content` is rendered by the PLUGIN modules */
+/*      shown in the sidebar (woco/presentation/sidebar.cljs, woco/details_view.cljs */
+/*      `[:div.content.details-view]`, woco/frame/view/legend.cljs); the deep */
+/*      `> div:not(.tabs__navigation, .overlay, .flex-initial, .details-view, */
+/*      .fulltext__container)` selector matches ARBITRARY plugin-injected panels; */
+/*      `:not()` / `:has(+ h3)` / `:where(h1,h2)` / `h2:has(span)` / */
+/*      `input:disabled + label img` / `:has(.details-view)`. */
+/*    * `.footer` (+ h3) -- `.footer` is rendered by config/reporting/expdb/projects */
+/*      module content (e.g. configuration/views/user_settings.cljs), not sidebar.cljs. */
+/*    * `hr` / `iframe` -- plugin content (`iframe` = the help iframe). */
+/*    * `.details-view` table block -- `.details-view` is cross-plugin (map / mosaic / */
+/*      woco details_view.cljs); zebra `tr:nth-child(odd)`, `thead th` / `tbody td`, */
+/*      `:has(.fulltext__container)`. */
+
+/*  Loaded at _sidebar's old style.scss slot (after _toolbar_domain, before */
+/*  _settings) so its cascade position is unchanged. Relocation is load-order-safe: */
+/*  all these selectors are `.sidebar`-scoped descendant/child rules on elements / */
+/*  properties no migrated utility touches; the only cross-sheet `.sidebar ...` */
+/*  co-selectors (_dialog_domain `.sidebar .overlay .dialog`, _settings */
+/*  `.sidebar .settings`, _temp `:where(.sidebar,..) .input--w6`) target different */
+/*  elements, so no tie exists to flip. */
+
+.sidebar {
+    .header .actions span {
+        background-color: var(--icon);
+    }
+
+    > .section:has(.details-view) {
+        border: none;
+
+        > .content {
+            margin: 0;
+        }
+    }
+
+    > .overlay {
+        border-radius: var(--radius-xl);
+    }
+
+    > .tabs__navigation {
+        box-shadow: none;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .content {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        position: relative;
+        overflow: auto;
+
+        > div:not(.tabs__navigation, .overlay, .flex-initial, .details-view, .fulltext__container) { /*  TODO: html/css should probably revised here */
+            flex: 1;
+            padding: 0.5rem;
+            border-bottom: 0.0625rem solid var(--border);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            > div:has(+ h3) {
+                margin-bottom: 1rem;
+            }
+
+            :where(h1,h2) {
+                margin: 0 0 0.5rem 0;
+                font-size: var(--text-lg);
+                font-weight: normal;
+                color: var(--text-secondary);
+                cursor: default;
+
+                span[class^='icon-'] {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    background-color: var(--icon-secondary);
+                }
+            }
+
+            h2:has(span) {
+                display: flex;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            input:disabled + label img {
+                opacity: .5;
+            }
+
+        }
+
+        &:has(.details-view) {
+            max-height: 240px;
+        }
+    }
+
+    .footer {
+        position: relative;
+        padding: 0.5rem;
+
+        h3 {
+            display: block;
+            margin-top: 0.25rem;
+            padding-inline: 0.25rem;
+            color: var(--text-secondary);
+            font-weight: normal;
+            text-align: center;
+            cursor: default;
+        }
+    }
+
+    hr {
+        border: 0;
+        border-bottom: 0.0625rem solid var(--border);
+    }
+
+    iframe { /*  help iframe styling */
+        flex-grow: 1;
+        border: none;
+    }
+
+    .details-view {
+        padding-bottom: 0.5rem;
+
+        &:has(.fulltext__container) {
+            flex-grow: 10;
+        }
+
+        .title.flex {
+            gap: 0.25rem;
+        }
+
+
+        table {
+            user-select: text;
+
+            thead {
+                th {
+                    white-space: nowrap;
+                    overflow: auto;
+                    text-overflow: ellipsis;
+                    vertical-align: text-bottom;
+                    > div {
+                        display: inline-block;
+
+                        button {
+                            margin-left: 0.25rem;
+                        }
+                    }
+                }
+            }
+            tbody {
+                td {
+                    padding: 0.25rem;
+
+                    &:first-of-type {
+                        font-weight: bold;
+                    }
+                }
+
+                tr:nth-child(odd) {
+                    background-color: var(--bg-hover);
+                }
+            }
+        }
+    }
+}

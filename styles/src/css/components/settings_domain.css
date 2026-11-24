@@ -1,0 +1,49 @@
+/*  components/settings residual: `.content.settings` is co-owned by the */
+/*  configuration and expdb plugins, rendered deep under the cross-plugin */
+/*  `.sidebar` shell (components/sidebar_domain.scss), with an */
+/*  adjacent-sibling `input + label` image-preview toggle and an */
+/*  attribute-prefix icon (`span[class^='icon-']`) -- none of it */
+/*  owner-exclusive or element-expressible. */
+.sidebar .settings {
+
+    > div {
+        flex: 0 !important;
+        padding-block: 1rem !important;
+    }
+
+    .info {
+        padding: 0.25rem 0.5rem;
+        border: 0.0625rem solid var(--border);
+        border-radius: var(--radius-md);
+        background-color: var(--bg-section);
+        font-style: italic;
+
+        > div:has(+div) {
+            margin-bottom: 0.25rem;
+        }
+
+        span[class^='icon-'] {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.25rem;
+            background-color: var(--icon);
+        }
+    }
+    
+    input + label {
+        > img {
+            display: block;
+            width: auto;
+            height: 0;
+            transition: height 200ms ease;
+        }
+    }
+
+    input:checked + label {
+        > img {
+            height: 75px;
+            border: 0.0625rem solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+    }
+}

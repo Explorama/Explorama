@@ -382,7 +382,8 @@
         all-attr @(re-frame/subscribe [::compare-attributes])
         event-source-groups @(re-frame/subscribe [::event-source-groups])
         labels @(fi/call-api [:i18n :get-labels-sub])
-        attr->display-name (fn [attr] (get labels attr attr))
+        units (i18n/attribute-units)
+        attr->display-name (fn [attr] (i18n/attribute-label-with-unit labels units attr))
         source-label @(re-frame/subscribe [::i18n/translate :table-column-source])]
     (reduce (fn [acc attr]
               (conj acc

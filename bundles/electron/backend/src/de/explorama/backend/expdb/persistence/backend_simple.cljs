@@ -10,6 +10,8 @@
 
 (def ^:private root-key "/de.explorama.backend.expdb/")
 
+(defonce ^:private store (atom {}))
+
 (defn- base-key [schema]
   (str root-key
        "simple/"
@@ -36,6 +38,7 @@
      :pairs -1})
   (del-bucket [_]
     (db-drop-table db-key bucket)
+    (swap! store dissoc bucket)
     {:success true
      :dropped-bucket? true})
 
@@ -70,10 +73,11 @@
      :pairs (count data)}))
 
 (defn new-instance [config bucket]
-  (Backend. bucket config))
+  (if-let [instance (get @store bucket)]
+    instance
+    (let [instance (Backend. bucket config)]
+      (swap! store assoc bucket instance)
+      instance)))
 
 (defn instances []
-  (let [stm "SELECT name FROM sqlite_master WHERE type='table';"
-        db (create-db db-key nil)
-        tables (.all (.prepare db stm))]
-    (js->clj tables)))
+  @store)

@@ -1,0 +1,20 @@
+{:paths ["src" "../../plugins/shared"]
+ :deps {org.clojure/clojure {:mvn/version "1.12.4"}
+        org.babashka/sci {:mvn/version "0.3.32"}
+        org.clojure/tools.cli {:mvn/version "1.0.206"}
+        yogthos/config {:mvn/version "1.2.0"}
+        org.clojure/data.csv {:mvn/version "1.0.1"}
+        metosin/jsonista {:mvn/version "0.3.7"}
+        metosin/malli {:mvn/version "0.12.0"}
+        org.clojure/tools.logging {:mvn/version "1.2.4"}
+        com.taoensso/timbre {:mvn/version "5.2.1"}
+        com.taoensso/tufte {:mvn/version "2.2.0"}}
+ :aliases {:run {:main-opts ["-m" "de.explorama.cli.data-transformer.core"]}
+
+           ;; run with:
+           ;;   java -jar builder.jar -m de.explorama.cli.data-transformer.core
+           ;; or through builder.sh, which passes that for you
+           :uberjar {:replace-deps {uberdeps/uberdeps {:mvn/version "1.4.0"}}
+                     :main-opts ["-m" "uberdeps.uberjar"
+                                 "--target" "target/builder.jar"
+                                 "--main-class" "clojure.main"]}}}

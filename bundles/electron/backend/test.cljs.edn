@@ -1,10 +1,10 @@
-^{:watch-dirs ["backend" "../shared" "../../plugins/backend" "../../plugins/shared" "test/backend"
-               "../../plugins/backend_test" "../../plugins/shared_test"]
+^{:watch-dirs ["src" "../shared" "../../../plugins/backend" "../../../plugins/shared" "test"
+               "../../../plugins/backend_test" "../../../plugins/shared_test"]
   :css-dirs ["resources/public/css"]
   :auto-bundle :webpack
   :reload-clj-files #{:cljc}
   :auto-testing true
-  :launch-js :node}
+  :launch-js ["node" :output-to]}
 {:main de.explorama.test-runner
  :output-to "target/public/cljs-out/test/main.js"
  :output-dir "target/public/cljs-out/test"

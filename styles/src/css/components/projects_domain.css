@@ -1,0 +1,98 @@
+/*  components/projects residual: `.projects`/`.projects-container`/ */
+/*  `.projects-grid`/`.card` is co-owned by the projects and expdb plugins */
+/*  (project-tile grid + import-list card layout), and `.new-indicator` is a */
+/*  cross-plugin shared marker (its base rule here is depended on by the */
+/*  `.navbar .menu .new-indicator` position override in */
+/*  components/navbar_domain.scss) -- none of it owner-exclusive or */
+/*  element-expressible. */
+.projects {
+    .projects-container {
+        height: calc(100vh - 120px);
+        overflow: hidden auto;
+        padding: .5rem 1rem;
+        margin: 1rem -1rem;
+
+        &.narrow {
+            height: auto;
+            max-height: calc(100vh - 580px);
+            min-height: 191px;
+        }
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1rem;
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        height: 11rem;
+
+        &.active {
+            outline: 0.125rem solid var(--border-focus);
+            background-color: var(--bg-hover);
+            box-shadow: 0 1px 2px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.05));
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            .title {
+                padding-top: 0.125rem;
+                font-size: var(--text-lg);
+                font-weight: bold;
+            }
+        }
+
+        .description.placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .footer {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            width: 100%;
+            margin-top: auto;
+
+            >span,
+            >.tooltip-wrapper>span {
+                margin-bottom: 0.375rem;
+                background-color: var(--icon-secondary);
+            }
+
+            .meta {
+                display: flex;
+                flex-direction: column;
+                margin-right: auto;
+                font-size: var(--text-xs);
+                color: var(--text-secondary);
+            }
+        }
+    }
+}
+
+.new-indicator {
+    /*  TODO: move to some other file? */
+    position: absolute;
+    top: -0.375rem;
+    right: -0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: var(--radius-full);
+    box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    background-color: var(--color-orange);
+    color: var(--color-white);
+    font-size: var(--text-xs);
+    font-weight: bold;
+}

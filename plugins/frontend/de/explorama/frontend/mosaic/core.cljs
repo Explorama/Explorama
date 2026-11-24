@@ -28,7 +28,6 @@
             [de.explorama.frontend.mosaic.render.pixi.common :as grpc]
             [de.explorama.frontend.mosaic.render.pixi.core :as pixicore]
             [de.explorama.frontend.mosaic.render.pixi.text-metrics]
-            [de.explorama.frontend.mosaic.tracks]
             [de.explorama.frontend.mosaic.views.frame :as view]
             [de.explorama.frontend.mosaic.vis.config :as vis-config]
             [de.explorama.frontend.mosaic.vis.details]

@@ -66,8 +66,9 @@
 (defn- translate-helper [db attr]
   (if (keyword? attr)
     (i18n/translate db attr)
-    (i18n/attribute-label
+    (i18n/attribute-label-with-unit
      (fi/call-api [:i18n :get-labels-db-get] db)
+     (fi/call-api [:acs :attribute-units-db-get] db)
      attr)))
 
 (defn- set-initial-y-option [db translate-attr-fn frame-id chart-index datasets]
@@ -148,7 +149,7 @@
  (fn [db [_ frame-id chart-index]]
    (chart-desc->chart-type db frame-id chart-index)))
 
-(defn- num-of-charts [db frame-id]
+(defn num-of-charts [db frame-id]
   (count (get-in db (path/charts frame-id))))
 
 (re-frame/reg-sub

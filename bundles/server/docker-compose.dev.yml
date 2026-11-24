@@ -1,0 +1,30 @@
+# Override for dev mode. Bridges Caddy to the frontend/backend running on the
+# host (e.g. `clj -M:dev`) via socat, instead of running the app in containers.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+#
+# Caddy's default upstreams (socat-frontend:8020 / socat-backend:4001) match
+# these services, so no extra env is needed.
+services:
+  caddy:
+    depends_on:
+      - socat-frontend
+      - socat-backend
+
+  socat-frontend:
+    image: alpine/socat
+    command: "tcp-listen:8020,fork,reuseaddr tcp-connect:host.docker.internal:${HOST_FRONTEND_PORT:-8020}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    expose:
+      - "8020"
+    restart: unless-stopped
+
+  socat-backend:
+    image: alpine/socat
+    command: "tcp-listen:4001,fork,reuseaddr tcp-connect:host.docker.internal:${HOST_BACKEND_PORT:-4001}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    expose:
+      - "4001"
+    restart: unless-stopped

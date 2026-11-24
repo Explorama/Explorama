@@ -19,6 +19,26 @@
 ;;TODO r1/ui-base Refactor to extra space/component - Maybe move to ui-base component
 (def resizable-comp (r/adapt-react-class Resizable))
 
+;; The sidebar SHELL is expressed as these utility stacks. Only the DOM this
+;; file actually renders is covered (the resizable root + `.header`/`h2`/
+;; `.actions`); the cross-plugin deep-child / details-view / footer / hr /
+;; iframe / actions-icon remainder stays in components/sidebar_domain.css
+;; (see that sheet's header). The `sidebar`/`show`/`header`/`actions` marker
+;; classes are still emitted here because residual `.sidebar ...` selectors
+;; (this plugin's sidebar_domain.css, plus temp_domain.css's
+;; `:has(.sidebar.show)`/`:where(.sidebar,..)`, dialog_domain.css's
+;; `.sidebar .overlay .dialog`, settings_domain.css's `.sidebar .settings`)
+;; reference them. `.show` is always present (static "sidebar show") and is
+;; fully subsumed by the base `flex`; the literal is kept only as that marker.
+(def ^:private sidebar-class
+  "sidebar show flex absolute top-[68px] right-[8px] bottom-[8px] flex-col w-[500px] h-auto bg-(--bg) rounded-xl overflow-hidden shadow-lg [animation:120ms_fadeInLeft]")
+(def ^:private sidebar-header-class
+  "flex flex-row justify-between items-center relative py-2 px-3")
+(def ^:private sidebar-header-title-class
+  "flex items-center gap-2 m-0 text-sm cursor-default")
+(def ^:private sidebar-header-actions-class
+  "flex gap-0.5")
+
 (reg-sub
  ::sidebar
  (fn [db]
@@ -106,9 +126,9 @@
                       (header-items-fn))]
           (dispatch [::set-sidebar-width curr-width])
           [:<>
-           [:div.header
-            [:h2 title]
-            [:div.actions
+           [:div.header {:class sidebar-header-class}
+            [:h2 {:class sidebar-header-title-class} title]
+            [:div.actions {:class sidebar-header-actions-class}
              (when items
                (map-indexed (fn [idx itm]
                               ^{:key (str "sidebar-header-icon" idx)}
@@ -137,7 +157,7 @@
                      :min-width 400
                      :max-width max-width
                      :id "explorama-sidebar"
-                     :class-name "sidebar show"
+                     :class-name sidebar-class
                      :style  (cond-> {:position :absolute
                                       :z-index 2}) ;;TODO r1/css remove after css fix
                      :on-resize-start (fn [ev _ _]

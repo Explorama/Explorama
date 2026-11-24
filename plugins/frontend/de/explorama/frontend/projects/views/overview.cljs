@@ -241,7 +241,7 @@
     [:div.flex.justify-between
      [:h2
       overview-title]
-     [:div.actions.flex.align-items-center
+     [:div.actions.flex.items-center
       [:div {:style {:width :fit-content}}
        [tooltip {:text (if project-id clean-workspace-text new-project-text)
                  :use-hover? (some? project-id)}
@@ -284,7 +284,7 @@
                          :value :public}]
         sorting-value @(re-frame/subscribe [::overview-sorting])
         filter-value @(re-frame/subscribe [::overview-filter])]
-    [:div.flex.gap-8
+    [:div.flex.gap-2
      [input-field {:start-icon :search
                    :extra-class "flex-auto"
                    :placeholder placeholder

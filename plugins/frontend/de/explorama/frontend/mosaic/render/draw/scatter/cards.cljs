@@ -136,7 +136,7 @@
                                        (tooltip/block-tooltips frame-id))))
                                  nil
                                  0)
-      (let [[soft hard] (color/font-color color [255 255 255])]
+      (let [[soft hard] (color/font-color color)]
         (when (and highlights (some (fn [event]
                                       (highlights (grc/get-id event)))
                                     data))
@@ -276,46 +276,44 @@
                                      highlights)))))))
 
 (defn draw-cluster
-  [[card-x card-y] [offset-x offset-y] color width height margin instance stage factor-absolute x-relative y-relative]
-  (let [x (* factor-absolute
-             (+ offset-x
-                (* (+ width (* 2 margin)) -0.5)
-                x-relative
-                (* card-x (+ width (* 2 margin)))))
-        y (* factor-absolute
-             (+ offset-y
-                (* (+ height (* 2 margin)) -0.5)
-                y-relative
-                (* card-y (+ height (* 2 margin)))))
-        add-x (* 465 factor-absolute)
-        add-y (* 465 factor-absolute)
-        scaled-width (* width factor-absolute)
-        scaled-height (* height factor-absolute)
+  [[card-x card-y] [offset-x offset-y] color width height margin instance stage x-relative y-relative]
+  (let [x (+ offset-x
+             (* (+ width (* 2 margin)) -0.5)
+             x-relative
+             (* card-x (+ width (* 2 margin))))
+        y (+ offset-y
+             (* (+ height (* 2 margin)) -0.5)
+             y-relative
+             (* card-y (+ height (* 2 margin))))
+        add-x 465
+        add-y 465
+        scaled-width width
+        scaled-height height
         color (if (= "#ffffff" color)
                 config/white-replacement
                 color)
-        [soft] (color/font-color color [255 255 255])]
+        [soft] (color/font-color color)]
     (gre/rect instance
               stage
-              (+ x (* factor-absolute 15))
-              (+ y (* factor-absolute 15))
-              (* factor-absolute width)
-              (* factor-absolute height)
+              (+ x 15)
+              (+ y 15)
+              width
+              height
               color)
     (gre/rect instance
               stage
-              (+ x (* factor-absolute 5))
-              (+ y (* factor-absolute 5))
-              (* factor-absolute width)
-              (* factor-absolute height)
+              (+ x 5)
+              (+ y 5)
+              width
+              height
               soft
               {:a 0.4})
     (gre/rect instance
               stage
               x
               y
-              (* factor-absolute width)
-              (* factor-absolute height)
+              width
+              height
               color)
     (gre/polygon instance
                  stage
@@ -355,25 +353,23 @@
                                      highlights)))))
 
 (defn draw-base
-  [[card-x card-y] [offset-x offset-y] data width height margin instance stage overview-factor x-relative y-relative]
+  [[card-x card-y] [offset-x offset-y] data width height margin instance stage x-relative y-relative]
   (let [color (grc/get-color data)
         x
-        (* overview-factor
-           (+ offset-x
-              (* (+ width (* 2 margin)) -0.5)
-              x-relative
-              (* card-x (+ width (* 2 margin)))))
-        y (* overview-factor
-             (+ offset-y
-                (* (+ height (* 2 margin)) -0.5)
-                y-relative
-                (* card-y (+ height (* 2 margin)))))]
+        (+ offset-x
+           (* (+ width (* 2 margin)) -0.5)
+           x-relative
+           (* card-x (+ width (* 2 margin))))
+        y (+ offset-y
+             (* (+ height (* 2 margin)) -0.5)
+             y-relative
+             (* card-y (+ height (* 2 margin))))]
     (gre/rect instance
               stage
               x
               y
-              (* overview-factor width)
-              (* overview-factor height)
+              width
+              height
               (if (= "#ffffff" color)
                 config/white-replacement
                 color))))
@@ -383,7 +379,7 @@
         (gre/state instance)
         {:keys [card-width card-height card-margin]}
         contraints
-        {{:keys [cpl-ctn count-ctn header]} :params :keys [factor-overview offset-absolute]
+        {{:keys [cpl-ctn count-ctn header]} :params :keys [offset-absolute]
          {:keys [mapping]} :optional-desc}
         ctx
         data-path (common/data-path render-path)
@@ -425,7 +421,6 @@
                               card-margin
                               instance
                               stage
-                              factor-overview
                               x-relative
                               y-relative))
               (when (seq idxs)
@@ -446,7 +441,6 @@
                              card-margin
                              instance
                              stage
-                             factor-overview
                              x-relative
                              y-relative)))))
           (recur (inc n)))
@@ -540,33 +534,29 @@
         @relevant-highlights))))
 
 (defn- draw-annotation
-  [[[card-x card-y] [offset-x offset-y] x-relative y-relative] width height margin instance stage overview-factor]
+  [[[card-x card-y] [offset-x offset-y] x-relative y-relative] width height margin instance stage]
   (let [x
-        (* overview-factor
-           (+ offset-x
-              (* (+ width (* 2 margin)) -0.5)
-              x-relative
-              (* card-x (+ width (* 2 margin)))
-              (* 0.25 width)))
-        y (* overview-factor
-             (+ offset-y
-                (* (+ height (* 2 margin)) -0.5)
-                y-relative
-                (* card-y (+ height (* 2 margin)))
-                (* 0.25 height)))]
+        (+ offset-x
+           (* (+ width (* 2 margin)) -0.5)
+           x-relative
+           (* card-x (+ width (* 2 margin)))
+           (* 0.25 width))
+        y (+ offset-y
+             (* (+ height (* 2 margin)) -0.5)
+             y-relative
+             (* card-y (+ height (* 2 margin)))
+             (* 0.25 height))]
     (gre/img instance
              stage
              "speech-bubble"
              x
              y
-             (* 0.5 width overview-factor)
-             (* 0.5 height overview-factor))))
+             (* 0.5 width)
+             (* 0.5 height))))
 
-(defn render-annotations-0 [instance stage contraints ctx relevant-annotations]
+(defn render-annotations-0 [instance stage contraints _ctx relevant-annotations]
   (let [{:keys [card-width card-height card-margin]}
-        contraints
-        {:keys [factor-overview]}
-        ctx]
+        contraints]
     (loop [n 0]
       (if (< n (count relevant-annotations))
         (do
@@ -575,8 +565,7 @@
                            card-height
                            card-margin
                            instance
-                           stage
-                           factor-overview)
+                           stage)
           (recur (inc n)))
         :done))))
 
@@ -591,22 +580,20 @@
       (* card-y (+ height (* 2 margin))))])
 
 (defn- draw-highlight
-  [info width height margin instance stage overview-factor]
+  [info width height margin instance stage]
   (let [[x y] (coords-highlight info width height margin)]
     (gre/rect instance
               stage
-              (* (- x (* 0.05 width)) overview-factor)
-              (* (- y (* 0.05 height)) overview-factor)
-              (* 1.1 width overview-factor)
-              (* 1.1 height overview-factor)
+              (- x (* 0.05 width))
+              (- y (* 0.05 height))
+              (* 1.1 width)
+              (* 1.1 height)
               grdcc/hightlight-color
               {:a 0.2})))
 
-(defn render-highlights-0 [instance stage contraints ctx relevant-highlights]
+(defn render-highlights-0 [instance stage contraints _ctx relevant-highlights]
   (let [{:keys [card-width card-height card-margin]}
-        contraints
-        {:keys [factor-overview]}
-        ctx]
+        contraints]
     (loop [n 0]
       (if (< n (count relevant-highlights))
         (do
@@ -615,8 +602,7 @@
                           card-height
                           card-margin
                           instance
-                          stage
-                          factor-overview)
+                          stage)
           (recur (inc n)))
         :done))))
 

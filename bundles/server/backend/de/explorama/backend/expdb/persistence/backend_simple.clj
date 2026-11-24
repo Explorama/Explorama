@@ -7,6 +7,8 @@
 
 (def ^:private db-key "de.explorama.backend.expdb.simple.sqlite3")
 
+(defonce ^:private store (atom {}))
+
 (deftype Backend [bucket config]
   itf/Simple
 
@@ -27,6 +29,7 @@
      :pairs -1})
   (del-bucket [_]
     (db-drop-table db-key bucket)
+    (swap! store dissoc bucket)
     {:success true
      :dropped-bucket? true})
 
@@ -57,14 +60,11 @@
      :pairs (count data)}))
 
 (defn new-instance [config bucket]
-  (Backend. bucket config))
+  (if-let [instance (get @store bucket)]
+    instance
+    (let [instance (Backend. bucket config)]
+      (swap! store assoc bucket instance)
+      instance)))
 
 (defn instances []
-  (let [stm "SELECT name FROM sqlite_master WHERE type='table';"
-        db (create-db db-key nil)
-        ^java.sql.ResultSet tables (.executeQuery (.prepareStatement db stm))]
-    (loop [result []]
-      (if (.next tables)
-        (recur (conj result
-                     (.getString "name")))
-        result))))
+  @store)

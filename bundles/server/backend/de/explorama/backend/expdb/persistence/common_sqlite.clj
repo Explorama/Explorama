@@ -60,7 +60,7 @@
       (finally (db-close db)))))
 
 (defn set-dump [db-key bucket data]
-  (let [^Connection db (create-db db-key nil)]
+  (let [^Connection db (create-db db-key bucket)]
     (try
       (let [stm (str "INSERT OR REPLACE INTO " (table-name bucket) "(key,value) VALUES ($key,$value)")
             _ (.setAutoCommit db false)

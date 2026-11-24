@@ -38,25 +38,10 @@
    (let [app (gre/app this)
          args (gre/args this)
          state (gre/state this)
-         {overview-factor  :factor-overview
-          render-type :render-type}
+         {render-type :render-type}
          (get-in (gre/state this) [:contexts stage-key []])
-         new-zoom-a (pc/zoom-level z
-                                   (get-in state [[:pos stage-key] :zoom] 0)
-                                   overview-factor
-                                   render-type)
-         z-a (pc/overview-op? new-zoom-a overview-factor z /)
-         new-zoom-b (pc/zoom-level z-a
-                                   new-zoom-a
-                                   overview-factor
-                                   render-type)
-         z-b (pc/overview-op? new-zoom-b overview-factor z-a /)
-         [x-bb y-bb z-bb] (pc/new-zoom stage-key state args [x y z-b] new-zoom-b)
-         [x-aa y-aa z-aa] (pc/new-zoom stage-key state args [x y z-a] new-zoom-a)
-         [new-x new-y new-z new-zoom]
-         (if (= new-zoom-a new-zoom-b)
-           [x-aa y-aa z-aa new-zoom-a]
-           [x-bb y-bb z-bb new-zoom-b])]
+         new-zoom (pc/zoom-level z render-type)
+         [new-x new-y new-z] (pc/new-zoom stage-key state args [x y z])]
      (try
        (when-not (:headless state)
          (let [stage (pc/zoom-context-stage app stage-key)]
@@ -76,7 +61,7 @@
          state (gre/state this)
          args (gre/state this)
          [x y z]
-         (pc/new-zoom stage-key state args [x y z] zoom)]
+         (pc/new-zoom stage-key state args [x y z])]
      (try
        (when (and (not (:headless state))
                   (not (nil? x))

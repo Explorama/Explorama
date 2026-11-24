@@ -7,14 +7,10 @@
 (defcomponent
   {:name "Upload"
    :require-statement "[de.explorama.frontend.ui-base.components.formular.core :refer [upload]"
-   :desc [:<> "Component for uploading files. Based on :target it will be upload the files to client (:target = :local) or chunked to server (:target = <url>). Client side uses the standard "
+   :desc [:<> "Component for uploading files into the client. Uses the standard "
           [:a {:href "https://developer.mozilla.org/en-US/docs/Web/API/FileReader/result"
                :target "_blank"}
-           "FileReader API"]
-          ", server side uses "
-          [:a {:href "https://github.com/23/resumable.js"
-               :target "_blank"}
-           "resumable.js"]]
+           "FileReader API"]]
    :default-parameters default-parameters
    :parameters parameter-definition})
 
@@ -101,9 +97,7 @@
    :desc "Variant as it works in data-provisioning for uploading an mapping file (edn)"})
 
 (defexample
-  [upload {:target "http://localhost:3454/upload"
-           :remote-query (fn [file] (clj->js {:file-identifier (aget file "uniqueIdentifier")}))
-           :on-file-loaded #(do)
+  [upload {:on-file-loaded #(do)
            :on-max-size-error (fn [error-infos]
                                 (js/console.log "error-infos" error-infos)
                                 (js/alert "Upload aborted!"))
@@ -112,13 +106,11 @@
                            "xlsx" (* 10 1024 1024)}
            :file-type [".csv" ".json" ".xlsx"]}]
 
-  {:title "Remote upload area"
-   :desc "Variant as it works in data-provisioning for uploading an csv, json or xlsx with size limits (without progress). Only works locally if you have started data-provisioning and set up the access-control policy"})
+  {:title "Upload area with size limits"
+   :desc "Variant as it works in data-provisioning for uploading an csv, json or xlsx with size limits (without progress)"})
 
 (defexample
-  [upload {:target "http://localhost:3454/upload"
-           :remote-query (fn [file] (clj->js {:file-identifier (aget file "uniqueIdentifier")}))
-           :variant :button
+  [upload {:variant :button
            :on-file-loaded #(do)
            :on-max-size-error (fn [error-infos]
                                 (js/console.log "error-infos" error-infos)
@@ -128,5 +120,5 @@
                            "xlsx" (* 10 1024 1024)}
            :file-type [".csv" ".json" ".xlsx"]}]
 
-  {:title "Remote upload button"
-   :desc "Same like \"Remote upload area\" example with a button. Only works locally if you have started data-provisioning and set up the access-control policy"})
+  {:title "Upload button with size limits"
+   :desc "Same like \"Upload area with size limits\" example with a button"})

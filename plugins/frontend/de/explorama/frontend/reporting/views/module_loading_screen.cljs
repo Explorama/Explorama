@@ -12,7 +12,7 @@
         @(fi/call-api :papi-loading-screen-sub frame-id)
         show? (when show? @(show? frame-id))]
     (when show?
-      [:div.loading-screen-wrapper
+      [:div.loading-screen-wrapper {:class ["absolute" "inset-[-32px_0_0_0]"]}
        [loading-screen {:show? show?
                         :buttons (when @(cancellable? frame-id)
                                    [{:label @(re-frame/subscribe [::i18n/translate :cancel-label])

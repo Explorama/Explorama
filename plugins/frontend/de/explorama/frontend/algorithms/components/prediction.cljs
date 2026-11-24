@@ -98,7 +98,7 @@
                [s/view current-algorithm-desc current-algorithm options settings-state translate-function changed-functions {:simple? false
                                                                                                                              :column  column}]])]
               ;parameter settings
-           [:div.options__divider]
+           [:div.options__divider {:class "mt-6 border-b border-b-(--border)"}]
            [:div.explorama__form__section
             [:div.title (translate-function :parameter)]]
            [:div.row

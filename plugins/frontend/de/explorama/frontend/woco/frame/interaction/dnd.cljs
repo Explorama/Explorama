@@ -5,13 +5,16 @@
             [de.explorama.frontend.ui-base.utils.view :refer [bounding-rect-id]]
             [goog.events :as events]
             [re-frame.core :refer [dispatch reg-event-fx subscribe] :as re-frame]
+            [re-frame.db :as rf-db]
             [reagent.core :as r]
             [taoensso.timbre :refer-macros [error]]
+            [de.explorama.frontend.woco.api.couple :as couple]
             [de.explorama.frontend.woco.api.interaction-mode :as inter-mode]
             [de.explorama.frontend.woco.api.product-tour :as product-tour]
             [de.explorama.frontend.woco.api.registry :as registry]
             [de.explorama.frontend.woco.config :as config]
             [de.explorama.frontend.woco.frame.events :as evts]
+            [de.explorama.frontend.woco.frame.info :as frame-info]
             [de.explorama.frontend.woco.frame.interaction.collision :refer [filter-visible-frames]]
             [de.explorama.frontend.woco.frame.interaction.connection :as iac-conn]
             [de.explorama.frontend.woco.frame.interaction.move :refer [move-event-call moving-data
@@ -22,6 +25,7 @@
             [de.explorama.frontend.woco.frame.interaction.z-order :as z-order]
             [de.explorama.frontend.woco.frame.size-position :refer [frame-position-sub]]
             [de.explorama.frontend.woco.navigation.control :as navigation-control]
+            [de.explorama.frontend.woco.path :as path]
             [de.explorama.frontend.woco.navigation.panning-handler :as panning-handler]
             [de.explorama.frontend.woco.navigation.snapping :as snapping]
             [de.explorama.frontend.woco.workspace.background :as background]
@@ -88,7 +92,7 @@
   (.preventDefault e)
   (when (not= target-frame-id source-frame-id)
     (.stopPropagation e)
-    (let [on-drop @(subscribe [::evts/on-drop target-frame-id])
+    (let [on-drop (get-in @rf-db/app-db (path/frame-on-drop target-frame-id))
           on-drop-data {:from source-frame-id
                         :to target-frame-id
                         :drop-event (aget e "nativeEvent")
@@ -108,10 +112,10 @@
 
 (defn activate-dropzone?
   "Checks if dropzone should be activated"
-  [source-frame-id]
-  (let [source-frame-di @(fi/call-api :frame-info-api-value-sub source-frame-id :di)
-        published-by-frame-id @(fi/call-api :frame-published-by-sub source-frame-id)
-        published-by-frame-di @(fi/call-api :frame-info-api-value-sub published-by-frame-id :di)]
+  [db source-frame-id]
+  (let [source-frame-di (frame-info/api-value db source-frame-id :di)
+        published-by-frame-id (get-in db (path/frame-published-by source-frame-id))
+        published-by-frame-di (frame-info/api-value db published-by-frame-id :di)]
     (boolean
      ;Show drop-zone, when datainstance is set on drag-frame or src-frame
      (or (and source-frame-id
@@ -189,7 +193,8 @@
    drag-hbs: custom registered hitboxes in global context (= related to whole page)
    drag-wsp-hbs: custom registered hitboxes in workspace context (= related to current pan/zoom)
    frames: automatically checks if frames overlaps (for connecting etc.) and handles dropzone-highlighting"
-  [source-frame-id
+  [db
+   source-frame-id
    {^number workspace-zoom :z
     ^number wsp-x :x
     ^number wsp-y :y
@@ -199,13 +204,13 @@
    drag-hbs
    drag-wsp-hbs
    ^boolean dropping-possible?]
-  (let [{:keys [width height]} @(subscribe [:de.explorama.frontend.woco.page/workspace-rect])
+  (let [{:keys [width height]} (get-in db path/workspace-rect)
         viewport-width (/ width workspace-zoom)
         viewport-height (/ height workspace-zoom)
         viewport-x (- (/ wsp-x workspace-zoom))
         viewport-y (- (/ wsp-y workspace-zoom))
         filter-frames-fn (partial filter-visible-frames viewport-x viewport-y viewport-width viewport-height #{source-frame-id})
-        visible-frames (-> @(subscribe [::evts/frames])
+        visible-frames (-> (get-in db path/frames)
                            vals
                            filter-frames-fn)
         droppable-frames (when dropping-possible?
@@ -213,7 +218,7 @@
                                (evts/ordered-consumer-frames
                                 #{source-frame-id}
                                 (when-not (vertical-drag-data) #{source-frame-id}))))
-        base-frame @(subscribe [::evts/frame source-frame-id])
+        base-frame (evts/frame-desc db source-frame-id)
         ;Calculate offset to Mousepos in frame for checking mouse-position
         ^number offset-x (- (/ (- px wsp-x)
                                workspace-zoom)
@@ -286,12 +291,12 @@
               leave-condition (assoc :reset-dragging-over? true)
               (and overwrite-pos (seq overwrite-pos)) (assoc :overwrite-pos overwrite-pos))))))))
 
-(defn- calc-sticky-frame-ids [move-frame-ids]
+(defn- calc-sticky-frame-ids [db move-frame-ids]
   (let [is-move-frame-id? (set move-frame-ids)
         check-positions (reduce (fn [acc frame-id]
-                                  (let [frame-position (-> (select-keys @(subscribe [::evts/frame frame-id])
+                                  (let [frame-position (-> (select-keys (evts/frame-desc db frame-id)
                                                                         [:full-size :coords :stick-to-frames?])
-                                                           (assoc :minimized? @(subscribe [::evts/is-minimized? frame-id])))]
+                                                           (assoc :minimized? (get-in db (path/frame-is-minimized frame-id))))]
                                     (cond-> acc
                                       (not (:stick-to-frames? frame-position))
                                       (conj (dissoc frame-position :stick-to-frames?)))))
@@ -314,61 +319,61 @@
                      (collide-with-frames? frame-desc))
                 (conj frame-id)))
             move-frame-ids
-            @(subscribe [::evts/frames]))))
+            (get-in db path/frames))))
 
 (defn- drag-frame-start [source-frame-id e frame-type]
   (navigation-control/stop-panning)
   (moving-state false true)
-  (if (or @(subscribe [::evts/is-maximized? source-frame-id])
-          (and (= frame-type :frame/content-type)
-               @(subscribe [::inter-mode/read-only?
-                            {:component (:vertical source-frame-id)
-                             :additional-info :move}])))
-    (.preventDefault e)
-    (let [px (aget e "pageX")
-          py (aget e "pageY")
-          [x y] @(frame-position-sub source-frame-id)
-          {workspace-zoom :z :as position} @(subscribe [::navigation-control/position])
-          dropping-possible? (or (activate-dropzone? source-frame-id)
-                                 (:overwrite-drop-cond? (vertical-drag-data)))
-          in-selection? (boolean (@wws/multiselect-current-selection source-frame-id))
-          coupled-with-init @(subscribe [:de.explorama.frontend.woco.api.couple/couple-with source-frame-id])
-          coupled-with-init (if (and (wws/multi-selection?)
-                                     in-selection?)
-                              (if coupled-with-init
-                                (set/union (set coupled-with-init)
-                                           @wws/multiselect-current-selection)
-                                @wws/multiselect-current-selection)
-                              coupled-with-init)
-          coupled-with (calc-sticky-frame-ids (if (seq coupled-with-init)
-                                                coupled-with-init
-                                                [source-frame-id]))
+  (let [db @rf-db/app-db]
+    (if (or (get-in db (path/frame-is-maximized source-frame-id))
+            (and (= frame-type :frame/content-type)
+                 (inter-mode/read-only? db {:component (:vertical source-frame-id)
+                                            :additional-info :move})))
+      (.preventDefault e)
+      (let [px (aget e "pageX")
+            py (aget e "pageY")
+            [x y] @(frame-position-sub source-frame-id)
+            {workspace-zoom :z :as position} (navigation-control/position db)
+            dropping-possible? (or (activate-dropzone? db source-frame-id)
+                                   (:overwrite-drop-cond? (vertical-drag-data)))
+            in-selection? (boolean (@wws/multiselect-current-selection source-frame-id))
+            coupled-with-init (couple/couple-with db source-frame-id)
+            coupled-with-init (if (and (wws/multi-selection?)
+                                       in-selection?)
+                                (if coupled-with-init
+                                  (set/union (set coupled-with-init)
+                                             @wws/multiselect-current-selection)
+                                  @wws/multiselect-current-selection)
+                                coupled-with-init)
+            coupled-with (calc-sticky-frame-ids db (if (seq coupled-with-init)
+                                                     coupled-with-init
+                                                     [source-frame-id]))
 
-          {:keys [drag-hbs drop-hbs drag-wsp-hbs drop-wsp-hbs] :as r} (build-additional-hit-boxes)
-          check-collisions-fn (when (and (not in-selection?)
-                                         (not coupled-with-init))
-                                (precompile-check-collisions-fn source-frame-id position px py x y drag-hbs drag-wsp-hbs dropping-possible?))]
-      (moving-state true)
-      (reset! wws/multiselect-bb-before-move @wws/multiselect-bb)
-      (when-not in-selection?
-        (dispatch [::wwms/selection-finish nil]))
-      (dispatch [:de.explorama.frontend.woco.workspace.background/set-minified-frames])
-      (dispatch [::z-order/bring-to-front source-frame-id])
-      (moving-data source-frame-id {:new-x x
-                                    :new-y y
-                                    :diff-x 0
-                                    :diff-y 0
-                                    :start-px px
-                                    :start-py py
-                                    :workspace-zoom workspace-zoom
-                                    :coupled-with coupled-with
-                                    :check-collisions-fn check-collisions-fn
-                                    :c 0
-                                    :dragging-over nil
-                                    :drag-hbs drag-hbs
-                                    :drop-hbs drop-hbs
-                                    :drag-wsp-hbs drag-wsp-hbs
-                                    :drop-wsp-hbs drop-wsp-hbs}))))
+            {:keys [drag-hbs drop-hbs drag-wsp-hbs drop-wsp-hbs] :as r} (build-additional-hit-boxes)
+            check-collisions-fn (when (and (not in-selection?)
+                                           (not coupled-with-init))
+                                  (precompile-check-collisions-fn db source-frame-id position px py x y drag-hbs drag-wsp-hbs dropping-possible?))]
+        (moving-state true)
+        (reset! wws/multiselect-bb-before-move @wws/multiselect-bb)
+        (when-not in-selection?
+          (dispatch [::wwms/selection-finish nil]))
+        (dispatch [:de.explorama.frontend.woco.workspace.background/set-minified-frames])
+        (dispatch [::z-order/bring-to-front source-frame-id])
+        (moving-data source-frame-id {:new-x x
+                                      :new-y y
+                                      :diff-x 0
+                                      :diff-y 0
+                                      :start-px px
+                                      :start-py py
+                                      :workspace-zoom workspace-zoom
+                                      :coupled-with coupled-with
+                                      :check-collisions-fn check-collisions-fn
+                                      :c 0
+                                      :dragging-over nil
+                                      :drag-hbs drag-hbs
+                                      :drop-hbs drop-hbs
+                                      :drag-wsp-hbs drag-wsp-hbs
+                                      :drop-wsp-hbs drop-wsp-hbs})))))
 
 (defn- temporary-move
   "Non persistent move of frame, which can be canceled with resetting the moving-data for this frame"
@@ -605,7 +610,7 @@
            target-frame-id
            (not= target-frame-id source-frame-id)
            (not ignore-drop-on-frame?))
-      (let [on-drop @(subscribe [::evts/on-drop target-frame-id])
+      (let [on-drop (get-in @rf-db/app-db (path/frame-on-drop target-frame-id))
             on-drop-data {:from {:drag-and-drop? true
                                  :drag-infos dragging-infos}
                           :to target-frame-id
@@ -640,6 +645,18 @@
        {:dispatch-n (mapv (fn [listener]
                             (conj listener create-frame-x create-frame-y event))
                           mouse-up-listeners)}))))
+
+;; Tailwind migration of styles/src/scss/components/_card.scss's `%card`/
+;; `.card` base rule -- this file builds `.card` markup directly (not via
+;; ui_base's `card` component), so the class stack is duplicated here per
+;; Task 7's direct-builder precedent (also duplicated in
+;; indicator/views/main.cljs and projects/views/project_card.cljs, the
+;; non-ui_base direct builders of `.card`). `card` itself stays a literal
+;; DOM class: base/_frames.scss's `.window-placement-overlay .card` rule
+;; (right below, still unmigrated) keys off it via a plain descendant
+;; selector.
+(def ^:private card-class
+  "rounded-xl shadow-md bg-(--bg-over-bg) no-underline text-(--text) border border-(--border-secondary) p-3")
 
 (defn dragging-overlay-comp [is-panning? is-moving? vertical-drag? animating? creating-new-windows?]
   (let [listener (atom nil)]
@@ -706,8 +723,8 @@
                    (assoc :class "window-placement-overlay"))
             (when creating-new-windows?
               (let [{:keys [dnd-card-top dnd-card-bottom]} @(subscribe [::i18n/translate-multi :dnd-card-top :dnd-card-bottom])]
-                [:div.card
-                 [:div.text-lg.mb-8 dnd-card-top]
+                [:div.card {:class card-class}
+                 [:div.text-lg.mb-2 dnd-card-top]
                  [:div.text-xs dnd-card-bottom]]))]
            (when  (and (snapping/snapping? :frame)
                        is-moving?

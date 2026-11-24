@@ -46,8 +46,7 @@ node_modules
 # dist
 output
 dist
-package-lock.json
-src/scss/base/_iconmap.scss
+src/css/base/iconmap.css
 
 # Sass
 .sass-cache/

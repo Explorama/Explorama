@@ -183,7 +183,7 @@
  (fn [db [_ axis path]]
    (let [operations-desc (get-in db (gp/operation-desc path))
          value (get operations-desc axis)
-         attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)]
+         attribute-labels (i18n/labels-with-units db)]
      {:label (i18n/attribute-label attribute-labels value)
       :value value})))
 

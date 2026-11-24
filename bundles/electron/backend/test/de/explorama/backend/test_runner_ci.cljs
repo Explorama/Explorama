@@ -6,6 +6,7 @@
             [de.explorama.shared.data-format.core-test]
             [de.explorama.shared.data-format.data-test]
             [de.explorama.shared.data-format.date-filter-test]
+            [de.explorama.shared.common.unification.time-test]
             [de.explorama.shared.data-format.operations-indicator-test]
             [de.explorama.shared.data-format.operations-mosaic-test]
             [de.explorama.shared.data-format.operations-test]
@@ -32,6 +33,8 @@
             [de.explorama.backend.expdb.mapping-test]
             [de.explorama.backend.expdb.suggestions-test]
             [de.explorama.backend.expdb.simple-db-test]
+            [de.explorama.backend.expdb.persistence.backend-simple-test]
+            [de.explorama.backend.expdb.db-api-test]
             [de.explorama.backend.indicator.calculate-test]
             [de.explorama.backend.indicator.persistence-test]
             [de.explorama.backend.indicator.sample-test]
@@ -48,9 +51,8 @@
             [de.explorama.backend.table.table-test]
             [de.explorama.backend.algorithms.test-env]
             [de.explorama.backend.expdb.middleware.indexed-db-test]
-            [cljs.test :refer [report]]
-            [clojure.string :as str]
-            [figwheel.main.testing :refer [run-tests-async]]))
+            [cljs.test :refer [report run-all-tests successful?]]
+            [clojure.string :as str]))
 
 (defonce test-results (atom {:test-cases [] :current-ns nil :current-test nil}))
 (defonce test-case-counter (atom {}))
@@ -137,7 +139,12 @@
   (let [junit-xml (generate-junit-xml m)]
     (println "### report start ###")
     (println junit-xml)
-    (println "### report end ###")))
+    (println "### report end ###")
+    ;; node run (cljs.main --target node): propagate the suite result as the
+    ;; process exit code; figwheel's run-tests-async needed a browser/figwheel
+    ;; context that no longer drives this runner.
+    (when (exists? js/process)
+      (.exit js/process (if (successful? m) 0 1)))))
 
 (defmethod report [:cljs.test/default :begin-test-ns] [m]
   (swap! test-results assoc :current-ns (:ns m)))
@@ -146,5 +153,5 @@
   (swap! test-results assoc :current-test (:var m)))
 
 (defn -main [& _args]
-  (run-tests-async 10000))
+  (run-all-tests #"de\.explorama\..*"))
 

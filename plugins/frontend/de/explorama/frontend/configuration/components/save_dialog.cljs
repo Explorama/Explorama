@@ -93,7 +93,7 @@
                                            :disabled? (or (not deref-can-edit?)
                                                           (= new-name (:name layout-desc)))
                                            :on-click reset-name-fn}}]}]
-              [:div.text-xs.text-bold.pl-4.mt-8 save-existing-layouts]
+              [:div.text-xs.font-bold.pl-1.mt-2 save-existing-layouts]
               [names-selection config-type existing-user-layout-names on-change-name]]}]))
 
 (defn save-dialog [{:keys [config-type layout-desc]}]

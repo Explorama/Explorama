@@ -1,0 +1,446 @@
+/*  _table_domain.scss -- residual/deep-descendant remnant of the table plugin */
+/*  chrome. The checkbox-matrix + variants families were migrated onto */
+/*  table/view.cljs's own markup; everything below is residual (not */
+/*  element-expressible as a static utility stack on owner-exclusive markup): */
+
+/*    * `.explorama__table` base (+ `caption`, `td`/`th`, `td:first-child` / */
+/*      `th:first-child`, `thead`, `td` striping) and `.explorama__table--bordered` */
+/*      (`td`, `tbody>tr:last-child>td`) -- CROSS-PLUGIN: the class is also */
+/*      consumed by the CSV/XLS preview grid in */
+/*      plugins/frontend/de/explorama/frontend/expdb/temp_import/core.cljs (the */
+/*      importer), and the rules are bare-element descendant selectors */
+/*      (`caption`, `td`, `th`, `thead`) reaching table markup the table plugin */
+/*      does not exclusively own. */
+/*    * `.explorama__fulltext` (`.window__body`, `.fulltext__tabs` incl. its */
+/*      `p`/`ul`/`li` tree with `:hover` and `.active+.active`, */
+/*      `.fulltext__container` incl. its nested `table`/`th`/`td`/`:nth-child(2)` */
+/*      tree) -- DEEP-DESCENDANT cascade also reached by */
+/*      plugins/frontend/de/explorama/frontend/woco/details_view.cljs (the */
+/*      cross-plugin details-view table), so it cannot be hoisted onto */
+/*      table-plugin-only markup. */
+/*    * `.table--footer__parent` (head declaration + the tail nested block, */
+/*      including the fully inlined `.btn-secondary` -- see #16 note below) -- */
+/*      DEEP cascade into ui_base internals: `.btn-group`, `.input`, */
+/*      `.text-input`, `.btn-clear`, plus `:has()` and `:disabled` state */
+/*      selectors on those ui_base components' raw DOM. */
+/*    * `.paging__selection__page__parent` (+ `>a`, `>a>div`), */
+/*      `.paging__selection__page__limit`, `.paging__selection__page__input__field` */
+/*      -- attach to the ui_base button-group / input-field component internals */
+/*      via an `>a>div` child-combinator selector, not table-plugin-owned markup. */
+/*    * `.enable--linebreaks` -- cross-plugin shared marker (used for empty */
+/*      table/container states outside the table plugin too). */
+/*    * `div[id^="woco_frame-table"] .window__body>div` -- attribute-prefix */
+/*      selector keyed to a runtime-generated frame id, targeting the shared */
+/*      woco `.window__body` frame-chrome element (not table-plugin markup). */
+
+/*  Note: the `.table--footer__parent .btn-group button` block below is kept */
+/*  whole rather than split across sheets. Its `&:disabled` */
+/*  rule sets `border-color: var(--color-gray-300)` -- that declaration is INERT */
+/*  (the block's own unconditional `border-width: 0` above it means no border */
+/*  is ever painted regardless of `border-color`), but it is kept anyway. */
+
+/* line 1, src/scss/components/_tables.scss */
+.explorama__table {
+    /* Remove spacing between table cells (from Normalize.css) */
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    empty-cells: show;
+    font-size: 12px;
+}
+
+/* line 14, src/scss/components/_tables.scss */
+.explorama__table caption {
+    text-align: center;
+}
+
+/* line 19, src/scss/components/_tables.scss */
+.explorama__table td,
+.explorama__table th {
+    margin: 0;
+    padding: 0.25em 0.5em;
+    border-width: 0 0 0 1px;
+    font-size: inherit;
+    overflow: visible;
+    /*to make ths where the title is really long work*/
+}
+
+/* Consider removing this next declaration block, as it causes problems when
+  there's a rowspan on the first cell. Case added to the tests. issue#432 */
+/* line 30, src/scss/components/_tables.scss */
+.explorama__table td:first-child,
+.explorama__table th:first-child {
+    border-left-width: 0;
+}
+
+/* line 35, src/scss/components/_tables.scss */
+.explorama__table thead {
+    background-color: var(--bg-hover);
+    text-align: left;
+    vertical-align: bottom;
+}
+
+/*
+  striping:
+     even - #fff (white)
+     odd  - #f2f2f2 (light gray)
+  */
+/* line 47, src/scss/components/_tables.scss */
+.explorama__table td {
+    background-color: transparent;
+}
+
+/* BORDERED TABLES */
+/* line 61, src/scss/components/_tables.scss */
+.explorama__table--bordered td {
+    border-bottom: 1px solid var(--border);
+}
+
+/* line 64, src/scss/components/_tables.scss */
+.explorama__table--bordered tbody>tr:last-child>td {
+    border-bottom-width: 0;
+}
+
+/* line 83, src/scss/components/_tables.scss */
+.explorama__fulltext .window__body {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    padding: 0;
+    overflow-y: hidden;
+}
+
+/* line 98, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs {
+    box-shadow: 0 1px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.1)), 0 1px 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.1));
+}
+
+/* line 104, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs p {
+    margin: 0;
+    padding: 5px 5px 8px;
+    border-bottom: 1.33px solid var(--border);
+    font-weight: 700;
+}
+
+/* line 111, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* line 116, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    position: relative;
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+    word-break: break-all;
+    cursor: pointer;
+    transition: background-color 120ms;
+}
+
+/* line 131, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li:hover {
+    background: #f8f9fa;
+}
+
+/* line 127, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li .fulltext__tab__actions {
+    position: absolute;
+    right: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms, visibility 120ms;
+}
+
+/* line 134, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li:hover .fulltext__tab__actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* line 189, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li.active {
+    background: var(--bg-hover);
+    font-weight: bold;
+}
+
+/* line 197, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__tabs ul li.active+.active {
+    border-top: 1px solid var(--border);
+}
+
+/* line 204, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 3;
+    overflow-y: scroll;
+}
+
+/* line 210, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container .fulltext__container__tab {
+    height: auto;
+}
+
+/* line 213, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container .fulltext__container__tab:nth-child(2) table {
+    border-left: 1px solid var(--border);
+}
+
+/* line 218, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table {
+    width: 100%;
+    border-collapse: separate;
+    table-layout: fixed;
+}
+
+/* line 223, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table thead th {
+    padding-top: 12px;
+    text-align: left;
+}
+
+/* line 227, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table thead th:first-child {
+    width: auto;
+    max-width: 10%;
+}
+
+/* line 233, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td,
+.explorama__fulltext .fulltext__container table th {
+    padding: 5px 12px 5px;
+    word-wrap: break-word;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+}
+
+/* line 240, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td .entry__header,
+.explorama__fulltext .fulltext__container table th .entry__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+}
+
+/* line 244, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td .entry__header .entry__title,
+.explorama__fulltext .fulltext__container table th .entry__header .entry__title {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* line 251, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table td .entry__header .entry__icon,
+.explorama__fulltext .fulltext__container table td .entry__header .entry__focus,
+.explorama__fulltext .fulltext__container table th .entry__header .entry__icon,
+.explorama__fulltext .fulltext__container table th .entry__header .entry__focus {
+    width: 20px;
+}
+
+/* line 258, src/scss/components/_tables.scss */
+.explorama__fulltext .fulltext__container table tr:first-child td {
+    border-right: none;
+}
+
+/* line 66, src/scss/components/_table.scss */
+.table--footer__parent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+}
+
+/* line 89, src/scss/components/_table.scss */
+.paging__selection__page__parent {
+    font-weight: bold;
+}
+
+/* line 92, src/scss/components/_table.scss */
+.paging__selection__page__parent>a {
+    padding: 0 !important;
+}
+
+/* line 95, src/scss/components/_table.scss */
+.paging__selection__page__parent>a>div {
+    margin: 0;
+}
+
+/* line 101, src/scss/components/_table.scss */
+.paging__selection__page__limit {
+    white-space: nowrap;
+}
+
+/* line 109, src/scss/components/_table.scss */
+.paging__selection__page__input__field {
+    text-align: center;
+}
+
+/* Used for empty container e.g opening an table with 0 Events */
+/* line 119, src/scss/components/_table.scss */
+.enable--linebreaks {
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+/* Table buttons */
+
+div[id^="woco_frame-table"] .window__body>div {
+    display: flex;
+    flex-direction: column;
+}
+
+.table--footer__parent {
+    flex-grow: 1;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+
+    .page__size__selection {
+
+        .input {
+            flex-direction: row;
+            align-items: center;
+            width: auto;
+            gap: 8px;
+
+            label {
+                padding: 0;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .btn-group {
+        height: 33.5px;
+        gap: 0;
+        padding: 0;
+        background: none;
+
+        &> :not(:last-child) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &> :not(:first-child) {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        button {
+            /*  Button-box styling is inlined here rather than shared via */
+            /*  button.cljs: the paging button-group is the ui_base */
+            /*  button-group component whose items are raw <button>s, so */
+            /*  they don't get button.cljs's utility stack. */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.375em;
+            padding: 0.5em 0.75em;
+            border: 1px solid var(--border);
+            font-weight: bold;
+            line-height: 1;
+            text-decoration: none;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: border-color 120ms, transform 120ms, box-shadow 120ms, background-color 120ms, color 120ms;
+            /*  table's own overrides (were declared after the @extend) */
+            border-width: 0;
+            box-shadow: none;
+            border-radius: var(--radius-sm);
+
+            &.hover,
+            &:hover:enabled {
+                cursor: pointer;
+                background-color: var(--bg-hover);
+            }
+
+            &.active,
+            &:active:enabled {
+                transform: scale(0.97);
+                box-shadow: none;
+            }
+
+            &.focus,
+            &:focus-visible {
+                outline: 2px solid var(--color-purple-700);
+                outline-offset: 2px;
+                isolation: isolate;
+            }
+
+            &:disabled {
+                opacity: .5;
+                box-shadow: none;
+                cursor: default;
+                background-color: var(--color-gray-100);
+                color: var(--color-gray-600);
+                border-color: var(--color-gray-300);
+            }
+
+            span[class^="icon-"] {
+                width: 1em;
+                height: 1em;
+                background-color: var(--icon);
+            }
+
+            &:disabled span[class^="icon-"] {
+                background-color: var(--color-gray-600);
+            }
+        }
+
+        .paging__selection__page__limit {
+
+            &:disabled {
+                border-right-width: 0.0625rem;
+                opacity: 1;
+                color: var(--text);
+                background-color: var(--bg-section);
+            }
+        }
+
+        .paging__selection__page__parent {
+            padding: 0;
+            border-inline-width: 0.0625rem;
+
+            label.paging__selection__page__input__field {
+                display: none;
+            }
+
+            .btn-clear {
+                display: none;
+            }
+
+            .text-input {
+                border: none;
+                box-shadow: none;
+                max-width: 3rem;
+                padding: 0.375em;
+
+                input {
+                    text-align: center;
+                }
+            }
+
+            &:has(input:focus) {
+                border-color: var(--border-focus);
+            }
+
+            &:active:enabled {
+                transform: none;
+                box-shadow: 0 2px 3px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 2px -1px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+            }
+        }
+    }
+}

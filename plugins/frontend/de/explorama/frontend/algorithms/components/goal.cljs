@@ -92,7 +92,8 @@
                       :color :gray
                       :brightness 5}]]])
            [:span.explorama__input__mode.input--w4
-            {:on-click (fn [_]
+            {:class "block w-fit ml-[155px] text-(--text-secondary) decoration-dashed whitespace-nowrap cursor-pointer hover:text-(--text) hover:decoration-solid hover:underline"
+             :on-click (fn [_]
                          (when-not read-only?
                            (swap! state assoc :choose-algorithm? false)
                            (logging-value-changed :goal [:choose-algorithm?] false)
@@ -148,7 +149,8 @@
                [icon {:icon :info-circle
                       :color :gray}]]])
            [:span.explorama__input__mode.input--w4
-            {:on-click (fn [_]
+            {:class "block w-fit ml-[155px] text-(--text-secondary) decoration-dashed whitespace-nowrap cursor-pointer hover:text-(--text) hover:decoration-solid hover:underline"
+             :on-click (fn [_]
                          (when-not read-only?
                            (swap! state assoc :choose-algorithm? true)
                            (logging-value-changed :goal [:choose-algorithm?] true)

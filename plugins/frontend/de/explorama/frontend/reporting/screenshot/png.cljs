@@ -42,7 +42,7 @@
              :always
              (str export-displayed-datasources " " (join ", " (map #(get datasource-mapping % %) datasources)))))]
         (when (or show-date? show-user?)
-          [:div.inline.justify-between.text-gray.text-italic
+          [:div.inline.justify-between.text-gray.italic
            (when show-date?
              [:span {:style {:margin-right 20}}
               (create-export-date)])

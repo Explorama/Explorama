@@ -372,7 +372,7 @@
   (disable-tickers)
   (when-not (aget instance "app")
     (let [{:keys [contexts background-color] :as state} (gre/state instance)
-          {:keys [x y z zoom next-zoom]} (get state [:pos pc/main-stage-index])
+          {:keys [x y z next-zoom]} (get state [:pos pc/main-stage-index])
           {:keys [width height host]} (gre/args instance)
           canvas (.getElementById js/document host)
           app (Application. (clj->js {:autoStart false
@@ -393,8 +393,7 @@
                     ["pointerup" (pm/mouseup instance) {:passive true}]
                     ["pointerleave" (pm/mouseleave instance) {:passive true}]
                     ["pointercancel" (pm/mouseleave instance) {:passive true}]]
-          {{:keys [count-ctn max-zoom min-zoom #_bb-min-x #_bb-min-y #_x #_y]} :params
-           factor-overview :factor-overview}
+          {{:keys [count-ctn max-zoom min-zoom #_bb-min-x #_bb-min-y #_x #_y]} :params}
           (get-in contexts [pc/main-stage-index []])
           root-container (Container.)
           main-container (Container.)
@@ -436,9 +435,6 @@
                         (and (= 1 count-ctn)
                              (not (= (get-in contexts [pc/main-stage-index [] :ctx-type]) :group)))
                         min-zoom
-                        (and z (zero? zoom)
-                             (not (nil? factor-overview)))
-                        (* z factor-overview)
                         z z
                         :else max-zoom))
         (and x y z)

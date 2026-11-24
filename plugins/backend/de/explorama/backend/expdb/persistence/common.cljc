@@ -55,7 +55,7 @@
   (map (fn [new-datatiles-key old-data-tile [_ merged-data-tiles-data]]
          (if-not old-data-tile
            [new-datatiles-key (assoc (select-keys (get new-data-tiles new-datatiles-key)
-                                                  [:hash :key :acs :attributes :ranges])
+                                                  [:hash :key :acs :attributes :ranges :units])
                                      :count (count (:data merged-data-tiles-data)))]
            [new-datatiles-key (let [a old-data-tile
                                     b (get new-data-tiles new-datatiles-key)]
@@ -71,6 +71,7 @@
                                                            (update 1 max (second new))))
                                                      (:ranges a)
                                                      (:ranges b))
+                                 :units (merge-with set/union (:units a) (:units b))
                                  :key (:key a)
                                  :hash (:hash a)})]))
        new-datatiles-keys

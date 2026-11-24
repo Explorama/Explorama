@@ -31,9 +31,11 @@
                                       :features [{:global-id "if1"
                                                   :facts [{:name "fact1"
                                                            :type "integer"
+                                                           :unit "kg"
                                                            :value 1}
                                                           {:name "fact2"
                                                            :type "decimal"
+                                                           :unit "°C"
                                                            :value 2.0}]
                                                   :locations [{:lat 15
                                                                :lon 15}]
@@ -48,9 +50,11 @@
                                       :features [{:global-id "if2"
                                                   :facts [{:name "fact1"
                                                            :type "integer"
+                                                           :unit "kg"
                                                            :value 3}
                                                           {:name "fact2"
                                                            :type "decimal"
+                                                           :unit "°C"
                                                            :value 4.0}]
                                                   :locations [{:lat 15
                                                                :lon 15}]
@@ -92,6 +96,7 @@
                                                            :value 1}
                                                           {:name "fact2"
                                                            :type "decimal"
+                                                           :unit "°F"
                                                            :value 2.0}]
                                                   :locations [{:lat 15
                                                                :lon 15}]
@@ -109,6 +114,7 @@
                                                            :value 3}
                                                           {:name "fact2"
                                                            :type "decimal"
+                                                           :unit "°F"
                                                            :value 4.0}]
                                                   :locations [{:lat 15
                                                                :lon 15}]
@@ -440,3 +446,16 @@
             "fact2" #?(:cljs {:min 2 :max 2}
                        :clj {:min 2.0 :max 2.0})}
            (sac-api/ranges {:datasources #{"dsn-1"} :countries #{"country1"}})))))
+
+(deftest units-test
+  (testing "units for all data-tiles"
+    (is (= {"fact1" #{"kg"}
+            "fact2" #{"°C" "°F"}}
+           (sac-api/units {}))))
+  (testing "units for one datasource"
+    (is (= {"fact1" #{"kg"}
+            "fact2" #{"°C"}}
+           (sac-api/units {:datasources #{"dsn-1"}}))))
+  (testing "units for one attribute"
+    (is (= {"fact2" #{"°C" "°F"}}
+           (sac-api/units {:attributes ["fact2"]})))))

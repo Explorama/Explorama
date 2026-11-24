@@ -1,6 +1,5 @@
 (ns de.explorama.backend.expdb.persistence.backend-indexed
   (:require [clojure.set :as set]
-            [de.explorama.backend.expdb.config :as config-expdb]
             [de.explorama.backend.expdb.legacy.compatibility :refer [create-formdata-for-ds]]
             [de.explorama.backend.expdb.legacy.search.data-tile :refer [get-data-tiles-for-schema]]
             [de.explorama.backend.expdb.persistence.common
@@ -186,6 +185,3 @@
 
 (defn new-instance [config]
   (Backend. (get config :schema) config))
-
-(defn instances []
-  (keys config-expdb/explorama-bucket-config))

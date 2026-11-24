@@ -1,0 +1,19 @@
+/*  components/product_tour residual: `.dialog.product-tour .dialog-body` is a */
+/*  deep descendant-context override of the cross-plugin co-owned `.dialog` */
+/*  family (shared with ui_base/components/frames/dialog.cljs, see */
+/*  components/dialog_domain.scss), which also carries the `.dialog` */
+/*  forced-colors marker (base/_themes.scss:370); includes an attribute-prefix */
+/*  icon (`span[class^="icon-"]`) and attribute-suffix svg selector */
+/*  (`img[src$=".svg"]`). Kept at its own load slot, NOT folded into */
+/*  components/dialog_domain.scss, which sits at an earlier cascade position. */
+.dialog.product-tour .dialog-body {
+
+    span[class^="icon-"] {
+        display: inline-block;
+        background-color: var(--primary);
+    }
+
+    img[src$=".svg"] {
+        height: 21px;
+    }
+}

@@ -2,7 +2,8 @@
   (:require
    [clojure.core.reducers :as r]
    [clojure.string :as str]
-   ["react-virtualized" :refer [AutoSizer List]]
+   ["@tanstack/react-virtual" :refer [useVirtualizer]]
+   ["react" :as react]
    [react-dom :as react-dom]
    [reagent.core :as reagent]
    [reagent.dom :as rdom]
@@ -12,7 +13,9 @@
    [de.explorama.frontend.ui-base.utils.specification :refer [parameters->malli validate]]
    [de.explorama.frontend.ui-base.components.common.core :refer [parent-wrapper error-boundary]]
    [de.explorama.frontend.ui-base.utils.css-classes :refer [toolbar-ignore-class export-ignore-class]]
+   [de.explorama.frontend.ui-base.utils.resize :refer [use-parent-size]]
    [de.explorama.frontend.ui-base.utils.subs :refer [val-or-deref translate-label]]
+   [de.explorama.frontend.ui-base.utils.virtual :as virtual]
    [taoensso.timbre :refer-macros [error]]))
 
 (def parameter-definition
@@ -201,9 +204,6 @@
 
 (def default-parameters-multi {:close-on-select? false})
 
-(def virt-autosizer (reagent/adapt-react-class AutoSizer))
-(def virt-list (reagent/adapt-react-class List))
-
 (def tab-keycode 9)
 (def esc-keycode 27)
 (def backspace-keycode 8)
@@ -221,7 +221,7 @@
 (def open-list-upwards-class "open-above")
 (def option-list-class "select-option-list")
 (def drop-down-value-selected-class "active")
-(def truncate-text-class "text-truncate")
+(def truncate-text-class "truncate")
 (def group-element-class "select-option-group")
 (def group-count-class "select-option-count")
 (def value-element-class "select-option")
@@ -235,16 +235,20 @@
 (def select-wrapper-class "select-wrapper")
 (def inactive-class "disabled")
 
-(def react-virt-grid-class "ReactVirtualized__Grid")
-(def react-virt-list-class "ReactVirtualized__List")
-(def react-virt-innerscroll-class "ReactVirtualized__Grid__innerScrollContainer")
+;; The `select-placeholder` marker is KEPT (alongside this utility stack) so
+;; the contextual sibling rule `.select-input > span[class^="icon-"] ~
+;; .select-placeholder` in styles/src/tailwind.css still applies its margin
+;; when a start-icon precedes it.
+(def ^:private select-placeholder-class "select-placeholder absolute truncate text-[#999]")
+
+(def list-scroll-class "select-list__scroll")
+(def list-sizer-class "select-list__sizer")
 (def in-list-check-classes [value-element-class
                             group-element-class
                             group-count-class
                             truncate-text-class
-                            react-virt-grid-class
-                            react-virt-list-class
-                            react-virt-innerscroll-class])
+                            list-scroll-class
+                            list-sizer-class])
 
 ; -------------------- Extra Component to position options list absolute ----------------------------
 ; It's only here to maintain the select component easier, later it should be an extra file
@@ -710,31 +714,42 @@
     :else
     (get rows idx)))
 
-(defn- list-menu [autoprops
-                  {:keys [no-options-placeholder menu-height
+(defn- list-menu [{:keys [no-options-placeholder menu-height
                           menu-row-height overscan-row-count]
                    :as props}
                   rows-length rows raw-state acc-state]
   (let [select-idx @(:select-idx acc-state)
-        last-key @(:last-key acc-state)]
-    [virt-list {:width (aget autoprops "width")
-                :height menu-height
-                :rowCount rows-length
-                :rowHeight menu-row-height
-                :overscanRowCount overscan-row-count
-                ;:onRowsRendered (fn [e]
-                ;                  (let [idx (min (aget e "startIndex")
-                ;                                 0)]
-                ;                   (swap! state assoc 
-                ;                         :select-idx idx)))
-                :scrollToIndex select-idx
-                :noRowsRenderer #(reagent/as-element [:div {:class [value-element-class inactive-class]}
-                                                      no-options-placeholder])
-                :rowRenderer (fn [a]
-                               (let [{:keys [key index style]} (js->clj a :keywordize-keys true)]
-                                 (row-renderer props key index style
-                                               (get-list-item props index rows)
-                                               raw-state select-idx last-key)))}]))
+        last-key @(:last-key acc-state)
+        scroll-ref (react/useRef nil)
+        parent-size (use-parent-size scroll-ref)
+        virtualizer (useVirtualizer
+                     #js {:count rows-length
+                          :getScrollElement (fn [] (.-current scroll-ref))
+                          :estimateSize (fn [_] menu-row-height)
+                          :overscan overscan-row-count})]
+    (react/useEffect
+     (fn []
+       (when select-idx
+         (.scrollToIndex virtualizer select-idx))
+       js/undefined)
+     #js [select-idx])
+    [:div {:ref scroll-ref
+           :class list-scroll-class
+           :style {:overflow "auto"
+                   :width (:width parent-size 0)
+                   :height menu-height}}
+     (if (zero? rows-length)
+       [:div {:class [value-element-class inactive-class]}
+        no-options-placeholder]
+       [:div {:class list-sizer-class
+              :style (virtual/sizer-style nil (.getTotalSize virtualizer))}
+        (doall
+         (for [virtual-row (.getVirtualItems virtualizer)]
+           (let [index (.-index virtual-row)]
+             (row-renderer props (.-key virtual-row) index
+                           (virtual/row-style (.-start virtual-row) (.-size virtual-row) false)
+                           (get-list-item props index rows)
+                           raw-state select-idx last-key))))])]))
 
 (defn- flip-menu?
   ([top menu-height]
@@ -793,9 +808,7 @@
     [:div {:class (cond-> [toolbar-ignore-class option-list-class]
                     flip?
                     (conj open-list-upwards-class))}
-     [virt-autosizer {:disableHeight true}
-      (fn [autoprops]
-        (reagent/as-element [list-menu autoprops props rows-length rows raw-state acc-state]))]]))
+     [:f> list-menu props rows-length rows raw-state acc-state]]))
 
 (defn- handle-click [e raw-state acc-state check-contains? scroll?]
   (let [{:keys [root-comp input-comp list-open? in-list?]} @raw-state]
@@ -993,7 +1006,8 @@
                                          :select-current? false
                                          :list-open? (not @list-open?))))
                :on-mouse-up #(when (and (not disabled?)
-                                        is-searchable?)
+                                        is-searchable?
+                                        @input-comp)
                                (.focus @input-comp))
                :on-mouse-enter #(reset! leaved-comp? false)
                :on-mouse-leave (fn [_]
@@ -1018,7 +1032,7 @@
             (and (= 0 (count selected))
                  (= "" @filterval)
                  (not @is-focused?))
-            [:div.select-placeholder placeholder]
+            [:div {:class select-placeholder-class} placeholder]
              ;multi value
             is-multi?
             [:div {:class (cond-> multi-select-holder-class
@@ -1036,7 +1050,7 @@
                (conj [:span {:class "overflow-count"}
                       (format show-more (- (count selected) visible-selections))]))
              (when is-searchable?
-               [input (assoc props :extra-class "min-w-40") raw-state acc-state])]
+               [input (assoc props :extra-class "min-w-10") raw-state acc-state])]
             ;empty select  
             (or (= 0 (count selected))
                 (not= "" @filterval))
@@ -1064,7 +1078,8 @@
                                      (reset! deleted-sel? false)
                                      (unselect-all is-multi? on-change selected)
                                      (when is-searchable?
-                                       (.focus @input-comp)
+                                       (when @input-comp
+                                         (.focus @input-comp))
                                        (swap! raw-state assoc :is-focused? true))))}
               [:span.icon-close]])
            [:button {:class select-button-class
@@ -1147,7 +1162,7 @@
                                                    (if (and @input-comp (= @displayed-rows 0))
                                                      (close-menu-state raw-state)
                                                      (swap! raw-state assoc :select-current? true))
-                                                   (when is-searchable?
+                                                   (when (and is-searchable? @input-comp)
                                                      (.focus @input-comp))))}
                             [typeahead-container props raw-state acc-state]
                             (when (and @list-open? (not disabled?))

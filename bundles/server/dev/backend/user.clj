@@ -8,7 +8,7 @@
   (info "Stopping old dev server")
   (server/stop-server!)
   (info "Starting dev server")
-  (server/start-server! server-config/explorama-host
+  (server/start-server! server-config/explorama-bind-address
                         server-config/explorama-port
                         handler/handler)
   (info "Starting dev server done!"))

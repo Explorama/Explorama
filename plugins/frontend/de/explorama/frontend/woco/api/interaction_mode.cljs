@@ -5,8 +5,7 @@
             [de.explorama.frontend.woco.frame.events :as evts]
             [de.explorama.frontend.woco.path :as wp]
             [re-frame.core :as re-frame]
-            [taoensso.timbre :refer-macros [debug]]
-            [vimsical.re-frame.cofx.inject :as inject]))
+            [taoensso.timbre :refer-macros [debug]]))
 
 (defn force-read-only? [db frame-id]
   (fi/call-api :flags-db-get db frame-id :force-read-only?))
@@ -97,12 +96,17 @@
  (fn [db [_ additional-infos]]
    (read-only? db additional-infos)))
 
-(re-frame/reg-sub
- ::current
- (fn [db [_ {:keys [frame-id]}]]
+(defn current
+  ([db] (current db nil))
+  ([db frame-id]
    (if (force-read-only? db frame-id)
      :read-only
      (interaction-mode db))))
+
+(re-frame/reg-sub
+ ::current
+ (fn [db [_ {:keys [frame-id]}]]
+   (current db frame-id)))
 
 (defn check-inter-mode [db frame-type additional-infos okay-fn & [force?]]
   (when (or (not (and (read-only? db additional-infos)
@@ -158,16 +162,12 @@
   <---  :after    <-----------  :after   <--- X X- -  (:after)  <- - -
     |               |       |               |      |               |
     +---------------+       +---------------+      +---------------+"
-  (let [interaction-mode-icpt
-        (re-frame/inject-cofx ::inject/sub
-                              ^:ignore-dispose [::current])]
-    (re-frame/->interceptor :id ::ro-interceptor
-                            :before (comp (fn [{{mode ::current} :coeffects
-                                                :as context}]
-                                            (if (= mode :read-only)
-                                              (assoc context :queue [])
-                                              context))
-                                          (:before interaction-mode-icpt)))))
+  (re-frame/->interceptor :id ::ro-interceptor
+                          :before (fn [{{db :db} :coeffects
+                                        :as context}]
+                                    (if (= (current db) :read-only)
+                                      (assoc context :queue [])
+                                      context))))
 
 (set! (.-uiInterceptor js/window)
       ro-interceptor)

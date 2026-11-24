@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directories:
+      - "/styles"
+      - "/bundles/browser"
+      - "/bundles/server"
+      - "/bundles/electron/frontend"
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # Separate entry so the deliberate better-sqlite3 pin can be ignored:
+  # 9.4.0 is the version whose prebuild matches the electron 28 runtime ABI
+  # (issue #28); bumping it independently breaks the packaged app.
+  - package-ecosystem: npm
+    directory: "/bundles/electron/backend"
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: better-sqlite3

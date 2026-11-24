@@ -1,0 +1,1050 @@
+/*  _frames_domain.scss -- residual (not Tailwind-scannable) remainder of the */
+/*  legacy `_frames.scss` window/frame chrome. The `/* line N, */
+/*  src/scss/components/_explorama-window.scss * /` comments scattered through */
+/*  this file are the original per-rule source-provenance markers from that */
+/*  sheet, kept as-is, as is the `!important` they annotate. None of the */
+/*  rules below are owner-exclusive + element-expressible, so all of it */
+/*  stays residual. */
+
+/*  Per-family residual justification: */
+
+/*  - `.explorama__window .window__body` cascade (base rule, `.flex`, */
+/*    `.no-data-placeholder` + `>span` + `span[class^="icon-"]`, */
+/*    `.window__body--scroll`, `canvas`, `.window__body__wrapper` (+ nested */
+/*    `.window__body` / `:has(.no-data-placeholder)` / `.extra-column` / */
+/*    `.no-data-placeholder`), `.explorama__window--maximized` + */
+/*    `.window__header`): CROSS-PLUGIN. `.window__body` is emitted by 11 */
+/*    distinct plugin source files (algorithms/components/main.cljs, */
+/*    algorithms/components/reduced_result.cljs, charts/charts/core.cljs, */
+/*    data_atlas/views/core.cljs, indicator/views/core.cljs, map/views/map.cljs, */
+/*    mosaic/views/frame.cljs, projects/protocol/core.cljs, */
+/*    search/views/main_search/core.cljs, table/table/core.cljs, */
+/*    woco/frame/view/core.cljs); `.no-data-placeholder` is emitted by 7 */
+/*    distinct plugins (algorithms, charts, configuration, indicator, mosaic, */
+/*    reporting, table). `.window__body--scroll` in particular is LIVE and */
+/*    emitted by `projects/protocol/core.cljs:475` -- it is kept here as part */
+/*    of the same `.window__body` cascade it was written next to. No single */
+/*    plugin owns this family, so it cannot become a component-owned utility */
+/*    stack on any one emitter's markup without stripping styling from the */
+/*    other ten. */
+/*  - `div[id^='woco_frame-visualization-charts']` / */
+/*    `div[id^='woco_frame-data-provisioning']` / `div[id^='woco_frame-ki']`: */
+/*    ATTRIBUTE-PREFIX selectors matching a runtime-constructed frame-id */
+/*    (`"woco_frame-" + id`), not a static class Tailwind's scanner can see or */
+/*    a single element Tailwind markup could target. */
+/*  - `.window__notification` family (base rule, `.hidden`, `.notification__icon` */
+/*    + icon glyph, `.notification__message` + `div` + `div button` + `:hover`, */
+/*    `.notification__actions` + `.button:first-child`, `.notification__close` */
+/*    + `:hover`): the base rule and `:hover` states are ordinary chrome, but */
+/*    `.notification__close` carries a hardcoded `background-image: url("data: */
+/*    image/svg+xml;...")` data-URI plus a `filter: invert(...) sepia(...)...` */
+/*    post-processing chain applied to that data-URI icon (dark-mode */
+/*    inversion), and `.notification__icon` carries the same `filter:` chain -- */
+/*    neither is element-expressible as a utility class, and the deep */
+/*    `.notification__message div button` descendant selector reaches into */
+/*    caller-supplied DOM. Kept together as one family. */
+/*  - `.frame` chrome (`.frame` + `:not(.note-card)`, `.frame>.header` + */
+/*    `> :where(span, div)` + `span.frame-icon` + `.title`/`.custom_title` + */
+/*    `.custom_title input::placeholder` + `.tools` (+ `button.active` + */
+/*    `span[class^="icon-"]` + `span.divider`) + the `@for $i from 1 through 15` */
+/*    `&.group-#{$i}` loop, `.body-wrapper` + `.body` + `.scroll` + */
+/*    `.extra-column` + `.no-data-placeholder` (+ `>span` + icon), `.footer` + */
+/*    `a:first-child` + `p`, `.drop-target` + `.window__body:after` icon */
+/*    mixin): this is the shared window-frame chrome rendered by */
+/*    `woco/frame/view/core.cljs`/`header.cljs`/`toolbar.cljs` around EVERY */
+/*    plugin's frame content -- cross-plugin by construction (every visualization */
+/*    plugin's frame lives inside it), the `.custom_title input::placeholder` */
+/*    pseudo-element is not expressible as a static utility, and the */
+/*    `@for $i from 1 through 15 { &.group-#{$i} { background-color: */
+/*    map.get($frame, 'group-#{$i}') } }` loop builds 15 dynamic classes whose */
+/*    values are runtime `map.get` lookups keyed by the frame's group color */
+/*    (constructed by `woco/frame/color.cljs`'s `group-classes` / */
+/*    `get-group-class` -- LEFT UNTOUCHED, this is a pure CSS relocation). None */
+/*    of these are single-selector/single-value enough for a utility class. */
+/*  - `.frame.selected` / `.selection` / `.sticking`; `#local-selection-bounding-box`; */
+/*    `#selection-bounding-box`: `.selected`/`.selection`/`.sticking` are */
+/*    state markers toggled by workspace selection/drag-and-drop logic across */
+/*    the whole canvas (not a single owner's markup), and the two */
+/*    `#...-bounding-box` rules are ID selectors (Tailwind's scanner and the */
+/*    utility-class model target class attributes, not IDs). */
+/*  - `.window-placement-overlay` / `.window-drag-overlay` + `.card`; */
+/*    `.window-handling-tour` + `.card` / `img` / `.image-hint` / `h3`: the */
+/*    nested `.card` selector is a SHARED MARKER -- `.card` is rendered by */
+/*    `ui_base/components/formular/card.cljs`, a shared UI-base component */
+/*    consumed by many callers, not owned by the window-placement/tour */
+/*    feature. Migrating this rule onto card.cljs's own markup would leak */
+/*    window-placement/tour-only styling into every other `.card` consumer. */
+/*    Kept as a global descendant selector so only these two ancestor contexts */
+/*    are affected, matching the `.card` precedent set by */
+/*    `_dashboards_domain.scss`/`_snapshots_domain.scss`. */
+/*  - Legacy `@for $i from 1 through 15` group loop */
+/*    (`.explorama__window__group-#{$i}`, */
+/*    `.frame:has(.explorama__window__group-#{$i}) .window__body__wrapper`, */
+/*    `.frame .explorama__window__group-#{$i}.header` gradient + `::after` */
+/*    clip-path): same dynamic-class-plus-`map.get`-runtime-value situation as */
+/*    the `.frame>.header` group loop above (both loops read the SAME */
+/*    `$frame` colormap and the SAME `group-classes` construction in */
+/*    `woco/frame/color.cljs`, just for the legacy top-level */
+/*    `.explorama__window__group-#{$i}` marker instead of the nested */
+/*    `&.group-#{$i}`) -- `map.get($frame, 'group-#{$i}')` is a Sass */
+/*    compile-time lookup into a runtime-indexed value, and the `::after` */
+/*    pseudo-element clip-path gradient is not element-expressible. LEFT */
+/*    UNTOUCHED: `woco/frame/color.cljs` and every viz-plugin view that */
+/*    applies these group classes. */
+
+/*  Tie-flip check (recorded at relocation time): grepped every relocated */
+/*  selector (`.window__body*`, `.no-data-placeholder`, `.window__notification*`, */
+/*  `.frame` + descendants, `.drop-target`, `#local-selection-bounding-box`, */
+/*  `#selection-bounding-box`, `.window-placement-overlay`, `.window-drag-overlay`, */
+/*  `.window-handling-tour`, `.card`, `.explorama__window__group-#{$i}`) across */
+/*  the rest of `styles/src/scss/**` and `styles/src/tailwind.css`. Two */
+/*  same-selector-text hits, both confirmed non-flipping: */
+/*    - `base/_themes.scss:378`'s `.frame>.header { border-bottom: 1px solid; }` */
+/*      inside `@media screen and (forced-colors: active)` (loaded via */
+/*      `base/base` at style.scss L3, i.e. BEFORE this sheet's slot at L7): */
+/*      same specificity, but sets a DIFFERENT property (`border-bottom`) than */
+/*      this file's `.frame>.header` block (background-color/color/padding/ */
+/*      margin-bottom/etc, no `border-bottom`) -- additive, not competing, and */
+/*      the load-order relationship (`_themes` before this file) is preserved */
+/*      by keeping the L7 slot, so nothing changes either way. */
+/*    - `components/_projects.scss:24`'s `.card` compiles to `.projects .card` */
+/*      (nested under `.projects`), a different ancestor context than this */
+/*      file's `.window-placement-overlay .card` / `.window-handling-tour .card` */
+/*      -- disjoint ancestors, so the two selector sets never match the same */
+/*      element; coincidental equal specificity, not a real tie. */
+/*  No other equal-specificity competitor exists outside this file, so the */
+/*  slot-preserving move (same `@use` position previously held by */
+/*  `components/frames`) cannot flip a single cascade winner. */
+
+
+/* line 15, src/scss/components/_explorama-window.scss */
+.explorama__window.ovh {
+    overflow: hidden;
+}
+
+/* line 196, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body {
+    overflow: hidden;
+    background: transparent !important;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* line 206, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body.flex {
+    display: flex;
+}
+
+/* line 210, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body .no-data-placeholder {
+    position: absolute;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+    padding: 25px;
+    background-color: var(--bg);
+    cursor: pointer;
+}
+
+/* line 219, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body .no-data-placeholder>span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed var(--border);
+}
+
+/* line 227, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body .no-data-placeholder>span span[class^="icon-"] {
+    position: absolute;
+    z-index: -1;
+    width: 64px;
+    height: 64px;
+    background-color: var(--icon-secondary);
+    opacity: .3;
+}
+
+/* line 238, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body--scroll {
+    overflow-y: auto;
+}
+
+/* line 248, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body canvas {
+    outline: 0;
+}
+
+/* line 252, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper {
+    display: flex;
+    flex-direction: row;
+    height: calc(100% - 32px);
+    position: relative;
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
+    overflow: hidden;
+    border-top: 6px solid var(--border-secondary);
+    border-bottom: 6px solid var(--border-secondary);
+    transition: border-color 120ms;
+}
+
+/* line 262, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper .window__body {
+    width: 100%;
+    height: 100%;
+}
+
+.explorama__window .window__body__wrapper .window__body:has(.no-data-placeholder) {
+    position: relative;
+}
+
+/* line 266, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper .extra-column {
+    flex: 0 0 auto;
+}
+
+/* line 274, src/scss/components/_explorama-window.scss */
+.explorama__window .window__body__wrapper .no-data-placeholder {
+    background-color: var(--bg);
+}
+
+/* line 303, src/scss/components/_explorama-window.scss */
+.explorama__window--maximized {
+    z-index: 10000;
+}
+
+/* line 306, src/scss/components/_explorama-window.scss */
+.explorama__window--maximized .window__header {
+    border-radius: 0;
+}
+
+/* line 335, src/scss/components/_explorama-window.scss */
+div[id^='woco_frame-visualization-charts'] .window__body,
+div[id^='woco_frame-data-provisioning'] .window__body {
+    height: 100% !important;
+}
+
+/* line 351, src/scss/components/_explorama-window.scss */
+div[id^='woco_frame-ki'] .window__body>div:not(.legend__panel) {
+    flex-grow: 1;
+}
+
+/* line 482, src/scss/components/_explorama-window.scss */
+.window__notification {
+    position: absolute;
+    top: 42px;
+    right: 10px;
+    left: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 60px;
+    padding: 0.75em;
+    border-radius: 0.375rem;
+    color: white;
+    background-color: rgba(27, 28, 30, 0.8);
+}
+
+/* line 496, src/scss/components/_explorama-window.scss */
+.window__notification.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s linear;
+}
+
+/* line 502, src/scss/components/_explorama-window.scss */
+.window__notification .notification__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    filter: invert(100%) sepia(2%) saturate(6%) hue-rotate(17deg) brightness(105%) contrast(101%);
+}
+
+.window__notification .notification__icon span[class^="icon-"] {
+    width: 24px;
+    height: 24px;
+}
+
+/* line 516, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message {
+    padding-left: 12px;
+}
+
+/* line 519, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message div {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+}
+
+/* line 524, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message div button {
+    padding: 1px 4px 2px;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+}
+
+/* line 530, src/scss/components/_explorama-window.scss */
+.window__notification .notification__message div button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* line 542, src/scss/components/_explorama-window.scss */
+.window__notification .notification__actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding-top: 12px;
+}
+
+/* line 548, src/scss/components/_explorama-window.scss */
+.window__notification .notification__actions .button:first-child {
+    margin-right: 6px;
+}
+
+/* line 553, src/scss/components/_explorama-window.scss */
+.window__notification .notification__close {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%22500%22%20height%3D%22500%22%20viewBox%3D%220%200%20500%20500%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cdefs%3E%3Cpath%20d%3D%22M318.426%20250L445.17%20123.256c6.441-6.44%206.441-16.885%200-23.326l-45.1-45.099c-6.44-6.441-16.884-6.441-23.327%200L250%20181.574%20123.257%2054.83c-6.442-6.441-16.885-6.441-23.327%200L54.83%2099.93c-6.441%206.441-6.441%2016.885%200%2023.326L181.574%20250%2054.831%20376.742c-6.441%206.442-6.441%2016.886%200%2023.328L99.93%20445.17A16.445%2016.445%200%2000111.593%20450c4.222%200%208.443-1.611%2011.664-4.831L250%20318.426%20376.742%20445.17A16.448%2016.448%200%2000388.407%20450c4.221%200%208.442-1.611%2011.662-4.831l45.1-45.099c6.441-6.442%206.441-16.885%200-23.328L318.426%20250z%22%20id%3D%22a%22%2F%3E%3C%2Fdefs%3E%3Cuse%20fill%3D%22%23000%22%20fill-rule%3D%22nonzero%22%20xlink%3Ahref%3D%22%23a%22%2F%3E%3C%2Fsvg%3E");
+    filter: invert(100%) sepia(2%) saturate(6%) hue-rotate(17deg) brightness(105%) contrast(101%);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background-size: 12px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: background-color 120ms;
+}
+
+/* line 566, src/scss/components/_explorama-window.scss */
+.window__notification .notification__close:hover {
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.frame {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    min-width: 100px;
+    box-shadow: 0 2px 6px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 4px -2px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    border-radius: var(--radius-lg);
+    outline: 0;
+    transition: outline-width 60ms;
+
+    &:not(.note-card) {
+        background-color: var(--bg) !important;
+    }
+
+    &>.header {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        gap: 0.25rem;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        padding: 0.375rem 1rem;
+        border-top-left-radius: var(--radius-lg);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-gray-700);
+        color: var(--color-white);
+        margin-bottom: -0.5px;
+
+        &> :where(span, div) {
+            z-index: 1;
+        }
+
+        span.frame-icon {
+            flex-shrink: 0;
+            width: 1.25em;
+            height: 1.25em;
+            margin-right: 0.25rem;
+            background-color: white;
+        }
+
+        .title,
+        .custom_title {
+            flex: 1 1 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .title {
+            flex: 0 1 auto;
+            max-width: 33%;
+        }
+
+        .custom_title input {
+            max-width: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-full);
+
+            &::placeholder {
+                color: rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .tools {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            flex-shrink: 1;
+
+            button {
+                padding: 0.25rem;
+
+                &.active {
+                    background-color: rgba(255, 255, 255, 0.5);
+                }
+            }
+
+            span[class^="icon-"] {
+                background-color: white;
+            }
+
+            span.divider {
+                width: 0.125rem;
+                height: 1.125rem;
+                margin-left: 0.25rem;
+                margin-right: 0.25rem;
+                border-radius: 0.25rem;
+                background-color: var(--color-white);
+                opacity: .25;
+            }
+        }
+
+        &.group-1 {
+            background-color: var(--color-group-1);
+        }
+        &.group-2 {
+            background-color: var(--color-group-2);
+        }
+        &.group-3 {
+            background-color: var(--color-group-3);
+        }
+        &.group-4 {
+            background-color: var(--color-group-4);
+        }
+        &.group-5 {
+            background-color: var(--color-group-5);
+        }
+        &.group-6 {
+            background-color: var(--color-group-6);
+        }
+        &.group-7 {
+            background-color: var(--color-group-7);
+        }
+        &.group-8 {
+            background-color: var(--color-group-8);
+        }
+        &.group-9 {
+            background-color: var(--color-group-9);
+        }
+        &.group-10 {
+            background-color: var(--color-group-10);
+        }
+        &.group-11 {
+            background-color: var(--color-group-11);
+        }
+        &.group-12 {
+            background-color: var(--color-group-12);
+        }
+        &.group-13 {
+            background-color: var(--color-group-13);
+        }
+        &.group-14 {
+            background-color: var(--color-group-14);
+        }
+        &.group-15 {
+            background-color: var(--color-group-15);
+        }
+    }
+
+    .body-wrapper {
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
+
+        .body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg);
+
+            .scroll {
+                overflow-y: scroll;
+            }
+        }
+
+        .extra-column {
+            flex: 0 0 auto;
+        }
+
+        .no-data-placeholder {
+            position: absolute;
+            z-index: 9; /*  above map */
+            width: 100%;
+            height: 100%;
+            padding: 25px;
+
+            &>span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+                border: 2px dashed var(--border);
+                border-radius: var(--radius-sm);
+
+                span[class^="icon-"] {
+                    position: absolute;
+                    z-index: -1;
+                    width: 4rem;
+                    height: 4rem;
+                    margin-top: 1rem;
+                    background-color: var(--icon-secondary);
+                }
+            }
+        }
+    }
+
+    .footer {
+        width: 100%;
+        height: 32px;
+        padding: 12px 3px 12px 18px;
+        border-top: 1px solid var(--border);
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
+
+        a:first-child {
+            margin-right: 12px;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    &.drop-target {
+        outline: 0.125rem dashed var(--border-focus);
+        outline-offset: 0.25rem;
+        transition: none;
+
+        /*  width/height are 33.3333333333% (a resolved 1/3), not a rounding */
+        /*  error -- kept as a literal since no matching size token exists. */
+        .window__body:after {
+            content: "";
+            z-index: 1000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            width: 33.3333333333%;
+            height: 33.3333333333%;
+            background-color: rgba(95, 117, 158, 0.5);
+            -webkit-mask-image: var(--icon-img-drop);
+            -webkit-mask-size: contain;
+            -webkit-mask-origin: content-box;
+            -webkit-mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+        }
+    }
+}
+
+/* Selection */
+
+.frame {
+    &.selected {
+        outline: 0.25rem solid var(--color-blue-200);
+        box-shadow: 0 2px 10px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 6px -4px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    }
+
+    &.selection {
+        outline: 0.5rem solid var(--color-blue-300);
+        box-shadow: 0 4px 25px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 10px -6px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    }
+
+    &.sticking {
+        /*  notes sticking to windows */
+        outline: 0.25rem solid var(--color-yellow-400);
+        box-shadow: 0 2px 10px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 6px -4px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+    }
+}
+
+#local-selection-bounding-box {
+    background-color: var(--color-blue);
+    border: 0;
+    opacity: 0.25;
+}
+
+#selection-bounding-box {
+    border: 0.25rem solid var(--color-blue-300);
+    border-radius: var(--radius-sm);
+    background-color: rgba(16, 90, 163, 0.1);
+}
+
+/* Window Placement */
+
+
+
+.window-placement-overlay,
+.window-drag-overlay {
+    position: absolute;
+    z-index: 200001;
+    overflow: hidden;
+    inset: 0;
+    user-select: none;
+}
+
+.window-placement-overlay {
+    cursor: url(/img/window-placement.svg), cell;
+    backdrop-filter: var(--backdrop-filter);
+
+    .card {
+        position: absolute;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* Window Handling Tour */
+
+.window-handling-tour {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    translate: -50% 0;
+    width: 386px;
+    animation: fadeInUp 1s 1s both;
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 25px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 10px -6px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+        text-align: center;
+
+        img {
+            border: 0.0625rem solid var(--color-gray-200);
+            border-radius: var(--radius-xs);
+            aspect-ratio: 3/4;
+        }
+
+        .image-hint {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border: 0.0625rem solid var(--color-gray-200);
+            border-radius: var(--radius-xs) 0;
+            background-color: rgba(242.6, 244.1, 244.8, 0.8);
+            backdrop-filter: blur(4px);
+            color: var(--color-gray-700);
+            font-size: var(--text-sm);
+            letter-spacing: 0.125rem;
+        }
+
+        h3 {
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+
+/* Legacy Styles */
+
+.explorama__window__group-1 {
+    background-color: var(--color-group-1);
+}
+
+.frame:has(.explorama__window__group-1) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-1);
+    border-bottom: 6px solid var(--color-group-1);
+}
+
+.frame .explorama__window__group-1.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-1) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-1);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-2 {
+    background-color: var(--color-group-2);
+}
+
+.frame:has(.explorama__window__group-2) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-2);
+    border-bottom: 6px solid var(--color-group-2);
+}
+
+.frame .explorama__window__group-2.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-2) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-2);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-3 {
+    background-color: var(--color-group-3);
+}
+
+.frame:has(.explorama__window__group-3) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-3);
+    border-bottom: 6px solid var(--color-group-3);
+}
+
+.frame .explorama__window__group-3.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-3) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-3);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-4 {
+    background-color: var(--color-group-4);
+}
+
+.frame:has(.explorama__window__group-4) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-4);
+    border-bottom: 6px solid var(--color-group-4);
+}
+
+.frame .explorama__window__group-4.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-4) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-4);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-5 {
+    background-color: var(--color-group-5);
+}
+
+.frame:has(.explorama__window__group-5) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-5);
+    border-bottom: 6px solid var(--color-group-5);
+}
+
+.frame .explorama__window__group-5.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-5) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-5);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-6 {
+    background-color: var(--color-group-6);
+}
+
+.frame:has(.explorama__window__group-6) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-6);
+    border-bottom: 6px solid var(--color-group-6);
+}
+
+.frame .explorama__window__group-6.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-6) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-6);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-7 {
+    background-color: var(--color-group-7);
+}
+
+.frame:has(.explorama__window__group-7) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-7);
+    border-bottom: 6px solid var(--color-group-7);
+}
+
+.frame .explorama__window__group-7.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-7) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-7);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-8 {
+    background-color: var(--color-group-8);
+}
+
+.frame:has(.explorama__window__group-8) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-8);
+    border-bottom: 6px solid var(--color-group-8);
+}
+
+.frame .explorama__window__group-8.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-8) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-8);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-9 {
+    background-color: var(--color-group-9);
+}
+
+.frame:has(.explorama__window__group-9) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-9);
+    border-bottom: 6px solid var(--color-group-9);
+}
+
+.frame .explorama__window__group-9.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-9) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-9);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-10 {
+    background-color: var(--color-group-10);
+}
+
+.frame:has(.explorama__window__group-10) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-10);
+    border-bottom: 6px solid var(--color-group-10);
+}
+
+.frame .explorama__window__group-10.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-10) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-10);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-11 {
+    background-color: var(--color-group-11);
+}
+
+.frame:has(.explorama__window__group-11) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-11);
+    border-bottom: 6px solid var(--color-group-11);
+}
+
+.frame .explorama__window__group-11.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-11) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-11);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-12 {
+    background-color: var(--color-group-12);
+}
+
+.frame:has(.explorama__window__group-12) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-12);
+    border-bottom: 6px solid var(--color-group-12);
+}
+
+.frame .explorama__window__group-12.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-12) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-12);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-13 {
+    background-color: var(--color-group-13);
+}
+
+.frame:has(.explorama__window__group-13) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-13);
+    border-bottom: 6px solid var(--color-group-13);
+}
+
+.frame .explorama__window__group-13.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-13) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-13);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-14 {
+    background-color: var(--color-group-14);
+}
+
+.frame:has(.explorama__window__group-14) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-14);
+    border-bottom: 6px solid var(--color-group-14);
+}
+
+.frame .explorama__window__group-14.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-14) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-14);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}
+
+.explorama__window__group-15 {
+    background-color: var(--color-group-15);
+}
+
+.frame:has(.explorama__window__group-15) .window__body__wrapper {
+    border-top: 6px solid var(--color-group-15);
+    border-bottom: 6px solid var(--color-group-15);
+}
+
+.frame .explorama__window__group-15.header {
+    background: linear-gradient(90deg, var(--color-gray-700) 59.9%, var(--color-group-15) 60%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: calc(60% - 199px);
+        border-top-right-radius: var(--radius-lg);
+        background-color: var(--color-group-15);
+        clip-path: path('M 0 40 Q 50 40 100 20 Q 150 0 200 0 L 200 40');
+    }
+}

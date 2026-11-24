@@ -1,5 +1,5 @@
 (ns de.explorama.frontend.algorithms.components.charts
-  (:require ["chart.js"]
+  (:require ["chart.js/auto" :refer [Chart]]
             ["chartjs-adapter-date-fns"]
             ["date-fns"]
             [de.explorama.frontend.ui-base.utils.interop :refer [format safe-aget]]
@@ -120,16 +120,15 @@
                 :legend {:color color, :shape :circle-line}})]}
      :options {:responsive true
                :maintainAspectRatio false
-               :legend {:position :top
-                        :labels {:fontSize 12
-                                 :boxWidth 10}}
-               :showLines true
                :fill true
                :elements {:line {:tension 0
                                  :fill false}}
                :plugins {:tooltip {:callbacks {:label (tooltip-label-fn language-function false)
                                                :title (tooltip-title-fn)}}
-                         :legend {:labels {:boxHeight 1}}}
+                         :legend {:position :top
+                                  :labels {:font {:size 12}
+                                           :boxWidth 10
+                                           :boxHeight 1}}}
                :scales {:y yAxes
                         :x xAxes}}}))
 
@@ -161,8 +160,8 @@
             :labels labels}
      :options {:responsive true
                :maintainAspectRatio false
-               :legend {:display false}
-               :cutoutPercentage 50}}))
+               :plugins {:legend {:display false}}
+               :cutout "50%"}}))
 
 (defn datapoint->line-point [x y datapoint]
   {:x (get datapoint x)
@@ -212,7 +211,7 @@
   (let [context (.getContext (.getElementById js/document
                                               (str "line-chart-" chart-id))
                              "2d")
-        chart-instance (js/Chart. context (clj->js chart-data))
+        chart-instance (Chart. context (clj->js chart-data))
         {[width] :size} @(fi/call-api :frame-sub frame-id)]
     (swap! chart-instances assoc chart-id chart-instance)
     (update-chart-size chart-id (if (coll? size) (second size) config/default-chart-height) width)))

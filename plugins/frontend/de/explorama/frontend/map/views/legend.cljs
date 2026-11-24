@@ -247,7 +247,7 @@
         type-name (when (keyword? i18n-key) @(i18n-sub i18n-key))
         read-only? @(re-frame/subscribe [::read-only? frame-id])]
     [:div.subsection__element__title
-     [:div.truncate-text
+     [:div.truncate
       [:span.layer__name layer-name]
       [:span.layer__type (when type-name
                            (str " (" type-name ")"))]]
@@ -353,7 +353,7 @@
 (defn- info-block [label attribute]
   [:div
    [:dt label]
-   [:dd.truncate-text attribute]])
+   [:dd.truncate attribute]])
 
 (defn- color-code-list [layer]
   (when-let [attributes (:attributes layer)]

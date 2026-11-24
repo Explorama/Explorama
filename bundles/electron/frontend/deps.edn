@@ -20,20 +20,17 @@
 
         ;; Client-side
         metosin/malli {:mvn/version "0.12.0"}
-        com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
-        clj-time/clj-time {:mvn/version "0.15.2"}
         org.clojure/math.combinatorics {:mvn/version "0.2.0"}
 
         day8.re-frame/http-fx {:mvn/version "0.2.4"}
-        re-frame-utils/re-frame-utils {:mvn/version "0.1.0"}
         funcool/cuerdas {:mvn/version "2023.10.15-405"}
 
         prismatic/dommy {:mvn/version "1.1.0"}
 
         ;; Super important to exclude cljsjs/react and cljsjs/react-dom
         ;; Otherwise webpack compiled result will not work
-        reagent/reagent {:mvn/version "1.0.0" :exclusions [cljsjs/react cljsjs/react-dom]}
-        re-frame/re-frame {:mvn/version "1.2.0"}}
+        reagent/reagent {:mvn/version "1.3.0" :exclusions [cljsjs/react cljsjs/react-dom]}
+        re-frame/re-frame {:mvn/version "1.4.7"}}
 
  :aliases {:dev {:main-opts ["-m" "figwheel.main" "--build" "dev" "--repl"]}
            :test {:extra-paths ["test"
@@ -41,13 +38,13 @@
                                 "../../../plugins/shared_test"]
                   :test {:extra-paths ["test"]}
                   :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner"]}
+                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.frontend.test-runner"]}
            :test-ci {:extra-paths ["test"
                                    "../../../plugins/frontend_test"
                                    "../../../plugins/shared_test"]
                      :test {:extra-paths ["test"]}
                      :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-                     :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner-ci"]}
+                     :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.frontend.test-runner-ci"]}
            :prod {:main-opts ["-m" "cljs.main"
                               "-co" "prod-opts.edn"
                               "-c" "de.explorama.frontend.woco.app.core"]}}}

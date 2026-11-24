@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head>
+  <meta charset='utf-8'><title>ui_base harness</title>
+  <link rel="stylesheet" href="/css/2_woco.css">
+  <link rel="stylesheet" href="/css/3_style.css">
+  <link rel="stylesheet" href="/css/4_temp.css">
+  <link rel="stylesheet" href="/css/5_utilities.css">
+  <style>
+    /* Harness determinism overrides.
+       - animation: none  -> kills keyframe animations (e.g. _forms.scss
+         fadeIn, loaders) whose phase would differ between captures.
+         Consequence: animation-name/-duration are NOT guarded by the diff
+         gate; keyframe migrations need a manual check.
+       - caret-color      -> hides the blinking input caret.
+         Consequence: input caret colors are NOT guarded by the diff gate.
+       - transition is deliberately NOT disabled: a static, non-interacted
+         render never fires a transition, so transitions cannot cause capture
+         nondeterminism, and leaving them enabled means the computed
+         transition-* properties ARE covered by the diff gate (10 of 11
+         batch-1 sheets declare transitions). */
+    *, *::before, *::after {
+      animation: none !important;
+    }
+    input, textarea, [contenteditable] {
+      caret-color: transparent !important;
+    }
+  </style>
+</head><body>
+  <div id="app"></div>
+  <!-- The :simple bundle auto-runs init on load (see ui_base_harness.cljs). -->
+  <script src="/cljs-out/harness/main_bundle.js"></script>
+</body></html>

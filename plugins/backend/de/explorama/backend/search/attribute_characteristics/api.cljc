@@ -99,6 +99,16 @@
                          key
                          (ac-api/attribute-types {:blocklist attribute-blocklist})))})))
 
+(defn attribute-units []
+  (single-destructuring
+   (cache-api/lookup @request-cache
+                     [::attribute-units]
+                     {:miss
+                      (fn [key _]
+                        (single-return-type
+                         key
+                         (ac-api/attribute-units)))})))
+
 (defn attribute-type [attr]
   (single-destructuring
    (cache-api/lookup @request-cache

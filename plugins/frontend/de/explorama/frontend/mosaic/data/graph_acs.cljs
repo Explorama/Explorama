@@ -4,7 +4,6 @@
             [clojure.set :as set]
             [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.mosaic.path :as gp]
-            [de.explorama.frontend.mosaic.tracks]
             [clojure.string :as string]
             [de.explorama.shared.mosaic.ws-api :refer [update-acs]]))
 
@@ -139,64 +138,72 @@
                                        :name "date"}]
                                      set/intersection)))
 
+(defn group-by-vals [db path]
+  (let [layouts (seq (get-in db (gp/selected-layouts (gp/frame-id path))))]
+    (update-labels db
+                   (cond-> (calc-datasource-by db
+                                               path
+                                               [{:label "Fact"}
+                                                {:label "External-ref"}
+                                                {:label "Context"
+                                                 :name "location"}
+                                                {:label "Notes"}
+                                                {:label "Date"
+                                                 :name "date"}
+                                                {:label "Date"
+                                                 :name "day"}]
+                                               set/union)
+                     layouts (conj
+                              {:name  "layout", :key "layout", :label "Layout", :type "map"})))))
+
 (re-frame/reg-sub
  ::group-by
  (fn [db [_ path]]
-   (let [layouts (seq (get-in db (gp/selected-layouts (gp/frame-id path))))
-         res (update-labels db
-                            (cond-> (calc-datasource-by db
-                                                        path
-                                                        [{:label "Fact"}
-                                                         {:label "External-ref"}
-                                                         {:label "Context"
-                                                          :name "location"}
-                                                         {:label "Notes"}
-                                                         {:label "Date"
-                                                          :name "date"}
-                                                         {:label "Date"
-                                                          :name "day"}]
-                                                        set/union)
-                              layouts (conj
-                                       {:name  "layout", :key "layout", :label "Layout", :type "map"})))]
-     res)))
+   (group-by-vals db path)))
+
+(defn sort-by-vals [db path]
+  (update-labels db
+                 (calc-datasource-by db
+                                     path
+                                     [{:label "Fact"
+                                       :type "boolean"}
+                                      {:label "External-ref"}
+                                      {:label "Context"
+                                       :name "location"}
+                                      {:label "Notes"}
+                                      {:label "Date"
+                                       :name "day"}
+                                      {:label "Date"
+                                       :name "year"}
+                                      {:label "Date"
+                                       :name "month"}]
+                                     set/union)))
 
 (re-frame/reg-sub
  ::sort-by
  (fn [db [_ path]]
-   (update-labels db
-                  (calc-datasource-by db
-                                      path
-                                      [{:label "Fact"
-                                        :type "boolean"}
-                                       {:label "External-ref"}
-                                       {:label "Context"
-                                        :name "location"}
-                                       {:label "Notes"}
-                                       {:label "Date"
-                                        :name "day"}
-                                       {:label "Date"
-                                        :name "year"}
-                                       {:label "Date"
-                                        :name "month"}]
-                                      set/union))))
+   (sort-by-vals db path)))
+
+(defn sort-by-group-vals [db path]
+  (update-labels db
+                 (calc-datasource-by db
+                                     path
+                                     [{:label "Context"}
+                                      {:label "External-ref"}
+                                      {:label "Date"}
+                                      {:label "Fact"
+                                       :type "string"}
+                                      {:label "Fact"
+                                       :type "boolean"}
+                                      {:label "Datasource"}
+                                      {:label "Feature"}
+                                      {:label "Notes"}]
+                                     set/union)))
 
 (re-frame/reg-sub
  ::sort-by-group
  (fn [db [_ path]]
-   (update-labels db
-                  (calc-datasource-by db
-                                      path
-                                      [{:label "Context"}
-                                       {:label "External-ref"}
-                                       {:label "Date"}
-                                       {:label "Fact"
-                                        :type "string"}
-                                       {:label "Fact"
-                                        :type "boolean"}
-                                       {:label "Datasource"}
-                                       {:label "Feature"}
-                                       {:label "Notes"}]
-                                      set/union))))
+   (sort-by-group-vals db path)))
 
 ;! deadcode
 (re-frame/reg-sub

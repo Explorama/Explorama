@@ -279,7 +279,7 @@
        :disabled? (= lang i18n/default-language)
        :on-change #(dispatch [::set-row idx [(:value %) {:title title :desc desc}]])
        :values selected-lang}]
-     [:div.flex.flex-col.flex-grow.gap-4
+     [:div.flex.flex-col.grow.gap-1
       [input-field {:value (or title "")
                     :invalid? title-already-exist?
                     :caption title-exist-caption
@@ -328,9 +328,9 @@
     [:<>
      [editing-header]
      [:div.content
-      [:div.container.spaced-y-8
+      [:div.container.space-y-2
        [:h3 config-topic-label]
-       [:div.grid.grid-cols-1-4.gap-8
+       [:div.grid.gap-2 {:class "grid-cols-[1fr_3fr_auto]"}
         (for [r (map-indexed vector rows)]
           ^{:key (str "edit-topic-view-" (first r))}
           [topic-texts lang-opts remaining-langs r])]
@@ -398,7 +398,7 @@
   (let [title (topic-val lang :title topic)
         desc (topic-val lang :desc topic)]
     [:li.disabled
-     [:div.card__text.align-self-start
+     [:div.card__text.self-start
       [:div.title.flex
        [tooltip {:text title :direction :up}
         title]]

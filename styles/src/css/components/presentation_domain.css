@@ -1,0 +1,58 @@
+/*  Presentation mode -- :has()-state / shared-marker RESIDUAL. */
+
+/*  The slide-overlay chrome (.slide__container / .slide__frame / */
+/*  .slide__title / .slide__number + the drag & remove buttons and their icons) */
+/*  is Tailwind utility stacks on woco/presentation/view.cljs. */
+/*  Each block below stays residual because it uses selector features Tailwind */
+/*  cannot statically scan: */
+
+/*    * The `.slide__frame:has(button.slide__drag:hover|:active)` / */
+/*      `:has(button.slide__remove:hover)` compound STATE selectors -- a */
+/*      gate-invisible `:has()` on the frame reacting to the drag/remove button */
+/*      hover/active state, driving the frame's box-shadow (two `!important`, */
+/*      which must keep beating the inline zoom-compensated box-shadow view.cljs */
+/*      sets on .slide__frame), border-colour, background and the */
+/*      .slide__title/.slide__number colour. Their specificity (>= 0,4,1) keeps */
+/*      them winning over the migrated base utilities (0,1,0) regardless of the */
+/*      utilities-loaded-last order. The slide__container/slide__frame/ */
+/*      slide__drag/slide__remove/slide__title/slide__number class markers stay */
+/*      EMITTED on the view.cljs hiccup so these selectors keep matching. */
+/*    * `.presentation__settings .title__bar:has(h2)` -- a `:has()` override of */
+/*      the shared `.title__bar` woco-sidebar marker (rendered by */
+/*      woco/presentation/sidebar.cljs), scoping extra padding to the settings */
+/*      title bar only; `:has()` is not statically scannable. */
+
+/*  Loaded immediately after `components/presentation` in style.scss so it keeps */
+/*  its original cascade position relative to the rest of _presentation.scss. */
+
+.slide__container .slide__frame {
+    &:has(button.slide__drag:hover) {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--border-focus);
+
+        .slide__title, .slide__number {
+            color: var(--color-gray-600);
+        }
+    }
+
+    &:has(button.slide__drag:active) {
+        box-shadow: var(--primary) 0 0 20px 0 !important;
+    }
+
+    &:has(button.slide__remove:hover) {
+        box-shadow: var(--border-warning) 0 0 20px 0 !important;
+        border-color: var(--border-warning);
+
+        .slide__title, .slide__number {
+            color: var(--color-gray-600);
+        }
+    }
+}
+
+.presentation__settings {
+    gap: 8px;
+
+    .title__bar:has(h2) {
+        padding: 1rem .375rem;
+    }
+}

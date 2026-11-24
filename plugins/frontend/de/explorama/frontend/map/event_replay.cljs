@@ -11,8 +11,7 @@
             [de.explorama.frontend.map.operations.tasks :as tasks]
             [de.explorama.frontend.map.paths :as geop]
             [re-frame.core :as re-frame]
-            [taoensso.timbre :refer-macros [debug]]
-            [vimsical.re-frame.cofx.inject :as inject]))
+            [taoensso.timbre :refer-macros [debug]]))
 
 (defn is-map? [frame-id]
   (= config/default-vertical-str (:vertical frame-id)))
@@ -235,10 +234,9 @@
 
 (re-frame/reg-event-fx
  ::replay-event
- [(re-frame/inject-cofx ::inject/sub (with-meta [:de.explorama.frontend.common.i18n/current-language] {:ignore-dispose true}))]
- (fn [{db :db
-       cur-lang :de.explorama.frontend.common.i18n/current-language} [_ [_ frame-id event-name event-params event-version] ignored-frames callback-vec]]
-   (let [parsed-event-params (edn/read-string event-params)
+ (fn [{db :db} [_ [_ frame-id event-name event-params event-version] ignored-frames callback-vec]]
+   (let [cur-lang (i18n/current-language db)
+         parsed-event-params (edn/read-string event-params)
          event-func (event-func event-name event-version)]
      (debug "replay-event map" {:frame-id frame-id
                                 :event-name event-name

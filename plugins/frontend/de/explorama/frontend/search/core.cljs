@@ -2,6 +2,7 @@
   (:require [de.explorama.frontend.common.frontend-interface :as fi]
             [de.explorama.frontend.common.i18n :as i18n]
             [de.explorama.frontend.search.api.core]
+            [de.explorama.frontend.search.backend.acs :as acs-backend]
             [de.explorama.frontend.search.backend.core]
             [de.explorama.frontend.search.backend.di :as di-backend]
             [de.explorama.frontend.search.backend.options :as options-backend]
@@ -94,6 +95,12 @@
 
                    (service-register :update-user-info-event-vec
                                      [ws-api/update-user-info])
+                   (service-register :db-get
+                                     :attribute-units
+                                     acs-backend/get-attribute-units)
+                   (service-register :sub-vector
+                                     :attribute-units
+                                     [::acs-backend/attribute-units])
                    (service-register :event-replay config/default-vertical-str {:event-replay :de.explorama.frontend.search.event-logging/replay-events
                                                                                 :replay-progress spath/replay-progress})
                    (service-register :event-sync config/default-vertical-str :de.explorama.frontend.search.event-logging/sync-event)

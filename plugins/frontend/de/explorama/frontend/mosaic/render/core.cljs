@@ -319,7 +319,7 @@
           (get-in desc [:updates :reconnect?]))
     (let [selected-layouts (get-in db (gp/selected-layouts (gp/frame-id path)))
           op-desc (get-in db (gp/operation-desc path))
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts
           (grp/grp-contexts (gdb/get-events (gp/canvas path))
@@ -354,7 +354,7 @@
            (not-empty (set/intersection (set (keys updates))
                                         update-data-actions)))
     (let [op-desc (get-in db (gp/operation-desc path))
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts
           (grp/grp-contexts (gdb/get-events (gp/canvas path))
@@ -380,16 +380,24 @@
           (update :done into update-data-actions)))
     update-state))
 
+(defn- degenerate-contexts? [state]
+  (let [{:keys [width height max-zoom]}
+        (get-in state [:contexts pc/main-stage-index [] :params])]
+    (and (some? max-zoom)
+         (not (and (js/isFinite width)
+                   (js/isFinite height)
+                   (js/isFinite max-zoom))))))
+
 (defn resize [{:keys [state db]
                {:keys [width height] :as desc} :desc
                :as update-state}]
   (if (get-in desc [:updates :resize?])
     (let [{:keys [path]} state
           coupled? (get-in db (conj (gp/operation-desc path) gcp/coupled-key))]
-      (-> (cond (js/Number.isNaN (get-in state [:contexts pc/main-stage-index [] :factor-overview]))
+      (-> (cond (degenerate-contexts? state)
                 (let [{:keys [x y z]} (get-in state [[:pos pc/main-stage-index]])
                       op-desc (get-in db (gp/operation-desc path))
-                      attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+                      attribute-labels (i18n/labels-with-units db)
                       lang (i18n/current-language db)
                       contexts
                       (grp/grp-contexts (gdb/get-events (gp/canvas path))
@@ -425,7 +433,7 @@
                 (and (= (get-in state [[:pos pc/main-stage-index] :zoom]) 0)
                      (not coupled?))
                 (let [op-desc (get-in db (gp/operation-desc path))
-                      attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+                      attribute-labels (i18n/labels-with-units db)
                       lang (i18n/current-language db)
                       contexts
                       (grp/grp-contexts (gdb/get-events (gp/canvas path))
@@ -484,7 +492,7 @@
 (defn reset [{:keys [state path db] desc :desc :as update-state}]
   (if (get-in desc [:updates :reset?])
     (let [op-desc (get-in db (gp/operation-desc path))
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts
           (grp/grp-contexts (gdb/get-events (gp/canvas path))
@@ -520,7 +528,7 @@
           (get-in desc [:updates :grid?]))
     (if data-acs?
       (let [op-desc (get-in db (gp/operation-desc path))
-            attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+            attribute-labels (i18n/labels-with-units db)
             lang (i18n/current-language db)
             contexts
             (grp/grp-contexts (gdb/get-events (gp/canvas path))
@@ -554,10 +562,7 @@
 (defn adjust [{:keys [state path db] desc :desc :as update-state} query key]
   (if (get-in desc [:updates query])
     (let [{:keys [z zoom]} (get state [:pos pc/main-stage-index])
-          z (if (zero? zoom)
-              (* z (get-in state [:contexts pc/main-stage-index [] :factor-overview]))
-              z)
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts (grp/grp-contexts (gdb/get-events (gp/canvas path))
                                      (gdb/get-scale (gp/canvas path))
@@ -599,7 +604,7 @@
 (defn adjust-replay [{:keys [state path db] {:keys [width height] :as desc} :desc :as update-state}]
   (if (get-in desc [:updates :adjust-replay?])
     (let [replay-desc (get-in desc [:updates :adjust-replay? :params])
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts (grp/grp-contexts (gdb/get-events (gp/canvas path))
                                      (gdb/get-scale (gp/canvas path))
@@ -612,7 +617,7 @@
                                               (gp/selected-layouts (gp/frame-id path))))
                                      attribute-labels
                                      lang)
-          {{width-ctn :width height-ctn :height} :params factor-overview :factor-overview} (get contexts [])
+          {{width-ctn :width height-ctn :height} :params} (get contexts [])
           z (max (/ width width-ctn)
                  (/ height height-ctn))]
       (cond-> update-state
@@ -624,9 +629,7 @@
                                         contexts)
                               (update [:pos pc/main-stage-index]
                                       assoc
-                                      :z (if (zero? (:zoom replay-desc))
-                                           (/ z factor-overview)
-                                           z)
+                                      :z z
                                       :zoom (:zoom replay-desc))))
             (assoc :rerender? true)
             (update :done conj :adjust-replay?)
@@ -637,7 +640,7 @@
   (if (get-in desc [:updates :sync-couple])
     (let [group-sizes (get-in desc [:updates :sync-couple :params])
           op-desc (get-in db (gp/operation-desc path))
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts (grp/grp-contexts (gdb/get-events (gp/canvas path))
                                      (gdb/get-scale (gp/canvas path))
@@ -662,7 +665,7 @@
 (defn rerender [{:keys [state path db desc] :as update-state}]
   (if (get-in desc [:updates :rerender?])
     (let [op-desc (get-in db (gp/operation-desc path))
-          attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+          attribute-labels (i18n/labels-with-units db)
           lang (i18n/current-language db)
           contexts (grp/grp-contexts (gdb/get-events (gp/canvas path))
                                      (gdb/get-scale (gp/canvas path))
@@ -792,8 +795,8 @@
             (assoc :container-header-id
                    (get-in db (conj (gp/top-level path)
                                     :container-header-id))))
-        label-dict (fi/call-api [:i18n :get-labels-db-get] db)
-        attribute-labels (fi/call-api [:i18n :get-labels-db-get] db)
+        label-dict (i18n/labels-with-units db)
+        attribute-labels (i18n/labels-with-units db)
         lang (i18n/current-language db)
         contexts (grp/grp-contexts (gdb/get-events (gp/canvas path))
                                    (gdb/get-scale (gp/canvas path))

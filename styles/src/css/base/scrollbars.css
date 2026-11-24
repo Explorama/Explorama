@@ -1,0 +1,8 @@
+/* ========== OVERFLOW ========== */
+.overflow-auto { overflow: auto; }
+.overflow-hidden { overflow: hidden; }
+.overflow-hover {
+	overflow: hidden;
+	scrollbar-gutter: stable;
+	&:hover { overflow: auto; }
+}

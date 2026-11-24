@@ -226,7 +226,7 @@
     :legacy? false
     :data-consumer true
     :resizable true
-    :optional-class "explorama__prediction"
+    :optional-class "explorama__prediction flex flex-col items-stretch"
     :type :frame/content-type}))
 
 (re-frame/reg-event-fx

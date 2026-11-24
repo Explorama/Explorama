@@ -1,0 +1,9 @@
+{:main e2e.main
+ :output-to "out-test/specs.js"
+ :output-dir "out-test"
+ :target :nodejs
+ :optimizations :simple
+ :npm-deps false
+ :install-deps false
+ :pretty-print true
+ :source-map "out-test/specs.js.map"}

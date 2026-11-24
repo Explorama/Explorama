@@ -1,6 +1,7 @@
 (ns de.explorama.backend.expdb.middleware.simple-db-test
-  (:require [de.explorama.backend.expdb.persistence.backend-simple :as simple-db]
-            [fs :as fs]))
+  (:require [de.explorama.backend.expdb.persistence.backend-simple :as simple-db]))
+
+(def ^:private node-fs (js/require "fs"))
 
 (def db (atom (simple-db/new-instance nil "test-db")))
 
@@ -10,4 +11,4 @@
   (with-redefs [de.explorama.backend.expdb.persistence.backend-simple/db-key db-key]
     (reset! db (simple-db/new-instance nil "test-db"))
     (test-func)
-    (fs/rmSync db-key)))
+    (.rmSync node-fs db-key)))

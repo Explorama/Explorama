@@ -51,7 +51,7 @@
       (finally (db-close db)))))
 
 (defn set-dump [db-key bucket data]
-  (let [db (create-db db-key nil)]
+  (let [db (create-db db-key bucket)]
     (try
       (let [stm (str "INSERT OR REPLACE INTO " (table-name bucket) "(key,value) VALUES ($key,$value)")
             dbstm (.prepare db stm)

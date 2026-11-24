@@ -111,9 +111,9 @@
   [data-acs]
   (reduce (fn [result [key contraints]]
             (reduce (fn [result [constraint-key {ftype :type}]]
-                      (assoc-in result
-                                {key constraint-key}
-                                ftype))
+                      (assoc result
+                             [key constraint-key]
+                             ftype))
                     result
                     contraints))
           {}

@@ -1,0 +1,124 @@
+/*  Residual for _navbar.scss. The navbar shell, logo, `.project`, the */
+/*  `.menu` container/anchor-padding and the `.divider` are utility stacks on */
+/*  woco/page.cljs + woco/tools.cljs. What remains here are the rules that are */
+/*  NOT owner-exclusive + element-expressible: */
+/*    * `.navbar > div` (+ `:has(.logo__link)`): the shared cluster-pill chrome is */
+/*      a child-combinator rule that also reaches the `.tabs__navigation` div */
+/*      rendered by woco/tabs.cljs (outside this task's two-file scope) -- forcing */
+/*      it to markup in page/tools only would strip the tabs pill (co-owned -> */
+/*      residual). */
+/*    * `.navbar .project .actions.btn-group` + `.btn-icon`: overrides the shared */
+/*      ui_base `.btn-group`/`.btn-icon` chrome on `button` COMPONENTS placed in a */
+/*      raw `.actions.btn-group` div (see ui-base/.../formular/button_group.cljs); */
+/*      the `.btn-icon` spans are component-generated -> residual. */
+/*    * `.navbar .menu a` icon-span/focus-visible/hover/active states: the */
+/*      `span[class^='icon-']` is rendered by the misc/icon COMPONENT and is a */
+/*      shared marker with base/_themes.scss forced-colors rules; the block uses a */
+/*      `transition` shorthand + `:has()`/`:not()` descendant-state selectors not */
+/*      byte-identically variant-expressible -> residual. */
+/*    * `.navbar .menu .new-indicator` position: `.new-indicator` is a cross-plugin */
+/*      shared marker (indicator/projects/woco, base in components/_projects.scss) */
+/*      -> residual. */
+/*  Loaded at the original _navbar slot in style.scss to keep the cascade position. */
+
+.navbar {
+	>div {
+		background-color: var(--bg);
+		padding: 7px;
+		box-shadow: 0 2px 10px 0 var(--box-shadow-color, rgba(0, 0, 0, 0.25)), 0 0 6px -4px var(--box-shadow-color, rgba(0, 0, 0, 0.25));
+		pointer-events: auto;
+		border-radius: var(--radius-xl);
+		height: 52px;
+
+		&:has(.logo__link) {
+			padding: 8px 16px;
+		}
+	}
+
+	.project {
+		/*  Per-child override of the shared `.navbar > div` pill chrome above: */
+		/*  the OLD `.navbar .project { height: 100% }` (specificity 0,2,0) beat */
+		/*  `.navbar > div { height: 52px }` (0,1,1); a migrated `h-full` utility */
+		/*  (0,1,0) would LOSE to it, so this override stays residual. */
+		height: 100%;
+
+		.actions.btn-group {
+			border: none;
+			box-shadow: none;
+			background-color: var(--bg);
+			padding: 0;
+
+			.btn-icon {
+				padding: 0.5rem;
+				box-shadow: none;
+
+				span {
+					width: 1.25rem;
+					height: 1.25rem;
+					background-color: var(--icon);
+				}
+
+				&:hover {
+					background-color: var(--bg);
+
+					span {
+						background-color: var(--icon-hover);
+					}
+				}
+
+				&:disabled {
+					background-color: var(--icon-disabled);
+				}
+			}
+		}
+	}
+
+	.menu {
+		/*  Per-child override of the shared `.navbar > div` pill chrome above: */
+		/*  the OLD `.navbar .menu { padding: size('8') }` (specificity 0,2,0) */
+		/*  beat `.navbar > div { padding: 7px }` (0,1,1); a migrated `p-2` */
+		/*  utility (0,1,0) would LOSE to it, so this override stays residual. */
+		padding: 0.5rem;
+
+		a {
+			&:focus-visible {
+				outline: 0.125rem solid var(--color-purple-700);
+				border-radius: var(--radius-sm);
+
+				&:has(.disabled) {
+					outline-color: var(--color-gray-700);
+					outline-style: dotted;
+				}
+			}
+
+			span[class^='icon-'] {
+				width: 1.25rem;
+				height: 1.25rem;
+				background-color: var(--icon);
+				transition: background-color 120ms;
+
+				&.disabled {
+					background-color: var(--icon-disabled);
+					cursor: default;
+				}
+			}
+
+			&:hover:has(.disabled) {
+				cursor: default;
+			}
+
+			&:hover span[class^='icon-']:not(.disabled) {
+				background-color: var(--icon-hover);
+			}
+
+			&:active span[class^='icon-']:not(.disabled) {
+				transform: scale(0.95);
+			}
+		}
+
+		.new-indicator {
+			top: -0.125rem;
+			right: -0.125rem;
+		}
+	}
+}

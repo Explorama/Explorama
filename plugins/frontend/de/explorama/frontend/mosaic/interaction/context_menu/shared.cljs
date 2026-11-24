@@ -32,7 +32,7 @@
   (let [label (cond (string? label)
                     label
                     (keyword? label)
-                    @(re-frame/subscribe [::i18n/translate label])
+                    (i18n/translate-anywhere label)
                     :else
                     (val-or-deref label))]
     (cond-> {:label label}
@@ -77,9 +77,8 @@
 
 (re-frame/reg-event-fx
  ::submenu-top-level-event
- (fn [_ [_ path attr event]]
-   (let [attribute-vals @(re-frame/subscribe [::di-acs/attribute-vals path attr])
-         attribute-vals (-> attribute-vals
+ (fn [{db :db} [_ path attr event]]
+   (let [attribute-vals (-> (di-acs/attribute-vals db path attr)
                             sort
                             vec)]
      (when (vector? event)
@@ -131,13 +130,16 @@
       :else
       [{:label (str "No valid submenu type " type)}])))
 
+(defn- canvas-context-menu [db path]
+  (get-in db (conj (gp/top-level path)
+                   :canvas
+                   :interaction
+                   :context-menu)))
+
 (re-frame/reg-sub
  ::canvas
  (fn [db [_ path]]
-   (get-in db (conj (gp/top-level path)
-                    :canvas
-                    :interaction
-                    :context-menu))))
+   (canvas-context-menu db path)))
 
 (defn submenu->options
   "Creates the submenu hiccup based on the description."
@@ -199,11 +201,11 @@
   (re-frame/dispatch [::tasks/execute-wrapper origin :sort-by {:by sortby-key}])
   (re-frame/dispatch (fi/call-api [:product-tour :next-event-vec] :mosaic :sort-by)))
 
-(defn sort-by-items [origin {sort-desc gcp/sort-key} coupled?]
+(defn sort-by-items [db origin {sort-desc gcp/sort-key} coupled?]
   (gen-nested-items {:label :contextmenu-top-level-sortby
                      :icon :sort-by
                      :sort? true
-                     :options (re-frame/subscribe [::gdgc/sort-by origin])
+                     :options (gdgc/sort-by-vals db origin)
                      :click-fn (fn [key]
                                  (sort-by-action key origin)
                                  (when coupled?
@@ -216,52 +218,55 @@
                                   (sort-icon sort-desc)
                                   nil))}))
 
-(defn sort-group-option [path attr-name by key {method-name :name method-value :value :as method} direction event-name]
+(defn sort-group-option [db path attr-name by key {method-name :name method-value :value :as method} direction event-name]
   (let [label (cond (keyword? attr-name)
-                    @(re-frame/subscribe [::i18n/translate attr-name])
+                    (i18n/translate db attr-name)
                     method
-                    (str attr-name " (" @(re-frame/subscribe [::i18n/translate method-name]) ")")
+                    (str attr-name " (" (i18n/translate db method-name) ")")
                     :else
                     attr-name)
         icon (sort-icon direction)]
     (item {:label label
            :icon icon
            :click-fn #(re-frame/dispatch [::tasks/execute-wrapper
-                                      path
-                                      event-name
-                                      {:by by
-                                       :attr key
-                                       :method method-value}])})))
+                                          path
+                                          event-name
+                                          {:by by
+                                           :attr key
+                                           :method method-value}])})))
+
+(defn- layout-sorting-required? [db path event-name]
+  (= "layout" (get-in db
+                      (conj (gp/operation-desc path)
+                            (case event-name
+                              :sort-group-by :grp-key
+                              :sort-sub-group-by :sub-grp-key
+                              (error event-name "is unknown sorting event"))))))
 
 (re-frame/reg-sub
  ::layout-sorting-required
  (fn [db [_ path event-name]]
-   (= "layout" (get-in db
-                       (conj (gp/operation-desc path)
-                             (case event-name
-                               :sort-group-by :grp-key
-                               :sort-sub-group-by :sub-grp-key
-                               (error event-name "is unknown sorting event")))))))
+   (layout-sorting-required? db path event-name)))
 
-(defn sort-group-items [origin {grp-direction-by :by
-                                grp-direction-attr :attr
-                                grp-direction-method :method
-                                _ :directon
-                                :as direction-params}
+(defn sort-group-items [db origin {grp-direction-by :by
+                                   grp-direction-attr :attr
+                                   grp-direction-method :method
+                                   _ :directon
+                                   :as direction-params}
                         label
                         event-name]
-  (let [labels @(fi/call-api [:i18n :get-labels-sub])
-        layout? @(re-frame/subscribe [::layout-sorting-required origin event-name])]
+  (let [labels (fi/call-api [:i18n :get-labels-db-get] db)
+        layout? (layout-sorting-required? db origin event-name)]
     (gen-nested-items {:label label
                        :icon :sort-by
                        :options (into (if layout?
                                         (conj generic-sort-functions {:name  (get labels "layout" "layout") :by "layout"})
                                         generic-sort-functions)
-                                      @(re-frame/subscribe [::gdgc/sort-by-group origin]))
+                                      (gdgc/sort-by-group-vals db origin))
                        :sort? false
                        :acc-fn (fn [acc {:keys [key name by]}]
                                  (let [gen-option (fn [by key method direction]
-                                                    (sort-group-option origin name by key method direction event-name))]
+                                                    (sort-group-option db origin name by key method direction event-name))]
                                    (cond (or (= by :event-count)
                                              (= by :name)
                                              (= by "layout"))

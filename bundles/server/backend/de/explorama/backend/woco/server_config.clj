@@ -29,9 +29,10 @@
 (def explorama-bind-address
   (defconfig
     {:env :explorama-bind-address
-     :default explorama-host
+     :default "127.0.0.1"
      :type :string
-     :doc "The IP address of the interface the HTTP server should listen on."}))
+     :doc "The IP address of the interface the HTTP server should listen on.
+         Defaults to loopback; set to 0.0.0.0 to accept connections from other hosts (e.g. Docker)."}))
 
 (defn url-port-suffix [port]
   (when (or (and (string? port)

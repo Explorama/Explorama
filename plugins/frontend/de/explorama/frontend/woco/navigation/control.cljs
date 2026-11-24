@@ -462,7 +462,7 @@
                                :orientation :horizontal
                                :tooltip-direction :up
                                :separator :symbol
-                               :extra-class ["bottom-8" "absolute"]
+                               :extra-class ["bottom-2" "absolute"]
                                :offset {:right (+ 10 navbar-offset)}
                                :items [[{:id "viewport-snapping"
                                          :title navigation-snapping

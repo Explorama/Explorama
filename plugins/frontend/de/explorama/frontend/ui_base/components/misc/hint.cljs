@@ -22,41 +22,76 @@
 (def specification (parameters->malli parameter-definition nil))
 (def default-parameters {:variant :default})
 
-(def ^:private parent-class "hint")
-(def ^:private warning-class "hint-warning")
-(def ^:private error-class "hint-error")
-(def ^:private content-class "hint-content")
-(def ^:private title-class "hint-title")
-(def ^:private desc-class "hint-desc")
+;; tailwind: migrated from styles/src/scss/components/_hints.scss.
+;; Whether the icon renders is known here in Clojure (`hint-display-icon`),
+;; so the old `.hint:not(:has(> span[class^="icon-"]))` CSS state selector
+;; becomes a plain `if` between two full layout class strings instead of a
+;; `:has()` variant. Variant colors are likewise `case`-selected full literal
+;; strings on `:variant`, never combined with each other, so no two `bg-*`/
+;; `border-*` utilities for the same property ever land on one element.
+;; The icon's background-color utility carries `!` because the old
+;; `.hint > span[class^="icon-"] { background-color: ...; }` rule had higher
+;; specificity than any `bg-*` class the icon component would add from a
+;; caller-supplied `icon-params :color` -- i.e. it unconditionally won
+;; before this migration too (a pre-existing quirk, not introduced here; no
+;; current caller passes `icon-params :color` to `hint`, so this is
+;; belt-and-braces parity, not an observed regression fix).
+(def ^:private hint-with-icon-class "flex flex-row gap-2 p-2 rounded-sm border")
+(def ^:private hint-without-icon-class "flex flex-col gap-1 p-2 rounded-sm border")
+(def ^:private hint-default-color-class "bg-gray-50 border-gray-200")
+(def ^:private hint-warning-color-class "bg-orange-50 text-orange-700 border-orange-200")
+(def ^:private hint-error-color-class "bg-red-50 text-red-700 border-red-200")
+(def ^:private hint-icon-structural-class "w-4 h-4 mt-0.5 flex-none")
+(def ^:private hint-icon-default-color-class "bg-gray-900!")
+(def ^:private hint-icon-warning-color-class "bg-orange!")
+(def ^:private hint-icon-error-color-class "bg-red!")
+(def ^:private hint-content-class "flex flex-col")
+(def ^:private hint-title-class "font-bold")
+
+(defn- hint-display-icon [{:keys [variant] ico :icon}]
+  (or ico
+      (case variant
+        :info    :info-circle
+        :warning :warning
+        :error   :error
+        nil)))
 
 (defn- hint-icon [params]
-  (let [{:keys [icon-params variant] ico :icon} params
-        default-icon (case variant
-                       :info    :info-circle
-                       :warning :warning
-                       :error   :error
-                       nil)
-        display-icon (or ico default-icon)]
+  (let [{:keys [icon-params variant]} params
+        display-icon (hint-display-icon params)]
     (when display-icon
-      [icon (merge icon-params {:icon display-icon})])))
+      (let [icon-color-class (case variant
+                                :warning hint-icon-warning-color-class
+                                :error   hint-icon-error-color-class
+                                hint-icon-default-color-class)
+            structural-class (str hint-icon-structural-class " " icon-color-class)
+            caller-extra-class (:extra-class icon-params)]
+        [icon (merge icon-params
+                     {:icon display-icon
+                      :extra-class (cond
+                                     (nil? caller-extra-class) structural-class
+                                     (vector? caller-extra-class) (conj caller-extra-class structural-class)
+                                     :else [caller-extra-class structural-class])})]))))
 
 (defn- hint-content [params]
   (let [{:keys [title content]} params]
     (if title
-      [:div {:class content-class}
-       [:div {:class title-class}
+      [:div {:class hint-content-class}
+       [:div {:class hint-title-class}
         title]
-       [:div {:class desc-class}
-        content]]
+       [:div content]]
       content)))
 
 (defn- hint-parent [params]
   (let [{:keys [variant]} params
-        extra-class (case variant
-                      :warning warning-class
-                      :error   error-class
-                      nil)]
-    [:div {:class [parent-class extra-class]}
+        layout-class (if (hint-display-icon params)
+                       hint-with-icon-class
+                       hint-without-icon-class)
+        color-class (case variant
+                      :warning hint-warning-color-class
+                      :error   hint-error-color-class
+                      hint-default-color-class)]
+    [:div {:class (str layout-class " " color-class)}
      [hint-icon params]
      [hint-content params]]))
 

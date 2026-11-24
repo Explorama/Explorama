@@ -18,16 +18,19 @@
                    [::options-backend/request-options frame-id nil true]
                    [ws-api/search-options datasources frame-id (vec (keys query)) query]]})))
 
+(defn queries [db filter]
+  (let [all-queries (vals (get-in db (spath/search-queries)))
+        filter (string/lower-case filter)]
+    (if (seq filter)
+      (filterv
+       #(string/includes? (string/lower-case (:title %)) filter)
+       all-queries)
+      all-queries)))
+
 (re-frame/reg-sub
  ::queries
  (fn [db [_ filter]]
-   (let [all-queries (vals (get-in db (spath/search-queries)))
-         filter (string/lower-case filter)]
-     (if (seq filter)
-       (filterv
-        #(string/includes? (string/lower-case (:title %)) filter)
-        all-queries)
-       all-queries))))
+   (queries db filter)))
 
 (re-frame/reg-sub
  ::is-new-title-valid?

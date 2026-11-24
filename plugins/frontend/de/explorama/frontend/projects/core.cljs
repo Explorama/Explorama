@@ -27,8 +27,7 @@
             [de.explorama.shared.common.config :as config-shared]
             [de.explorama.shared.projects.ws-api :as ws-api]
             [re-frame.core :as re-frame]
-            [taoensso.timbre :refer [debug error]]
-            [vimsical.re-frame.cofx.inject :as inject]))
+            [taoensso.timbre :refer [debug error]]))
 
 (when (get-in config/configs [:automate-tests :enabled?])
   (defn startTestCase [project-id]
@@ -36,10 +35,8 @@
 
   (re-frame/reg-event-fx
    ::start-test-case
-   [(re-frame/inject-cofx ::inject/sub (with-meta [:de.explorama.frontend.projects.views.project-loading-screen/is-active?]
-                                         {:ignore-dispose true}))]
-   (fn [{loading? :de.explorama.frontend.projects.views.project-loading-screen/is-active?} [_ project-id]]
-     (overview/load-project-from-code loading? project-id {:plogs-id {:project-id project-id}}))))
+   (fn [{db :db} [_ project-id]]
+     (overview/load-project-from-code (loading-screen/is-active? db) project-id {:plogs-id {:project-id project-id}}))))
 
 (def ^:private max-check-tries 100)
 

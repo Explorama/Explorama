@@ -17,25 +17,36 @@ There are currently three versions of Explorama
 - [babashka](https://github.com/babashka/babashka) - just for some tools
 
 ### Browser
-The browser version is the easiest to develop for. Just run `make dev` and open the `localhost:4000` file in your browser.
-
-> [!IMPORTANT]
->
-> Currently you have to use:
-```
-npx shadow-cljs compile app 
-vite build --mode development
-npx shadow-cljs watch app
+The browser version is the easiest to develop for:
+```bash
+cd bundles/browser
+npm install
+bb gather-assets.bb.clj dev
+clj -M:dev   # Figwheel on port 8020
 ```
 
 ### Electron
-The electron version is a bit more complicated. You need to run `make dev` and `make dev-app` in two different terminals. Then you can open the electron app.
+`bundles/electron` is split into `backend/` (Clojure backend + Electron
+main/worker process) and `frontend/` (ClojureScript UI), each with its own
+`deps.edn`/`package.json`. Run `make assets build_mode=dev` once, then start
+each half's Figwheel REPL in its own terminal (`cd backend && clj -M:dev`,
+`cd frontend && clj -M:dev` - both default to port 8020, so only one half can
+bind it at a time). App packaging: `make build-linux`
+runs the full prepare/verify/bundle chain and produces a boot-verified
+`dist/electron/Explorama-linux.AppImage`; `make build-win` mirrors it but is
+untested (no Windows/wine toolchain on hand). `make dev-app` compiles and
+launches just the Electron main process for main-process dev - its UI/worker
+windows won't load, since the per-half Figwheel dev builds don't emit the
+`js/frontend.js`/`js/backend.js` files those windows expect (see the
+Makefile's `dev-app` target for details).
 
 ### Server
-The server version simply does not work at the moment.
+See [bundles/server/README.md](../bundles/server/README.md): local dev
+(`clj.deps.edn`/`cljs.deps.edn` + Figwheel) and a Docker Compose harness for
+production-like auth/routing are both supported now.
 
 ### Folder structure
-There are currently three places where you can find code:
+There are currently four places where you can find code:
 
 #### Plugins
 The plugins are shared code between all versions and are separated into backend and frontend code. There are also some tests 🥸.
@@ -43,10 +54,6 @@ The plugins are shared code between all versions and are separated into backend 
 #### Bundles
 
 Bundles are containing the specific code for each version of Explorama.
-
-#### Libs
-
-Libs are also shared code like plugins but are more libary like. We will see how to deal with them later.
 
 #### Tools
 

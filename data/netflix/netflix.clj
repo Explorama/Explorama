@@ -45,7 +45,7 @@
          :global-id [:id-generate ["rating" :text] :name],
          :type [:value "rating"]}],
        :dates
-       [{:value [:date-schema "MMM. dd, YYYY" [:field "date_added"]],
+       [{:value [:date-schema "MMM. dd, yyyy" [:field "date_added"]],
          :type [:value "occured-at"]}],
        :texts [[:field "description" ""]]}]}]}})
 

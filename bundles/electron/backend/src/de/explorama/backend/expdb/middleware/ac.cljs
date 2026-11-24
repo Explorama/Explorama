@@ -11,5 +11,6 @@
 (def data-tiles-ref-api dt-api/get-data-tiles-api)
 (def neighborhood search-api/neighborhood)
 (def attribute-ranges search-api/ranges)
+(def attribute-units search-api/units)
 (def datasource-search ds-api/datasource-search)
 (def grouped-search ds-api/grouped-search)

@@ -1,0 +1,155 @@
+/*  Loader chrome residual. Every family here is residual (not expressible as */
+/*  a static utility stack): */
+
+/*    - `button .loader` (+ `span` + `&:nth-child(1..3)`) is a DESCENDANT */
+/*      selector driving a 3-dot spinner matrix with per-child */
+/*      `animation-delay` offsets referencing the `pulse` keyframe (defined in */
+/*      base/_animations.scss, unmoved). */
+/*    - `.loader-sm` (+ `span`) is a simple spinner dot, kept alongside its */
+/*      siblings for cohesion. */
+/*    - `.loader-md` (grid + `span` + `&:nth-child(1..4)`) and `.loader-lg` */
+/*      (grid + `span` + `&:nth-child(1..9)` + `&:nth-child(5){visibility: */
+/*      hidden}`) are `:nth-child` per-child `animation-delay` spinner-dot */
+/*      matrices -- gate-invisible, per-child state that can't be hoisted to */
+/*      static markup classes. */
+/*    - `.progress-bar` (+ `> span`) is a CHILD-combinator progress track/fill */
+/*      pair. */
+/*    - `div:has(> [class^='loader-'])` is a `:has()` + attribute-prefix */
+/*      selector (centers the loading indicator's parent), not element- */
+/*      expressible. */
+
+/*  `button .loader span`, `:where(.loader-sm, .loader-md, .loader-lg) span` */
+/*  and `.progress-bar`/`> span` are also forced-colors markers */
+/*  (base/_themes.scss) -- keep the literal class names/selectors. */
+
+button .loader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    position: absolute;
+
+    span {
+        background-color: var(--primary);
+        width: .9em;
+        height: .9em;
+        border-radius: 1px;
+        animation: 1s ease-in-out infinite pulse;
+
+        &:nth-child(1) {
+            animation-delay: .0s;
+        }
+        &:nth-child(2) {
+            animation-delay: .1s;
+        }
+        &:nth-child(3) {
+            animation-delay: .2s;
+        }
+    }
+}
+
+.loader-sm {
+    display: flex;
+
+    span {
+        background-color: var(--primary);
+        width: .9em;
+        height: .9em;
+        border-radius: 1px;
+        animation: 1s ease-in-out infinite pulse;
+    }
+}
+
+.loader-md {
+    display: grid;
+    grid-template: repeat(2, .9em) / repeat(2, .9em);
+    gap: 0.25rem;
+
+    span {
+        background-color: var(--primary);
+        width: .9em;
+        height: .9em;
+        border-radius: 1px;
+        animation: 1s ease-in-out infinite pulse;
+
+        &:nth-child(1) {
+            animation-delay: .0s;
+        }
+        &:nth-child(2) {
+            animation-delay: .2s;
+        }
+        &:nth-child(4) {
+            animation-delay: .4s;
+        }
+        &:nth-child(3) {
+            animation-delay: .8s;
+        }
+    }
+}
+
+.loader-lg {
+    display: grid;
+    grid-template: repeat(3, .9em) / repeat(3, .9em);
+    gap: 0.25rem;
+
+    span {
+        background-color: var(--primary);
+        width: .9em;
+        height: .9em;
+        border-radius: 1px;
+        animation: 1s ease-in-out infinite pulse;
+
+        &:nth-child(1) {
+            animation-delay: .0s;
+        }
+        &:nth-child(2) {
+            animation-delay: .125s;
+        }
+        &:nth-child(3) {
+            animation-delay: .25s;
+        }
+        &:nth-child(6) {
+            animation-delay: .375s;
+        }
+        &:nth-child(9) {
+            animation-delay: .5s;
+        }
+        &:nth-child(8) {
+            animation-delay: .625s;
+        }
+        &:nth-child(7) {
+            animation-delay: .75s;
+        }
+        &:nth-child(4) {
+            animation-delay: .875s;
+        }
+
+        &:nth-child(5) {
+            visibility: hidden;
+        }
+    }
+}
+
+.progress-bar {
+    width: 100%;
+    height: 0.5rem;
+    position: relative;
+    border-radius: var(--radius-full);
+    background-color: var(--bg-hover);
+    box-shadow: inset 0 2px 4px 2px var(--box-shadow-color, rgba(0, 0, 0, 0.05));
+    overflow: hidden;
+
+    > span {
+        height: 100%;
+        position: absolute;
+        left: 0;
+        border-radius: var(--radius-full);
+        background-color: var(--primary);
+        transition: width 240ms;
+    }
+}
+
+div:has(> [class^='loader-']) { /*  center loading indicator */
+    justify-content: center;
+    width: 100%;
+}

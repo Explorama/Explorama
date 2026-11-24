@@ -29,7 +29,7 @@
 
 (reg-event-fx
  ws-api/init-client-result
- (fn [_ [_ {:keys [enabled-datasources search-parameter-config attr-types bucket-datasources] :as r}]]
+ (fn [_ [_ {:keys [enabled-datasources search-parameter-config attr-types attr-units bucket-datasources] :as r}]]
    (debug "Init client result" r)
    {:fx [(when search-parameter-config
            [:dispatch [::config/set-search-parameter-config search-parameter-config]])
@@ -37,6 +37,8 @@
            [:dispatch [::acs-backend/set-enabled-datasources enabled-datasources]])
          (when attr-types
            [:dispatch [::acs-backend/set-attr-types attr-types]])
+         (when attr-units
+           [:dispatch [::acs-backend/set-attr-units attr-units]])
          (when bucket-datasources
            [:dispatch [::acs-backend/set-bucket-datasources bucket-datasources]])]}))
 

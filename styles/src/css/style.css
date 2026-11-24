@@ -1,0 +1,58 @@
+/* Import all CSS files here in the cascade order that determines which rule
+   wins equal-specificity ties. `npm run css:dist` (lightningcss --bundle)
+   resolves every @import below into dist/css/style.css. */
+@import './base/normalize.css';
+@import './base/base.css';
+@import './components/login_domain.css';
+@import './components/navbar_domain.css';
+/* `base/iconmap.css` + `base/icons.css` import immediately BEFORE
+   frames_domain.css and are NOT imported again anywhere else in this
+   manifest -- this is their only load point (see the note near
+   base/fonts.css below for why re-importing them elsewhere would be a
+   no-op/duplicate-emission risk). */
+@import './base/iconmap.css';
+@import './base/icons.css';
+@import './components/frames_domain.css';
+@import './components/forms_domain.css';
+@import './components/section_domain.css';
+@import './components/projects_domain.css';
+@import './components/welcome_page_domain.css';
+@import './components/toolbar_domain.css';
+@import './components/sidebar_domain.css';
+@import './components/settings_domain.css';
+@import './components/snapshots_domain.css';
+@import './components/legend_domain.css';
+@import './components/slider_domain.css';
+@import './components/datepicker_domain.css';
+@import './components/loader_domain.css';
+/* context-menu forced-colors markers (`.context-menu-entry`/`.disabled`)
+   live in base/themes.css, not in a components/ sheet -- there is no
+   components/context_menu(_domain).css. */
+@import './components/table_domain.css';
+@import './components/dialog_domain.css';
+@import './components/search_domain.css';
+@import './components/geomap_domain.css';
+@import './components/notes_domain.css';
+@import './components/dashboards_domain.css';
+/* components/reports_domain.css is imported here, after
+   components/legend_domain.css, so its deep-legend cascade wins. */
+@import './components/reports_domain.css';
+@import './components/alerts_domain.css';
+@import './components/data_atlas_domain.css';
+@import './components/prediction_domain.css';
+@import './components/indicator_domain.css';
+@import './components/presentation_domain.css';
+@import './components/product_tour_domain.css';
+@import './components/temp_domain.css';
+
+/* `icons` is NOT re-imported here even though this block covers the rest of
+   base/: it is already imported once above (immediately before
+   components/frames_domain.css) and must not be imported a second time --
+   re-importing a CSS file here does not deduplicate, so doing so would
+   double-emit its rules. The utility layer (spacing/sizing/colour/
+   typography/etc) lives in Tailwind (dist/css/5_utilities.css), not here. */
+@import './base/fonts.css';
+@import './base/colors.css';
+@import './base/scrollbars.css';
+@import './base/themes.css';
+@import './base/animations.css';

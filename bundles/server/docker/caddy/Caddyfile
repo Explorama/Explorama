@@ -1,0 +1,47 @@
+{
+	admin off
+}
+
+(oauth_gate) {
+	forward_auth oauth2-proxy:4180 {
+		uri /oauth2/auth
+		copy_headers X-Auth-Request-User X-Auth-Request-Email
+
+		@error status 401
+		handle_response @error {
+			redir * /oauth2/sign_in?rd={http.request.uri} 302
+		}
+	}
+}
+
+{$EXPLORAMA_APP_HOST::80} {
+	encode gzip
+
+	handle /health {
+		respond "OK" 200
+	}
+
+	handle /oauth2/* {
+		reverse_proxy oauth2-proxy:4180
+	}
+
+	handle /api/* {
+		import oauth_gate
+		reverse_proxy {$BACKEND_UPSTREAM:socat-backend:4001}
+	}
+
+	handle /ws* {
+		import oauth_gate
+		reverse_proxy {$BACKEND_UPSTREAM:socat-backend:4001}
+	}
+
+	handle {
+		import oauth_gate
+		reverse_proxy {$FRONTEND_UPSTREAM:socat-frontend:8020}
+	}
+}
+
+{$CASDOOR_SITE_ADDRESS::8000} {
+	encode gzip
+	reverse_proxy casdoor:8000
+}

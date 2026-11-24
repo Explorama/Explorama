@@ -23,31 +23,10 @@
             [de.explorama.frontend.map.views.details :as details]
             [de.explorama.shared.common.data.attributes :as attrs]
             [de.explorama.shared.map.ws-api :as ws-api]
+            [de.explorama.frontend.common.tracks :as tracks]
             [re-frame.core :as re-frame]
             [taoensso.timbre :refer [error info warn]]
-            [taoensso.tufte :as tufte]
-            [vimsical.re-frame.fx.track :as track]))
-
-(defn- register-fx
-  [track-or-tracks]
-  (try
-    (track/register-fx track-or-tracks)
-    (catch js/Error
-           e
-      (info e)
-      {})))
-
-(defn- dispose-fx
-  [track-or-tracks]
-  (try
-    (track/dispose-fx track-or-tracks)
-    (catch js/Error
-           e
-      (info e)
-      {})))
-
-(re-frame/reg-fx ::register register-fx)
-(re-frame/reg-fx ::dispose dispose-fx)
+            [taoensso.tufte :as tufte]))
 
 (re-frame/reg-sub
  ::frame-datasource
@@ -120,7 +99,7 @@
 (re-frame/reg-event-fx
  ::register-state-tracker
  (fn [_ [_ frame-id]]
-   {::register
+   {::tracks/register
     {:id [::state frame-id]
      :subscription [::map-state frame-id]
      :event-fn (fn [val]
@@ -130,7 +109,7 @@
 (re-frame/reg-event-fx
  ::dispose-state-tracker
  (fn [_ [_ frame-id]]
-   {::dispose
+   {::tracks/dispose
     {:id [::state frame-id]}}))
 
 (re-frame/reg-sub
@@ -220,11 +199,13 @@
         view-position-change (atom nil)]
     {:do-panning? geo-config/do-panning?
      :attribute-label (fn [attr]
-                        (let [attr-labels @(fi/call-api [:i18n :get-labels-sub])]
-                          (or (get attr-labels attr)
-                              (when-let [agg-label (get-in dfl-agg/descs [(keyword attr) :label])]
-                                @(re-frame/subscribe [::i18n/translate agg-label]))
-                              attr)))
+                        (let [attr-labels @(fi/call-api [:i18n :get-labels-sub])
+                              units @(fi/call-api [:acs :attribute-units-sub])]
+                          (str (or (get attr-labels attr)
+                                   (when-let [agg-label (get-in dfl-agg/descs [(keyword attr) :label])]
+                                     @(re-frame/subscribe [::i18n/translate agg-label]))
+                                   attr)
+                               (i18n/unit-suffix units attr))))
      :workspace-scale (partial fi/call-api :workspace-scale-sub)
      :max-hover-marker (fn [] (atom config/max-hover-marker))
      :move-data-max-zoom (fn [] (atom 10))

@@ -120,6 +120,21 @@
         (filter #(= :reporting (:tool-group %)))
         (sort-by #(:sort-order % 500)))))
 
+;; Static utility stacks for the navbar `.menu` chrome; the misc/icon-component
+;; `span[class^=icon-]`/focus-visible/hover/active states and the cross-plugin
+;; `.new-indicator` position stay in components/navbar_domain.css.
+;; `.menu`/`.divider`/`.new-indicator` markers stay emitted (the residual
+;; descendant rules key on them).
+;; NOTE: `.menu` padding is NOT here -- it stays in navbar_domain.css because
+;; it overrides the co-owned `.navbar > div` pill-padding (7px) and a
+;; (0,1,0) utility would lose that specificity tie.
+(def ^:private navbar-menu-class "flex flex-wrap justify-end")
+
+(def ^:private navbar-menu-link-class "relative leading-[0] p-2")
+
+(def ^:private navbar-divider-class
+  "flex-[0_0_auto] w-0.5 h-auto my-0 mx-1 rounded-full bg-(--divider)")
+
 (defn- notifications [notification-sub]
   (let [notifications (when notification-sub
                         @(re-frame/subscribe notification-sub))]
@@ -160,6 +175,7 @@
            [:a {:id id
                 :href "#"
                 :aria-label tooltip-text
+                :class navbar-menu-link-class
                 :on-click #(do
                              (when (and active?
                                         (not disable-menu?)
@@ -258,7 +274,7 @@
                                         :left 50
                                         :top "50%"}]
        [misc-ui/toolbar
-        {:extra-class ["fixed" "center-y" "left-8"]
+        {:extra-class ["fixed" "center-y" "left-2"]
          :items (cond-> []
                   top
                   (conj (mapv #(gen-tool-item % toolbar-normal? current-button ignore-action? false) top))
@@ -284,14 +300,14 @@
         creating-new-windows? (wwc/creating-new-windows?)
         disable-menu? (or project-loading? creating-new-windows?)
         show? (not @(re-frame/subscribe [:de.explorama.frontend.woco.welcome/welcome-active?]))]
-    [:div.menu
+    [:div.menu {:class navbar-menu-class}
      (when show?
        [:<>
         [header-section sidebar-items disable-menu?]
         [header-section left disable-menu?]
-        [:span.divider]
+        [:span.divider {:class navbar-divider-class}]
         [header-section middle disable-menu?]
-        [:span.divider]])
+        [:span.divider {:class navbar-divider-class}]])
      [header-section right disable-menu?]]))
 
 (defn- action-item [{:keys [id]} _]
@@ -368,7 +384,7 @@
       (when icon
         [misc-ui/icon {:icon icon}])
       (when (and notifications (< 0 notifications))
-        [:span.ml-6 notifications])]]))
+        [:span {:class "ml-1.5"} notifications])]]))
 
 (defn sync-projects []
   (let [items @(re-frame/subscribe [::sync-project-items])
@@ -383,6 +399,6 @@
                       []
                       items)]
     (when (seq items)
-      [:div.toolbar-wrapper.bottom-8.absolute {:style {:left 10}}
+      [:div.toolbar-wrapper.bottom-2.absolute {:style {:left 10}}
        [:div.toolbar.toolbar-horizontal
         (apply conj [:div.toolbar-section] items)]])))

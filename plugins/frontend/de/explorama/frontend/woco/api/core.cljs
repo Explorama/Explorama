@@ -170,7 +170,7 @@
                                      [:de.explorama.frontend.woco.api.config/load-users-roles])
 
        :user-info-sub (fn []
-                        (sub-error-boundary [::registry/lookup-target :sub-vector :user-info]))
+                        (sub-error-boundary :sub-vector :user-info))
        :user-info-db-get (fn [db]
                            (db-get-error-boundary db
                                                   (registry/lookup-target db :db-get :user-info)
@@ -438,7 +438,7 @@
                                                       (registry/lookup-target db :db-get :get-theme)
                                                       :get-theme-db-get))
        :config-theme-sub (fn []
-                           (sub-error-boundary [::registry/lookup-target :sub-vector :get-theme]))
+                           (sub-error-boundary :sub-vector :get-theme))
 
        :i18n {:available-languages-db-get (fn [db]
                                             (db-get-error-boundary db
@@ -449,7 +449,7 @@
                                                           (registry/lookup-target db :db-get :get-labels)
                                                           :get-labels-db-get))
               :get-labels-sub (fn []
-                                (sub-error-boundary [::registry/lookup-target :sub-vector :get-labels]))
+                                (sub-error-boundary :sub-vector :get-labels))
               :translate-db-get (fn [db word-key]
                                   (db-get-error-boundary db
                                                          (registry/lookup-target db :db-get :translate)
@@ -461,6 +461,13 @@
                                                                :translate-multi-db-get
                                                                word-keys))}
 
+       :acs {:attribute-units-db-get (fn [db]
+                                       (db-get-error-boundary db
+                                                              (registry/lookup-target db :db-get :attribute-units)
+                                                              :attribute-units-db-get))
+             :attribute-units-sub (fn []
+                                    (sub-error-boundary :sub-vector :attribute-units))}
+
        :config {:get-config-db-get (fn [db config-type config-id]
                                      (db-get-error-boundary db
                                                             (registry/lookup-target db :db-get :get-config)
@@ -468,7 +475,7 @@
                                                             config-type
                                                             config-id))
                 :get-config-sub (fn [config-type config-id]
-                                  (sub-error-boundary [::registry/lookup-target :sub-vector :get-config]
+                                  (sub-error-boundary :sub-vector :get-config
                                                       config-type
                                                       config-id))
 
@@ -488,10 +495,10 @@
                                                        (registry/lookup-target db :db-get :loaded-project)
                                                        :loaded-project))
        :project-loading-sub (fn [_]
-                              (sub-error-boundary [::registry/lookup-target :sub-vector :project-loading?]))
+                              (sub-error-boundary :sub-vector :project-loading?))
 
        :loaded-project-sub (fn []
-                             (sub-error-boundary [::registry/lookup-target :sub-vector :loaded-project]))
+                             (sub-error-boundary :sub-vector :loaded-project))
 
        :project-current-step-db-get (fn [db]
                                       (db-get-error-boundary db
@@ -503,7 +510,7 @@
                                                             step))
 
        :project-receive-sync?-sub (fn []
-                                    (sub-error-boundary [::registry/lookup-target :sub-vector :receive-sync-events?]))
+                                    (sub-error-boundary :sub-vector :receive-sync-events?))
        :project-receive-sync?-db-get (fn [db]
                                        (db-get-error-boundary db
                                                               (registry/lookup-target db :db-get :receive-sync-events?)

@@ -1,0 +1,16 @@
+{
+  "name": "explorama-e2e",
+  "private": true,
+  "scripts": {
+    "build-specs": "clojure -M:build-specs",
+    "test": "npm run build-specs && NODE_OPTIONS=--enable-source-maps playwright test",
+    "test:headed": "npm run build-specs && NODE_OPTIONS=--enable-source-maps playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "playwright": "^1.56.0"
+  }
+}

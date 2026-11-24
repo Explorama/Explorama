@@ -84,6 +84,15 @@
 
 (def item-default-parameters {:type :button})
 
+;; Structural / forced-colors marker classes kept as literals in the DOM.
+;; `.toolbar button.active` is selected directly by base/themes.css's
+;; `@media (forced-colors: active)` block, `.toolbar-wrapper` by
+;; welcome_page_domain.css (`&~.toolbar-wrapper{display:none}`), and
+;; `.toolbar` is the ancestor those forced-colors `.toolbar button.active`
+;; rules need. The `.toolbar-*` chrome is expressed as the utility stacks
+;; below; the two rules that can't become owner markup (Pixi
+;; `.toolbar-popout canvas` and the dead `:has(> .toolbar-options)
+;; .toolbar-section:last-child`) stay in components/toolbar_domain.css.
 (def ^:private toolbar-class "toolbar")
 (def ^:private toolbar-options-class "toolbar-options")
 (def ^:private section-class "toolbar-section")
@@ -92,9 +101,104 @@
 (def ^:private active-button-class "active")
 (def ^:private wrapper-class "toolbar-wrapper")
 (def ^:private popout-class "toolbar-popout")
-(def ^:private text-only-class ["text-bold"])
+(def ^:private label-class "label")
+(def ^:private text-only-class ["font-bold"])
 
-(defn- toolbar-segment [items tooltip-direction]
+;; ---- migrated _toolbar.scss chrome as Tailwind utility stacks ----------------
+;; Standard classes are fully-spelled static literals; theme colours use the
+;; `bg-(--var)` css-var shorthand; descendant `span[class^=icon-]` rules and the
+;; button state selectors are arbitrary variants, all verified to compile
+;; byte-identically to the old declarations in dist/css/5_utilities.css.
+
+(defn- toolbar-util-class
+  "`.toolbar` base (+ .toolbar-horizontal direction). transition + delay merged
+   into the transition shorthand (opacity 120ms ease-in 500ms)."
+  [horizontal?]
+  (str "flex " (if horizontal? "flex-row" "flex-col")
+       " gap-1 [transition:opacity_120ms_ease-in_500ms]"))
+
+(defn- wrapper-util-class
+  "`.toolbar-wrapper`; :has(.toolbar-horizontal) column-flip resolved from the
+   known orientation instead of a :has() variant."
+  [horizontal?]
+  (str "flex " (if horizontal? "flex-col" "flex-row") " gap-1"))
+
+(defn- section-util-class
+  "`.toolbar-section` (+ .toolbar-horizontal row direction)."
+  [horizontal?]
+  (str "flex " (if horizontal? "flex-row" "flex-col")
+       " items-center gap-0.5 p-2 rounded-xl bg-(--bg) shadow-lg"))
+
+(defn- divider-util-class
+  "`.toolbar-divider` (vertical default vs .toolbar-horizontal variant)."
+  [horizontal?]
+  (str (if horizontal? "w-0.5 h-4/5 mx-1" "w-4/5 h-0.5 my-1")
+       " rounded-full bg-(--divider)"))
+
+(def ^:private item-button-base-class
+  ;; `.toolbar button` chrome independent of active/resting state. No flex-
+  ;; direction here: default row; icon+label buttons add flex-col below,
+  ;; matching `button:has(> .label)`.
+  (str "flex justify-center items-center p-2 [border:none] rounded-lg font-bold "
+       "cursor-pointer [transition:color_120ms,background-color_120ms] disabled:cursor-default "
+       "active:enabled:[transform:scale(0.95)] "
+       "focus-visible:[outline:2px_solid_var(--border-focus)] "
+       "[&_span[class^=icon-]]:w-5 [&_span[class^=icon-]]:h-5 "
+       "[&_span[class^=icon-]]:[transition:background-color_120ms]"))
+
+(def ^:private item-button-resting-class
+  ;; `.toolbar button` resting colours + hover/disabled variants.
+  (str "text-(--text) bg-(--bg) hover:text-(--link) disabled:text-(--text-disabled) "
+       "[&_span[class^=icon-]]:bg-(--icon) [&:hover_span[class^=icon-]]:bg-(--icon-hover) "
+       "[&:disabled_span[class^=icon-]]:bg-(--icon-disabled)"))
+
+(def ^:private item-button-active-class
+  ;; `.toolbar button.active` (+ its :hover). Swapped in for the resting colours
+  ;; so the old `.active` (0,2,1) specificity win is reproduced without a tie;
+  ;; the disabled colour variants are dropped when active, matching the old
+  ;; "active state overwrites disabled" cascade.
+  (str "text-(--link) bg-(--bg-hover) hover:text-(--link-hover) "
+       "[&_span[class^=icon-]]:bg-(--icon-hover) [&:hover_span[class^=icon-]]:bg-(--link-hover)"))
+
+(defn- item-button-util-class [active? has-label?]
+  (str item-button-base-class
+       (when has-label? " flex-col gap-0.5")
+       " " (if active? item-button-active-class item-button-resting-class)))
+
+;; `.label:not(:only-child)` (icon + label buttons). font-size is `text-xs`;
+;; in this theme `--text-xs--line-height` is `initial`, so `.text-xs` emits
+;; only `font-size: var(--text-xs)` (0.75rem) with no line-height — identical
+;; to the old single-property rule.
+(def ^:private item-label-extra-class "w-max font-normal text-xs")
+
+(def ^:private options-button-util-class
+  ;; `.toolbar-options` union: the `.toolbar button` chrome it inherited as a
+  ;; descendant PLUS its own absolute-position/padding/radius/transparent-bg
+  ;; overrides. Icon is smaller (w-3), tinted --icon-secondary, rotated -45deg.
+  (str "absolute bottom-0 right-0 flex justify-center items-center [border:none] font-bold "
+       "cursor-pointer p-0.5 rounded-md bg-transparent text-(--text) "
+       "[transition:color_120ms,background-color_120ms] hover:text-(--link) "
+       "disabled:text-(--text-disabled) disabled:cursor-default "
+       "active:enabled:[transform:scale(0.95)] "
+       "focus-visible:[outline:2px_solid_var(--border-focus)] "
+       "[&_span[class^=icon-]]:w-3 [&_span[class^=icon-]]:h-3 "
+       "[&_span[class^=icon-]]:bg-(--icon-secondary) "
+       "[&_span[class^=icon-]]:[transform:rotate(-45deg)] "
+       "[&_span[class^=icon-]]:[transition:background-color_120ms] "
+       "[&:hover_span[class^=icon-]]:bg-(--icon-hover) "
+       "[&:disabled_span[class^=icon-]]:bg-(--icon-disabled)"))
+
+(def ^:private popout-util-class
+  ;; `.toolbar-popout` (border:1px = `border`; border-style solid is global).
+  "flex p-2 border border-(--border) rounded-md bg-(--bg) shadow-md")
+
+(defn- popout-span-util-class
+  "`.toolbar-popout > span`: vertical keeps flex:1/height:0; horizontal (the old
+   `:has(.toolbar-horizontal)` case) sets width:0/height:auto, flex:1 retained."
+  [horizontal?]
+  (str "flex-1 " (if horizontal? "w-0 h-auto" "h-0")))
+
+(defn- toolbar-segment [items tooltip-direction horizontal?]
   (reduce
    (fn [res item]
      (let [{:keys [id active? disabled? title label on-click extra-class type icon-props] ic :icon
@@ -107,7 +211,7 @@
        (conj res
              (cond
                (= type :divider)
-               [:span {:class divider-class}]
+               [:span {:class [divider-class (divider-util-class horizontal?)]}]
                (= type :text)
                [:span {:class text-only-class} label]
                :else
@@ -116,8 +220,8 @@
                 [:button
                  (cond-> {:aria-label title
                           :id id
-                          :class []}
-                   active? (update :class conj active-button-class)
+                          :class (cond-> [(item-button-util-class active? (some? label))]
+                                   active? (conj active-button-class))}
                    disabled? (assoc :disabled true)
                    (and (fn? on-click) (not disabled?)) (assoc :on-click on-click)
                    (and extra-class (vector? extra-class)) (update :class concat extra-class)
@@ -125,29 +229,33 @@
                  (when ic
                    [icon (assoc icon-props :icon ic)])
                  (when label
-                   [:span.label label])]]))))
+                   [:span {:class (cond-> [label-class]
+                                    (and ic label) (conj item-label-extra-class))}
+                    label])]]))))
    [:<>]
    (val-or-deref items)))
 
-(defn- toolbar-segmentation [{:keys [items tooltip-direction separator]}]
-  (let [segments (if (every? vector? items)
-                   (mapv #(vector toolbar-segment % tooltip-direction) items)
-                   [[toolbar-segment items tooltip-direction]])]
+(defn- toolbar-segmentation [{:keys [items tooltip-direction separator orientation]}]
+  (let [horizontal? (= orientation :horizontal)
+        segments (if (every? vector? items)
+                   (mapv #(vector toolbar-segment % tooltip-direction horizontal?) items)
+                   [[toolbar-segment items tooltip-direction horizontal?]])]
     (if (= separator :symbol)
-      (into [:div {:class section-class}] (interpose [:span {:class divider-class}] segments))
-      (into [:<>] (mapv #(vector :div {:class section-class} %) segments)))))
+      (into [:div {:class [section-class (section-util-class horizontal?)]}]
+            (interpose [:span {:class [divider-class (divider-util-class horizontal?)]}] segments))
+      (into [:<>] (mapv #(vector :div {:class [section-class (section-util-class horizontal?)]} %) segments)))))
 
-(defn- toolbar-popout [{:keys [show? content id]}]
+(defn- toolbar-popout [{:keys [show? content id]} horizontal?]
   (when (val-or-deref show?)
-    [:div {:class popout-class
+    [:div {:class [popout-class popout-util-class]
            :id id}
-     [:span content]]))
+     [:span {:class (popout-span-util-class horizontal?)} content]]))
 
 (defn- toolbar-options [{:keys [on-click-toolbar-options disabled-toolbar-options? toolbar-options-tooltip]}]
   (let [disabled? (val-or-deref disabled-toolbar-options?)
         toolbar-options-tooltip (val-or-deref toolbar-options-tooltip)]
     (when (fn? on-click-toolbar-options)
-      [:button (cond-> {:class toolbar-options-class}
+      [:button (cond-> {:class [toolbar-options-class options-button-util-class]}
                  disabled? (assoc disabled? true)
                  (not disabled?) (assoc :on-click on-click-toolbar-options))
        [icon (cond-> {:icon :collapse}
@@ -158,15 +266,14 @@
                                 extra-props id]
                          :or {extra-props {}}
                          :as params}]
-  (let [style (cond-> (select-keys offset [:right :left :top :bottom])
+  (let [horizontal? (= orientation :horizontal)
+        style (cond-> (select-keys offset [:right :left :top :bottom])
                 z-index (assoc :z-index z-index))]
     (if (empty? popouts)
       [:div
        (-> extra-props
-           (assoc :class (cond-> []
-                           :always
-                           (conj toolbar-class)
-                           (= orientation :horizontal)
+           (assoc :class (cond-> [toolbar-class (toolbar-util-class horizontal?)]
+                           horizontal?
                            (conj horizontal-class)
                            (vector? extra-class)
                            (concat extra-class)
@@ -178,21 +285,17 @@
        [toolbar-segmentation params]
        [toolbar-options params]]
       [:div
-       {:class (cond-> []
-                 :always
-                 (conj wrapper-class)
+       {:class (cond-> [wrapper-class (wrapper-util-class horizontal?)]
                  (vector? extra-class)
                  (concat extra-class)
                  (string? extra-class)
                  (conj extra-class))
         :style style}
-       (let [wrapped-popouts (into [:<>] (mapv toolbar-popout popouts))
+       (let [wrapped-popouts (into [:<>] (mapv #(toolbar-popout % horizontal?) popouts))
              wrapped-toolbar [:div
                               {:id id
-                               :class (cond-> []
-                                        :always
-                                        (conj toolbar-class)
-                                        (= orientation :horizontal)
+                               :class (cond-> [toolbar-class (toolbar-util-class horizontal?)]
+                                        horizontal?
                                         (conj horizontal-class))}
                               [toolbar-segmentation params]
                               [toolbar-options params]]]

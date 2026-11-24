@@ -103,7 +103,7 @@
                  (= label ::dfdates/month) "month"
                  :else label)]
      [:div {:class parent-class}
-      [:dt (i18n/attribute-label label)]
+      [:dt (i18n/attribute-label-with-unit label)]
       [:dd (cond-> {:style {:overflow-x :hidden
                             :white-space :nowrap
                             :text-overflow :ellipsis
@@ -114,7 +114,7 @@
   ([label attribute tooltip]
    [info-block label attribute tooltip nil])
   ([label attribute]
-   [info-block label attribute (i18n/attribute-label attribute)]))
+   [info-block label attribute (i18n/attribute-label-with-unit attribute)]))
 
 (defn- more-data-row [{:de.explorama.shared.data-format.filter/keys [prop value]
                        op ::dflsv/op}]

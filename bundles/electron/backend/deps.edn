@@ -8,6 +8,9 @@
         org.clojure/clojurescript {:mvn/version "1.12.134"}
         com.bhauman/figwheel-main {:mvn/version "0.2.18"}
         com.bhauman/cljs-test-display {:mvn/version "0.1.1"}
+        ;; used by electron/config.cljs; was silently supplied by the
+        ;; pre-restructure project.clj (lost in 3ac8251)
+        cljs-node-io/cljs-node-io {:mvn/version "1.1.2"}
 
         ;; Existing dependencies from shadow-cljs.edn
         binaryage/devtools {:mvn/version "1.0.5"}
@@ -20,20 +23,17 @@
 
         ;; Client-side
         metosin/malli {:mvn/version "0.12.0"}
-        com.andrewmcveigh/cljs-time {:mvn/version "0.5.2"}
-        clj-time/clj-time {:mvn/version "0.15.2"}
         org.clojure/math.combinatorics {:mvn/version "0.2.0"}
 
         day8.re-frame/http-fx {:mvn/version "0.2.4"}
-        re-frame-utils/re-frame-utils {:mvn/version "0.1.0"}
         funcool/cuerdas {:mvn/version "2023.10.15-405"}
 
         prismatic/dommy {:mvn/version "1.1.0"}
 
         ;; Super important to exclude cljsjs/react and cljsjs/react-dom
         ;; Otherwise webpack compiled result will not work
-        reagent/reagent {:mvn/version "1.0.0" :exclusions [cljsjs/react cljsjs/react-dom]}
-        re-frame/re-frame {:mvn/version "1.2.0"}}
+        reagent/reagent {:mvn/version "1.3.0" :exclusions [cljsjs/react cljsjs/react-dom]}
+        re-frame/re-frame {:mvn/version "1.4.7"}}
 
  :aliases {:dev {:main-opts ["-m" "figwheel.main" "--build" "dev" "--repl"]}
            :test {:extra-paths ["test"
@@ -41,14 +41,45 @@
                                 "../../../plugins/shared_test"]
                   :test {:extra-paths ["test"]}
                   :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner"]}
+                  :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.backend.test-runner"]}
            :test-ci {:extra-paths ["test"
                                    "../../../plugins/backend_test"
                                    "../../../plugins/shared_test"]
                      :test {:extra-paths ["test"]}
                      :extra-deps {com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-                     :main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "de.explorama.test-runner-ci"]}
+                     ;; plain cljs.main + node, NOT figwheel: its node launch
+                     ;; path hangs waiting for a REPL connection (issue #6).
+                     ;; The inline -co injects the per-bundle CONFIG that
+                     ;; provider_impl.cljs expects via goog-define (mirrors
+                     ;; the browser bundle's hard-coded provider config,
+                     ;; which the shared expdb/middleware tests assume).
+                     ;; run-tests-ci.bb.clj kills the process after the
+                     ;; report block — cljs.main lingers in a REPL after
+                     ;; -main returns.
+                     :main-opts ["-m" "cljs.main"
+                                 "-co" "{:closure-defines {de.explorama.shared.common.configs.provider-impl/CONFIG \"{:explorama-bucket-config {\\\"default\\\" {:backend \\\"browser\\\" :indexed? true :schema \\\"default\\\" :data-tile-keys {\\\"year\\\" {:field [\\\"Date\\\" \\\"date\\\" \\\"value\\\"] :date-part :year :type :string} \\\"country\\\" {:field [\\\"Context\\\" \\\"country\\\" \\\"name\\\"] :type :string} \\\"datasource\\\" {:field [\\\"Datasource\\\" \\\"datasource\\\" \\\"name\\\"]} \\\"bucket\\\" {:field :bucket :type :string} \\\"identifier\\\" {:value \\\"search\\\"}}}}}\"}}"
+                                 "--target" "node"
+                                 "--output-dir" "target/node-test"
+                                 "-m" "de.explorama.backend.test-runner-ci"]}
+           :bench {:extra-paths ["bench" "../../../benchmarks/src"]
+                   :main-opts ["-m" "cljs.main"
+                               "-co" "{:closure-defines {de.explorama.shared.common.configs.provider-impl/CONFIG \"{:explorama-bucket-config {\\\"default\\\" {:backend \\\"browser\\\" :indexed? true :schema \\\"default\\\" :data-tile-keys {\\\"year\\\" {:field [\\\"Date\\\" \\\"date\\\" \\\"value\\\"] :date-part :year :type :string} \\\"country\\\" {:field [\\\"Context\\\" \\\"country\\\" \\\"name\\\"] :type :string} \\\"datasource\\\" {:field [\\\"Datasource\\\" \\\"datasource\\\" \\\"name\\\"]} \\\"bucket\\\" {:field :bucket :type :string} \\\"identifier\\\" {:value \\\"search\\\"}}}}}\"}}"
+                               "--target" "node"
+                               "--output-dir" "target/node-bench"
+                               "-m" "de.explorama.benchmarks.expdb.runner"]}
            :prod {:main-opts ["-m" "cljs.main"
                               "-co" "prod-opts.edn"
-                              "-c" "de.explorama.frontend.woco.app.core"]}}}
+                              "-c" "de.explorama.backend.woco.app.core"]}
+           :prod-main {:extra-paths ["main"]
+                       ;; main/core.cljs needs core.async (not in :deps)
+                       :extra-deps {org.clojure/core.async {:mvn/version "1.6.681"}}
+                       :main-opts ["-m" "cljs.main"
+                                   "-co" "prod-main-opts.edn"
+                                   "-c" "de.explorama.main.core"]}
+           ;; unoptimized main-process build for `make dev-app`
+           :dev-main {:extra-paths ["main"]
+                      :extra-deps {org.clojure/core.async {:mvn/version "1.6.681"}}
+                      :main-opts ["-m" "cljs.main"
+                                  "-co" "dev-main-opts.edn"
+                                  "-c" "de.explorama.main.core"]}}}
 

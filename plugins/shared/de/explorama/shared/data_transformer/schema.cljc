@@ -84,6 +84,7 @@
                                                                                         [:name "value-multi"]
                                                                                         [:type {:doc "Current types are: \"decimal\" \"integer\" \"string\""}
                                                                                          "value-single"]
+                                                                                        [:unit {:optional true} "value-single"]
                                                                                         [:value "value-multi"]]]]
                                                                                      [:locations {:optional true}
                                                                                       [:vector [:map {:closed true}

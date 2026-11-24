@@ -183,7 +183,7 @@
         user @(fi/call-api :user-info-sub)]
      ;;TODO r1/reporting notify if status is not :success
     (if (or status save-pending?)
-      [:div.dashboard__actions
+      [:div.dashboard__actions {:class ["flex" "justify-between" "pb-2"]}
        [loading-message {:show? true
                          :message saving-label}]]
       [button {:start-icon :save

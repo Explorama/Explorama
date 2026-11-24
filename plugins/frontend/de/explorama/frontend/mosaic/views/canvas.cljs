@@ -31,14 +31,18 @@
      status))
 
 (defn reagent-canvas [path vis-settings]
-  (let [host-ref (atom nil)]
+  (let [host-ref (atom nil)
+        status-sub (re-frame/subscribe [::status path])
+        host-sub (re-frame/subscribe [::host path])
+        width-sub (re-frame/subscribe [::width path])
+        height-sub (re-frame/subscribe [::height path])]
     (reagent/create-class {:display-name (str path)
                            :reagent-render
-                           (fn [path {:keys [disable-canvas-click?]}]
-                             (let [status @(re-frame/subscribe [::status path])
-                                   host @(re-frame/subscribe [::host path])
-                                   width @(re-frame/subscribe [::width path])
-                                   height @(re-frame/subscribe [::height path])]
+                           (fn [_path {:keys [disable-canvas-click?]}]
+                             (let [status @status-sub
+                                   host @host-sub
+                                   width @width-sub
+                                   height @height-sub]
                                (when (and status height width host)
                                  [:canvas.mosaic-canvas
                                   (cond-> {:key host
@@ -57,18 +61,17 @@
                                     (assoc :on-click #(re-frame/dispatch (fi/call-api :frame-bring-to-front-event-vec (gp/frame-id path)))))])))
                            :component-did-mount
                            (fn [_]
-                             (let [status @(re-frame/subscribe [::status path])]
+                             (let [status @status-sub]
                                (when (render-guard status)
                                  (reset! grpc/vis-settings vis-settings)
                                  (re-frame/dispatch [:de.explorama.frontend.mosaic.render.core/init path]))))
                            :should-component-update
                            (fn [_ _ _]
-                             (let [status @(re-frame/subscribe [::status path])]
-                               (render-guard status)))
+                             (render-guard @status-sub))
                            :component-did-update
                            (fn [_ _]
-                             (let [status @(re-frame/subscribe [::status path])
-                                   host @(re-frame/subscribe [::host path])
+                             (let [status @status-sub
+                                   host @host-sub
                                    container (js/document.getElementById host)]
                                (when (nil? container)
                                  (warn "updating nil canvas" host))

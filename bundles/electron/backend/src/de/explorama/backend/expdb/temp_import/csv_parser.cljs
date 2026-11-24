@@ -1,5 +1,5 @@
 (ns de.explorama.backend.expdb.temp-import.csv-parser
-  (:require ["papaparse"]))
+  (:require ["papaparse" :as Papa]))
 
 (def ^:private default-desc {:separator ","
                              :quote "\""
@@ -7,12 +7,12 @@
 
 (defn parse [{{csv :csv} :meta-data} result]
   (let [{:keys [separator quote]} (or csv default-desc)]
-    ;TODO r1/mapping use 
+    ;TODO r1/mapping use
 
-    (let [results (js/Papa.parse result #js {"delimiter" separator
-                                             "quoteChar" quote
-                                             "skipEmptyLines" true
-                                             "encoding" "UTF-8"})
+    (let [results (.parse Papa result #js {"delimiter" separator
+                                           "quoteChar" quote
+                                           "skipEmptyLines" true
+                                           "encoding" "UTF-8"})
           edn (get (js->clj results) "data")]
       (->> (map #(zipmap (first edn) %) (rest edn))
            (map-indexed (fn [idx row]

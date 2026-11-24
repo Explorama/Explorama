@@ -10,7 +10,8 @@
                                                                                   sort-by-items
                                                                                   sort-group-items]]
             [de.explorama.frontend.mosaic.operations.tasks :as tasks]
-            [re-frame.core :refer [dispatch reg-event-fx subscribe]]))
+            [re-frame.core :refer [dispatch reg-event-fx subscribe]]
+            [re-frame.db :as rf-db]))
 
 (reg-event-fx
  ::no-event
@@ -130,7 +131,7 @@
                                      (boolean (:grp-key @(subscribe [::tasks/operations frame-id])))
                                      (not (coupled? frame-id))))
                     :on-click (fn [_e frame-id]
-                                (let [coupled? (coupled? frame-id)]
+                                (let [coupled? (boolean (seq (fi/call-api :coupled-with-db-get @rf-db/app-db frame-id)))]
                                   (dispatch [:de.explorama.frontend.mosaic.views.frame/event-wrapper
                                              [::ddq/queue frame-id
                                               [:de.explorama.frontend.mosaic.render.actions/update frame-id :adjust-one-row?]]])
@@ -160,9 +161,11 @@
                                        (gcp/render-mode-key @(subscribe [::tasks/operations frame-id])))
                                  (not (coupled? frame-id))))
                 :on-click (fn [_e frame-id]
-                            (let [coupled? (coupled? frame-id)]
-                              {:items (:sub-items (sort-by-items frame-id
-                                                                 @(subscribe [::tasks/operations frame-id])
+                            (let [db @rf-db/app-db
+                                  coupled? (boolean (seq (fi/call-api :coupled-with-db-get db frame-id)))]
+                              {:items (:sub-items (sort-by-items db
+                                                                 frame-id
+                                                                 (tasks/operations db frame-id)
                                                                  coupled?))}))})
 
 (def group-elem {:icon :group-by
@@ -182,7 +185,7 @@
                  :active? (fn [frame-id]
                             (boolean (:grp-key @(subscribe [::tasks/operations frame-id]))))
                  :on-click (fn [_e frame-id]
-                             (let [options (->> @(subscribe [::graph-acs/group-by frame-id])
+                             (let [options (->> (graph-acs/group-by-vals @rf-db/app-db frame-id)
                                                 (sort-by (fn [{:keys [name]}]
                                                            (lower-case name))))
                                    click-fn (fn [key]
@@ -215,7 +218,7 @@
                     :active? (fn [frame-id]
                                (boolean (:sub-grp-key @(subscribe [::tasks/operations frame-id]))))
                     :on-click (fn [_e frame-id]
-                                (let [options (->> @(subscribe [::graph-acs/group-by frame-id])
+                                (let [options (->> (graph-acs/group-by-vals @rf-db/app-db frame-id)
                                                    (sort-by (fn [{:keys [name]}]
                                                               (lower-case name))))
                                       click-fn (fn [key]
@@ -246,9 +249,10 @@
                                    (and (uncoupled-raster-op? frame-id)
                                         (boolean (:grp-key @(subscribe [::tasks/operations frame-id])))))
                        :on-click (fn [_e frame-id]
-                                   (let [{sort-grp-desc gcp/sort-grp-key}
-                                         @(subscribe [::tasks/operations frame-id])]
-                                     {:items (:sub-items (sort-group-items frame-id sort-grp-desc :contextmenu-top-level-sort-group :sort-group-by))}))})
+                                   (let [db @rf-db/app-db
+                                         {sort-grp-desc gcp/sort-grp-key}
+                                         (tasks/operations db frame-id)]
+                                     {:items (:sub-items (sort-group-items db frame-id sort-grp-desc :contextmenu-top-level-sort-group :sort-group-by))}))})
 
 (def treemap-algorithm-elem {:icon :treemap-settings
                              :group "Operations"
@@ -258,12 +262,13 @@
                                          (= gcp/render-mode-key-treemap
                                             (gcp/render-mode-key @(subscribe [::tasks/operations frame-id]))))
                              :on-click (fn [_e frame-id]
-                                         {:items [{:label (subscribe [::i18n/translate :treemap-algo-squared])
-                                                   :on-click #(dispatch [::tasks/execute-wrapper frame-id :treemap-algorithm {:algo "squared"}])}
-                                                  {:label (subscribe [::i18n/translate :treemap-algo-binary])
-                                                   :on-click #(dispatch [::tasks/execute-wrapper frame-id :treemap-algorithm {:algo "binary"}])}
-                                                  {:label (subscribe [::i18n/translate :treemap-algo-slice])
-                                                   :on-click #(dispatch [::tasks/execute-wrapper frame-id :treemap-algorithm {:algo "slice"}])}]})})
+                                         (let [db @rf-db/app-db]
+                                           {:items [{:label (i18n/translate db :treemap-algo-squared)
+                                                     :on-click #(dispatch [::tasks/execute-wrapper frame-id :treemap-algorithm {:algo "squared"}])}
+                                                    {:label (i18n/translate db :treemap-algo-binary)
+                                                     :on-click #(dispatch [::tasks/execute-wrapper frame-id :treemap-algorithm {:algo "binary"}])}
+                                                    {:label (i18n/translate db :treemap-algo-slice)
+                                                     :on-click #(dispatch [::tasks/execute-wrapper frame-id :treemap-algorithm {:algo "slice"}])}]}))})
 
 (def sort-subgroups-elem {:icon :sort-subgroup
                           :group "Operations"
@@ -273,9 +278,10 @@
                                       (and (uncoupled-raster-op? frame-id)
                                            (boolean (:sub-grp-key @(subscribe [::tasks/operations frame-id])))))
                           :on-click (fn [_e frame-id]
-                                      (let [{sub-sort-grp-desc gcp/sort-sub-grp-key}
-                                            @(subscribe [::tasks/operations frame-id])]
-                                        {:items (:sub-items (sort-group-items frame-id sub-sort-grp-desc :contextmenu-top-level-sub-sort-group :sort-sub-group-by))}))})
+                                      (let [db @rf-db/app-db
+                                            {sub-sort-grp-desc gcp/sort-sub-grp-key}
+                                            (tasks/operations db frame-id)]
+                                        {:items (:sub-items (sort-group-items db frame-id sub-sort-grp-desc :contextmenu-top-level-sub-sort-group :sort-sub-group-by))}))})
 
 (defn- provided-elem [_frame-id elem-desc]
   (let [{:keys [label icon disabled? visible? sub-items]} elem-desc]

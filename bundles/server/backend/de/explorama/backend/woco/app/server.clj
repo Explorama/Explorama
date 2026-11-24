@@ -30,7 +30,7 @@
          (fn [instance]
            (or instance
                (http/run-server handler
-                                {:ip "127.0.0.1"
+                                {:ip ip
                                  :port port
                                  :join? false
                                  :max-body http-max-body
@@ -38,6 +38,6 @@
   (println "Server started on port" port))
 
 (defn -main [& _args]
-  (start-server! config-server/explorama-host
+  (start-server! config-server/explorama-bind-address
                  config-server/explorama-port
                  handler/handler))

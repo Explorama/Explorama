@@ -50,5 +50,5 @@
      (fn [res item]
        (conj res
              [button item]))
-     [:div.flex.gap-2]
+     [:div.flex {:class "gap-0.5"}]
      items)))

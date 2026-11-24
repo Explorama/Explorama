@@ -2,7 +2,6 @@
   (:require [clojure.set :as set]
             [clojure.string :as string]
             [de.explorama.frontend.map.paths :as geop]
-            [de.explorama.frontend.map.tracks]
             [de.explorama.shared.map.ws-api :refer [set-acs]]
             [re-frame.core :as re-frame]))
 

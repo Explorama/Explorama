@@ -36,7 +36,7 @@ jobs:
       # cli needs the JVM installed above; bb does not, but both are
       # provisioned from this one action.
       - name: Set up Clojure tools
-        uses: DeLaGuardo/setup-clojure@13.6.1
+        uses: DeLaGuardo/setup-clojure@13.7.0
         with:
           cli: "1.12.4.1629"
           bb: "1.12.218"

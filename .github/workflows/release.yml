@@ -37,7 +37,7 @@ jobs:
       - name: Ensure permissions # workaround for newer git versions
         run: |
           chown $(whoami) -R .
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           set-safe-directory: "*"
           fetch-tags: true

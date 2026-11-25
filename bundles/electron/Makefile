@@ -80,9 +80,9 @@ target_platform ?= linux
 prepare-prod:
 	cd backend && bash gather-assets.sh prod
 	bash prebuild-node-modules.sh $(target_platform) prod
-	cd backend && clj -M:prod-main
-	cd backend && clj -M:prod
-	cd frontend && clj -M:prod
+	cd backend && clojure -M:prod-main
+	cd backend && clojure -M:prod
+	cd frontend && clojure -M:prod
 	cp backend/clean_modules.sh $(prepared)/
 	cd $(prepared) && bash clean_modules.sh
 	rm -f $(prepared)/clean_modules.sh

@@ -54,9 +54,16 @@ jobs:
         run: |
           echo "--------- Compile Browser version ---------"
           cd bundles/browser
+          npm ci
           bash build.sh
           mv dist/Explorama-browser.zip ../../
           echo "--------- done ---------"
+      - name: Electron dependencies
+        run: |
+          cd bundles/electron/backend
+          npm ci
+          cd ../frontend
+          npm ci
       - name: Electron win build
         run: |
           echo "--------- Compile Electron (windows) version ---------"

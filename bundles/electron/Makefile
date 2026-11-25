@@ -16,12 +16,10 @@ assets:
 # Tests
 # ---------------------------------------------------------------------------
 
-# Backend suite runs on plain Node. better-sqlite3 stays pinned at 9.4.0
-# for the electron runtime, but that version cannot build on modern Node --
-# the test run swaps in a @12 prebuild via --no-save (node_modules only;
-# manifest and lockfile keep the pin).
+# Backend suite runs on plain Node; npm install fetches the node-ABI
+# better-sqlite3 prebuild.
 test-backend:
-	cd backend && npm install better-sqlite3@12 --no-save --no-package-lock
+	cd backend && npm install
 	cd backend && bb run-tests-ci.bb.clj
 
 # Frontend suite drives a headless chromium instance launched via
@@ -40,10 +38,9 @@ test: test-backend test-frontend
 # Benchmarks
 # ---------------------------------------------------------------------------
 
-# Same better-sqlite3 prebuild swap as test-backend -- the bench also runs on
-# plain Node.
+# The bench also runs on plain Node.
 bench-backend:
-	cd backend && npm install better-sqlite3@12 --no-save --no-package-lock
+	cd backend && npm install
 	cd backend && clj -M:bench
 
 # ---------------------------------------------------------------------------
@@ -78,10 +75,11 @@ dev: clean-before
 # backend/gather-assets.sh's prod branch.
 dist_root := ../../dist/electron
 prepared := $(dist_root)/prepared
+target_platform ?= linux
 
 prepare-prod:
 	cd backend && bash gather-assets.sh prod
-	bash prebuild-node-modules.sh linux prod
+	bash prebuild-node-modules.sh $(target_platform) prod
 	cd backend && clj -M:prod-main
 	cd backend && clj -M:prod
 	cd frontend && clj -M:prod

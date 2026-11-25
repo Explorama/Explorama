@@ -50,9 +50,7 @@ Tests:
 ```bash
 cd bundles/electron
 make test           # both suites
-make test-backend   # 116/0/0 - swaps in a better-sqlite3@12 prebuild
-                     # (--no-save) for the run; the 9.4.0 manifest pin is for
-                     # the electron runtime (see issue #28)
+make test-backend   # 116/0/0
 make test-frontend  # 75/0/0
 ```
 

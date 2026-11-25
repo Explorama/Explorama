@@ -10,7 +10,7 @@
   "dependencies": {
     "better-sqlite3": "12.11.1",
     "date-fns": "4.1.0",
-    "ml-regression-simple-linear": "2.0.4",
+    "ml-regression-simple-linear": "3.0.1",
     "papaparse": "5.4.1"
   },
   "devDependencies": {

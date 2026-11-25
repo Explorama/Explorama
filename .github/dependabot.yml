@@ -19,8 +19,8 @@ updates:
         update-types: ["minor", "patch"]
 
   # Separate entry so the deliberate better-sqlite3 pin can be ignored:
-  # 9.4.0 is the version whose prebuild matches the electron 28 runtime ABI
-  # (issue #28); bumping it independently breaks the packaged app.
+  # its version and electron ABI must match the prebuild that
+  # bundles/electron/prebuild-node-modules.sh downloads; bump all three together.
   - package-ecosystem: npm
     directory: "/bundles/electron/backend"
     schedule:

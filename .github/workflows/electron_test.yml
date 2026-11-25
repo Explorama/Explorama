@@ -30,14 +30,9 @@ jobs:
           path: ~/.m2/repository
           key: "m2-electron-${{ hashFiles('bundles/electron/backend/deps.edn') }}-${{ hashFiles('bundles/electron/frontend/deps.edn') }}-${{ hashFiles('bundles/electron/backend/package-lock.json') }}-${{ hashFiles('bundles/electron/frontend/package-lock.json') }}"
       - name: Run backend tests
-        # better-sqlite3 stays pinned at 9.4.0 for the electron runtime
-        # (issue #28); that version cannot build on modern Node (no
-        # prebuilds, native build fails against current V8), so the test
-        # run swaps in a v12 prebuild without touching manifest/lockfile
-        # (same override `make test-backend` uses).
         run: |
           cd backend
-          npm install better-sqlite3@12 --no-save --no-package-lock
+          npm install
           bb run-tests-ci.bb.clj
       - name: Run frontend tests
         run: |

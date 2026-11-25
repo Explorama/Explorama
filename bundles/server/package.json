@@ -23,7 +23,7 @@
     "date-fns": "4.1.0",
     "html-to-image-mod": "1.11.11-1",
     "jspdf": "4.2.1",
-    "ol": "7.5.2",
+    "ol": "10.11.0",
     "ol-ext": "4.0.37",
     "pixi.js-legacy": "7.4.2",
     "quill": "2.0.3",

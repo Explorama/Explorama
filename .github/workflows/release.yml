@@ -30,7 +30,7 @@ env:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # ubuntu-26.04's docker seccomp profile breaks the 32-bit wine that bundle-win needs
     container:
       image: ghcr.io/explorama/images/deploy-image:latest
     steps:

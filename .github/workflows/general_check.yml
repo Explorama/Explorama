@@ -18,7 +18,7 @@ jobs:
     container:
       image: ghcr.io/explorama/images/build-image:latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - run: if command -v apk >/dev/null; then apk add --no-cache tar; fi
       - name: Cache dependencies
         uses: actions/cache@v5

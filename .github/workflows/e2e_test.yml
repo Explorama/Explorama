@@ -20,7 +20,7 @@ jobs:
     # job runs on the bare runner instead of the Alpine build-image the other
     # suites share, and provisions its own JVM/Node/Clojure toolchain below.
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Java
         uses: actions/setup-java@v5

@@ -46,7 +46,7 @@ jobs:
           git fetch --tags
           git tag
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.m2/repository
           key: "m2-electron-${{ hashFiles('bundles/electron/project.clj') }}"
